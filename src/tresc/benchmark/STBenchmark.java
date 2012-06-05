@@ -136,7 +136,7 @@ public class STBenchmark {
 		if (_configuration.getOutputOption(OutputOption.TrampXML)) {
 			StringBuffer mappingScenarioXMLBuffer = new StringBuffer();
 			schemaWriter.print(mappingScenarioXMLBuffer, scenario, 0,
-					instDir.getAbsolutePath());
+					instDir.getAbsolutePath(), _configuration);
 
 			try {
 				BufferedWriter bufWriter =

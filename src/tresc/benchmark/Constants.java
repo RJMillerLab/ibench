@@ -5,7 +5,9 @@ import java.util.Map;
 
 import tresc.benchmark.dataGen.DataGenerator;
 import tresc.benchmark.dataGen.ToXDataGenerator;
+import tresc.benchmark.dataGen.ToXScriptOnlyDataGenerator;
 import tresc.benchmark.dataGen.TrampCSVGen;
+import tresc.benchmark.dataGen.TrampXMLinlineGen;
 
 
 public class Constants
@@ -97,10 +99,31 @@ public class Constants
     		= new HashMap<DataGenType, Class<? extends DataGenerator>> ();
     
     static {
-    	dataGens.put(DataGenType.ToXGeneScriptOnly, DataGenerator.class);
+    	dataGens.put(DataGenType.ToXGeneScriptOnly, ToXScriptOnlyDataGenerator.class);
     	dataGens.put(DataGenType.ToXGene, ToXDataGenerator.class);
     	dataGens.put(DataGenType.TrampCSV, TrampCSVGen.class);
-    	dataGens.put(DataGenType.TrampXMLInline, null); //TODO
+    	dataGens.put(DataGenType.TrampXMLInline, TrampXMLinlineGen.class); //TODO
     }
     
+    public enum TrampXMLOutputSwitch {
+    	Correspondences,
+    	Transformations,
+    	Data,
+    	ConnectionInfo
+    }
+    
+    public static final Map<TrampXMLOutputSwitch, Boolean> trampXmlOutDefaults
+    		= new HashMap<TrampXMLOutputSwitch, Boolean> ();
+    
+    static {
+    	trampXmlOutDefaults.put(TrampXMLOutputSwitch.Correspondences, Boolean.TRUE);
+    	trampXmlOutDefaults.put(TrampXMLOutputSwitch.Transformations, Boolean.TRUE);
+    	trampXmlOutDefaults.put(TrampXMLOutputSwitch.Data, Boolean.TRUE);
+    	trampXmlOutDefaults.put(TrampXMLOutputSwitch.ConnectionInfo, Boolean.TRUE);
+    }
+    
+    public enum MappingLanguageType {
+    	FOtgds,
+    	SOtgds
+    }
 }

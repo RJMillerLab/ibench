@@ -6,11 +6,14 @@ import java.util.StringTokenizer;
 
 import org.kohsuke.args4j.Option;
 import org.vagabond.util.PropertyWrapper;
+import org.vagabond.xmlmodel.MappingsType;
 
 import tresc.benchmark.Constants.DataGenType;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import vtools.utils.structures.AssociativeArray;
 import vtools.utils.structures.SetAssociativeArray;
 
@@ -23,6 +26,7 @@ public class Configuration {
 
 	private int[][] _configurations;
 	private boolean[] _outputOpts;
+	private boolean[] _trampXMLoutputOpts;
 
 	@Option(name = "-sourceSchemaFile",
 			usage = "name for the source schema file")
@@ -60,9 +64,10 @@ public class Configuration {
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
 
-	int _namingPolicy;
+	int namingPolicy;
 
 	DataGenType dataGen = DataGenType.TrampCSV;
+	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 
 	public Configuration() {
 		initArrays();
@@ -116,6 +121,15 @@ public class Configuration {
 		}
 		prop.resetPrefix();
 
+		// read switches for omitting parts of the Tramp XML document
+		prop.setPrefix("TrampXMLOutput");
+		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values()) {
+			boolean b =
+					prop.getBool(s.toString(), _trampXMLoutputOpts[s.ordinal()]);
+			_trampXMLoutputOpts[s.ordinal()] = b;
+		}
+		prop.resetPrefix();
+
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);
 		randomGenerator.setSeed(_seed);
@@ -124,9 +138,13 @@ public class Configuration {
 		maxStringLength = prop.getInt("MaxStringLength", 10);
 		maxNumValue = prop.getInt("MaxNumValue", 100);
 
-		dataGen = (DataGenType) prop.getEnumProperty("DataGenerator",
+		// data generator and type of mapping language
+		dataGen =
+				(DataGenType) prop.getEnumProperty("DataGenerator",
 						DataGenType.class, dataGen);
-
+		mapType =
+				(MappingLanguageType) prop.getEnumProperty("MappingLanguage",
+						MappingLanguageType.class, mapType);
 		// read optional parameters
 		genFileNames(fileNameSuffix);
 
@@ -141,6 +159,7 @@ public class Configuration {
 		prop.resetPrefix();
 	}
 
+	// deprecate this one because it does not read all the options anymore
 	public Configuration(String configLine) {
 		// other than that, we need to read a configuration file for which by
 		// the name, we get some info.
@@ -300,6 +319,8 @@ public class Configuration {
 		_repetitions = new int[Constants.ScenarioName.values().length];
 		_configurations = new int[Constants.ParameterName.values().length][2];
 		_outputOpts = new boolean[Constants.OutputOption.values().length];
+		_trampXMLoutputOpts =
+				new boolean[Constants.TrampXMLOutputSwitch.values().length];
 		randomGenerator = new Random();
 		initOutputOptionsDefaults();
 	}
@@ -308,6 +329,10 @@ public class Configuration {
 		for (OutputOption o : Constants.OutputOption.values())
 			_outputOpts[o.ordinal()] =
 					Constants.defaultOutputOptionValues.get(o);
+		
+		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values())
+			_trampXMLoutputOpts[s.ordinal()] =
+					Constants.trampXmlOutDefaults.get(s);
 	}
 
 	private void setDefaultConfiguration() {
@@ -373,7 +398,7 @@ public class Configuration {
 		sourceDocumentName = "I.xml";
 		schemaPathPrefix = ".";
 		instancePathPrefix = ".";
-		_namingPolicy = Modules.namingPolicy.LowerUpper;
+		namingPolicy = Modules.namingPolicy.LowerUpper;
 
 		mappingFile = "M.html";
 		schemaFile = "Schemas.xml";
@@ -381,7 +406,7 @@ public class Configuration {
 	}
 
 	public int getNamingPolicy() {
-		return _namingPolicy;
+		return namingPolicy;
 	}
 
 	public void setParam(Constants.ParameterName param, int value) {
@@ -404,8 +429,12 @@ public class Configuration {
 		return _repetitions[scenario];
 	}
 
-	public boolean getOutputOption (OutputOption o) {
+	public boolean getOutputOption(OutputOption o) {
 		return _outputOpts[o.ordinal()];
+	}
+
+	public boolean getTrampXMLOutputOption (TrampXMLOutputSwitch s) {
+		return _trampXMLoutputOpts[s.ordinal()];
 	}
 	
 	/*
@@ -501,7 +530,7 @@ public class Configuration {
 		result.append("repElemCountValue : <" + repElemCountValue + ">\n");
 		result.append("maxStringLength : <" + maxStringLength + ">\n");
 		result.append("maxNumValue : <" + maxNumValue + ">\n");
-		result.append("_namingPolicy : <" + _namingPolicy + ">\n");
+		result.append("_namingPolicy : <" + namingPolicy + ">\n");
 		result.append("_seed: <" + _seed + ">\n");
 
 		return result.toString();
@@ -522,5 +551,15 @@ public class Configuration {
 	public void setDataGen(DataGenType dataGen) {
 		this.dataGen = dataGen;
 	}
+
+	public MappingLanguageType getMapType() {
+		return mapType;
+	}
+
+	public void setMapType(MappingLanguageType mapType) {
+		this.mapType = mapType;
+	}
+	
+	
 
 }
