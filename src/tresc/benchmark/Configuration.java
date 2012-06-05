@@ -114,7 +114,7 @@ public class Configuration {
 		prop.resetPrefix();
 
 		// read the output activation/deactivation options
-		prop.setPrefix("OutputOptions");
+		prop.setPrefix("OutputOption");
 		for (OutputOption o : Constants.OutputOption.values()) {
 			boolean b = prop.getBool(o.toString(), _outputOpts[o.ordinal()]);
 			_outputOpts[o.ordinal()] = b;
@@ -532,7 +532,21 @@ public class Configuration {
 		result.append("maxNumValue : <" + maxNumValue + ">\n");
 		result.append("_namingPolicy : <" + namingPolicy + ">\n");
 		result.append("_seed: <" + _seed + ">\n");
-
+		result.append("mapType: <" + mapType + ">\n");
+		result.append("dataGen: <" + dataGen + ">\n");
+		
+		result.append("\n\n---- OUTPUT OPTIONS ----\n");
+		for (OutputOption p : Constants.OutputOption.values()) {
+			boolean val = _outputOpts[p.ordinal()];
+			result.append(p.toString() + ": <" + val + ">\n");
+		}
+		
+		result.append("\n\n---- TRAMP XML OUTPUT OPTIONS ----\n");
+		for (TrampXMLOutputSwitch p : Constants.TrampXMLOutputSwitch.values()) {
+			boolean val = _trampXMLoutputOpts[p.ordinal()];
+			result.append(p.toString() + ": <" + val + ">\n");
+		}
+		
 		return result.toString();
 	}
 
