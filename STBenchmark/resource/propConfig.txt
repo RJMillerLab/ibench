@@ -1,0 +1,65 @@
+# Configuration File for STBenchmark
+
+# output path prefixes
+SchemaPathPrefix=out
+InstancePathPrefix=out
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 0 
+Scenarios.VALUEGEN = 0 
+Scenarios.HORIZPARTITION = 0 
+Scenarios.SURROGATEKEY = 30 
+Scenarios.MERGING = 0 
+Scenarios.VALUEMANAGEMENT = 0 
+Scenarios.FUSION = 0 
+Scenarios.FLATTENING = 0 
+Scenarios.NESTING = 0 
+Scenarios.SELFJOINS = 0 
+Scenarios.VERTPARTITION = 0 
+Scenarios.GLAV = 0 
+Scenarios.ADDATTRIBUTE = 0
+Scenarios.DELATTRIBUTE = 0
+Scenarios.VERTPARTITIONISA = 0
+
+# Parameters that define the shape of the schema and basic scenarios
+ConfigOptions.NumOfSubElements = 2 
+ConfigOptions.NestingDepth = 0 
+ConfigOptions.JoinSize = 2 
+ConfigOptions.JoinKind = 1 
+ConfigOptions.NumOfJoinAttributes = 1 
+ConfigOptions.NumOfParamsInFunctions = 2 
+ConfigOptions.NumOfNewAttributes = 1
+ConfigOptions.NumofAttributestoDelete = 1
+ConfigOptions.SkolemKind = 1
+
+# Derivations for each of the parameters
+ConfigOptionsDerivation.NumOfSubElements = 0 
+ConfigOptionsDerivation.NestingDepth = 0 
+ConfigOptionsDerivation.JoinSize = 0 
+ConfigOptionsDerivation.JoinKind = 0 
+ConfigOptionsDerivation.NumOfJoinAttributes = 0 
+ConfigOptionsDerivation.NumOfParamsInFunctions = 0 
+ConfigOptionsDerivation.NumOfNewAttributes = 0
+ConfigOptionsDerivation.NumofAttributestoDelete = 0
+ConfigOptionsDerivation.SkolemKind = 0
+
+# Random number generator and max values and DataGenerator
+RandomSeed = 0
+RepElementCount = 5
+MaxStringLength = 5
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+
+# Optional overwriting file names
+# FileNames.SourceSchema = 
+# FileNames.TargetSchema = 
+# FileNames.SourceInstance = 
+# FileNames.SourceDocumentName =
+# FileNames.Schemas =
+
+# Optional activation/deactivation of output options
+# OutputOption.HTMLSchemas = false
+# OutputOption.Data = true
+# OutputOption.XMLSchemas = false
+# OutputOption.HTMLMapping = false
+# OutputOption.TrampXML = true
