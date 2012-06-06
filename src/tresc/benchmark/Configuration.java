@@ -186,103 +186,31 @@ public class Configuration {
 		// INSTANCE_FILE SOURCE_DOC_NAME MAPPING_FILE_NAME
 
 		StringTokenizer st = new StringTokenizer(configLine, " \t");
-		int coRep = Integer.valueOf(st.nextToken());
-		if (coRep != 0)
-			fileNameSuffix += "_CO";
-		_repetitions[Constants.ScenarioName.COPY.ordinal()] = coRep;
-		int vgRep = Integer.valueOf(st.nextToken());
-		if (vgRep != 0)
-			fileNameSuffix += "_VG";
-		_repetitions[Constants.ScenarioName.VALUEGEN.ordinal()] = vgRep;
-		int hpRep = Integer.valueOf(st.nextToken());
-		if (hpRep != 0)
-			fileNameSuffix += "_HP";
-		_repetitions[Constants.ScenarioName.HORIZPARTITION.ordinal()] = hpRep;
-		int skRep = Integer.valueOf(st.nextToken());
-		if (skRep != 0)
-			fileNameSuffix += "_SK";
-		_repetitions[Constants.ScenarioName.SURROGATEKEY.ordinal()] = skRep;
-		int vpRep = Integer.valueOf(st.nextToken());
-		if (vpRep != 0)
-			fileNameSuffix += "_VP";
-		_repetitions[Constants.ScenarioName.VERTPARTITION.ordinal()] = vpRep;
-		int flRep = Integer.valueOf(st.nextToken());
-		if (flRep != 0)
-			fileNameSuffix += "_FL";
-		_repetitions[Constants.ScenarioName.FLATTENING.ordinal()] = flRep;
-		int neRep = Integer.valueOf(st.nextToken());
-		if (neRep != 0)
-			fileNameSuffix += "_NE";
-		_repetitions[Constants.ScenarioName.NESTING.ordinal()] = neRep;
-		int cjRep = Integer.valueOf(st.nextToken());
-		if (cjRep != 0)
-			fileNameSuffix += "_CJ";
-		_repetitions[Constants.ScenarioName.SELFJOINS.ordinal()] = cjRep;
-		int deRep = Integer.valueOf(st.nextToken());
-		if (deRep != 0)
-			fileNameSuffix += "_DE";
-		_repetitions[Constants.ScenarioName.MERGING.ordinal()] = deRep;
-		int ofRep = Integer.valueOf(st.nextToken());
-		if (ofRep != 0)
-			fileNameSuffix += "_OF";
-		_repetitions[Constants.ScenarioName.FUSION.ordinal()] = ofRep;
-		int avRep = Integer.valueOf(st.nextToken());
-		if (avRep != 0)
-			fileNameSuffix += "_AV";
-		_repetitions[Constants.ScenarioName.VALUEMANAGEMENT.ordinal()] = avRep;
-		int glRep = Integer.valueOf(st.nextToken());
-		if (glRep != 0)
-			fileNameSuffix += "_GL";
-		_repetitions[Constants.ScenarioName.GLAV.ordinal()] = glRep;
+		
+		// read the number of repetitions for each scenario
+		for (int i = 0; i < Constants.ScenarioName.values().length; i++) {
+			ScenarioName scen = Constants.ScenarioName.values()[i]; 
+			int numScen = Integer.valueOf(st.nextToken());
 
-		int seValue = Integer.valueOf(st.nextToken());
-		fileNameSuffix += "_" + seValue;
-		_configurations[Constants.ParameterName.NumOfSubElements.ordinal()][0] =
-				seValue;
-		int ndValue = Integer.valueOf(st.nextToken());
-		fileNameSuffix += "_" + ndValue;
-		_configurations[Constants.ParameterName.NestingDepth.ordinal()][0] =
-				ndValue;
-		int jsValue = Integer.valueOf(st.nextToken());
-		fileNameSuffix += "_" + jsValue;
-		_configurations[Constants.ParameterName.JoinSize.ordinal()][0] =
-				jsValue;
-		int jkValue = Integer.valueOf(st.nextToken());
-		fileNameSuffix += "_" + jkValue;
-		_configurations[Constants.ParameterName.JoinKind.ordinal()][0] =
-				jkValue;
-		int jaValue = Integer.valueOf(st.nextToken());
-		fileNameSuffix += "_" + jaValue;
-		_configurations[Constants.ParameterName.NumOfJoinAttributes.ordinal()][0] =
-				jaValue;
-		int fpValue = Integer.valueOf(st.nextToken());
-		fileNameSuffix += "_" + fpValue;
-		_configurations[Constants.ParameterName.NumOfParamsInFunctions
-				.ordinal()][0] = fpValue;
-
-		/*
-		 * // set the deviations to 0 for (int i = 0, imax =
-		 * _configurations.length; i < imax; i++) _configurations[i][1] = 0;
-		 */
+			_repetitions[i] = numScen;
+			if (numScen != 0)
+				fileNameSuffix += Constants.nameForScenarios.get(scen);
+		}
+		
+		// read the parameters
+		for(int i = 0; i < Constants.ParameterName.values().length; i++) {
+			int val= Integer.valueOf(st.nextToken());
+			_configurations[i][0] = val;
+			fileNameSuffix += "_" + val;
+		}
 
 		// read the deviations
-		int seDev = Integer.valueOf(st.nextToken());
-		_configurations[Constants.ParameterName.NumOfSubElements.ordinal()][1] =
-				seDev;
-		int ndDev = Integer.valueOf(st.nextToken());
-		_configurations[Constants.ParameterName.NestingDepth.ordinal()][1] =
-				ndDev;
-		int jsDev = Integer.valueOf(st.nextToken());
-		_configurations[Constants.ParameterName.JoinSize.ordinal()][1] = jsDev;
-		int jkDev = Integer.valueOf(st.nextToken());
-		_configurations[Constants.ParameterName.JoinKind.ordinal()][1] = jkDev;
-		int jaDev = Integer.valueOf(st.nextToken());
-		_configurations[Constants.ParameterName.NumOfJoinAttributes.ordinal()][1] =
-				jaDev;
-		int fpDev = Integer.valueOf(st.nextToken());
-		_configurations[Constants.ParameterName.NumOfParamsInFunctions
-				.ordinal()][1] = fpDev;
-
+		for(int i = 0; i < Constants.ParameterName.values().length; i++) {
+			int val= Integer.valueOf(st.nextToken());
+			_configurations[i][1] = val;
+			fileNameSuffix += "_" + val;
+		}
+		
 		// generate the output file names
 		genFileNames(fileNameSuffix);
 
