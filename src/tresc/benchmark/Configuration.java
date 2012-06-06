@@ -1,25 +1,23 @@
 package tresc.benchmark;
 
-import java.util.Set;
 import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.kohsuke.args4j.Option;
 import org.vagabond.util.PropertyWrapper;
-import org.vagabond.xmlmodel.MappingsType;
 
+import tresc.benchmark.Constants.DESErrorType;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
-import vtools.utils.structures.AssociativeArray;
-import vtools.utils.structures.SetAssociativeArray;
 
 public class Configuration {
 	private int[] _repetitions;
-
+	private int[] _numExplsForType;
+	
 	// private long[] _seeds;
 	private long _seed;
 	private Random randomGenerator;
@@ -130,6 +128,17 @@ public class Configuration {
 		}
 		prop.resetPrefix();
 
+		// read how many explanations to generate
+		prop.setPrefix("ExplGenNum");
+		for(DESErrorType e: Constants.DESErrorType.values()) {
+			int val = prop.getInt(e.toString(), 0);
+			_numExplsForType[e.ordinal()] = val;
+		}
+		prop.resetPrefix();
+		
+		// explgen options like percentage of errors to add
+		
+		
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);
 		randomGenerator.setSeed(_seed);
@@ -321,11 +330,12 @@ public class Configuration {
 		_outputOpts = new boolean[Constants.OutputOption.values().length];
 		_trampXMLoutputOpts =
 				new boolean[Constants.TrampXMLOutputSwitch.values().length];
+		_numExplsForType = new int[Constants.DESErrorType.values().length];
 		randomGenerator = new Random();
-		initOutputOptionsDefaults();
+		initOptionsDefaults();
 	}
 
-	private void initOutputOptionsDefaults() {
+	private void initOptionsDefaults() {
 		for (OutputOption o : Constants.OutputOption.values())
 			_outputOpts[o.ordinal()] =
 					Constants.defaultOutputOptionValues.get(o);

@@ -3,6 +3,15 @@ package tresc.benchmark;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.vagabond.benchmark.explgen.CorrespondenceGen;
+import org.vagabond.benchmark.explgen.ExplanationGenerator;
+import org.vagabond.benchmark.explgen.SourceCopyGen;
+import org.vagabond.benchmark.explgen.SourceJoinGen;
+import org.vagabond.benchmark.explgen.SourceSkeletonGen;
+import org.vagabond.benchmark.explgen.SuperfluousMappingGen;
+import org.vagabond.benchmark.explgen.TargetSkeletonGen;
+import org.vagabond.explanation.model.basic.SuperflousMappingError;
+
 import tresc.benchmark.dataGen.DataGenerator;
 import tresc.benchmark.dataGen.ToXDataGenerator;
 import tresc.benchmark.dataGen.ToXScriptOnlyDataGenerator;
@@ -21,7 +30,7 @@ public class Constants
         NumOfParamsInFunctions,
         NumOfNewAttributes,
         NumofAttributestoDelete,
-        SkolemKind
+        SkolemKind,
     };
 
     public enum JoinKind {
@@ -75,6 +84,7 @@ public class Constants
     	XMLSchemas,
     	HTMLMapping,
     	TrampXML,
+    	ErrorsAndExplanations
     }
     
     public static final Map<OutputOption, Boolean> defaultOutputOptionValues
@@ -86,6 +96,7 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.XMLSchemas, Boolean.FALSE);
     	defaultOutputOptionValues.put(OutputOption.Data, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.TrampXML, Boolean.TRUE);
+    	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
     }
     
     public enum DataGenType {
@@ -125,5 +136,26 @@ public class Constants
     public enum MappingLanguageType {
     	FOtgds,
     	SOtgds
+    }
+    
+    public enum DESErrorType {
+    	SuperfluousMapping,
+    	SourceCopyError,
+    	SourceJoinValueError,
+    	SourceSkeletonError,
+    	TargetSkeletonError,
+    	CorrespondenceError
+    }
+    
+    public static final Map<DESErrorType, ExplanationGenerator> errorGenerators
+    		= new HashMap<DESErrorType, ExplanationGenerator> ();
+    
+    static {
+    	errorGenerators.put(DESErrorType.SourceCopyError, new SourceCopyGen());
+    	errorGenerators.put(DESErrorType.SourceJoinValueError, new SourceJoinGen());
+    	errorGenerators.put(DESErrorType.SuperfluousMapping, new SuperfluousMappingGen());
+    	errorGenerators.put(DESErrorType.SourceSkeletonError, new SourceSkeletonGen());
+    	errorGenerators.put(DESErrorType.TargetSkeletonError, new TargetSkeletonGen());
+    	errorGenerators.put(DESErrorType.CorrespondenceError, new CorrespondenceGen());
     }
 }
