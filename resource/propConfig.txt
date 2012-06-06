@@ -49,6 +49,7 @@ RepElementCount = 5
 MaxStringLength = 5
 MaxNumValue = 1000
 DataGenerator = TrampCSV
+MappingLanguage = FOtgds
 
 # Optional overwriting file names
 # FileNames.SourceSchema = 
