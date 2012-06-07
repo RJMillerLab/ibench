@@ -92,6 +92,8 @@ public class Schema extends Element
                     if (m.equals(relName)) return constraint;
                 }
             	
+            } else {
+            	constraint = null;
             }
         }
         

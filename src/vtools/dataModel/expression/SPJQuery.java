@@ -26,6 +26,8 @@ public class SPJQuery extends Query implements Visitable, Cloneable
     private boolean _withJOINS;
     
     private ArrayList<String> _targets = new ArrayList<String>();
+    
+    private ArrayList<String> _sources = new ArrayList<String>();
 
     public SPJQuery()
     {
@@ -249,4 +251,17 @@ public class SPJQuery extends Query implements Visitable, Cloneable
     public ArrayList<String> getTargets() {
     	return _targets;
     }
+    
+    public void addSource(String t) {
+    	_sources.add(t);
+    }
+    
+    public String getSource(int i) {
+    	return _sources.get(i);
+    }
+    
+    public ArrayList<String> getSources() {
+    	return _sources;
+    }
+    
 }

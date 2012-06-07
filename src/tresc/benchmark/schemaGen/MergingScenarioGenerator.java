@@ -1,7 +1,10 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -11,14 +14,18 @@ import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
+import vtools.dataModel.expression.BooleanExpression;
 import vtools.dataModel.expression.EQ;
+import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.ForeignKey;
 import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Rule;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
+import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
@@ -29,6 +36,8 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 
     private final String _stamp = "MR";
 
+    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+    
     public MergingScenarioGenerator()
     {		;		}
 
@@ -62,6 +71,8 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
+            SPJQuery generatedQuery = new SPJQuery();
+
             // number of tables we will use
             int numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfFragments,
                 numOfFragmentsDeviation);
@@ -87,12 +98,131 @@ public class MergingScenarioGenerator extends ScenarioGenerator
                         : tmpInt;
             }
             
-            createSubElements(source, target, numOfAttributes, numOfJoinAttributes, jk, i, pquery);
+            SMarkElement[] srcRels = new SMarkElement[numOfAttributes.length];
+            SMarkElement tgtRel = createSubElements(source, target, numOfAttributes, numOfJoinAttributes, jk, i, pquery, generatedQuery, srcRels);
+            
+            setScenario(scenario, generatedQuery, pquery, tgtRel, srcRels);
         }
    }
 
-    private void createSubElements(Schema source, Schema target, int[] numOfAttributes,int numOfJoinAttributes, 
-    		    JoinKind jk, int repetition, SPJQuery pquery)
+    private Character getAttrSymbol(String attrName) {
+    	if (attrInSymbolList(attrName))
+    		return attrMap.get(attrName);
+    	Character letter = _attributes.charAt(_currAttributeIndex++);
+    	attrMap.put(attrName, letter);
+    	return letter;
+    }
+    
+    private boolean attrInSymbolList(String attrName) {
+    	return attrMap.containsKey(attrName);
+    }
+    
+    private void resetAttrSymbol() {
+    	_currAttributeIndex = 0;
+    	attrMap.clear();
+    }
+
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement tgtRel, SMarkElement[] srcRels) {
+		SelectClauseList gselect = generatedQuery.getSelect();
+		HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
+		HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+		
+		String mKey = scenario.getNextMid();
+
+		ArrayList<String> corrsList = new ArrayList<String>();
+		
+		ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
+		HashMap<String, Character> targetAttrSymbols = new HashMap<String , Character>();
+
+		for (int j = 0; j < tgtRel.size(); j++) {
+			Element attr = tgtRel.getSubElement(j);
+			String attrName = attr.getLabel();
+			Character symbol = getAttrSymbol(attrName);
+			targetAttrSymbols.put(attrName, symbol);
+			targetRelAttrs.add(symbol);
+		}
+    	String targetName = tgtRel.getLabel();
+		targetAttrs.put(targetName, targetRelAttrs);
+
+		SPJQuery e = (SPJQuery)(gselect.getTerm(0));
+    	FromClauseList fcl = e.getFrom();
+    	SelectClauseList scl = e.getSelect();
+    	String[] sclArray = scl.toString().split(",");
+    	String[] whereArray = e.getWhere().toString().split("AND");
+    	
+    	// 2-way hashmap of the where clauses
+    	HashMap<String, String> whereExprs0 = new HashMap<String, String>();
+    	HashMap<String, String> whereExprs1 = new HashMap<String, String>();
+    	
+    	for (String wherecl : whereArray) {
+    		String[] expr = wherecl.split("=");
+    		String leftExpr = expr[0].replaceAll("^\\$(.*)/", "");
+    		String rightExpr = expr[1].replaceAll("^\\$(.*)/", "");
+    		whereExprs0.put(leftExpr, rightExpr);
+    		whereExprs1.put(rightExpr, leftExpr);
+    	}
+    	
+		String tKey = scenario.getNextTid();
+		for (int i = 0; i < srcRels.length; i++) {
+			ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
+			String sourceName = srcRels[i].getLabel();
+
+    		SMarkElement srcRel = srcRels[i];
+        	for (int j = 0; j < srcRels[i].size(); j++) {
+        		String attr = srcRel.getSubElement(j).getLabel();
+        		
+    			String sourceRelAttr = sourceName + "." + attr;
+    			String targetRelAttr = targetName + "." + attr;
+        		if (targetAttrSymbols.containsKey(attr)) {
+        			sourceRelAttrs.add(getAttrSymbol(attr));
+        		} else {
+        			String refAttrName = null;
+        			if (whereExprs0.containsKey(attr)) 
+        				refAttrName = whereExprs0.get(attr);
+        			else if (whereExprs1.containsKey(attr))
+        				refAttrName = whereExprs1.get(attr);
+        			else
+        				refAttrName = attr;
+        			targetRelAttr = targetName + "." + refAttrName;
+        			sourceRelAttrs.add(getAttrSymbol(refAttrName));
+        		}
+    			String cKey = scenario.getNextCid();
+    			String cVal = sourceRelAttr + "=" + targetRelAttr;
+    			scenario.putCorrespondences(cKey, cVal);
+    			corrsList.add(cKey);
+        	}
+        	sourceAttrs.put(sourceName, sourceRelAttrs);
+    			
+		}
+		ArrayList<String> mList = new ArrayList<String>();
+		mList.add(mKey);
+		scenario.putTransformation2Mappings(tKey, mList);
+		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
+		scenario.putTransformationRelName(tKey, targetName);
+        	
+		scenario.putMappings2Correspondences(mKey, corrsList);
+        scenario.putMappings2Sources(mKey, sourceAttrs);
+        scenario.putMappings2Targets(mKey, targetAttrs);
+
+		resetAttrSymbol();
+	}
+	
+	private String getQueryString(SPJQuery origQ, String mKey) {
+		String retVal = origQ.toString();
+		FromClauseList from = origQ.getFrom();
+		for (int i = 0; i < from.size(); i++) {
+			String key = from.getKey(i).toString();
+			String relAlias = key.replace("$", "");
+			retVal = retVal.replace(key+"/", relAlias+".");
+			retVal = retVal.replace("${" + i + "}", mKey);
+		}
+		retVal = retVal.replaceAll("/", "");
+		
+		return retVal;
+	}
+
+    private SMarkElement createSubElements(Schema source, Schema target, int[] numOfAttributes,int numOfJoinAttributes, 
+    		    JoinKind jk, int repetition, SPJQuery pquery, SPJQuery generatedQuery, SMarkElement[] sources)
     {
     	// the local query which will be added to the final pquery
     	SPJQuery query = new SPJQuery();
@@ -112,7 +242,8 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 
         // first we create the source tables and their attributes 
         // that do not participate in the joins.
-        SMarkElement[] tables = new SMarkElement[numOfAttributes.length];
+        SMarkElement[] tables = sources;
+        //SMarkElement[] tables = new SMarkElement[numOfAttributes.length];
         for (int i = 0, imax = tables.length; i < imax; i++)
         {
             String namePrefix = Modules.nameFactory.getARandomName();
@@ -141,6 +272,8 @@ public class MergingScenarioGenerator extends ScenarioGenerator
                 Projection att = new Projection(new Variable("X"+i), attrName);
                 sel.add(attrName, att);
             }
+            
+            generatedQuery.addSource(name);
         }
 
         // The way the algorithm works is by generating the following situation
@@ -229,6 +362,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
                 andCond.add(new EQ(att1,att2));
         	}
         	source.addConstraint(fKeySrc);
+        	source.addConstraint(fKeySrc); // this just makes it consistent with other cases so the printing does not miss one.
         }	
 
         // ********************************************************************
@@ -286,6 +420,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
                 andCond.add(new EQ(att1,att2));
             }
             source.addConstraint(fKeySrc);
+        	source.addConstraint(fKeySrc); // this just makes it consistent with other cases so the printing does not miss one.
        }
 
         query.setSelect(sel);
@@ -293,8 +428,11 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         if(andCond.size() > 0)
         	query.setWhere(andCond);
         SelectClauseList pselect = pquery.getSelect();
+        SelectClauseList gselect = generatedQuery.getSelect();
         pselect.add(nameT, query);
+        gselect.add(nameT, query);
         pquery.setSelect(pselect);
-        
+        generatedQuery.setSelect(gselect);
+        return elTrg;
     }
 }

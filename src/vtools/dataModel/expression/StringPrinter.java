@@ -267,7 +267,7 @@ public class StringPrinter extends VisitorImpl
             expr.accept(this, args);
             if (expr instanceof Query)
                 buf.append(") AS ");
-            buf.append(" "+v.getName() + "ANNOT('${" + i + "}')");
+            buf.append(" "+v.getName() + " ANNOT('${" + i + "}')");
         }
 
         BooleanExpression where = o.getWhere();
