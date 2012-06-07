@@ -1,5 +1,7 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import smark.support.MappingScenario;
@@ -12,6 +14,7 @@ import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.ConstantAtomicValue;
 import vtools.dataModel.expression.EQ;
+import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
@@ -33,6 +36,8 @@ public class FusionScenarioGenerator extends ScenarioGenerator
 
     private final String _stamp = "FU";
 
+    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+    
     public FusionScenarioGenerator()
     {
         ;
@@ -66,27 +71,125 @@ public class FusionScenarioGenerator extends ScenarioGenerator
 
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
-            createSubElements(source, target, i, numOfElements, numOfElementsDeviation, keyWidth,
-                keyWidthDeviation, numOfSetElements, numOfSetElementsDeviation, depth, pquery);
+            SPJQuery generatedQuery = new SPJQuery();
+
+        	// decide the nr. of fragments
+        	int N = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
+            N = (N < 2) ? 2 : N;
+            // generate the fragments in the source schema
+            SMarkElement[] srcRels = new SMarkElement[N];
+            SMarkElement tgtRel = createSubElements(source, target, i, numOfElements, numOfElementsDeviation, keyWidth,
+                keyWidthDeviation, numOfSetElements, numOfSetElementsDeviation, N, depth, pquery, generatedQuery, srcRels);
+
+            setScenario(scenario, generatedQuery, tgtRel, srcRels);
         }
     }
+
+    private Character getAttrSymbol(String attrName) {
+    	if (attrInSymbolList(attrName))
+    		return attrMap.get(attrName);
+    	Character letter = _attributes.charAt(_currAttributeIndex++);
+    	attrMap.put(attrName, letter);
+    	return letter;
+    }
+    
+    private boolean attrInSymbolList(String attrName) {
+    	return attrMap.containsKey(attrName);
+    }
+    
+    private void resetAttrSymbol() {
+    	_currAttributeIndex = 0;
+    	attrMap.clear();
+    }
+
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SMarkElement tgtRel, SMarkElement[] srcRels) {
+		SelectClauseList gselect = generatedQuery.getSelect();
+		HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+		
+		ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
+		HashMap<String, Character> targetAttrSymbols = new HashMap<String , Character>();
+
+		for (int j = 0; j < tgtRel.size(); j++) {
+			Element attr = tgtRel.getSubElement(j);
+			String attrName = attr.getLabel();
+			Character symbol = getAttrSymbol(attrName);
+			targetAttrSymbols.put(attrName, symbol);
+			targetRelAttrs.add(symbol);
+		}
+    	String targetName = tgtRel.getLabel();
+		targetAttrs.put(targetName, targetRelAttrs);
+
+		SPJQuery e = (SPJQuery)(gselect.getTerm(0));
+    	
+		String tKey = scenario.getNextTid();
+		ArrayList<String> mList = new ArrayList<String>();
+		for (int i = 0; i < srcRels.length; i++) {
+			String mKey = scenario.getNextMid(); // Each source relation get a mapping
+			HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
+			ArrayList<String> corrsList = new ArrayList<String>();
+			
+			ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
+			String sourceName = srcRels[i].getLabel();
+
+    		SMarkElement srcRel = srcRels[i];
+        	for (int j = 0; j < srcRels[i].size(); j++) {
+        		String attr = srcRel.getSubElement(j).getLabel();
+        		
+    			String sourceRelAttr = sourceName + "." + attr;
+    			String targetRelAttr = targetName + "." + attr;
+        		sourceRelAttrs.add(getAttrSymbol(attr));
+
+        		String cKey = scenario.getNextCid();
+    			String cVal = sourceRelAttr + "=" + targetRelAttr;
+    			scenario.putCorrespondences(cKey, cVal);
+    			corrsList.add(cKey);
+        	}
+        	sourceAttrs.put(sourceName, sourceRelAttrs);
+    			
+    		mList.add(mKey);
+    		scenario.putTransformation2Mappings(tKey, mList);
+    		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
+    		scenario.putTransformationRelName(tKey, targetName);
+            	
+    		scenario.putMappings2Correspondences(mKey, corrsList);
+            scenario.putMappings2Sources(mKey, sourceAttrs);
+            scenario.putMappings2Targets(mKey, targetAttrs);
+
+		}
+		resetAttrSymbol();
+	}
+	
+	private String getQueryString(SPJQuery origQ, String mKey) {
+		String retVal = origQ.toString();
+		FromClauseList from = origQ.getFrom();
+		for (int i = 0; i < from.size(); i++) {
+			String key = from.getKey(i).toString();
+			String relAlias = key.replace("$", "");
+			retVal = retVal.replace(key+"/", relAlias+".");
+			retVal = retVal.replace("${" + i + "}", mKey);
+		}
+		retVal = retVal.replaceAll("/", "");
+		
+		return retVal;
+	}
 
     // There are at most 2 levels. At each level, there will be E elements.
     // From these elements , K will be forming a key (KE),
     // F will be free elements (FE) and S will be nested set elements (NE).
     // Theoretically K + F + S = E
     // K>=1, N>=2, hence, E>=3. If E< K+N, then E becomes = K + N
-    private void createSubElements(Schema source, Schema target, int repetition, int numOfElements, 
+    private SMarkElement createSubElements(Schema source, Schema target, int repetition, int numOfElements, 
     		     int numOfElementsDeviation, int keyWidth,int keyWidthDeviation, int numOfSetElements, 
-    		     int numOfSetElementsDeviation, int depth, SPJQuery pquery)
+    		     int numOfSetElementsDeviation, int numOfFragments, int depth, SPJQuery pquery, 
+    		     SPJQuery generatedQuery, SMarkElement[] srcTbls)
     {   
-    	// decide the nr. of fragments
-    	int N = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
-        N = (N < 2) ? 2 : N;
-        // generate the fragments in the source schema
-        SMarkElement[] srcTbls = new SMarkElement[N];
-        String[] fragNames = new String[N];
-        for (int k = 0; k < N; k++)
+//    	// decide the nr. of fragments
+//    	int N = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
+//        N = (N < 2) ? 2 : N;
+//        // generate the fragments in the source schema
+//        SMarkElement[] srcTbls = new SMarkElement[N];
+        String[] fragNames = new String[numOfFragments];
+        for (int k = 0; k < numOfFragments; k++)
         {
             String randomName = Modules.nameFactory.getARandomName();
             String elName = randomName + "_" + _stamp + repetition + "NE" + k;
@@ -120,8 +223,8 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         // Also, we create the key constraint for the source and target schema.
         String[] keyAttr = new String[K];
         // array with the keys for each fragment in the source
-        Key[] keyS = new Key[N];
-        for (int k = 0; k < N; k++)
+        Key[] keyS = new Key[numOfFragments];
+        for (int k = 0; k < numOfFragments; k++)
         {
             keyS[k] = new Key();
             keyS[k].addLeftTerm(new Variable("X"), new Projection(Path.ROOT,srcTbls[k].getLabel()));
@@ -135,7 +238,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         {
             randomName = Modules.nameFactory.getARandomName();
             String keyName = randomName + "_" + _stamp + repetition + "KE" + i;
-            for (int k = 0; k < N; k++)
+            for (int k = 0; k < numOfFragments; k++)
             {
                 SMarkElement e = new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
                 e.setHook(new String(_stamp + repetition + "KE" + i));
@@ -151,7 +254,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
             
             keyAttr[i] = keyName;
         }
-        for (int k = 0; k < N; k++)
+        for (int k = 0; k < numOfFragments; k++)
                 source.addConstraint(keyS[k]);
         target.addConstraint(keyT);
         
@@ -159,8 +262,8 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         // different free elements.
         // All the free elements from all the source fragments will be copied in
         // the target source.
-        String[][] freeAttr = new String[N][F];
-        for (int k = 0; k < N; k++)
+        String[][] freeAttr = new String[numOfFragments][F];
+        for (int k = 0; k < numOfFragments; k++)
             for (int i = 0; i < F; i++)
             {
             	randomName = Modules.nameFactory.getARandomName();
@@ -177,8 +280,8 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         // create the Fquery that is the union of all the attributes (keys and
         // non-keys)
         // from each fragment of the source
-        SPJQuery[] Uquery = new SPJQuery[N];
-        for(int k=0; k<N; k++) 
+        SPJQuery[] Uquery = new SPJQuery[numOfFragments];
+        for(int k=0; k<numOfFragments; k++) 
         {
         	Uquery[k] = new SPJQuery();
         	// add each fragment to the from clause
@@ -198,7 +301,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
             // the
         	// select clause.
         	// given a fragment, use NULL for each missing global free element
-        	for(int i= 0; i<N; i++)
+        	for(int i= 0; i<numOfFragments; i++)
         		if (i==k){
         			for(int j=0; j<F; j++){
         			    att = new Projection(var.clone(), freeAttr[k][j]);
@@ -213,7 +316,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         	Uquery[k].setSelect(select);
         }
         Union Fquery = new Union();
-        for(int k=0; k<N; k++)
+        for(int k=0; k<numOfFragments; k++)
         {
         	Fquery.add(Uquery[k]);
         }
@@ -241,7 +344,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
             select.add(keyAttr[i], att);
         }
         // add the non-key attributes of Fquery as MAX(attribute)
-        for(int i=0; i<N; i++)
+        for(int i=0; i<numOfFragments; i++)
         	for(int j=0; j<F; j++)
         	{
         	    att =  new Projection(var.clone(), freeAttr[i][j]);
@@ -285,10 +388,10 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         }
         // generate the names of the free attributes. All the free attributes
         // are different no matter in which set/fragment they appear.
-        String[][][] setFreeAttr = new String[N][S][];
+        String[][][] setFreeAttr = new String[numOfFragments][S][];
         for (int i = 0; i < S; i++)
         {	
-        	for (int j=0; j<N; j++)
+        	for (int j=0; j<numOfFragments; j++)
         	{	
         		int ES = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
             	int KS = setKeyAttr[i].length;
@@ -304,11 +407,11 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         }	
         // generate the matrix that keeps track of which set appears in which
         // fragment
-        boolean[][]  setUse = new boolean[N][S];
+        boolean[][]  setUse = new boolean[numOfFragments][S];
         for (int i = 0; i < S; i++)	
         {
             int appearances = 0;
-        	for (int j = 0; j<N; j++)
+        	for (int j = 0; j<numOfFragments; j++)
         	{
         		setUse[j][i] = _generator.nextBoolean();
         		if (setUse[j][i]) appearances++;
@@ -317,7 +420,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
             // one fragment randomly
         	if (appearances == 0)
         	{
-        	    int pos = _generator.nextInt(N);
+        	    int pos = _generator.nextInt(numOfFragments);
         	    setUse[pos][i] = true;
         	}
         }
@@ -325,9 +428,9 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         // also, we add the key constraints in the source.
         int[] t = new int[S];
         // matrix with the keys for each subset in each fragment of the source
-        Key[][] keySS = new Key[N][S];
+        Key[][] keySS = new Key[numOfFragments][S];
         for (int i = 0; i < S; i++)
-            for (int j = 0; j < N; j++)
+            for (int j = 0; j < numOfFragments; j++)
             {
                 if (setUse[j][i] == false) continue;
                 keySS[j][i] = new Key();
@@ -339,7 +442,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < S; i++)
         {	
         	t[i] = 0;
-        	for (int j = 0; j<N; j++)
+        	for (int j = 0; j<numOfFragments; j++)
         	{
         		if (setUse[j][i] == false) continue;
         		t[i] = 1;
@@ -365,7 +468,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         	}
         }
         for (int i = 0; i < S; i++)
-            for (int j = 0; j < N; j++)
+            for (int j = 0; j < numOfFragments; j++)
             {
                 if (setUse[j][i] == false) continue;
                 source.addConstraint(keySS[j][i]);
@@ -402,7 +505,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
     			// add the key attribute to the target
     			keyTS[i].addKeyAttr(new Projection(new Variable("Y"), setKeyAttr[i][k]));
     		}
-        	for (int j = 0; j<N; j++)
+        	for (int j = 0; j<numOfFragments; j++)
         		for (int k = 0, FS = setFreeAttr[j][i].length; k < FS; k++){
         			if (setUse[j][i] == false) continue;
         			SMarkElement e = new SMarkElement(setFreeAttr[j][i][k], Atomic.STRING, null, 0, 0);
@@ -427,10 +530,10 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         	// *********************************************************
         	// create the union query (i.e keys and non-keys elem) of set ith
         	// from each fragment in which it appears
-        	SPJQuery[] Uiquery = new SPJQuery[N];
+        	SPJQuery[] Uiquery = new SPJQuery[numOfFragments];
         	Variable var1 = new Variable("P");
             Variable var2 = new Variable("S");
-        	for(int j=0; j<N; j++)
+        	for(int j=0; j<numOfFragments; j++)
         	{
         		if (setUse[j][i] == false) { 
         			 Uiquery[j] = null;
@@ -454,7 +557,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
                 // be added it to the
             	// select clause. Given the occurrence of set i in a fragment,
         		// use NULL for each missing global free element
-            	for(int f= 0; f<N; f++)
+            	for(int f= 0; f<numOfFragments; f++)
             	{
             		if (setUse[f][i] == false)  continue;
             		if (f==j){
@@ -482,7 +585,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
             	Uiquery[j].setWhere(andCond);
         	}	
         	Union Squery = new Union();
-            for(int j=0; j<N; j++)
+            for(int j=0; j<numOfFragments; j++)
             {
             	if (Uiquery[j] == null) continue;
             	Squery.add(Uiquery[j]);
@@ -511,7 +614,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
                 s.add(setKeyAttr[i][k], atts);
             }
             // add the non-key attributes of Squery as MAX(attribute)
-            for(int f= 0; f<N; f++)
+            for(int f= 0; f<numOfFragments; f++)
             {	
             	if (setUse[f][i] == false)  continue;
             	for(int k=0, FS=setFreeAttr[f][i].length; k<FS; k++)
@@ -530,6 +633,10 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         query.setSelect(select);
         // the final query will be returned to the main method
         SelectClauseList pselect = pquery.getSelect();
+        SelectClauseList gselect = generatedQuery.getSelect();
         pselect.add(elTrgName, query);
+        gselect.add(elTrgName, query);
+        
+        return trgTbl;
     }
 }

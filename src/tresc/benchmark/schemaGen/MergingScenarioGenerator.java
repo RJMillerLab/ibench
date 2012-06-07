@@ -3,8 +3,6 @@ package tresc.benchmark.schemaGen;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Vector;
-import java.util.regex.Pattern;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -14,14 +12,11 @@ import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
-import vtools.dataModel.expression.BooleanExpression;
 import vtools.dataModel.expression.EQ;
-import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.ForeignKey;
 import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
-import vtools.dataModel.expression.Rule;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -101,7 +96,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
             SMarkElement[] srcRels = new SMarkElement[numOfAttributes.length];
             SMarkElement tgtRel = createSubElements(source, target, numOfAttributes, numOfJoinAttributes, jk, i, pquery, generatedQuery, srcRels);
             
-            setScenario(scenario, generatedQuery, pquery, tgtRel, srcRels);
+            setScenario(scenario, generatedQuery, tgtRel, srcRels);
         }
    }
 
@@ -122,7 +117,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
     	attrMap.clear();
     }
 
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement tgtRel, SMarkElement[] srcRels) {
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SMarkElement tgtRel, SMarkElement[] srcRels) {
 		SelectClauseList gselect = generatedQuery.getSelect();
 		HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
 		HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
@@ -145,9 +140,6 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		targetAttrs.put(targetName, targetRelAttrs);
 
 		SPJQuery e = (SPJQuery)(gselect.getTerm(0));
-    	FromClauseList fcl = e.getFrom();
-    	SelectClauseList scl = e.getSelect();
-    	String[] sclArray = scl.toString().split(",");
     	String[] whereArray = e.getWhere().toString().split("AND");
     	
     	// 2-way hashmap of the where clauses
