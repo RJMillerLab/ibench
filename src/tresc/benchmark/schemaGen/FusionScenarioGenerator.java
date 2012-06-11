@@ -9,6 +9,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -46,29 +47,10 @@ public class FusionScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
-        // generate the generator based on the seed
-        // long seed =
-        // configuration.getScenarioSeeds(Constants.ScenarioName.FUSION.ordinal());
-        // _generator = (seed == 0) ? new Random() : new Random(seed);
-
-        _generator = configuration.getRandomGenerator();
-
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.FUSION.ordinal());
+    	init(configuration, scenario);
         // first decide the nesting depth
-        int nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
-        int nestingDeviation = configuration.getDeviation(Constants.ParameterName.NestingDepth);
         int depth = Utils.getRandomNumberAroundSomething(_generator, nesting, nestingDeviation);
         // Find the parameters affecting the structure of the elements created
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int keyWidth = configuration.getParam(Constants.ParameterName.NumOfJoinAttributes);
-        int keyWidthDeviation = configuration.getDeviation(Constants.ParameterName.NumOfJoinAttributes);
-        int numOfSetElements = configuration.getParam(Constants.ParameterName.JoinSize);
-        int numOfSetElementsDeviation = configuration.getDeviation(Constants.ParameterName.JoinSize);
 
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
@@ -162,17 +144,6 @@ public class FusionScenarioGenerator extends ScenarioGenerator
 	
 	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
 		return origQ.toTrampStringOneMap(mKey);
-//		String retVal = origQ.toString();
-//		FromClauseList from = origQ.getFrom();
-//		for (int i = 0; i < from.size(); i++) {
-//			String key = from.getKey(i).toString();
-//			String relAlias = key.replace("$", "");
-//			retVal = retVal.replace(key+"/", relAlias+".");
-//			retVal = retVal.replace("${" + i + "}", mKey);
-//		}
-//		retVal = retVal.replaceAll("/", "");
-//		
-//		return retVal;
 	}
 
     // There are at most 2 levels. At each level, there will be E elements.
@@ -641,4 +612,27 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         
         return trgTbl;
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.FUSION;
+	}
 }

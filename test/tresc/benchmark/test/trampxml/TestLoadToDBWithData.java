@@ -132,9 +132,9 @@ public class TestLoadToDBWithData {
 			if (toDB) {
 				Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
 				if (withData)
-					DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
-				else
 					DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
+				else
+					DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
 				dbCon.close();
 			}
 		}

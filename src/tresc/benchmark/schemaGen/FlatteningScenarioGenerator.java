@@ -6,6 +6,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -21,7 +22,6 @@ import vtools.dataModel.types.Set;
 
 public class FlatteningScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
 
     private final String _stamp = "FL";
 
@@ -41,20 +41,8 @@ public class FlatteningScenarioGenerator extends ScenarioGenerator
      */
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
-        _generator = configuration.getRandomGenerator();
-
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.FLATTENING.ordinal());
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int numOfSetElements = configuration.getParam(Constants.ParameterName.JoinSize);
-        int numOfSetElementsDeviation = configuration.getDeviation(Constants.ParameterName.JoinSize);
-        int nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
-        int nestingDeviation = configuration.getDeviation(Constants.ParameterName.NestingDepth);
-
+    	init(configuration, scenario);
+    	
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             _atElCounter = 0;
@@ -175,4 +163,27 @@ public class FlatteningScenarioGenerator extends ScenarioGenerator
                 nestingDeviation, query, newVarParent);
         }
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.FLATTENING;
+	}
 }

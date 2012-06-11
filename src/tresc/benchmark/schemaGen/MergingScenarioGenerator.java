@@ -9,6 +9,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
@@ -39,42 +40,27 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
+    	init(configuration, scenario);
         // generate the generator based on the seed
         //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.MERGING.ordinal());
         //_generator = (seed == 0) ? new Random() : new Random(seed);
 
-    	_generator=configuration.getRandomGenerator();
-    	
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-
-        // first let's read the parameters
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.MERGING.ordinal());
-        // How many elements to have in each table
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
         // how many tables to have
-        int numOfFragments = configuration.getParam(Constants.ParameterName.JoinSize);
-        int numOfFragmentsDeviation = configuration.getDeviation(Constants.ParameterName.JoinSize);
         // whether we do star or chain joins
-        int joinKind = configuration.getParam(Constants.ParameterName.JoinKind);
         // int joinKindDeviation =
         // configuration.getDeviation(Constants.ParameterName.JoinKind);
         // how many attributes to be used in the joins.
-        int joinWidth = configuration.getParam(Constants.ParameterName.NumOfJoinAttributes);
-        int joinWidthDeviation = configuration.getDeviation(Constants.ParameterName.NumOfJoinAttributes);
         
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             SPJQuery generatedQuery = new SPJQuery();
 
             // number of tables we will use
-            int numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfFragments,
-                numOfFragmentsDeviation);
+            int numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+                numOfSetElementsDeviation);
             // number of attributes we will use in the joins
-            int numOfJoinAttributes = Utils.getRandomNumberAroundSomething(_generator, joinWidth,
-                joinWidthDeviation);
+            int numOfJoinAttributes = Utils.getRandomNumberAroundSomething(_generator, keyWidth,
+                keyWidthDeviation);
             // decide the kind of join we will follow.
             JoinKind jk = JoinKind.values()[joinKind];
             if (jk == JoinKind.VARIABLE)
@@ -428,4 +414,27 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         generatedQuery.setSelect(gselect);
         return elTrg;
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.MERGING;
+	}
 }

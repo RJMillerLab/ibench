@@ -9,6 +9,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.ForeignKey;
@@ -34,8 +35,6 @@ public class GLAVScenarioGenerator extends ScenarioGenerator
 
     private final GLAVScenarioMappingGenerator mapGenerator = new GLAVScenarioMappingGenerator();
 
-    private Random _generator;
-
     private EqClassManager eqClassMgr;
 
     public static final String _stamp = "GL";
@@ -47,19 +46,8 @@ public class GLAVScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
-        // generate the generator based on the seed
-        // long seed =
-        // configuration.getScenarioSeeds(Constants.ScenarioName.GLAV.ordinal());
-        // seed = (seed == 0) ? System.currentTimeMillis() : seed;
-        // _generator = new Random(seed);
-
-        _generator = configuration.getRandomGenerator();
-
-        // _generator = (seed == 0) ? new Random() : new Random(seed);
-        // System.out.println("Seed Used:" + seed);
-
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.GLAV.ordinal());
-        for (int i = 0, imax = repetitions; i < imax; i++)
+    	init(configuration, scenario);
+    	for (int i = 0, imax = repetitions; i < imax; i++)
         {
             createGLAVcase(scenario, configuration, i);
         }
@@ -153,4 +141,27 @@ public class GLAVScenarioGenerator extends ScenarioGenerator
         }
         mapQuery.setSelect(sel);
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.GLAV;
+	}
 }

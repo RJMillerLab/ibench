@@ -7,6 +7,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
@@ -34,28 +35,12 @@ public class NestingScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
+    	init(configuration, scenario);
         // generate the generator based on the seed
         //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.NESTING.ordinal());
         //_generator = (seed == 0) ? new Random() : new Random(seed);
 
-    	_generator=configuration.getRandomGenerator();
-    	
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-        
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.NESTING.ordinal());
-
-        // first decide the nesting depth that we will go
-        int nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
-        int nestingDeviation = configuration.getDeviation(Constants.ParameterName.NestingDepth);
-        int depth = Utils.getRandomNumberAroundSomething(_generator, nesting, nestingDeviation);
-
-        // Find the parameters affecting the structure of the elements created
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int keyWidth = configuration.getParam(Constants.ParameterName.NumOfJoinAttributes);
-        int keyWidthDeviation = configuration.getDeviation(Constants.ParameterName.NumOfJoinAttributes);
+    	int depth = Utils.getRandomNumberAroundSomething(_generator, nesting, nestingDeviation);
 
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
@@ -170,4 +155,27 @@ public class NestingScenarioGenerator extends ScenarioGenerator
         query.setSelect(sel);
 
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.NESTING;
+	}
 }

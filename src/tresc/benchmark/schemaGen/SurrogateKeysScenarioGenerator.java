@@ -9,6 +9,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -29,8 +30,6 @@ import vtools.dataModel.values.StringValue;
 
 public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
-
     private final String _stamp = "SK";
 
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
@@ -42,23 +41,10 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
-        // generate the generator based on the seed
-        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.SURROGATEKEY.ordinal());
-        //_generator = (seed == 0) ? new Random() : new Random(seed);
-    	
-    	_generator=configuration.getRandomGenerator();
-    	
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
+    	init(configuration, scenario);
+        
         SPJQuery generatedQuery = new SPJQuery();
         
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.SURROGATEKEY.ordinal());
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int numOfParams = configuration.getParam(Constants.ParameterName.NumOfParamsInFunctions);
-        int numOfParamsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfParamsInFunctions);
-
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             int elements = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
@@ -241,4 +227,27 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         pselect.add(targetParent.getLabel(), query);
         pquery.setSelect(pselect);
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.SURROGATEKEY;
+	}
 }

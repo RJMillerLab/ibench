@@ -6,6 +6,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -22,8 +23,6 @@ import vtools.dataModel.types.Set;
 
 public class ValueManagementScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
-
     private final String _stamp = "VM";
 
     public ValueManagementScenarioGenerator()
@@ -34,26 +33,13 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
-        // generate the generator based on the seed
-        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.VALUEMANAGEMENT.ordinal());
-        //_generator = (seed == 0) ? new Random() : new Random(seed);
-
-        _generator=configuration.getRandomGenerator();
+    	init(configuration, scenario);
         
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.VALUEMANAGEMENT.ordinal());
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int numOfArguments = configuration.getParam(Constants.ParameterName.NumOfParamsInFunctions);
-        int numOfArgumentsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfParamsInFunctions);
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             int numOfSubElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
-            createSubElements(source, target, numOfSubElements, i, numOfArguments, numOfArgumentsDeviation, pquery);
+            createSubElements(source, target, numOfSubElements, i, numOfParams, numOfParamsDeviation, pquery);
         }
 
     }
@@ -149,4 +135,31 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
         pselect.add(randomNameTrg, query);
         pquery.setSelect(pselect);
     }
+
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.VALUEMANAGEMENT;
+	}
 }

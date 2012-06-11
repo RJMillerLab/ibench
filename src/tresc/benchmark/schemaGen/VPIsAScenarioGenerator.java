@@ -6,6 +6,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
@@ -35,23 +36,9 @@ public class VPIsAScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
-        _generator = configuration.getRandomGenerator();
-
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-
-        // first let's read the parameters
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.VERTPARTITIONISA.ordinal());
-        // How many elements to have in each table
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        // how many tables to have
-        int numOfFragments = configuration.getParam(Constants.ParameterName.JoinSize);
-        int numOfFragmentsDeviation = configuration.getDeviation(Constants.ParameterName.JoinSize);
+    	init(configuration, scenario);
+       
         // whether we do star of chain joins
-        int joinKind = configuration.getParam(Constants.ParameterName.JoinKind);
-
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             // decide how many attributes will the source table have
@@ -59,8 +46,8 @@ public class VPIsAScenarioGenerator extends ScenarioGenerator
                 numOfElementsDeviation);
 
             // number of tables we will use in the target
-            int numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfFragments,
-                numOfFragmentsDeviation);
+            int numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+                numOfSetElementsDeviation);
 
             // decide the kind of join we will follow.
             JoinKind jk = JoinKind.values()[joinKind];
@@ -273,4 +260,27 @@ public class VPIsAScenarioGenerator extends ScenarioGenerator
         }
         pquery.setSelect(pselect);
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.VERTPARTITIONISA;
+	}
 }

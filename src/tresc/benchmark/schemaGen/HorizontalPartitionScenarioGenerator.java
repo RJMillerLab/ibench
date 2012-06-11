@@ -9,6 +9,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -28,8 +29,6 @@ import vtools.dataModel.expression.LE;
 
 public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
-
     private final String _stamp = "HP";
 
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
@@ -39,27 +38,14 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
-        // generate the generator based on the seed
-        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.HORIZPARTITION.ordinal());
-        //_generator = (seed == 0) ? new Random() : new Random(seed);
-
-    	_generator=configuration.getRandomGenerator();
-    	
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
+    	init(configuration, scenario);
         SPJQuery generatedQuery = new SPJQuery();
 
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.HORIZPARTITION.ordinal());
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int joinSize = configuration.getParam(Constants.ParameterName.JoinSize);
-        int joinSizeDeviation = configuration.getDeviation(Constants.ParameterName.JoinSize);
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             int randomElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
-            int randomFragments = Utils.getRandomNumberAroundSomething(_generator, joinSize, joinSizeDeviation);
+            int randomFragments = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
             createHorizPartitionCase(source, target, randomElements, randomFragments, i, pquery, generatedQuery);
         }
         
@@ -130,19 +116,6 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 	
 	private String getQueryString(SPJQuery origQ, List<String> mKeys) throws Exception {
 		return origQ.toTrampString(mKeys.toArray(new String[] {}));
-//		String retVal = origQ.toString();
-//		FromClauseList from = origQ.getFrom();
-//		for (int i = 0; i < from.size(); i++) {
-//			String key = from.getKey(i).toString();
-//			String relName = from.getValue(i).toString();
-//			String mKey = mKeys.get(i);
-//			relName = relName.substring(1)+"."; // remove the first "/"
-//			retVal = retVal.replace(key, relName).replace("/", "");
-//			retVal = retVal.replace(key.substring(1), "");
-//			retVal = retVal.replace("${" + i + "}", mKey);
-//		}
-//		
-//		return retVal;
 	}
 
     //
@@ -236,4 +209,27 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
         	generatedQuery.addTarget(fragments[i].getLabel());
         }
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.HORIZPARTITION;
+	}
 }

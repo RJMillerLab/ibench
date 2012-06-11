@@ -10,6 +10,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -26,8 +27,6 @@ import vtools.dataModel.values.StringValue;
 
 public class ValueGenerationScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
-
     private final String _stamp = "VG";
 
     public ValueGenerationScenarioGenerator()
@@ -37,27 +36,13 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
-        // generate the generator based on the seed
-        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.VALUEGEN.ordinal());
-        //_generator = (seed == 0) ? new Random() : new Random(seed);
-    	
-    	_generator=configuration.getRandomGenerator();
-
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
+    	init(configuration, scenario);
         SPJQuery generatedQuery = new SPJQuery();
 
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.VALUEGEN.ordinal());
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
         for (int i = 0, imax = repetitions; i < imax; i++)
-        {
-            createSubElements(source, target, numOfElements, numOfElementsDeviation, i, pquery, generatedQuery);
-        }
+        	createSubElements(source, target, numOfElements, numOfElementsDeviation, i, pquery, generatedQuery);
         
         setScenario(scenario, generatedQuery);
-
     }
     
     private void setScenario(MappingScenario scenario, SPJQuery gquery) {
@@ -150,4 +135,27 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator
         pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
     }
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.VALUEGEN;
+	}
 }

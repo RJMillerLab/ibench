@@ -14,6 +14,7 @@ import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Expression;
@@ -44,29 +45,14 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 
 	public void generateScenario(MappingScenario scenario,
 			Configuration configuration) throws Exception {
-		_generator = configuration.getRandomGenerator();
-
-		Schema source = scenario.getSource();
-		Schema target = scenario.getTarget();
-		SPJQuery pquery = scenario.getTransformation();
-
-		int repetitions = configuration
-						.getScenarioRepetitions(Constants.ScenarioName.COPY
-								.ordinal());
-		int numOfElements = configuration
-						.getParam(Constants.ParameterName.NumOfSubElements);
-		int numOfElementsDeviation = configuration
-						.getDeviation(Constants.ParameterName.NumOfSubElements);
-		int nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
-		int nestingDeviation = configuration
-						.getDeviation(Constants.ParameterName.NestingDepth);
+		init(configuration, scenario);
 
 		SelectClauseList pselect = new SelectClauseList();
-		for (int i = 0, imax = repetitions; i < imax; i++) {
+		for (int i = 0, imax = getRepetitions(); i < imax; i++) {
 			SPJQuery lquery = new SPJQuery();
 			int randomNesting =
 					Utils.getRandomNumberAroundSomething(_generator, nesting,
-							nestingDeviation);
+							getNestingDeviation());
 			createSubElements(source, target, 0, randomNesting, i,
 					numOfElements, numOfElementsDeviation, lquery);
 			// each local query will be added to the transformation query
@@ -270,5 +256,28 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 				targetParent.addSubElement(et);
 			}
 		}
+	}
+
+	@Override
+	protected void genMapsAndTrans() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genSourceRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTargetRels() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScenarioName getScenType() {
+		return ScenarioName.COPY;
 	}
 }

@@ -52,6 +52,8 @@ public class MappingScenario
     				= new HashMap<String, String>(); // <tid, code>
     private HashMap<String, String> _transformationRelName 
     				= new HashMap<String, String>(); // <tid, relName>
+    private Map<String, PartialMapping> _basicScens = 
+    				new HashMap<String, PartialMapping> ();
     private int _cid = 0; // correspondence id
     private int _mid = 0; // mapping id
     private int _tid = 0; // transformation id
@@ -367,6 +369,20 @@ public class MappingScenario
 	public void setDocFac(TrampModelFactory docFac, Configuration conf) {
 		this.docFac = docFac;
 		docFac.initAllElem(conf);
+	}
+
+
+	public Map<String, PartialMapping> get_basicScens() {
+		return _basicScens;
+	}
+
+
+	public void set_basicScens(Map<String, PartialMapping> _basicScens) {
+		this._basicScens = _basicScens;
+	}
+	
+	public void addBasicScen (String key, PartialMapping p) {
+		_basicScens.put(key, p);
 	}
     
     

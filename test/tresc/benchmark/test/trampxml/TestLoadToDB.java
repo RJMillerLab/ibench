@@ -129,7 +129,7 @@ public class TestLoadToDB {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
 			if (toDB) {
 				Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-				if (withData)
+				if (!withData)
 					DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
 				else
 					DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
