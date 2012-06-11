@@ -2,6 +2,7 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import smark.support.MappingScenario;
@@ -38,7 +39,7 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
         // generate the generator based on the seed
         // long seed =
@@ -96,10 +97,10 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
     	attrMap.clear();
     }
 
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement srcRel) {
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement srcRel) throws Exception {
 		SelectClauseList gselect = generatedQuery.getSelect();
-		HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
-		HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
+		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
 		
 		String mKey = scenario.getNextMid();
 
@@ -155,18 +156,19 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
 		resetAttrLetters();
 	}
 	
-	private String getQueryString(SPJQuery origQ, String mKey) {
-		String retVal = origQ.toString();
-		FromClauseList from = origQ.getFrom();
-		for (int i = 0; i < from.size(); i++) {
-			String key = from.getKey(i).toString();
-			String relAlias = key.replace("$", "");
-			retVal = retVal.replace(key+"/", relAlias+".");
-			retVal = retVal.replace("${" + i + "}", mKey);
-		}
-		retVal = retVal.replaceAll("/", "");
-		
-		return retVal;
+	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
+		return origQ.toTrampStringOneMap(mKey);
+//		String retVal = origQ.toString();
+//		FromClauseList from = origQ.getFrom();
+//		for (int i = 0; i < from.size(); i++) {
+//			String key = from.getKey(i).toString();
+//			String relAlias = key.replace("$", "");
+//			retVal = retVal.replace(key+"/", relAlias+".");
+//			retVal = retVal.replace("${" + i + "}", mKey);
+//		}
+//		retVal = retVal.replaceAll("/", "");
+//		
+//		return retVal;
 	}
 
     // the Source schema has one table with E number of elements, from which K

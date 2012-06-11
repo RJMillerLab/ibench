@@ -2,6 +2,7 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import smark.support.MappingScenario;
@@ -119,8 +120,8 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 
 	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SMarkElement tgtRel, SMarkElement[] srcRels) {
 		SelectClauseList gselect = generatedQuery.getSelect();
-		HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
-		HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
+		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
 		
 		String mKey = scenario.getNextMid();
 
@@ -156,7 +157,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
     	
 		String tKey = scenario.getNextTid();
 		for (int i = 0; i < srcRels.length; i++) {
-			ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
+			List<Character> sourceRelAttrs = new ArrayList<Character>();
 			String sourceName = srcRels[i].getLabel();
 
     		SMarkElement srcRel = srcRels[i];

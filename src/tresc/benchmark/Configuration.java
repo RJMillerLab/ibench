@@ -366,6 +366,14 @@ public class Configuration {
 	public int getScenarioRepetitions(int scenario) {
 		return _repetitions[scenario];
 	}
+	
+	public void setScenarioRepetitions(ScenarioName n, int value) {
+		setScenarioRepetitions(n.ordinal(), value);
+	}
+	
+	public void setScenarioRepetitions(int scenario, int value) {
+		_repetitions[scenario] = value;
+	}
 
 	public boolean getOutputOption(OutputOption o) {
 		return _outputOpts[o.ordinal()];

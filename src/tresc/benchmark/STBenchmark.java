@@ -217,6 +217,11 @@ public class STBenchmark {
 		}
 	}
 	
+	public void runConfig (Configuration conf) throws Exception {
+		this._configuration = conf;
+		runConfig();
+	}
+	
 	public void runConfig() throws Exception {
 		Modules.scenarioGenerator = new Generator(_configuration);
 		MappingScenario scenario =

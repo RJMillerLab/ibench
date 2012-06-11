@@ -1,6 +1,9 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import smark.support.MappingScenario;
@@ -11,6 +14,7 @@ import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
 import vtools.dataModel.expression.ConstantAtomicValue;
+import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
@@ -61,11 +65,35 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator
     	
 		for (int i = 0; i < scl.size(); i++) {
 			String tKey = scenario.getNextTid();
+			String mKey = scenario.getNextMid();
 			String targetName = scl.getTermName(i);
+			SelectClauseList atts = ((SPJQuery) scl.getTerm(i)).getSelect();
 			
-			scenario.putTransformation2Mappings(tKey, null);
+			HashMap<String, List<Character>> targetAttrs = new HashMap<String , List<Character>> ();
+			targetAttrs.put(targetName, new ArrayList<Character> ());
+			for(int j = 0; j < atts.size(); j++) {
+				char attr = (char) ('a' + j);
+				targetAttrs.get(targetName).add(attr);
+			}
+//			sourceName = target.get fcl.getValue(j).toString().substring(1);
+//			targetName = sourceName + "Copy";
+//			String[] sclArray = scl.toString().split(",");
+//			for (int k = 0; k < sclArray.length; k++) {
+//				String attr = sclArray[k];
+//				attr = attr.replaceFirst("\\" + key + "/", "").trim();
+//				attrs.add(attr);
+//				attrLists.add(getAttrLetter(attr));
+//				//
+//			}
+//			targetAttrs.put(targetName, attrLists);
+			
+			
+			scenario.putTransformation2Mappings(tKey, Collections.singletonList(mKey));
 			scenario.putTransformationCode(tKey, getQueryString(scl.getValue(i).toString()));
 			scenario.putTransformationRelName(tKey, targetName);
+			scenario.putMappings2Correspondences(mKey, null);
+			scenario.putMappings2Sources(mKey, null);
+			scenario.putMappings2Targets(mKey, targetAttrs);
 		}
    }
     

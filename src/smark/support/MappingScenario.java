@@ -1,10 +1,17 @@
 package smark.support;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.vagabond.benchmark.model.TrampModelFactory;
+import org.vagabond.benchmark.model.TrampXMLModel;
+import org.vagabond.benchmark.model.UniqueIdGen;
+import org.vagabond.xmlmodel.MappingScenarioDocument;
+
+import tresc.benchmark.Configuration;
 import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
@@ -20,6 +27,7 @@ import vtools.dataModel.schema.Schema;
 /**
  * A mapping scenario is a triplet that consists of a source schema, a target
  * schema, and some specification on how to map from the source to the target.
+ * Now we also include the Java model for a Tramp-style mapping scenario XML file.
  */
 public class MappingScenario
 {
@@ -32,14 +40,14 @@ public class MappingScenario
     private HashMap<String, String> _correspondences 
     				= new HashMap<String, String>(); // <cid, source.attr=target.attr>
     
-    private HashMap<String, ArrayList<String>> _mappings2Correspondences 
-    				= new HashMap<String, ArrayList<String>>(); // <mid, <c1, c2, ... >>
-    private HashMap<String, HashMap<String, ArrayList<Character>>> _mappings2Sources
-    				= new HashMap<String, HashMap<String, ArrayList<Character>>>(); 	// <mid, <relName, <attr1, attr2, ... >>>
-    private HashMap<String, HashMap<String, ArrayList<Character>>> _mappings2Targets
-    				= new HashMap<String, HashMap<String, ArrayList<Character>>>(); 	// <mid, <relName, <attr1, attr2, ... >>>
-    private HashMap<String, ArrayList<String>> _transformation2Mappings 
-    				= new HashMap<String, ArrayList<String>>(); // <tid, <mid1, mid2, ...>>
+    private HashMap<String, List<String>> _mappings2Correspondences 
+    				= new HashMap<String, List<String>>(); // <mid, <c1, c2, ... >>
+    private HashMap<String, HashMap<String, List<Character>>> _mappings2Sources
+    				= new HashMap<String, HashMap<String, List<Character>>>(); 	// <mid, <relName, <attr1, attr2, ... >>>
+    private HashMap<String, HashMap<String, List<Character>>> _mappings2Targets
+    				= new HashMap<String, HashMap<String, List<Character>>>(); 	// <mid, <relName, <attr1, attr2, ... >>>
+    private HashMap<String, List<String>> _transformation2Mappings 
+    				= new HashMap<String, List<String>>(); // <tid, <mid1, mid2, ...>>
     private HashMap<String, String> _transformationCode 
     				= new HashMap<String, String>(); // <tid, code>
     private HashMap<String, String> _transformationRelName 
@@ -48,19 +56,34 @@ public class MappingScenario
     private int _mid = 0; // mapping id
     private int _tid = 0; // transformation id
     private int _sk = 0;
-    
+    private TrampXMLModel _doc;
     // this is a set of strings that describe how the mapping will be done.
     private Vector<String> _spec;
-
-    public MappingScenario()
+    private TrampModelFactory docFac;
+    
+    public MappingScenario(Configuration conf)
     {
+        _doc = new TrampXMLModel();
+        init();
+        setDocFac(new TrampModelFactory(_doc), conf);
+    }
+    
+    
+	public MappingScenario (TrampXMLModel doc) {
+    	this._doc = doc;
+    	init();
+    	setDocFac(new TrampModelFactory(_doc));
+    }
+	
+	private void init () {
         _source = new Schema("Source");
         _target = new Schema("Target");
         _transformation = new SPJQuery();
         _spec = new Vector<String>();
-    }
+	}
 
-    public Schema getSource()
+
+	public Schema getSource()
     {
         return _source;
     }
@@ -74,19 +97,19 @@ public class MappingScenario
     	return _correspondences;
     }
     
-    public HashMap<String, ArrayList<String>> getMappings2Correspondences() {
+    public HashMap<String, List<String>> getMappings2Correspondences() {
     	return _mappings2Correspondences;
     }
     
-    public HashMap<String, HashMap<String, ArrayList<Character>>> getMappings2Sources() {
+    public HashMap<String, HashMap<String, List<Character>>> getMappings2Sources() {
     	return _mappings2Sources;
     }
     
-    public HashMap<String, HashMap<String, ArrayList<Character>>> getMappings2Targets() {
+    public HashMap<String, HashMap<String, List<Character>>> getMappings2Targets() {
     	return _mappings2Targets;
     }
     
-    public HashMap<String, ArrayList<String>> getTransformation2Mappings() {
+    public HashMap<String, List<String>> getTransformation2Mappings() {
     	return _transformation2Mappings;
     }
     
@@ -137,35 +160,35 @@ public class MappingScenario
     	_correspondences.put(key, value);
     }
     
-    public void setMappings2Correspondences(Map<String, ArrayList<String>> m) {
-    	_mappings2Correspondences.putAll((HashMap<String, ArrayList<String>>)m);
+    public void setMappings2Correspondences(Map<String, List<String>> m) {
+    	_mappings2Correspondences.putAll((HashMap<String, List<String>>)m);
     }
     
-    public void putMappings2Correspondences(String key, ArrayList<String> value) {
+    public void putMappings2Correspondences(String key, List<String> value) {
     	_mappings2Correspondences.put(key, value);
     }
     
-    public void setMappings2Sources(Map<String, HashMap<String, ArrayList<Character>>> m) {
-    	_mappings2Sources.putAll((HashMap<String, HashMap<String, ArrayList<Character>>>)m);
+    public void setMappings2Sources(Map<String, HashMap<String, List<Character>>> m) {
+    	_mappings2Sources.putAll((HashMap<String, HashMap<String, List<Character>>>)m);
     }
     
-    public void putMappings2Sources(String key, HashMap<String, ArrayList<Character>> value) {
+    public void putMappings2Sources(String key, HashMap<String, List<Character>> value) {
     	_mappings2Sources.put(key, value);
     }
     
-    public void setMappings2Targets(Map<String, HashMap<String, ArrayList<Character>>> m) {
-    	_mappings2Targets.putAll((HashMap<String, HashMap<String, ArrayList<Character>>>)m);
+    public void setMappings2Targets(Map<String, HashMap<String, List<Character>>> m) {
+    	_mappings2Targets.putAll((HashMap<String, HashMap<String, List<Character>>>)m);
     }
     
-    public void putMappings2Targets(String key, HashMap<String, ArrayList<Character>> value) {
+    public void putMappings2Targets(String key, HashMap<String, List<Character>> value) {
     	_mappings2Targets.put(key, value);
     }
     
-    public void setTransformation2Mappings(Map<String, ArrayList<String>> t) {
-    	_transformation2Mappings.putAll((HashMap<String, ArrayList<String>>)t);
+    public void setTransformation2Mappings(Map<String, List<String>> t) {
+    	_transformation2Mappings.putAll((HashMap<String, List<String>>)t);
     }
 
-    public void putTransformation2Mappings(String key, ArrayList<String> value) {
+    public void putTransformation2Mappings(String key, List<String> value) {
     	_transformation2Mappings.put(key, value);
     }
     
@@ -324,6 +347,27 @@ public class MappingScenario
     	
     	return currentElement;
     }
+
+	public TrampXMLModel getDoc() {
+		return _doc;
+	}
+
+	public void setDoc(TrampXMLModel _doc) {
+		this._doc = _doc;
+	}
+
+	public TrampModelFactory getDocFac() {
+		return docFac;
+	}
+
+	public void setDocFac(TrampModelFactory docFac) {
+		this.docFac = docFac;
+	}
+	
+	public void setDocFac(TrampModelFactory docFac, Configuration conf) {
+		this.docFac = docFac;
+		docFac.initAllElem(conf);
+	}
     
     
 }

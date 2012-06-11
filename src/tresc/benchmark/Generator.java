@@ -93,11 +93,11 @@ public class Generator {
 		return null; // keep compiler quiet
 	}
 
-	public MappingScenario generateScenario(Configuration configuration) {
+	public MappingScenario generateScenario(Configuration configuration) throws Exception {
 		/*
 		 * First we create an empty dummy schema
 		 */
-		MappingScenario scenario = new MappingScenario();
+		MappingScenario scenario = new MappingScenario(configuration);
 
 		for (int i = 0, imax = scenarioGenerators.length; i < imax; i++) {
 			scenarioGenerators[i].generateScenario(scenario, configuration);

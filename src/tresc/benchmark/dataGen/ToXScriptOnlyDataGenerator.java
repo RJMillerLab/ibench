@@ -101,10 +101,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		generateTemplateClosing(templateBuffer);
 
-		// System.out.println(templateBuffer);
-		File instFile = new File(
-				Configuration.getInstancePathPrefix(),
-				config.getSourceInstanceFile());
+		log.debug(templateBuffer);
+
 		BufferedWriter bufWriter =
 				new BufferedWriter(new FileWriter(new File(
 						Configuration.getInstancePathPrefix(),

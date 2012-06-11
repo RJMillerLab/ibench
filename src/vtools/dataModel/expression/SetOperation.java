@@ -2,11 +2,13 @@ package vtools.dataModel.expression;
 
 import java.util.Vector;
 
+import org.vagabond.benchmark.model.IdGen;
+
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 
 
-public abstract class SetOperation extends Query implements Visitable, Cloneable
+public abstract class SetOperation extends Query implements Visitable, Cloneable, Trampable
 {
 
     public static int UNION = 0;
@@ -82,4 +84,27 @@ public abstract class SetOperation extends Query implements Visitable, Cloneable
     {
         return StringPrinter.StringPrinter;
     }
+    
+    @Override
+    public String toTrampString(IdGen idGen) throws Exception {
+    	StringBuffer result = new StringBuffer();
+    	for(int i = 0; i < _v.size(); i++) {
+    		Query q = _v.get(i);
+    		result.append(q.toTrampString(idGen));
+    		if (i != _v.size() - 1)
+    			result.append("\n" + getSymbol() + "\n");
+    	}
+    	return result.toString();
+    }
+    
+	@Override
+	public String toTrampStringOneMap(String mapping) throws Exception {
+		String result = toTrampString();
+		int maxId = findMaxId(result);
+		
+		for(int i = 0; i < maxId; i++) {
+			result = result.replace("${" + i + "}", mapping);
+		}
+		return result;
+	}
 }

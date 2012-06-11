@@ -16,5 +16,5 @@ public abstract class ScenarioGenerator
     
     protected HashMap<String, Character> attrMap = new HashMap<String, Character>();
 
-    public abstract void generateScenario(MappingScenario scenario, Configuration configuration);
+    public abstract void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception;
 }

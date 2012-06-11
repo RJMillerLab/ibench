@@ -2,6 +2,7 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import smark.support.MappingScenario;
@@ -39,7 +40,7 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
         // generate the generator based on the seed
         //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.SURROGATEKEY.ordinal());
@@ -94,15 +95,15 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
     	attrMap.clear();
     }
 
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery) {
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery) throws Exception {
 		SelectClauseList gselect = generatedQuery.getSelect();
 		for (int i = 0; i < gselect.size(); i++) {
 			String mKey = scenario.getNextMid();
 			String tKey = scenario.getNextTid();
 
 			ArrayList<String> corrsList = new ArrayList<String>();
-			HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
-			HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+			HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
+			HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
 
 			SPJQuery e = (SPJQuery)(gselect.getTerm(i));
 			SPJQuery realQ = (SPJQuery)(pquery.getSelect().getTerm(i));
@@ -145,19 +146,20 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 		}
 	}
 	
-	private String getQueryString(SPJQuery origQ, String mKey) {
-		String retVal = origQ.toString();
-		FromClauseList from = origQ.getFrom();
-		for (int i = 0; i < from.size(); i++) {
-			String key = from.getKey(i).toString();
-			String relName = from.getValue(i).toString();
-			relName = relName.substring(1)+"."; // remove the first "/"
-			retVal = retVal.replace(key, relName).replace("/", "");
-			retVal = retVal.replace(key.substring(1), "");
-			retVal = retVal.replace("${" + i + "}", mKey);
-		}
-		
-		return retVal;
+	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
+		return origQ.toTrampStringOneMap(mKey);
+//		String retVal = origQ.toString();
+//		FromClauseList from = origQ.getFrom();
+//		for (int i = 0; i < from.size(); i++) {
+//			String key = from.getKey(i).toString();
+//			String relName = from.getValue(i).toString();
+//			relName = relName.substring(1)+"."; // remove the first "/"
+//			retVal = retVal.replace(key, relName).replace("/", "");
+//			retVal = retVal.replace(key.substring(1), "");
+//			retVal = retVal.replace("${" + i + "}", mKey);
+//		}
+//		
+//		return retVal;
 	}
 
     // it generates a copy case in which there are 2 keys one that is

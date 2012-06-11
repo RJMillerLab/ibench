@@ -37,7 +37,7 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
     public HorizontalPartitionScenarioGenerator()
     {		;		}
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
         // generate the generator based on the seed
         //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.HORIZPARTITION.ordinal());
@@ -79,15 +79,15 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
     	attrMap.clear();
     }
 
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery) {
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery) throws Exception {
 		SelectClauseList pselect = generatedQuery.getSelect();
 		for (int i = 0; i < pselect.size(); i++) {
 			String mKey = scenario.getNextMid();
 			String tKey = scenario.getNextTid();
 
 			ArrayList<String> corrsList = new ArrayList<String>();
-			HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
-			HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+			HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
+			HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
 
 			SPJQuery e = (SPJQuery)(pselect.getTerm(i));
         	SPJQuery subQ = (SPJQuery)(pselect.getValue(i));
@@ -122,26 +122,27 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 			mList.add(mKey);
 			scenario.putTransformation2Mappings(tKey, mList);
 			scenario.putTransformationCode(tKey, getQueryString(e, mList));
-			scenario.putTransformationRelName(tKey, sourceName);
+			scenario.putTransformationRelName(tKey, targetName);
 			
 			resetAttrLetters();
 		}
 	}
 	
-	private String getQueryString(SPJQuery origQ, List<String> mKeys) {
-		String retVal = origQ.toString();
-		FromClauseList from = origQ.getFrom();
-		for (int i = 0; i < from.size(); i++) {
-			String key = from.getKey(i).toString();
-			String relName = from.getValue(i).toString();
-			String mKey = mKeys.get(i);
-			relName = relName.substring(1)+"."; // remove the first "/"
-			retVal = retVal.replace(key, relName).replace("/", "");
-			retVal = retVal.replace(key.substring(1), "");
-			retVal = retVal.replace("${" + i + "}", mKey);
-		}
-		
-		return retVal;
+	private String getQueryString(SPJQuery origQ, List<String> mKeys) throws Exception {
+		return origQ.toTrampString(mKeys.toArray(new String[] {}));
+//		String retVal = origQ.toString();
+//		FromClauseList from = origQ.getFrom();
+//		for (int i = 0; i < from.size(); i++) {
+//			String key = from.getKey(i).toString();
+//			String relName = from.getValue(i).toString();
+//			String mKey = mKeys.get(i);
+//			relName = relName.substring(1)+"."; // remove the first "/"
+//			retVal = retVal.replace(key, relName).replace("/", "");
+//			retVal = retVal.replace(key.substring(1), "");
+//			retVal = retVal.replace("${" + i + "}", mKey);
+//		}
+//		
+//		return retVal;
 	}
 
     //

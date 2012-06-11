@@ -92,10 +92,12 @@ public class ToXGeneWrapper {
 		catch (ToXgeneErrorException e1) {
 			LoggerUtil.logException(e1, log);
 			error(e1.getMessage());
+			throw e1;
 		}
 		catch (FileNotFoundException e) {
 			tgEngine.endSession();
 			error("cannot open template file \"" + template + "\"");
+			throw e;
 		}
 		catch (Exception e) {
 			LoggerUtil.logException(e, log);

@@ -81,7 +81,7 @@ public abstract class VObject implements Cloneable, Visitable
         this.accept(getPrintVisitor(), args);
         return buf.toString();
     }
-
+ 
     public Object accept(Visitor visitor, Object[] args)
     {
         return visitor.dispatch(this, args);

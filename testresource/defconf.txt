@@ -1,14 +1,14 @@
 # Configuration File for STBenchmark
 
 # output path prefixes
-SchemaPathPrefix=out
-InstancePathPrefix=out
+SchemaPathPrefix=testout
+InstancePathPrefix=testout
 
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 0 
 Scenarios.VALUEGEN = 0 
 Scenarios.HORIZPARTITION = 0 
-Scenarios.SURROGATEKEY = 30 
+Scenarios.SURROGATEKEY = 0 
 Scenarios.MERGING = 0 
 Scenarios.VALUEMANAGEMENT = 0 
 Scenarios.FUSION = 0 
@@ -22,10 +22,10 @@ Scenarios.DELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 2 
+ConfigOptions.NumOfSubElements = 3 
 ConfigOptions.NestingDepth = 0 
 ConfigOptions.JoinSize = 2 
-ConfigOptions.JoinKind = 1 
+ConfigOptions.JoinKind = 0 
 ConfigOptions.NumOfJoinAttributes = 1 
 ConfigOptions.NumOfParamsInFunctions = 2 
 ConfigOptions.NumOfNewAttributes = 1
@@ -56,17 +56,17 @@ MappingLanguage = FOtgds
 # FileNames.TargetSchema = 
 # FileNames.SourceInstance = 
 # FileNames.SourceDocumentName =
-# FileNames.Schemas =
+FileNames.Schemas = test.xml
 
 # Optional activation/deactivation of output options
-# OutputOption.HTMLSchemas = false
-OutputOption.Data = false
-# OutputOption.XMLSchemas = false
-# OutputOption.HTMLMapping = false
+OutputOption.HTMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = false
+OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
-TrampXMLOutput.Correspondences = false
-TrampXMLOutput.Transformations = false
-TrampXMLOutput.Data = false
-TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.Correspondences = true
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
+TrampXMLOutput.ConnectionInfo = true

@@ -1,6 +1,7 @@
 package vtools.xml;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,7 +90,7 @@ public class XMLWriter {
 		Type type = e.getType();
 		for (int i = 0; i < ident; i++)
 			buf.append(_tab);
-		buf.append("<Relation name=\"" + e.getLabel() + "\">\n");
+		buf.append("<Relation name=\"" + e.getLabel().toLowerCase() + "\">\n");
 		print(buf, (Set) type, ident + 1);
 		Rule primaryKey = s.getMyKeyConstraint(e.getLabel());
 		if (primaryKey != null)
@@ -107,7 +108,7 @@ public class XMLWriter {
 		// "\" minOccurs=\"0\"");
 
 		if (type instanceof Set) {
-			buf.append("<Relation name=\"" + e.getLabel() + "\">\n");
+			buf.append("<Relation name=\"" + e.getLabel().toLowerCase() + "\">\n");
 			print(buf, (Set) type, ident + 1);
 			for (int i = 0; i < ident; i++)
 				buf.append(_tab);
@@ -123,11 +124,11 @@ public class XMLWriter {
 			buf.append("</xs:element>\n");
 		}
 		else if (type instanceof Int) {
-			buf.append("<Attr><Name>" + e.getLabel()
+			buf.append("<Attr><Name>" + e.getLabel().toLowerCase()
 					+ "</Name><DataType>INT8</DataType></Attr>\n");
 		}
 		else if (type instanceof Str) {
-			buf.append("<Attr><Name>" + e.getLabel()
+			buf.append("<Attr><Name>" + e.getLabel().toLowerCase()
 					+ "</Name><DataType>TEXT</DataType></Attr>\n");
 		}
 		else
@@ -140,13 +141,13 @@ public class XMLWriter {
 		Schema source = scenario.getSource();
 		Schema target = scenario.getTarget();
 		Map<String, String> correspondences = scenario.getCorrespondences();
-		Map<String, ArrayList<String>> mappings2Correspondences =
+		Map<String, List<String>> mappings2Correspondences =
 				scenario.getMappings2Correspondences();
-		Map<String, HashMap<String, ArrayList<Character>>> mappings2Sources =
+		Map<String, HashMap<String, List<Character>>> mappings2Sources =
 				scenario.getMappings2Sources();
-		Map<String, HashMap<String, ArrayList<Character>>> mappings2Targets =
+		Map<String, HashMap<String, List<Character>>> mappings2Targets =
 				scenario.getMappings2Targets();
-		Map<String, ArrayList<String>> transformationMappings =
+		Map<String, List<String>> transformationMappings =
 				scenario.getTransformation2Mappings();
 		Map<String, String> transformationCode =
 				scenario.getTransformationCode();
@@ -185,15 +186,15 @@ public class XMLWriter {
 	}
 
 	public void printTransformations(StringBuffer buf,
-			Map<String, ArrayList<String>> tM, Map<String, String> tC,
+			Map<String, List<String>> tM, Map<String, String> tC,
 			Map<String, String> tR) {
 		List<String> sortedKeys = new ArrayList<String>(tC.keySet());
 		Collections.sort(sortedKeys, ID_COMP);
 
 		for (String tId : sortedKeys) {
-			ArrayList<String> mappingList = tM.get(tId);
+			List<String> mappingList = tM.get(tId);
 			buf.append(_tab + "<Transformation id=\"" + tId + "\" creates=\""
-					+ tR.get(tId) + "\">\n");
+					+ tR.get(tId).toLowerCase() + "\">\n");
 			if (mappingList != null) {
 				buf.append(_tab + _tab + "<Implements>");
 				for (String mapping : mappingList) {
@@ -212,9 +213,9 @@ public class XMLWriter {
 
 		//
 		// if (!tM.isEmpty()) {
-		// for (Map.Entry<String, ArrayList<String>> entry : tM.entrySet()) {
+		// for (Map.Entry<String, List<String>> entry : tM.entrySet()) {
 		// String tId = entry.getKey();
-		// ArrayList<String> mappingList = entry.getValue();
+		// List<String> mappingList = entry.getValue();
 		// buf.append(_tab+"<Transformation id=\""+tId+"\" creates=\""+tR.get(tId)+"\">\n");
 		// if (mappingList != null) {
 		// buf.append(_tab+_tab+"<Implements>");
@@ -275,9 +276,9 @@ public class XMLWriter {
 	}
 
 	public void printMappings(StringBuffer buf,
-			Map<String, ArrayList<String>> mC,
-			Map<String, HashMap<String, ArrayList<Character>>> mS,
-			Map<String, HashMap<String, ArrayList<Character>>> mT, 
+			Map<String, List<String>> mC,
+			Map<String, HashMap<String, List<Character>>> mS,
+			Map<String, HashMap<String, List<Character>>> mT, 
 			Configuration conf) {
 		List<String> sortedKeys = new ArrayList<String>(mC.keySet());
 		Collections.sort(sortedKeys, ID_COMP);
@@ -286,37 +287,41 @@ public class XMLWriter {
 			buf.append(_tab + "<Mapping id=\"" + mId + "\">\n");
 			
 			if (conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences)) {
-				ArrayList<String> corrList = mC.get(mId);
-				buf.append(_tab + _tab + "<Uses>\n");
-				for (String attr : corrList) {
-					buf.append(_tab + _tab + _tab + "<Correspondence>" + attr
-							+ "</Correspondence>\n");
+				List<String> corrList = mC.get(mId);
+				if (corrList != null) {
+					buf.append(_tab + _tab + "<Uses>\n");
+					for (String attr : corrList) {
+						buf.append(_tab + _tab + _tab + "<Correspondence>"
+								+ attr + "</Correspondence>\n");
+					}
+					buf.append(_tab + _tab + "</Uses>\n");
 				}
-				buf.append(_tab + _tab + "</Uses>\n");
 			}
-			
-			buf.append(_tab + _tab + "<Foreach>\n");
-			Map<String, ArrayList<Character>> sourceList = mS.get(mId);
-			for (Map.Entry<String, ArrayList<Character>> sourceEntry : sourceList
-					.entrySet()) {
-				String sourceName = sourceEntry.getKey();
-				buf.append(_tab + _tab + _tab + "<Atom tableref=\""
-						+ sourceName + "\">");
-				ArrayList<Character> attrList = sourceEntry.getValue();
-				for (Character attr : attrList) {
-					buf.append("<Var>" + attr + "</Var>");
+
+			Map<String, List<Character>> sourceList = mS.get(mId);
+			if (sourceList != null) {
+				buf.append(_tab + _tab + "<Foreach>\n");			
+				for (Map.Entry<String, List<Character>> sourceEntry : sourceList
+						.entrySet()) {
+					String sourceName = sourceEntry.getKey();
+					buf.append(_tab + _tab + _tab + "<Atom tableref=\""
+							+ sourceName.toLowerCase() + "\">");
+					List<Character> attrList = sourceEntry.getValue();
+					for (Character attr : attrList) {
+						buf.append("<Var>" + attr + "</Var>");
+					}
+					buf.append("</Atom>\n");
 				}
-				buf.append("</Atom>\n");
+				buf.append(_tab + _tab + "</Foreach>\n");
 			}
-			buf.append(_tab + _tab + "</Foreach>\n");
 			buf.append(_tab + _tab + "<Exists>\n");
-			Map<String, ArrayList<Character>> targetList = mT.get(mId);
-			for (Map.Entry<String, ArrayList<Character>> targetEntry : targetList
+			Map<String, List<Character>> targetList = mT.get(mId);
+			for (Map.Entry<String, List<Character>> targetEntry : targetList
 					.entrySet()) {
 				String targetName = targetEntry.getKey();
 				buf.append(_tab + _tab + _tab + "<Atom tableref=\""
-						+ targetName + "\">");
-				ArrayList<Character> attrList = targetEntry.getValue();
+						+ targetName.toLowerCase() + "\">");
+				List<Character> attrList = targetEntry.getValue();
 				for (Character attr : attrList) {
 					buf.append("<Var>" + attr + "</Var>");
 				}
@@ -362,14 +367,18 @@ public class XMLWriter {
 		buf.append(_tab);
 		buf.append("<DB>tramptest</DB>\n");
 		buf.append(_tab);
-		buf.append("<User>lordpretzel</User>\n");
+		buf.append("<User>postgres</User>\n");
 		buf.append(_tab);
 		buf.append("<Password/>\n");
+		buf.append("<Port>5432</Port>\n");
 		buf.append("</ConnectionInfo>\n");
 	}
 
 	private void printData(StringBuffer buf, Schema schema,
 			String instancePathPrefix) {
+		if (schema.size() == 0)
+			return;
+		
 		buf.append("<Data>\n");
 		for (int i = 0; i < schema.size(); i++) {
 			SMarkElement rootSetElt = (SMarkElement) schema.getSubElement(i);
@@ -378,9 +387,10 @@ public class XMLWriter {
 		buf.append("</Data>\n");
 	}
 
-	private void
-			printDataSource(StringBuffer buf, SMarkElement rel, String path) {
-		buf.append("\t<InstanceFile name=\"person\">\n" + "\t\t<Path>" + path
+	private void printDataSource(StringBuffer buf, SMarkElement rel, 
+			String path) {
+		buf.append("\t<InstanceFile name=\"" + rel.getLabel().toLowerCase() + "\">\n" + "\t\t<Path>" + path
+				
 				+ "</Path>\n" + "\t\t<FileName>" + rel.getLabel()
 				+ ".csv</FileName>\n" + "\t\t<ColumnDelim>|</ColumnDelim>\n"
 				+ "\t</InstanceFile>\n");
@@ -393,7 +403,7 @@ public class XMLWriter {
 	}
 
 	private void printForeignKeys(StringBuffer buf,
-			ArrayList<Rule> constraints, int ident) {
+			List<Rule> constraints, int ident) {
 		int i = 0;
 		for (Rule constraint : constraints) {
 			// the foreign keys are both ways. we need only one of them.
@@ -431,7 +441,7 @@ public class XMLWriter {
 			Rule constraint, int ident) {
 		printIdents(buf, ident);
 		String id = relName + "_" + "PrimaryKey";
-		buf.append("<PrimaryKey id=\"" + id + "\">\n");
+		buf.append("<PrimaryKey>\n"); // id=\"" + id + "\">\n");
 		printIdents(buf, ident);
 		buf.append(_tab + "<Attr>"
 				+ getAttributes(constraint.getLeftConditions())[0]
@@ -462,7 +472,7 @@ public class XMLWriter {
 		else
 			buf.append(_tab + "<TargetSchema>\n");
 		print(buf, s, 1);
-		ArrayList<Rule> foreignKeys = s.getForeignKeyConstraints();
+		List<Rule> foreignKeys = s.getForeignKeyConstraints();
 		printForeignKeys(buf, foreignKeys, ident + 2);
 		if (schemaType == 0)
 			buf.append(_tab + "</SourceSchema>\n");

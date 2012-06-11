@@ -2,6 +2,7 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import smark.support.MappingScenario;
@@ -43,7 +44,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
     {
         // generate the generator based on the seed
         // long seed =
@@ -102,9 +103,9 @@ public class FusionScenarioGenerator extends ScenarioGenerator
     	attrMap.clear();
     }
 
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SMarkElement tgtRel, SMarkElement[] srcRels) {
+	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SMarkElement tgtRel, SMarkElement[] srcRels) throws Exception {
 		SelectClauseList gselect = generatedQuery.getSelect();
-		HashMap<String, ArrayList<Character>> targetAttrs = new HashMap<String, ArrayList<Character>>();
+		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
 		
 		ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
 		HashMap<String, Character> targetAttrSymbols = new HashMap<String , Character>();
@@ -125,7 +126,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator
 		ArrayList<String> mList = new ArrayList<String>();
 		for (int i = 0; i < srcRels.length; i++) {
 			String mKey = scenario.getNextMid(); // Each source relation get a mapping
-			HashMap<String, ArrayList<Character>> sourceAttrs = new HashMap<String, ArrayList<Character>>();
+			HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
 			ArrayList<String> corrsList = new ArrayList<String>();
 			
 			ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
@@ -159,18 +160,19 @@ public class FusionScenarioGenerator extends ScenarioGenerator
 		resetAttrSymbol();
 	}
 	
-	private String getQueryString(SPJQuery origQ, String mKey) {
-		String retVal = origQ.toString();
-		FromClauseList from = origQ.getFrom();
-		for (int i = 0; i < from.size(); i++) {
-			String key = from.getKey(i).toString();
-			String relAlias = key.replace("$", "");
-			retVal = retVal.replace(key+"/", relAlias+".");
-			retVal = retVal.replace("${" + i + "}", mKey);
-		}
-		retVal = retVal.replaceAll("/", "");
-		
-		return retVal;
+	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
+		return origQ.toTrampStringOneMap(mKey);
+//		String retVal = origQ.toString();
+//		FromClauseList from = origQ.getFrom();
+//		for (int i = 0; i < from.size(); i++) {
+//			String key = from.getKey(i).toString();
+//			String relAlias = key.replace("$", "");
+//			retVal = retVal.replace(key+"/", relAlias+".");
+//			retVal = retVal.replace("${" + i + "}", mKey);
+//		}
+//		retVal = retVal.replaceAll("/", "");
+//		
+//		return retVal;
 	}
 
     // There are at most 2 levels. At each level, there will be E elements.
