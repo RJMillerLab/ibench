@@ -169,46 +169,6 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 
 	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
 		return origQ.toTrampString().replace("${" + 0 + "}", mKey);
-//		String retVal = origQ.toString();
-//		FromClauseList from = origQ.getFrom();
-//		SelectClauseList sel = origQ.getSelect();
-//		StringBuffer result = new StringBuffer();
-//		result.append("SELECT ");
-//		
-//		for (int i = 0; i < sel.size(); i++) {
-//			String expr = sel.getValue(i).toString().toLowerCase();
-//			expr = expr.replace("/", ".").replace("$", "");					
-//			String name = sel.getKey(i).toString().toLowerCase();
-//			String attrString = expr + " AS " + name;
-//			result.append(attrString);
-//			if (i != sel.size() - 1)
-//				result.append(", ");
-//			log.debug("Add attr " + attrString);
-//		}
-//		
-//		result.append("\nFROM ");
-//		for (int i = 0; i < from.size(); i++) {
-//			String key = from.getKey(i).toString();
-//			key = key.substring(1).toLowerCase();
-//			String relName = from.getValue(i).toString().toLowerCase();
-//			relName = relName.substring(1); // remove the first "/"
-//			String relCode = relName + " ANNOT(" + mKey + ") AS " + key;
-//
-//			result.append(relCode);
-//			if (i != sel.size() - 1)
-//				result.append(", ");
-//			
-//			
-//			retVal = retVal.replace(key, relName).replace("/", "");
-//			retVal = retVal.replace(key.substring(1), "");
-//			retVal = retVal.replace("${" + 0 + "}", mKey);
-//		}
-//
-//		result.append(origQ.getWhere().toString());
-//		
-//		log.debug(result);
-//		return result.toString();
-//		return retVal;
 	}
 
 	// Algorithm: Schema generated is the following
@@ -236,8 +196,7 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 			int numOfElements, int numOfElementsDeviation, SPJQuery lquery) {
 		SelectClauseList lselect = lquery.getSelect();
 		// decide randomly how many elements to create
-		int N =
-				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+		int N = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
 						numOfElementsDeviation);
 		// number of set elements
 		int S = 0;
@@ -287,7 +246,7 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 				SMarkElement es = new SMarkElement(name, new Set(), null, 0, 0);
 				es.setHook(new String(_stamp + repetition + "NL" + nestingLevel
 						+ "CE" + i));
-				SMarkElement et = new SMarkElement(name, new Set(), null, 0, 0);
+				SMarkElement et = new SMarkElement(name + "Copy", new Set(), null, 0, 0);
 				et.setHook(new String(_stamp + repetition + "NL" + nestingLevel
 						+ "CE" + i));
 

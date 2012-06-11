@@ -17,6 +17,7 @@ import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.SKFunction;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -282,7 +283,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
             // add to the first partial query a skolem function to generate
             // the join attribute in the first target table
             SelectClauseList sel0 = queries[0].getSelect();
-            Function f0 = new Function("SK");
+            SKFunction f0 = new SKFunction("SK");
             for (int k = 0; k < numOfSrcTblAttr; k++)
             {
                 Projection att = new Projection(new Variable("X"), attNames[k]);
@@ -353,6 +354,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
                 // we create the target constraint(i.e. foreign key both ways )
                 Variable varKey1 = new Variable("F");
                 Variable varKey2 = new Variable("K");
+                
                 ForeignKey fKeySrc1 = new ForeignKey();
                 fKeySrc1.addLeftTerm(varKey1.clone(),
                     new Projection(Path.ROOT, target.getSubElement(tgtPos).getLabel()));
@@ -361,6 +363,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
                 fKeySrc1.addFKeyAttr(new Projection(varKey2.clone(), joinAttNameRef), new Projection(
                     varKey1.clone(), joinAttName));
                 target.addConstraint(fKeySrc1);
+                
                 ForeignKey fKeySrc2 = new ForeignKey();
                 fKeySrc2.addLeftTerm(varKey1.clone(), new Projection(Path.ROOT,
                     target.getSubElement(tgtPos + 1).getLabel()));

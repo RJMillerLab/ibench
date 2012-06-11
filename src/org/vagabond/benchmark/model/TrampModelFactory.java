@@ -111,7 +111,7 @@ public class TrampModelFactory {
 		
 		Uses u = map.addNewUses();
 		for(CorrespondenceType c: cs)
-			u.addCorrespondence(c.getId());
+			u.addNewCorrespondence().setRef(c.getId());
 		
 		return map;
 	}

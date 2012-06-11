@@ -163,7 +163,7 @@ public class XMLWriter {
 		buf.append("</Schemas>\n");
 		if (conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences)) {
 			buf.append("<Correspondences>\n");
-			print(buf, correspondences);
+			printCorrespondences(buf, correspondences);
 			buf.append("</Correspondences>\n");
 		}
 		buf.append("<Mappings>\n");
@@ -198,7 +198,7 @@ public class XMLWriter {
 			if (mappingList != null) {
 				buf.append(_tab + _tab + "<Implements>");
 				for (String mapping : mappingList) {
-					buf.append("<Mapping>" + mapping + "</Mapping>");
+					buf.append("<Mapping ref=\"" + mapping + "\" />");
 				}
 				buf.append("</Implements>\n");
 			}
@@ -290,9 +290,9 @@ public class XMLWriter {
 				List<String> corrList = mC.get(mId);
 				if (corrList != null) {
 					buf.append(_tab + _tab + "<Uses>\n");
-					for (String attr : corrList) {
-						buf.append(_tab + _tab + _tab + "<Correspondence>"
-								+ attr + "</Correspondence>\n");
+					for (String corr : corrList) {
+						buf.append(_tab + _tab + _tab + "<Correspondence ref=\""
+								+ corr + "\" />\n");
 					}
 					buf.append(_tab + _tab + "</Uses>\n");
 				}
@@ -332,7 +332,7 @@ public class XMLWriter {
 		}
 	}
 
-	private void print(StringBuffer buf, Map<String, String> correspondences) {
+	private void printCorrespondences (StringBuffer buf, Map<String, String> correspondences) {
 		List<String> sortedKeys =
 				new ArrayList<String>(correspondences.keySet());
 		Collections.sort(sortedKeys, ID_COMP);
@@ -347,14 +347,14 @@ public class XMLWriter {
 			String[] toRelAttr = to.split("\\.");
 			buf.append(_tab + "<Correspondence id=\"" + cId + "\">\n");
 			buf.append(_tab + _tab + "<From tableref=\"");
-			buf.append(fromRelAttr[0]);
+			buf.append(fromRelAttr[0].toLowerCase());
 			buf.append("\"><Attr>");
-			buf.append(fromRelAttr[1]);
+			buf.append(fromRelAttr[1].toLowerCase());
 			buf.append("</Attr></From>\n");
 			buf.append(_tab + _tab + "<To tableref=\"");
-			buf.append(toRelAttr[0]);
+			buf.append(toRelAttr[0].toLowerCase());
 			buf.append("\"><Attr>");
-			buf.append(toRelAttr[1]);
+			buf.append(toRelAttr[1].toLowerCase());
 			buf.append("</Attr></To>\n");
 			buf.append(_tab + "</Correspondence>\n");
 		}
@@ -411,8 +411,7 @@ public class XMLWriter {
 			// one
 			if (i % 2 == 0) {
 				printIdents(buf, ident);
-				String id =
-						getTableName(constraint.getLeftTerms()) + "_"
+				String id = getTableName(constraint.getLeftTerms()) + "_"
 								+ getTableName(constraint.getRightTerms())
 								+ Integer.toString(i);
 				buf.append("<ForeignKey id=\"" + id + "\">\n");
@@ -453,7 +452,7 @@ public class XMLWriter {
 
 	private String getTableName(FromClauseList cl) {
 		int strLength = cl.toString().length();
-		return cl.toString().substring(1, strLength - 3);
+		return cl.toString().substring(1, strLength - 3).toLowerCase();
 	}
 
 	private String[] getAttributes(BooleanExpression be) {
@@ -461,8 +460,8 @@ public class XMLWriter {
 		String fromAttribute = terms[0].substring(3);
 		String toAttribute = terms[1].substring(3);
 		String[] retVal = new String[2];
-		retVal[0] = fromAttribute;
-		retVal[1] = toAttribute;
+		retVal[0] = fromAttribute.toLowerCase();
+		retVal[1] = toAttribute.toLowerCase();
 		return retVal;
 	}
 

@@ -73,7 +73,7 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
             SMarkElement srcElem = new SMarkElement(name, new Set(), null, 0, 0);
             srcElem.setHook(new String(_stamp + "CE" + i));
             source.addSubElement(srcElem);
-            SMarkElement trgElem = new SMarkElement(name, new Set(), null, 0, 0);
+            SMarkElement trgElem = new SMarkElement(name + "Skey", new Set(), null, 0, 0);
             trgElem.setHook(new String(_stamp + "CE" + i));
             target.addSubElement(trgElem);
             createSubElements(srcElem, trgElem, elements, params, pquery, generatedQuery, scenario);

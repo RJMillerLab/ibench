@@ -76,7 +76,7 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
         srcTbl.setHook(new String(_stamp + repetition));
         sourceParent.addSubElement(srcTbl);
         String randomNameTrg = randomName;
-        SMarkElement trgTbl = new SMarkElement(randomName, new Set(), null, 0, 0);
+        SMarkElement trgTbl = new SMarkElement(randomName + "Target", new Set(), null, 0, 0);
         trgTbl.setHook(new String(_stamp + repetition));
         targetParent.addSubElement(trgTbl);
         
