@@ -158,4 +158,23 @@ public class Constants
     	errorGenerators.put(DESErrorType.TargetSkeletonError, new TargetSkeletonGen());
     	errorGenerators.put(DESErrorType.CorrespondenceError, new CorrespondenceGen());
     }
+    
+    public enum DBOption {
+    	User,
+    	URL,
+    	Password,
+    	Port,
+    	DBName
+    }
+    
+    public static final Map<DBOption, String> dbOptionDefaults = 
+    		new HashMap<DBOption, String> ();
+    
+    static {
+    	dbOptionDefaults.put(DBOption.DBName, "tramptest");
+    	dbOptionDefaults.put(DBOption.Password, "");
+    	dbOptionDefaults.put(DBOption.URL, "127.0.0.1");
+    	dbOptionDefaults.put(DBOption.User, "postgres");
+    	dbOptionDefaults.put(DBOption.Port, "5432");
+    }
 }

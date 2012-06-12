@@ -62,19 +62,19 @@ public class MappingScenario
     // this is a set of strings that describe how the mapping will be done.
     private Vector<String> _spec;
     private TrampModelFactory docFac;
-    
+
     public MappingScenario(Configuration conf)
     {
         _doc = new TrampXMLModel();
         init();
-        setDocFac(new TrampModelFactory(_doc), conf);
+        setDocFac(new TrampModelFactory(this), conf);
     }
     
     
 	public MappingScenario (TrampXMLModel doc) {
     	this._doc = doc;
     	init();
-    	setDocFac(new TrampModelFactory(_doc));
+    	setDocFac(new TrampModelFactory(this));
     }
 	
 	private void init () {
@@ -255,6 +255,8 @@ public class MappingScenario
     {
         StringBuffer buf = new StringBuffer();
         prettyPrint(buf, 0);
+        buf.append("\n\n-------------------------\n\n");
+        buf.append(_doc.toString());
         return buf.toString();
     }
     
@@ -384,6 +386,7 @@ public class MappingScenario
 	public void addBasicScen (String key, PartialMapping p) {
 		_basicScens.put(key, p);
 	}
-    
+ 
+	
     
 }

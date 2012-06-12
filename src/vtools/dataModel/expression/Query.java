@@ -54,4 +54,6 @@ public abstract class Query extends Expression implements Visitable, Cloneable, 
     	return maxId;
     }
     
+    public abstract int getNumberOfLeafs ();
+    
 }

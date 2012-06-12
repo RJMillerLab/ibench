@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.TransformationType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -21,6 +23,7 @@ import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -30,11 +33,8 @@ import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
 public class CopyScenarioGenerator extends ScenarioGenerator {
+
 	static Logger log = Logger.getLogger(CopyScenarioGenerator.class);
-
-	private Random _generator;
-
-	private final String _stamp = "CO";
 
 	private static int _currAttributeIndex = 0; // this determines the letter
 												// used for the attribute in the
@@ -43,26 +43,26 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 	public CopyScenarioGenerator() {
 	}
 
-	public void generateScenario(MappingScenario scenario,
-			Configuration configuration) throws Exception {
-		init(configuration, scenario);
-
-		SelectClauseList pselect = new SelectClauseList();
-		for (int i = 0, imax = getRepetitions(); i < imax; i++) {
-			SPJQuery lquery = new SPJQuery();
-			int randomNesting =
-					Utils.getRandomNumberAroundSomething(_generator, nesting,
-							getNestingDeviation());
-			createSubElements(source, target, 0, randomNesting, i,
-					numOfElements, numOfElementsDeviation, lquery);
-			// each local query will be added to the transformation query
-			pselect = pquery.getSelect();
-			pselect.add(lquery.getSelect().getTermName(0), lquery.getSelect()
-					.getTerm(0));
-		}
-
-		setScenario(scenario, pselect);
-	}
+//	public void generateScenario(MappingScenario scenario,
+//			Configuration configuration) throws Exception {
+//		init(configuration, scenario);
+//
+//		SelectClauseList pselect = new SelectClauseList();
+//		for (int i = 0, imax = getRepetitions(); i < imax; i++) {
+//			SPJQuery lquery = new SPJQuery();
+//			int randomNesting =
+//					Utils.getRandomNumberAroundSomething(_generator, nesting,
+//							getNestingDeviation());
+//			createSubElements(source, target, 0, randomNesting, i,
+//					numOfElements, numOfElementsDeviation, lquery);
+//			// each local query will be added to the transformation query
+//			pselect = pquery.getSelect();
+//			pselect.add(lquery.getSelect().getTermName(0), lquery.getSelect()
+//					.getTerm(0));
+//		}
+//
+//		setScenario(scenario, pselect);
+//	}
 
 	private Character getAttrLetter(String attrName) {
 		if (attrMap.containsKey(attrName))
@@ -115,17 +115,17 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 					corrsList.add(cKey);
 					//
 					scenario.putCorrespondences(cKey, cVal);
-					corrs.add(scenario.getDocFac().addCorrespondence(
+					corrs.add(fac.addCorrespondence(
 							sourceName, attr, targetName, attr));
 				}
 				sourceAttrs.put(sourceName, attrLists);
 				targetAttrs.put(targetName, attrLists);
 
 				//
-				rels.add(scenario.getDocFac().addRelation(sourceName,
-						attrs.toArray(new String[] {}), true));
-				rels.add(scenario.getDocFac().addRelation(targetName,
-						attrs.toArray(new String[] {}), false));
+//				rels.add(fac.addRelation(sourceName,
+//						attrs.toArray(new String[] {}), true));
+//				rels.add(fac.addRelation(targetName,
+//						attrs.toArray(new String[] {}), false));
 			}
 			scenario.putMappings2Correspondences(mKey, corrsList);
 			scenario.putMappings2Sources(mKey, sourceAttrs);
@@ -137,20 +137,14 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 			scenario.putTransformationCode(tKey, getQueryString(e, mKey));
 			scenario.putTransformationRelName(tKey, targetName);
 
-			createMapping(scenario, rels.get(0), rels.get(1),
-					corrs.toArray(new CorrespondenceType[] {}));
+//			createMapping(rels.get(0), rels.get(1),
+//					corrs.toArray(new CorrespondenceType[] {}));
 
 			resetAttrLetters();
 		}
 	}
 
-	private void createMapping (MappingScenario scenario, RelationType source, RelationType target, CorrespondenceType[] corrs) throws Exception {
-		String[] vars = scenario.getDocFac().getFreshVars(0, source.getAttrArray().length);
-		MappingType m = scenario.getDocFac().addMapping(corrs);
-		scenario.getDocFac().addForeachAtom(m.getId(), source.getName(), vars);
-		scenario.getDocFac().addExistsAtom(m.getId(), target.getName(), vars);
-	}
-	
+
 	
 
 	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
@@ -204,15 +198,13 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		 * schema elements. In that case we do not create the atomic elements.
 		 */
 		for (int i = 0; i < A; i++) {
-			String randomName = Modules.nameFactory.getARandomName();
-			String name =
-					randomName + "_" + _stamp + repetition + "NL"
-							+ nestingLevel + "AE" + i;
+			curRep = repetition;
+			String name = randomAttrName(0, i);
 			SMarkElement es = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-			es.setHook(new String(_stamp + repetition + "NL" + nestingLevel
+			es.setHook(new String(getStamp() + repetition + "NL" + nestingLevel
 					+ "AE" + i));
 			SMarkElement et = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-			et.setHook(new String(_stamp + repetition + "NL" + nestingLevel
+			et.setHook(new String(getStamp() + repetition + "NL" + nestingLevel
 					+ "AE" + i));
 			sourceParent.addSubElement(es);
 			targetParent.addSubElement(et);
@@ -225,15 +217,12 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 
 		if (nestingLevel <= maxNesting) {
 			for (int i = 0; i < S; i++) {
-				String randomName = Modules.nameFactory.getARandomName();
-				String name =
-						randomName + "_" + _stamp + repetition + "NL"
-								+ nestingLevel + "CE" + i;
+				String name = randomRelName(i);
 				SMarkElement es = new SMarkElement(name, new Set(), null, 0, 0);
-				es.setHook(new String(_stamp + repetition + "NL" + nestingLevel
+				es.setHook(new String(getStamp() + repetition + "NL" + nestingLevel
 						+ "CE" + i));
 				SMarkElement et = new SMarkElement(name + "Copy", new Set(), null, 0, 0);
-				et.setHook(new String(_stamp + repetition + "NL" + nestingLevel
+				et.setHook(new String(getStamp() + repetition + "NL" + nestingLevel
 						+ "CE" + i));
 
 				// create the subquery that will be added to the parent query
@@ -258,22 +247,97 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		}
 	}
 
+	
+
+
+
 	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
+	protected void genMappings() throws Exception {
+		RelationType source = m.getSourceRels().get(0);
+		RelationType target = m.getTargetRels().get(0);
 		
+		String[] vars = fac.getFreshVars(0, source.getAttrArray().length);
+		MappingType m1 = fac.addMapping(m.getCorrs());
+		fac.addForeachAtom(m1.getId(), source.getName(), vars);
+		fac.addExistsAtom(m1.getId(), target.getName(), vars);
+		
+		m.addMapping(m1);	
 	}
 
 	@Override
-	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+	protected void genCorrespondences () {
+		RelationType source = m.getSourceRels().get(0);
+		RelationType target = m.getTargetRels().get(0);
 		
+		for(AttrDefType attr: source.getAttrArray()) {
+			CorrespondenceType c = fac.addCorrespondence(source.getName(), 
+					attr.getName(), target.getName(), attr.getName());
+			m.addCorr(c);
+		}
+	}
+	
+	@Override
+	protected void genTransformations () throws Exception {
+		TransformationType t;
+		RelationType target = m.getTargetRels().get(0);
+		RelationType source = m.getSourceRels().get(0);
+		String tRelName = target.getName();
+		String sRelName = source.getName();
+		
+		// create STBench query
+		SPJQuery lquery = new SPJQuery();
+		SelectClauseList lselect = lquery.getSelect();
+		
+		SPJQuery query = new SPJQuery();
+		SelectClauseList qselect = query.getSelect();
+		Variable var = new Variable(("XL" + 0 + "V" + 0).toLowerCase());
+		query.getFrom().add(var, new Projection(Path.ROOT, sRelName));
+		lselect.add(sRelName, query);
+		
+		for(int i = 0; i < target.getAttrArray().length; i++) {
+			String attrName = target.getAttrArray()[i].getName();
+			qselect.add(attrName, new Projection(var, attrName));
+		}
+		
+		SelectClauseList pselect = pquery.getSelect();
+		pselect.add(lquery.getSelect().getTermName(0), lquery.getSelect()
+				.getTerm(0));
+		SPJQuery q = (SPJQuery) pselect.getTerm(curRep);
+		
+		m.addQuery(q);
+		
+		// add Tramp transformation
+		t = fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), tRelName);
+		m.addTrans(t);
+	}
+	
+	
+	@Override
+	protected void genSourceRels() throws Exception {
+		int A = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+				numOfElementsDeviation);
+		String[] attrs = new String[A];
+		String relName = randomRelName(0);
+		String hook = getRelHook(0);
+		
+		for(int i = 0; i < A; i++) {
+			attrs[i] = randomAttrName(0, i);
+		}
+		RelationType rel = fac.addRelation(hook, relName, attrs, true);
+		fac.addPrimaryKey(rel.getName(), new String[] {attrs[0]}, true);
+		m.addSourceRel(rel);
 	}
 
 	@Override
 	protected void genTargetRels() {
-		// TODO Auto-generated method stub
+		RelationType s = m.getSourceRels().get(0);
+		String[] attrs = new String[s.getAttrArray().length];
+		String relName = s.getName() + "copy";
+		String hook = getRelHook(0);
 		
+		for(int i = 0; i < s.getAttrArray().length; i++)
+			attrs[i] = s.getAttrArray()[i].getName();
+		m.addTargetRel(fac.addRelation(hook, relName, attrs, false));
 	}
 
 	@Override

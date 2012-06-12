@@ -142,11 +142,7 @@ public class GLAVScenarioGenerator extends ScenarioGenerator
         mapQuery.setSelect(sel);
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	protected void genSourceRels() {

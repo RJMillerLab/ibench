@@ -415,11 +415,6 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         return elTrg;
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	protected void genSourceRels() {
@@ -430,6 +425,21 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 	@Override
 	protected void genTargetRels() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	protected void genMappings() {
+		
+	}
+	
+	@Override
+	protected void genTransformations() {
+		
+	}
+	
+	@Override
+	protected void genCorrespondences() {
 		
 	}
 

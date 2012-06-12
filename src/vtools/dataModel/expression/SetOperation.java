@@ -107,4 +107,14 @@ public abstract class SetOperation extends Query implements Visitable, Cloneable
 		}
 		return result;
 	}
+	
+	@Override
+	public int getNumberOfLeafs () {
+		int result = 0;
+		
+		for(Query q: _v)
+			result += q.getNumberOfLeafs();
+		
+		return result;
+	}
 }

@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.TransformationType;
+
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
@@ -25,133 +29,189 @@ import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.values.StringValue;
 
-public class ValueGenerationScenarioGenerator extends ScenarioGenerator
-{
-    private final String _stamp = "VG";
+public class ValueGenerationScenarioGenerator extends ScenarioGenerator {
+	private final String _stamp = "VG";
 
-    public ValueGenerationScenarioGenerator()
-    {
-        ;
-    }
+	public ValueGenerationScenarioGenerator() {
+		;
+	}
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
-    {
-    	init(configuration, scenario);
-        SPJQuery generatedQuery = new SPJQuery();
+	// public void generateScenario(MappingScenario scenario, Configuration
+	// configuration)
+	// {
+	// init(configuration, scenario);
+	// SPJQuery generatedQuery = new SPJQuery();
+	//
+	// for (int i = 0, imax = repetitions; i < imax; i++)
+	// createSubElements(source, target, numOfElements, numOfElementsDeviation,
+	// i, pquery, generatedQuery);
+	//
+	// setScenario(scenario, generatedQuery);
+	// }
 
-        for (int i = 0, imax = repetitions; i < imax; i++)
-        	createSubElements(source, target, numOfElements, numOfElementsDeviation, i, pquery, generatedQuery);
-        
-        setScenario(scenario, generatedQuery);
-    }
-    
-    private void setScenario(MappingScenario scenario, SPJQuery gquery) {
+	private void setScenario(MappingScenario scenario, SPJQuery gquery) {
 		SelectClauseList scl = gquery.getSelect();
-    	
+
 		for (int i = 0; i < scl.size(); i++) {
 			String tKey = scenario.getNextTid();
 			String mKey = scenario.getNextMid();
 			String targetName = scl.getTermName(i);
 			SelectClauseList atts = ((SPJQuery) scl.getTerm(i)).getSelect();
-			
-			HashMap<String, List<Character>> targetAttrs = new HashMap<String , List<Character>> ();
-			targetAttrs.put(targetName, new ArrayList<Character> ());
-			for(int j = 0; j < atts.size(); j++) {
+
+			HashMap<String, List<Character>> targetAttrs =
+					new HashMap<String, List<Character>>();
+			targetAttrs.put(targetName, new ArrayList<Character>());
+			for (int j = 0; j < atts.size(); j++) {
 				char attr = (char) ('a' + j);
 				targetAttrs.get(targetName).add(attr);
 			}
-//			sourceName = target.get fcl.getValue(j).toString().substring(1);
-//			targetName = sourceName + "Copy";
-//			String[] sclArray = scl.toString().split(",");
-//			for (int k = 0; k < sclArray.length; k++) {
-//				String attr = sclArray[k];
-//				attr = attr.replaceFirst("\\" + key + "/", "").trim();
-//				attrs.add(attr);
-//				attrLists.add(getAttrLetter(attr));
-//				//
-//			}
-//			targetAttrs.put(targetName, attrLists);
-			
-			
-			scenario.putTransformation2Mappings(tKey, Collections.singletonList(mKey));
-			scenario.putTransformationCode(tKey, getQueryString(scl.getValue(i).toString()));
+			// sourceName = target.get fcl.getValue(j).toString().substring(1);
+			// targetName = sourceName + "Copy";
+			// String[] sclArray = scl.toString().split(",");
+			// for (int k = 0; k < sclArray.length; k++) {
+			// String attr = sclArray[k];
+			// attr = attr.replaceFirst("\\" + key + "/", "").trim();
+			// attrs.add(attr);
+			// attrLists.add(getAttrLetter(attr));
+			// //
+			// }
+			// targetAttrs.put(targetName, attrLists);
+
+			scenario.putTransformation2Mappings(tKey,
+					Collections.singletonList(mKey));
+			scenario.putTransformationCode(tKey, getQueryString(scl.getValue(i)
+					.toString()));
 			scenario.putTransformationRelName(tKey, targetName);
 			scenario.putMappings2Correspondences(mKey, null);
 			scenario.putMappings2Sources(mKey, null);
 			scenario.putMappings2Targets(mKey, targetAttrs);
 		}
-   }
-    
-   private String getQueryString(String origQ) {
+	}
+
+	private String getQueryString(String origQ) {
 		return origQ.replace("(", "").replace(")", ""); // remove brackets
-   }
+	}
 
-    //
-    // Algorithm: Schema generated is the following
-    // Target
-    // _DataSetVGCE0
-    // _____AttributeVGCE0AE0
-    // _____AttributeVGCE0AE1
-    // _____AttributeVGCE0AE2
-    // ... ...
-    // _DataSetVGCE1
-    // _____AttributeVGCE1AE0
-    // _____AttributeVGCE1AE1
-    // _____AttributeVGCE1AE2
-    // .....
-    private void createSubElements(Element sourceParent, Element targetParent, int numOfElements,
-            int numOfElementsDeviation, int repetition, SPJQuery pquery, SPJQuery generatedQuery)
-    {
-        String randomName = Modules.nameFactory.getARandomName();
-        String nameT = randomName + "_" + _stamp + "CE" + repetition;
-        SMarkElement ce = new SMarkElement(nameT, new Set(), null, 0,0);
-        ce.setHook(new String(_stamp + "CE" + repetition));
-        targetParent.addSubElement(ce);
+	//
+	// Algorithm: Schema generated is the following
+	// Target
+	// _DataSetVGCE0
+	// _____AttributeVGCE0AE0
+	// _____AttributeVGCE0AE1
+	// _____AttributeVGCE0AE2
+	// ... ...
+	// _DataSetVGCE1
+	// _____AttributeVGCE1AE0
+	// _____AttributeVGCE1AE1
+	// _____AttributeVGCE1AE2
+	// .....
+	private void createSubElements(Element sourceParent, Element targetParent,
+			int numOfElements, int numOfElementsDeviation, int repetition,
+			SPJQuery pquery, SPJQuery generatedQuery) {
+		String randomName = Modules.nameFactory.getARandomName();
+		String nameT = randomName + "_" + _stamp + "CE" + repetition;
+		SMarkElement ce = new SMarkElement(nameT, new Set(), null, 0, 0);
+		ce.setHook(new String(_stamp + "CE" + repetition));
+		targetParent.addSubElement(ce);
 
-        // decide randomly how many elements to create
-        String name = null;
-        SPJQuery query = new SPJQuery();
-        SelectClauseList select = query.getSelect();
-        
-        int ranNumOfEl = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-        for (int i = 0, imax = ranNumOfEl; i < imax; i++)
-        {
-            randomName = Modules.nameFactory.getARandomName();
-            name = randomName + "_" + _stamp + "CE" + repetition + "AE" + i;
-            SMarkElement et = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            et.setHook(new String(_stamp + "CE" + repetition + "AE" + i));
-            ce.addSubElement(et);
-            
-            // add the constants value to the select clause
-            select.add(name, new ConstantAtomicValue(new StringValue(randomName)));
-        }
-        
-        //  add everything to the final query
-        query.setSelect(select);
-        SelectClauseList pselect = pquery.getSelect();
-        SelectClauseList gselect = generatedQuery.getSelect();
-        pselect.add(nameT, query);
-        gselect.add(nameT, query);
-        pquery.setSelect(pselect);
-        generatedQuery.setSelect(gselect);
-    }
+		// decide randomly how many elements to create
+		String name = null;
+		SPJQuery query = new SPJQuery();
+		SelectClauseList select = query.getSelect();
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
+		int ranNumOfEl =
+				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+						numOfElementsDeviation);
+		for (int i = 0, imax = ranNumOfEl; i < imax; i++) {
+			randomName = Modules.nameFactory.getARandomName();
+			name = randomName + "_" + _stamp + "CE" + repetition + "AE" + i;
+			SMarkElement et = new SMarkElement(name, Atomic.STRING, null, 0, 0);
+			et.setHook(new String(_stamp + "CE" + repetition + "AE" + i));
+			ce.addSubElement(et);
+
+			// add the constants value to the select clause
+			select.add(name, new ConstantAtomicValue(
+					new StringValue(randomName)));
+		}
+
+		// add everything to the final query
+		query.setSelect(select);
+		SelectClauseList pselect = pquery.getSelect();
+		SelectClauseList gselect = generatedQuery.getSelect();
+		pselect.add(nameT, query);
+		gselect.add(nameT, query);
+		pquery.setSelect(pselect);
+		generatedQuery.setSelect(gselect);
 	}
 
 	@Override
 	protected void genSourceRels() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void genTargetRels() {
-		// TODO Auto-generated method stub
+		String relName = randomRelName(0);
+		String[] attrs;
+		String hook = getRelHook(0);
 		
+		int ranNumOfEl =Utils.getRandomNumberAroundSomething(_generator, 
+				numOfElements, numOfElementsDeviation);
+		attrs = new String[ranNumOfEl];
+		
+		for (int i = 0, imax = ranNumOfEl; i < imax; i++)
+			attrs[i] = randomAttrName(0, i);	
+		
+		RelationType tRel = fac.addRelation(hook, relName, attrs, false);
+		m.addTargetRel(tRel);
+	}
+
+	@Override
+	protected void genMappings() throws Exception {
+		MappingType m1 = fac.addMapping(m.getCorrs());
+		
+		RelationType tRel = m.getTargetRels().get(0);
+		fac.addExistsAtom(m1.getId(), tRel.getName(), 
+				fac.getFreshVars(0, tRel.sizeOfAttrArray()));
+		
+		m.addMapping(m1);
+	}
+
+	@Override
+	protected void genTransformations() throws Exception {
+		TransformationType t;
+		String[] attrs = m.getAttrIds(0, false);
+		String nameT = m.getTargetRels().get(0).getName();
+		
+		// gen query
+		SPJQuery generatedQuery = new SPJQuery();
+		SPJQuery query = new SPJQuery();
+		SelectClauseList select = query.getSelect();
+
+		for (String attName: attrs) {
+			String randomName = Modules.nameFactory.getARandomName();
+			// add the constants value to the select clause
+			select.add(attName, new ConstantAtomicValue(
+					new StringValue(randomName)));
+		}
+
+		// add everything to the final query
+		query.setSelect(select);
+		SelectClauseList pselect = pquery.getSelect();
+		SelectClauseList gselect = generatedQuery.getSelect();
+		pselect.add(nameT, query);
+		gselect.add(nameT, query);
+		pquery.setSelect(pselect);
+		generatedQuery.setSelect(gselect);
+		
+		// gen trans
+		t = fac.addTransformation(query.toTrampString(m.getMapIds()), 
+				m.getMapIds(), nameT);
+		m.addTrans(t);
+	}
+
+	@Override
+	protected void genCorrespondences() {
+
 	}
 
 	@Override

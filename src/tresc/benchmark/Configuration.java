@@ -1,11 +1,13 @@
 package tresc.benchmark;
 
+import java.io.File;
 import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.kohsuke.args4j.Option;
 import org.vagabond.util.PropertyWrapper;
 
+import tresc.benchmark.Constants.DBOption;
 import tresc.benchmark.Constants.DESErrorType;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.MappingLanguageType;
@@ -25,7 +27,8 @@ public class Configuration {
 	private int[][] _configurations;
 	private boolean[] _outputOpts;
 	private boolean[] _trampXMLoutputOpts;
-
+	private String[] _dbOptions;
+	
 	@Option(name = "-sourceSchemaFile",
 			usage = "name for the source schema file")
 	String sourceSchemaFile;
@@ -133,6 +136,14 @@ public class Configuration {
 		for(DESErrorType e: Constants.DESErrorType.values()) {
 			int val = prop.getInt(e.toString(), 0);
 			_numExplsForType[e.ordinal()] = val;
+		}
+		prop.resetPrefix();
+		
+		// database connection options
+		prop.setPrefix("DB");
+		for (DBOption o : Constants.DBOption.values()) {
+			String val = prop.getProperty(o.toString(), _dbOptions[o.ordinal()]);
+			_dbOptions[o.ordinal()] = val;
 		}
 		prop.resetPrefix();
 		
@@ -259,6 +270,8 @@ public class Configuration {
 		_trampXMLoutputOpts =
 				new boolean[Constants.TrampXMLOutputSwitch.values().length];
 		_numExplsForType = new int[Constants.DESErrorType.values().length];
+		_dbOptions = new String[Constants.DBOption.values().length];
+		
 		randomGenerator = new Random();
 		initOptionsDefaults();
 	}
@@ -271,6 +284,10 @@ public class Configuration {
 		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values())
 			_trampXMLoutputOpts[s.ordinal()] =
 					Constants.trampXmlOutDefaults.get(s);
+		
+		for (DBOption o : Constants.DBOption.values())
+			_dbOptions[o.ordinal()] =
+					Constants.dbOptionDefaults.get(o);
 	}
 
 	private void setDefaultConfiguration() {
@@ -503,6 +520,10 @@ public class Configuration {
 	public static String getInstancePathPrefix() {
 		return instancePathPrefix;
 	}
+	
+	public static String getAbsoluteInstancePath () {
+		return new File(instancePathPrefix).getAbsolutePath();
+	}
 
 	public DataGenType getDataGen() {
 		return dataGen;
@@ -518,6 +539,10 @@ public class Configuration {
 
 	public void setMapType(MappingLanguageType mapType) {
 		this.mapType = mapType;
+	}
+	
+	public String getDBOption (DBOption o) {
+		return _dbOptions[o.ordinal()];
 	}
 	
 	

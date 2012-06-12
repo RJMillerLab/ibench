@@ -3,47 +3,68 @@ package smark.support;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.vagabond.util.LoggerUtil;
+import org.vagabond.xmlmodel.AttrDefType;
+import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.TransformationType;
 
 import vtools.dataModel.expression.Query;
 import vtools.dataModel.types.Set;
 
 public class PartialMapping {
 
-	private List<Set> sourceRels;
-	private List<Set> targetRels;
+	static Logger log = Logger.getLogger(PartialMapping.class);
+	
+	private List<RelationType> sourceRels;
+	private List<RelationType> targetRels;
+	private List<CorrespondenceType> corrs;
 	private List<MappingType> maps;
-	private List<Query> trans;
+	private List<Query> queries;
+	private List<TransformationType> trans;
 	
 	public PartialMapping () {
-		sourceRels = new ArrayList<Set> ();
-		targetRels = new ArrayList<Set> ();
+		sourceRels = new ArrayList<RelationType> ();
+		targetRels = new ArrayList<RelationType> ();
+		setCorrs(new ArrayList<CorrespondenceType> ());
 		maps = new ArrayList<MappingType> ();
-		trans = new ArrayList<Query> ();
+		queries = new ArrayList<Query> ();
+		setTrans(new ArrayList<TransformationType> ());
 	}
 
-	public List<Set> getSourceRels() {
+	public List<RelationType> getSourceRels() {
 		return sourceRels;
 	}
 
-	public void setSourceRels(List<Set> sourceRels) {
+	public void setSourceRels(List<RelationType> sourceRels) {
 		this.sourceRels = sourceRels;
 	}
 	
-	public void addSourceRel (Set sourceRel) {
+	public void addSourceRel (RelationType sourceRel) {
 		this.sourceRels.add(sourceRel);
 	}
 
-	public List<Set> getTargetRels() {
+	public List<RelationType> getTargetRels() {
 		return targetRels;
 	}
 
-	public void setTargetRels(List<Set> targetRels) {
+	public void setTargetRels(List<RelationType> targetRels) {
 		this.targetRels = targetRels;
 	}
 	
-	public void addTargetRel (Set targetRel) {
+	public void addTargetRel (RelationType targetRel) {
 		this.targetRels.add(targetRel);
+	}
+	
+	public String[] getMapIds () {
+		String[] result = new String[maps.size()];
+		
+		for(int i = 0; i < maps.size(); i++)
+			result[i] = maps.get(i).getId();
+		
+		return result;
 	}
 
 	public List<MappingType> getMaps() {
@@ -58,16 +79,71 @@ public class PartialMapping {
 		this.maps.add(m);
 	}
 
-	public List<Query> getTrans() {
+	public List<Query> getQueries() {
+		return queries;
+	}
+
+	public void setQueries(List<Query> trans) {
+		this.queries = trans;
+	}
+	
+	public void addQuery(Query trans) {
+		this.queries.add(trans);
+	}
+
+	public List<CorrespondenceType> getCorrs() {
+		return corrs;
+	}
+
+	public void setCorrs(List<CorrespondenceType> corrs) {
+		this.corrs = corrs;
+	}
+	
+	public void addCorr (CorrespondenceType corr) {
+		corrs.add(corr);
+	}
+
+	public List<TransformationType> getTrans() {
 		return trans;
 	}
 
-	public void setTrans(List<Query> trans) {
+	public void setTrans(List<TransformationType> trans) {
 		this.trans = trans;
 	}
-	
-	public void addTrans(Query trans) {
-		this.trans.add(trans);
+
+	public void addTrans(TransformationType t) {
+		this.trans.add(t);
 	}
 	
+	@Override
+	public String toString() {
+		StringBuffer result = new StringBuffer(); 
+		
+		result.append("PARTIAL MAPPING:\n\n");
+		for(RelationType rel: sourceRels)
+			result.append(rel.toString());
+		for(RelationType rel: targetRels)
+			result.append(rel.toString());
+		for(MappingType map: maps)
+			result.append(map.toString());
+		for(Query q: queries)
+			try {
+				result.append(q.toTrampString());
+			}
+			catch (Exception e) {
+				LoggerUtil.logException(e, log);
+			}
+		return result.toString();
+	}
+	
+	public String[] getAttrIds (int relId, boolean source) {
+		RelationType rel = source ? sourceRels.get(relId) 
+				: targetRels.get(relId);
+		String[] result = new String[rel.getAttrArray().length];
+		for(int i = 0; i < rel.getAttrArray().length; i++)
+			result[i] = rel.getAttrArray(i).getName();
+		
+		return result;
+	}
+
 }

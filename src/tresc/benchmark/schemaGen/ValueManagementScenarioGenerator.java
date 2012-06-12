@@ -137,12 +137,6 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
     }
 
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	@Override
 	protected void genSourceRels() {
@@ -157,6 +151,20 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
 		
 	}
 
+	@Override
+	protected void genMappings() {
+		
+	}
+	
+	@Override
+	protected void genTransformations() {
+		
+	}
+	
+	@Override
+	protected void genCorrespondences() {
+		
+	}
 
 	@Override
 	public ScenarioName getScenType() {

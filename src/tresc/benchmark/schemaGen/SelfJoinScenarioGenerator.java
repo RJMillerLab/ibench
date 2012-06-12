@@ -123,7 +123,6 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
     		ArrayList<String> mList = new ArrayList<String>();
     		mList.add(mKey);
     		scenario.putTransformation2Mappings(tKey, mList);
-    		// scenario.putTransformationCode(tKey, getQueryString(realQ));
     		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
     		scenario.putTransformationRelName(tKey, targetName);
     			
@@ -364,11 +363,7 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         return srcEl;
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	protected void genSourceRels() {
@@ -382,6 +377,21 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
 		
 	}
 
+	@Override
+	protected void genMappings() {
+		
+	}
+	
+	@Override
+	protected void genTransformations() {
+		
+	}
+	
+	@Override
+	protected void genCorrespondences() {
+		
+	}
+	
 	@Override
 	public ScenarioName getScenType() {
 		return ScenarioName.SELFJOINS;

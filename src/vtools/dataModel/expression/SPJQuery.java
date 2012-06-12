@@ -296,49 +296,51 @@ public class SPJQuery extends Query implements Visitable, Cloneable, Trampable
 			log.debug("Add attr " + attrString);
 		}
 		
-		result.append("\nFROM ");
-		for (int i = 0; i < _from.size(); i++) {
-			// check whether we have a subquery or a relation 
-			Object fromItem = _from.getValue(i);
-			
-			if (fromItem instanceof Query) {
-				String subQuery = ""; // keep compiler quiet
+		if (_from.size() > 0) {
+			result.append("\nFROM ");
+			for (int i = 0; i < _from.size(); i++) {
+				// check whether we have a subquery or a relation 
+				Object fromItem = _from.getValue(i);
 				
-				if (fromItem instanceof SPJQuery) {
-					SPJQuery spj = (SPJQuery) fromItem;
-					subQuery = spj.toTrampString(idGen);
+				if (fromItem instanceof Query) {
+					String subQuery = ""; // keep compiler quiet
+					
+					if (fromItem instanceof SPJQuery) {
+						SPJQuery spj = (SPJQuery) fromItem;
+						subQuery = spj.toTrampString(idGen);
+					}
+					else if (fromItem instanceof SetOperation) {
+						SetOperation setOp = (SetOperation) fromItem;
+						subQuery = setOp.toTrampString(idGen);
+					}
+					else
+						throw new Exception("Unkown subquery type " + fromItem.getClass());
+					
+					subQuery = "(" + subQuery + ")";
+					
+					String key = _from.getKey(i).toString();
+					key = key.substring(1).toLowerCase();
+					String relCode;
+					
+					
+					relCode = subQuery + " AS " + key;
+					result.append(relCode);
 				}
-				else if (fromItem instanceof SetOperation) {
-					SetOperation setOp = (SetOperation) fromItem;
-					subQuery = setOp.toTrampString(idGen);
+				else if (fromItem instanceof Projection) {
+					String key = _from.getKey(i).toString();
+					key = key.substring(1).toLowerCase();
+					String relName = _from.getValue(i).toString().toLowerCase();
+					relName = "source." + relName.substring(1); // remove the first "/"
+					String relCode = relName + " ANNOT('${" + idGen.getNextId() + "}') AS " + key;
+					rels.add(relName);
+					
+					result.append(relCode);
+					if (i != _from.size() - 1)
+						result.append(", ");
 				}
-				else
-					throw new Exception("Unkown subquery type " + fromItem.getClass());
-				
-				subQuery = "(" + subQuery + ")";
-				
-				String key = _from.getKey(i).toString();
-				key = key.substring(1).toLowerCase();
-				String relCode;
-				
-				
-				relCode = subQuery + " AS " + key;
-				result.append(relCode);
-			}
-			else if (fromItem instanceof Projection) {
-				String key = _from.getKey(i).toString();
-				key = key.substring(1).toLowerCase();
-				String relName = _from.getValue(i).toString().toLowerCase();
-				relName = "source." + relName.substring(1); // remove the first "/"
-				String relCode = relName + " ANNOT('${" + idGen.getNextId() + "}') AS " + key;
-				rels.add(relName);
-				
-				result.append(relCode);
-				if (i != _from.size() - 1)
-					result.append(", ");
-			}
-			else {
-				throw new Exception("unkown from clause element " + fromItem.getClass());
+				else {
+					throw new Exception("unkown from clause element " + fromItem.getClass());
+				}
 			}
 		}
 
@@ -382,10 +384,24 @@ public class SPJQuery extends Query implements Visitable, Cloneable, Trampable
 	@Override
 	public String toTrampStringOneMap(String mapping) throws Exception {
 		String result = toTrampString();
-		for(int i = 0; i < _from.size(); i++) {
+		for(int i = 0; i < getNumberOfLeafs(); i++) {
 			result = result.replace("${" + i + "}", mapping);
 		}
 		return result;
+	}
+	
+	public int getNumberOfLeafs () {
+		int numLeafs = 0;
+		for(int i = 0; i < _from.size(); i++) {
+			Object fromItem = _from.getValue(i);
+			
+			if (fromItem instanceof Query)
+				numLeafs += ((Query) fromItem).getNumberOfLeafs();
+			if (fromItem instanceof Projection)
+				numLeafs++;
+		}
+			
+		return numLeafs;
 	}
     
 }

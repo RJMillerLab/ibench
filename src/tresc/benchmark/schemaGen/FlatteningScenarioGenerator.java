@@ -164,11 +164,7 @@ public class FlatteningScenarioGenerator extends ScenarioGenerator
         }
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	protected void genSourceRels() {

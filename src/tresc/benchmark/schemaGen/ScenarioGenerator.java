@@ -3,12 +3,16 @@ package tresc.benchmark.schemaGen;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
+import org.vagabond.benchmark.model.TrampXMLModel;
+import org.vagabond.xmlmodel.CorrespondenceType;
 
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.ScenarioName;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
@@ -19,6 +23,9 @@ import vtools.utils.structures.AssociativeArray;
  * Each generator of a scenario case subclasses this class.
  */
 public abstract class ScenarioGenerator {
+	
+	static Logger log = Logger.getLogger(ScenarioGenerator.class);
+	
 	protected final String _attributes = "abcdefghijklmnopqrstuvwxyz"; // Can
 																		// only
 																		// hold
@@ -50,45 +57,52 @@ public abstract class ScenarioGenerator {
 	protected int numOfParams;
 	protected int numOfParamsDeviation;
 	
+	protected int curRep;
+	
 	protected Schema source;
 	protected Schema target;
 	protected SPJQuery pquery;
 	
 	protected TrampModelFactory fac;
-
-
-
-
-
-
+	protected TrampXMLModel model;
+	
 	public void generateScenario(MappingScenario scenario,
 			Configuration configuration) throws Exception {
 		init(configuration, scenario);
 		initPartialMapping();
-
-		for (int i = 0; i < repetitions; i++) {
+		log.debug("CREATE " + repetitions + " scenarios of type <" + getScenType() + ">");
+		
+		for (curRep = 0; curRep < repetitions; curRep++) {
 			initPartialMapping();
 			genSchemas();
-			genMapsAndTrans();
-			scenario.get_basicScens().put(getScenType() + "_" + i, m);
+			genCorrespondences();
+			genMappings();
+			genTransformations();
+			scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
+			log.debug("Repetition <" + curRep +"> is " + m.toString());
 		}
 	}
 
-	protected abstract void genMapsAndTrans();
-
-	protected void genSchemas() {
+	protected void genCorrespondences() {}
+	
+	protected void genMappings() throws Exception {}
+	
+	protected void genTransformations() throws Exception {}
+	
+	protected void genSchemas() throws Exception {
 		// TODO switch on schema reuse
 		genSourceRels();
 		genTargetRels();
 	}
 
-	protected abstract void genSourceRels();
+	protected abstract void genSourceRels() throws Exception;
 
-	protected abstract void genTargetRels();
+	protected abstract void genTargetRels() throws Exception;
 
 	protected void init(Configuration configuration,
 			MappingScenario mappingScenario) {
 		this.scen = mappingScenario;
+		model = scen.getDoc();
 		fac = scen.getDocFac();
 		m = null;
 		_generator = configuration.getRandomGenerator();
@@ -166,4 +180,39 @@ public abstract class ScenarioGenerator {
 		this.nesting = nesting;
 	}
 
+	public String getStamp() {
+		return Constants.nameForScenarios.get(getScenType()).substring(1);
+	}
+	
+	protected String randomRelName(int relNum) {
+		String randomName = Modules.nameFactory.getARandomName();
+		String name =
+				randomName + "_" + getStamp() + curRep + "NL"
+						+ 0 + "CE" + relNum;
+		return name.toLowerCase();
+	}
+	
+	protected String randomAttrName(int relNum, int attrNum) {
+		String randomName = Modules.nameFactory.getARandomName();
+		String name = randomName + "_" + getStamp() + curRep + "NL"
+						+ relNum + "AE" + attrNum;
+		return name.toLowerCase();
+	}
+	
+	protected String getAttrHook (int relNum, int attrNum) {
+		return getStamp() + curRep + "NL" + relNum + "AE" + attrNum;
+	}
+	
+	protected String getRelHook (int relNum) {
+		return getStamp() + curRep + "NL" + 0 + "CE" + relNum;
+	}
+	
+	protected void addCorr (int sRel, int sAttr, int tRel, int tAttr) {
+		String toRel = m.getTargetRels().get(tRel).getName();
+		String fromRel = m.getSourceRels().get(sRel).getName();
+		String fromAttr = model.getRelAttr(sRel, sAttr, true);
+		String toAttr = model.getRelAttr(tRel, tAttr, false);
+		CorrespondenceType c = fac.addCorrespondence(fromRel, fromAttr, toRel, toAttr);
+		m.addCorr(c);
+	}
 }

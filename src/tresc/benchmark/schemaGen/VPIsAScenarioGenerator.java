@@ -261,11 +261,6 @@ public class VPIsAScenarioGenerator extends ScenarioGenerator
         pquery.setSelect(pselect);
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	protected void genSourceRels() {
@@ -276,6 +271,21 @@ public class VPIsAScenarioGenerator extends ScenarioGenerator
 	@Override
 	protected void genTargetRels() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	protected void genMappings() {
+		
+	}
+	
+	@Override
+	protected void genTransformations() {
+		
+	}
+	
+	@Override
+	protected void genCorrespondences() {
 		
 	}
 

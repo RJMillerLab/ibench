@@ -385,11 +385,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
         return srcRel;
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	protected void genSourceRels() {
@@ -403,6 +399,21 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
 		
 	}
 
+	@Override
+	protected void genMappings() {
+		
+	}
+	
+	@Override
+	protected void genTransformations() {
+		
+	}
+	
+	@Override
+	protected void genCorrespondences() {
+		
+	}
+	
 	@Override
 	public ScenarioName getScenType() {
 		return ScenarioName.VERTPARTITION;

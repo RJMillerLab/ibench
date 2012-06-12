@@ -156,11 +156,7 @@ public class NestingScenarioGenerator extends ScenarioGenerator
 
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	protected void genSourceRels() {
@@ -174,6 +170,8 @@ public class NestingScenarioGenerator extends ScenarioGenerator
 		
 	}
 
+	
+	
 	@Override
 	public ScenarioName getScenType() {
 		return ScenarioName.NESTING;

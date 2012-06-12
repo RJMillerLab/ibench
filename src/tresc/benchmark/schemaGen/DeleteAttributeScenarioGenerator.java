@@ -132,11 +132,7 @@ public class DeleteAttributeScenarioGenerator extends ScenarioGenerator
         pquery.setSelect(pselect);
     }
 
-	@Override
-	protected void genMapsAndTrans() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	protected void genSourceRels() {

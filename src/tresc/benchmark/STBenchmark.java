@@ -134,15 +134,17 @@ public class STBenchmark {
 		}
 		
 		if (_configuration.getOutputOption(OutputOption.TrampXML)) {
-			StringBuffer mappingScenarioXMLBuffer = new StringBuffer();
-			schemaWriter.print(mappingScenarioXMLBuffer, scenario, 0,
-					instDir.getAbsolutePath(), _configuration);
+//			StringBuffer mappingScenarioXMLBuffer = new StringBuffer();
+			
+//			schemaWriter.print(mappingScenarioXMLBuffer, scenario, 0,
+//					instDir.getAbsolutePath(), _configuration);
 
 			try {
 				BufferedWriter bufWriter =
 						new BufferedWriter(new FileWriter(new File(
 								Configuration.schemaPathPrefix, S1)));
-				bufWriter.write(mappingScenarioXMLBuffer.toString());
+				scenario.getDoc().getDocument().save(bufWriter);
+//				bufWriter.write(mappingScenarioXMLBuffer.toString());
 				bufWriter.close();
 			}
 			catch (IOException e) {
