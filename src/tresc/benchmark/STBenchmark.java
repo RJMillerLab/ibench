@@ -8,6 +8,7 @@ import java.io.RandomAccessFile;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.xmlbeans.XmlOptions;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.vagabond.util.LoggerUtil;
@@ -140,10 +141,16 @@ public class STBenchmark {
 //					instDir.getAbsolutePath(), _configuration);
 
 			try {
+				File trampFile = new File(Configuration.schemaPathPrefix, S1);
+//				if (trampFile.exists()) {
+//					trampFile.delete();
+//					trampFile.createNewFile();
+//				}
 				BufferedWriter bufWriter =
-						new BufferedWriter(new FileWriter(new File(
-								Configuration.schemaPathPrefix, S1)));
-				scenario.getDoc().getDocument().save(bufWriter);
+						new BufferedWriter(new FileWriter(trampFile));
+				XmlOptions options = new XmlOptions();
+				options.setSavePrettyPrint();
+				scenario.getDoc().getDocument().save(bufWriter, options);
 //				bufWriter.write(mappingScenarioXMLBuffer.toString());
 				bufWriter.close();
 			}

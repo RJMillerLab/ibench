@@ -23,9 +23,6 @@ import vtools.dataModel.types.Set;
 
 public class AddAttributeScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
-
-    private final String _stamp = "AA";
     private int skolemCounter = 0;
 
     public AddAttributeScenarioGenerator()
@@ -35,20 +32,9 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
 
     public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
-        _generator = configuration.getRandomGenerator();
-
-        Schema source = scenario.getSource();
-        Schema target = scenario.getTarget();
-        SPJQuery pquery = scenario.getTransformation();
-
-        // first let's read the parameters
-        int repetitions = configuration.getScenarioRepetitions(Constants.ScenarioName.ADDATTRIBUTE.ordinal());
-        // How many elements to have in each table
-        int numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-        int numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
-        int numNewAttr = configuration.getParam(Constants.ParameterName.NumOfNewAttributes);
-        int typeOfSkolem = configuration.getParam(Constants.ParameterName.SkolemKind);
-
+    	init(configuration, scenario);
+    	SPJQuery pquery = scenario.getTransformation();
+        
         for (int i = 0, imax = repetitions; i < imax; i++)
         {
             // decide how many attributes will the source table have
@@ -95,7 +81,7 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
     			break;
     	}
     	
-    	String coding = _stamp + repetition;
+    	String coding = getStamp() + repetition;
     	int curTbl = repetition;
     	
     	// First create the source table
@@ -114,7 +100,7 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
     	
         // generate random key name even though it may not be used to avoid variable may not have been initialized errors
         String randomName = Modules.nameFactory.getARandomName();
-        String keyName = randomName + "_" + _stamp + repetition + "KE0";
+        String keyName = randomName + "_" + getStamp() + repetition + "KE0";
         
     	if(useKey)
         {
@@ -130,14 +116,14 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
 	        
 	        // create the actual key and add it to the source schema
             SMarkElement es = new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
-            es.setHook(new String(_stamp + repetition + "KE0"));
+            es.setHook(new String(getStamp() + repetition + "KE0"));
             source.getSubElement(curTbl).addSubElement(es);
             // add the key attribute to the source key
             srcKey.addKeyAttr(new Projection(new Variable("X"),keyName));
                 
             // add the key to the target schema
             SMarkElement et = new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
-            et.setHook(new String(_stamp + repetition + "KE0"));
+            et.setHook(new String(getStamp() + repetition + "KE0"));
             target.getSubElement(curTbl).addSubElement(et);
             // add the key attribute to the target key
             tgtKey.addKeyAttr(new Projection(new Variable("Y"),keyName));
@@ -156,7 +142,7 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < numOfSrcTblAttr; i++)
         {
             String namePrefix = Modules.nameFactory.getARandomName();
-            coding = _stamp + repetition + "A" + i;
+            coding = getStamp() + repetition + "A" + i;
             String srcAttName = namePrefix + "_" + coding;
             SMarkElement el = new SMarkElement(srcAttName, Atomic.STRING, null, 0, 0);
             el.setHook(new String(coding));
@@ -187,7 +173,7 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
         }
         
         // now we need to add a fixed number of attributes to the target
-        coding = _stamp + repetition + "NewAtt";
+        coding = getStamp() + repetition + "NewAtt";
         
         // by default use all elements in the table as arguments for skolem generation
         int numArgsForSkolem = numOfSrcTblAttr;
@@ -245,7 +231,24 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
             
         pquery.setSelect(pselect);
     }
+    
+	@Override
+	protected void genCorrespondences() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	protected void genMappings() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTransformations() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	protected void genSourceRels() {
@@ -263,4 +266,6 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator
 	public ScenarioName getScenType() {
 		return ScenarioName.ADDATTRIBUTE;
 	}
+
+
 }

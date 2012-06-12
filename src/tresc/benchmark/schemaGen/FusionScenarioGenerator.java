@@ -710,7 +710,6 @@ public class FusionScenarioGenerator extends ScenarioGenerator {
 			
 			// create relation
 			sourceRel = fac.addRelation(hook, elName, attrs, true);
-			m.addSourceRel(sourceRel);
 
 			// add key
 			keyS[frag] = fac.addPrimaryKey(elName, keyAttrs, true);
@@ -735,7 +734,6 @@ public class FusionScenarioGenerator extends ScenarioGenerator {
 
 		targetRel = fac.addRelation(hook, relName, attrs, false);
 		fac.addPrimaryKey(relName, keyAttrs, false);
-		m.addTargetRel(targetRel);
 	}
 
 	@Override
@@ -760,8 +758,6 @@ public class FusionScenarioGenerator extends ScenarioGenerator {
 		int numTAttrs = tRel.getAttrArray().length;
 		fac.addExistsAtom(m1.getId(), tRel.getName(), 
 				fac.getFreshVars(0, numTAttrs));
-		
-		m.addMapping(m1);
 	}
 
 	@Override
@@ -773,7 +769,6 @@ public class FusionScenarioGenerator extends ScenarioGenerator {
 		
 		t = fac.addTransformation(code, m.getMapIds(), m.getTargetRels().get(0).getName());
 		m.addQuery(q);
-		m.addTrans(t);
 	}
 	
 	private SPJQuery genQuery () {

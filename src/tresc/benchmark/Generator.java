@@ -110,6 +110,7 @@ public class Generator {
 	public void generateSourceData(MappingScenario scenario) throws Exception {
 		dataGenerator.setSchema(scenario.getSource());
 		dataGenerator.setConstraints(scenario.getSrcConstraints());
+		dataGenerator.setScenario(scenario);
 		dataGenerator.generateData();
 	}
 

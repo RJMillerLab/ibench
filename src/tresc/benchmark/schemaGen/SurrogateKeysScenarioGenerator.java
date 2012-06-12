@@ -39,34 +39,34 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-    {
-    	init(configuration, scenario);
-        
-        SPJQuery generatedQuery = new SPJQuery();
-        
-        for (int i = 0, imax = repetitions; i < imax; i++)
-        {
-            int elements = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-            int params = Utils.getRandomNumberAroundSomething(_generator, numOfParams, numOfParamsDeviation);
-            // make sure params are at least 2
-            params = (params < 2) ? 2 : params;
-            // and the elements are at least as many as the the params
-            if (params > elements)
-                elements = params;
-            String randomName = Modules.nameFactory.getARandomName();
-            String name = randomName + "_" + _stamp + "CE" + i;
-            SMarkElement srcElem = new SMarkElement(name, new Set(), null, 0, 0);
-            srcElem.setHook(new String(_stamp + "CE" + i));
-            source.addSubElement(srcElem);
-            SMarkElement trgElem = new SMarkElement(name + "Skey", new Set(), null, 0, 0);
-            trgElem.setHook(new String(_stamp + "CE" + i));
-            target.addSubElement(trgElem);
-            createSubElements(srcElem, trgElem, elements, params, pquery, generatedQuery, scenario);
-        }
-        
-        setScenario(scenario, generatedQuery, pquery);
-    }
+//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
+//    {
+//    	init(configuration, scenario);
+//        
+//        SPJQuery generatedQuery = new SPJQuery();
+//        
+//        for (int i = 0, imax = repetitions; i < imax; i++)
+//        {
+//            int elements = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+//            int params = Utils.getRandomNumberAroundSomething(_generator, numOfParams, numOfParamsDeviation);
+//            // make sure params are at least 2
+//            params = (params < 2) ? 2 : params;
+//            // and the elements are at least as many as the the params
+//            if (params > elements)
+//                elements = params;
+//            String randomName = Modules.nameFactory.getARandomName();
+//            String name = randomName + "_" + _stamp + "CE" + i;
+//            SMarkElement srcElem = new SMarkElement(name, new Set(), null, 0, 0);
+//            srcElem.setHook(new String(_stamp + "CE" + i));
+//            source.addSubElement(srcElem);
+//            SMarkElement trgElem = new SMarkElement(name + "Skey", new Set(), null, 0, 0);
+//            trgElem.setHook(new String(_stamp + "CE" + i));
+//            target.addSubElement(trgElem);
+//            createSubElements(srcElem, trgElem, elements, params, pquery, generatedQuery, scenario);
+//        }
+//        
+//        setScenario(scenario, generatedQuery, pquery);
+//    }
 
     private Character getAttrLetter(String attrName) {
     	if (attrMap.containsKey(attrName))

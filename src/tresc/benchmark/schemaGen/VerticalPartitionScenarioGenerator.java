@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
+
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
@@ -34,114 +37,138 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
     private final String _stamp = "VP";
 
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+
+	private JoinKind jk;
+	private int numOfSrcTblAttr;
+	private int numOfTgtTables;
+	private int attsPerTargetRel;
+	private int attrRemainder;
     
     public VerticalPartitionScenarioGenerator()
     {
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-    {
-    	init(configuration, scenario);
+//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
+//    {
+//    	init(configuration, scenario);
+//
+//        for (int i = 0, imax = repetitions; i < imax; i++)
+//        {
+//            SPJQuery generatedQuery = new SPJQuery();
+//
+//    
+//
+//            // decide the kind of join we will follow.
+//            JoinKind jk = JoinKind.values()[joinKind];
+//            if (jk == JoinKind.VARIABLE)
+//            {
+//                int tmp = Utils.getRandomNumberAroundSomething(_generator, 0, 1);
+//                if (tmp < 0)
+//                    jk = JoinKind.STAR;
+//                else jk = JoinKind.CHAIN;
+//            }
+//            SMarkElement srcRel = createSubElements(source, target, numOfSrcTblAttr, numOfTgtTables, jk, i, pquery, generatedQuery);
+//            
+//            setScenario(scenario, generatedQuery, pquery, srcRel);
+//        }
+//    }
+    
+    protected void initPartialMapping() {
+    	super.initPartialMapping();
+    	
+        numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+            numOfElementsDeviation);
 
-        for (int i = 0, imax = repetitions; i < imax; i++)
+        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+            numOfSetElementsDeviation);
+    	
+
+        attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+        attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
+        
+        
+        jk = JoinKind.values()[joinKind];
+        if (jk == JoinKind.VARIABLE)
         {
-            SPJQuery generatedQuery = new SPJQuery();
-
-            // decide how many attributes will the source table have
-            int numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-                numOfElementsDeviation);
-
-            // number of tables we will use in the target
-            int numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
-                numOfSetElementsDeviation);
-
-            // decide the kind of join we will follow.
-            JoinKind jk = JoinKind.values()[joinKind];
-            if (jk == JoinKind.VARIABLE)
-            {
-                int tmp = Utils.getRandomNumberAroundSomething(_generator, 0, 1);
-                if (tmp < 0)
-                    jk = JoinKind.STAR;
-                else jk = JoinKind.CHAIN;
-            }
-            SMarkElement srcRel = createSubElements(source, target, numOfSrcTblAttr, numOfTgtTables, jk, i, pquery, generatedQuery);
-            
-            setScenario(scenario, generatedQuery, pquery, srcRel);
+            int tmp = Utils.getRandomNumberAroundSomething(_generator, 0, 1);
+            if (tmp < 0)
+                jk = JoinKind.STAR;
+            else jk = JoinKind.CHAIN;
         }
     }
 
-    private Character getAttrLetter(String attrName) {
-    	if (attrMap.containsKey(attrName))
-    		return attrMap.get(attrName);
-    	Character letter = _attributes.charAt(_currAttributeIndex++);
-    	attrMap.put(attrName, letter);
-    	return letter;
-    }
-
-    private void resetAttrLetters() {
-    	_currAttributeIndex = 0;
-    	attrMap.clear();
-    }
-
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement srcRel) throws Exception {
-		SelectClauseList gselect = generatedQuery.getSelect();
-		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
-		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
-		
-		String mKey = scenario.getNextMid();
-
-		ArrayList<String> corrsList = new ArrayList<String>();
-		
-		ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
-		for (int j = 0; j < srcRel.size(); j++) {
-			Element attr = srcRel.getSubElement(j);
-			sourceRelAttrs.add(getAttrLetter(attr.getLabel()));
-		}
-    	String sourceName = srcRel.getLabel();
-		sourceAttrs.put(sourceName, sourceRelAttrs);
-		
-		ArrayList<String> targets = generatedQuery.getTargets();
-
-		for (int i = 0; i < targets.size(); i++) {
-			String tKey = scenario.getNextTid();
-			String targetName = targets.get(i);
-			ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
-
-			SPJQuery e = (SPJQuery)(gselect.getTerm(i));
-        	FromClauseList fcl = e.getFrom();
-        	SelectClauseList scl = e.getSelect();
-        	String key = fcl.getKey(0).toString();
-        	String[] sclArray = scl.toString().split(",");
-        	for (int k = 0; k < sclArray.length; k++) {
-        		String attr = sclArray[k];
-        		if (attr.contains(key)) {  // there is a correspondence
-        			attr = attr.replaceFirst("\\"+key+"/", "").trim();
-        			String sourceRelAttr = sourceName + "." + attr;
-        			String targetRelAttr = targetName + "." + attr;
-        			String cKey = scenario.getNextCid();
-        			String cVal = sourceRelAttr + "=" + targetRelAttr;
-        			scenario.putCorrespondences(cKey, cVal);
-        			corrsList.add(cKey);
-        		}
-    			targetRelAttrs.add(getAttrLetter(attr));
-        	}
-        	targetAttrs.put(targetName, targetRelAttrs);
-    		ArrayList<String> mList = new ArrayList<String>();
-    		mList.add(mKey);
-    		scenario.putTransformation2Mappings(tKey, mList);
-    		// scenario.putTransformationCode(tKey, getQueryString(realQ));
-    		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
-    		scenario.putTransformationRelName(tKey, targetName);
-    			
-		}
-        	
-		scenario.putMappings2Correspondences(mKey, corrsList);
-        scenario.putMappings2Sources(mKey, sourceAttrs);
-        scenario.putMappings2Targets(mKey, targetAttrs);
-
-		resetAttrLetters();
-	}
+//    private Character getAttrLetter(String attrName) {
+//    	if (attrMap.containsKey(attrName))
+//    		return attrMap.get(attrName);
+//    	Character letter = _attributes.charAt(_currAttributeIndex++);
+//    	attrMap.put(attrName, letter);
+//    	return letter;
+//    }
+//
+//    private void resetAttrLetters() {
+//    	_currAttributeIndex = 0;
+//    	attrMap.clear();
+//    }
+//
+//	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement srcRel) throws Exception {
+//		SelectClauseList gselect = generatedQuery.getSelect();
+//		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
+//		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
+//		
+//		String mKey = scenario.getNextMid();
+//
+//		ArrayList<String> corrsList = new ArrayList<String>();
+//		
+//		ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
+//		for (int j = 0; j < srcRel.size(); j++) {
+//			Element attr = srcRel.getSubElement(j);
+//			sourceRelAttrs.add(getAttrLetter(attr.getLabel()));
+//		}
+//    	String sourceName = srcRel.getLabel();
+//		sourceAttrs.put(sourceName, sourceRelAttrs);
+//		
+//		ArrayList<String> targets = generatedQuery.getTargets();
+//
+//		for (int i = 0; i < targets.size(); i++) {
+//			String tKey = scenario.getNextTid();
+//			String targetName = targets.get(i);
+//			ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
+//
+//			SPJQuery e = (SPJQuery)(gselect.getTerm(i));
+//        	FromClauseList fcl = e.getFrom();
+//        	SelectClauseList scl = e.getSelect();
+//        	String key = fcl.getKey(0).toString();
+//        	String[] sclArray = scl.toString().split(",");
+//        	for (int k = 0; k < sclArray.length; k++) {
+//        		String attr = sclArray[k];
+//        		if (attr.contains(key)) {  // there is a correspondence
+//        			attr = attr.replaceFirst("\\"+key+"/", "").trim();
+//        			String sourceRelAttr = sourceName + "." + attr;
+//        			String targetRelAttr = targetName + "." + attr;
+//        			String cKey = scenario.getNextCid();
+//        			String cVal = sourceRelAttr + "=" + targetRelAttr;
+//        			scenario.putCorrespondences(cKey, cVal);
+//        			corrsList.add(cKey);
+//        		}
+//    			targetRelAttrs.add(getAttrLetter(attr));
+//        	}
+//        	targetAttrs.put(targetName, targetRelAttrs);
+//    		ArrayList<String> mList = new ArrayList<String>();
+//    		mList.add(mKey);
+//    		scenario.putTransformation2Mappings(tKey, mList);
+//    		// scenario.putTransformationCode(tKey, getQueryString(realQ));
+//    		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
+//    		scenario.putTransformationRelName(tKey, targetName);
+//    			
+//		}
+//        	
+//		scenario.putMappings2Correspondences(mKey, corrsList);
+//        scenario.putMappings2Sources(mKey, sourceAttrs);
+//        scenario.putMappings2Targets(mKey, targetAttrs);
+//
+//		resetAttrLetters();
+//	}
 	
 	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
 		return origQ.toTrampStringOneMap(mKey);
@@ -389,29 +416,213 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
 
 	@Override
 	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+		String sourceRelName = randomRelName(0);
+		String[] attNames = new String[numOfSrcTblAttr];
+		String hook = getRelHook(0);
 		
+		for (int i = 0; i < numOfSrcTblAttr; i++)
+			attNames[i] = randomAttrName(0, i);
+		
+		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		m.addSourceRel(sRel);
 	}
 
 	@Override
 	protected void genTargetRels() {
-		// TODO Auto-generated method stub
+        String[] attrs;
+		String[] srcAttrs = m.getAttrIds(0, true);
 		
+		String joinAttName = randomAttrName(0, 0) + "JoinAttr";
+        String joinAttNameRef = joinAttName + "Ref";
+		
+        for (int i = 0; i < numOfTgtTables; i++)
+        {
+        	int offset = i * attsPerTargetRel;
+        	String trgName = randomRelName(i);
+        	String hook = getRelHook(i);
+        	int attrNum = (i < numOfTgtTables - 1) ? attsPerTargetRel:
+        		attsPerTargetRel + attrRemainder;
+        	int fkAttrs = ((jk == JoinKind.CHAIN && 
+        			(i != 0 && i != numOfTgtTables - 1)) 
+        			? 2 : 1);
+        	int attWithFK = attrNum + fkAttrs;
+        	attrs = new String[attWithFK];
+        	
+            for (int j = 0; j < attrNum; j++)
+            	attrs[j] = srcAttrs[offset + j];
+            
+            if (jk == JoinKind.STAR) {
+            	if (i == 0)
+            		attrs[attrs.length - 1] = joinAttName;
+            	else 
+            		attrs[attrs.length - 1] = joinAttNameRef;
+            } else { // chain
+            	if (i == 0)
+            		attrs[attrs.length - 1] = joinAttName;
+            	if (i == numOfTgtTables - 1)
+            		attrs[attrs.length - 1] = joinAttNameRef;
+            	else {
+            		attrs[attrs.length - 2] = joinAttName;
+            		attrs[attrs.length - 1] = joinAttNameRef;
+            	}
+            }
+            
+            fac.addRelation(hook, trgName, attrs, false);
+        }
+        
+        addFKs();
+	}
+
+	private void addFKs() {
+		if (jk == JoinKind.STAR) {
+			for(int i = 1; i < numOfTgtTables; i++) {
+				int toA = m.getNumRelAttr(0, false) - 1;
+				int fromA = m.getNumRelAttr(i, false) - 1;
+				addFK(i, fromA, 0, toA, false);
+			}
+		} else { // chain
+			int toA = m.getNumRelAttr(1, false) - 1;
+			int fromA = m.getNumRelAttr(0, false) - 1;
+			addFK(0, fromA, 1, toA, false);
+			for(int i = 1; i < numOfTgtTables - 1; i++) {
+				toA = m.getNumRelAttr(i + 1, false) - 1;
+				fromA = m.getNumRelAttr(i, false) - 2;
+				addFK(i, fromA, i+1, toA, false);
+			}
+		}
 	}
 
 	@Override
-	protected void genMappings() {
+	protected void genMappings() throws Exception {
+		MappingType m1 = fac.addMapping(m.getCorrs());
+		String[] vars = fac.getFreshVars(0, numOfSrcTblAttr);
 		
+		fac.addForeachAtom(m1, 0, vars);
+		
+		for(int i = 0; i < numOfTgtTables; i++) {
+			int offset = i * attsPerTargetRel;
+        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+    				attsPerTargetRel + attrRemainder;
+        	
+        	fac.addExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
+		}
 	}
 	
 	@Override
-	protected void genTransformations() {
+	protected void genTransformations() throws Exception {
+		SPJQuery q;
+		SPJQuery genQuery = genQuery(new SPJQuery());
 		
+		for(int i = 0; i < numOfTgtTables; i++) {
+			String creates = m.getTargetRels().get(i).getName();
+			q = (SPJQuery) genQuery.getSelect().getTerm(i);
+			
+			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+		}
 	}
 	
+	private SPJQuery genQuery(SPJQuery generatedQuery) {
+		String sourceRelName = m.getSourceRels().get(0).getName();
+		SPJQuery[] queries = new SPJQuery[numOfTgtTables];
+		String[] srcAttrs = m.getAttrIds(0, true);
+		String joinAttName;
+		String joinAttNameRef;
+		SKFunction skFunc;
+		
+		// join attrs different for star and chain join.
+		if (jk == JoinKind.STAR) {
+			joinAttName = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
+            joinAttNameRef = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
+            
+            //TODO check what they do there really
+		}
+		else {
+			int numAttr = m.getNumRelAttr(0, false);
+			joinAttName = m.getAttrId(0, numAttr - 1, false);
+            joinAttNameRef = m.getAttrId(0, numAttr - 2, false);
+		}
+		
+        skFunc = new SKFunction(fac.getNextId("SK"));
+        for (int i = 0; i < srcAttrs.length; i++)
+        {
+            Projection att = new Projection(new Variable("X"), srcAttrs[i]);
+            skFunc.addArg(att);
+        }
+		
+		
+		// gen query
+		for(int i = 0; i < numOfTgtTables; i++) {
+			String targetRelName = m.getTargetRels().get(i).getName();
+			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+					attsPerTargetRel + attrRemainder;
+			int offset = i * attsPerTargetRel;
+			
+			// gen query for the target table
+			SPJQuery q = new SPJQuery();
+			queries[i] = q;
+	        q.getFrom().add(new Variable("X"), new Projection(Path.ROOT, sourceRelName));
+	        generatedQuery.addTarget(targetRelName);
+	        SelectClauseList sel = q.getSelect();
+	        
+	        for (int j = 0; j < numAttr; j++) {
+	        	String trgAttrName = m.getAttrId(i, j, false);
+				Projection att = new Projection(new Variable("X"), trgAttrName);
+				sel.add(trgAttrName, att);
+	        }
+		}
+
+		// add skolem function for join
+		if (jk == JoinKind.STAR) {
+			SelectClauseList sel0 = queries[0].getSelect();
+			sel0.add(joinAttName, skFunc);
+			for(int i = 1; i < numOfTgtTables; i++) {
+				SelectClauseList seli = queries[i].getSelect();
+	            Function fi = (Function) skFunc.clone();
+	            seli.add(joinAttNameRef, fi);
+			}
+		}
+
+        if (jk == JoinKind.CHAIN)
+        {
+            for (int i = 0; i < numOfTgtTables - 1; i++)
+            {
+            	  SelectClauseList sel1 = queries[i].getSelect();
+                  Function f1 = (Function) skFunc.clone();
+                  sel1.add(joinAttName, f1);
+                  queries[i].setSelect(sel1);
+                  SelectClauseList sel2 = queries[i + 1].getSelect();
+                  Function f2 = (Function) skFunc.clone();
+                  sel2.add(joinAttNameRef, f2);
+                  queries[i + 1].setSelect(sel2);
+            }
+        }
+        
+        // add the partial queries to the parent query
+        // to form the whole transformation
+        SelectClauseList pselect = pquery.getSelect();
+        SelectClauseList gselect = generatedQuery.getSelect();
+        for (int i = 0; i < numOfTgtTables; i++)
+        {
+            String tblTrgName = m.getRelName(i, false);
+            pselect.add(tblTrgName, queries[i]);
+            gselect.add(tblTrgName, queries[i]);
+        }
+        pquery.setSelect(pselect);
+        generatedQuery.setSelect(gselect);
+		return generatedQuery;
+	}
+
 	@Override
 	protected void genCorrespondences() {
-		
+        for (int i = 0; i < numOfTgtTables; i++)
+        {
+        	int offset = i * attsPerTargetRel;
+        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+    				attsPerTargetRel + attrRemainder;
+        	
+            for (int j = 0; j < numAtts; j++)
+            	addCorr(0, offset + j, i, j);         
+        }
 	}
 	
 	@Override

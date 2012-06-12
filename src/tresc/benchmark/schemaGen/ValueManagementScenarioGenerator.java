@@ -31,18 +31,18 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
     }
 
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
-    {
-    	init(configuration, scenario);
-        
-        for (int i = 0, imax = repetitions; i < imax; i++)
-        {
-            int numOfSubElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-                numOfElementsDeviation);
-            createSubElements(source, target, numOfSubElements, i, numOfParams, numOfParamsDeviation, pquery);
-        }
-
-    }
+//    public void generateScenario(MappingScenario scenario, Configuration configuration)
+//    {
+//    	init(configuration, scenario);
+//        
+//        for (int i = 0, imax = repetitions; i < imax; i++)
+//        {
+//            int numOfSubElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+//                numOfElementsDeviation);
+//            createSubElements(source, target, numOfSubElements, i, numOfParams, numOfParamsDeviation, pquery);
+//        }
+//
+//    }
 
     // Assume that we have E elements in each table (which means that we also want E
     // elements to create in the target table). From them (the source), let X be

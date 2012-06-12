@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.vagabond.util.CollectionUtils;
+import org.vagabond.xmlmodel.MappingType;
+
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
@@ -29,126 +32,72 @@ import vtools.dataModel.types.Set;
 
 public class SelfJoinScenarioGenerator extends ScenarioGenerator
 {
-    private final String _stamp = "SJ";
-
-    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+	private int JN;
+	private int K;
+	private int E;
+	private int F;
+	private String[] keys;
+	private String[] fks;
     
     public SelfJoinScenarioGenerator()
     {
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-    {
-        if (configuration.getScenarioRepetitions(Constants.ScenarioName.GLAV.ordinal()) != 0) { return; }
-        init(configuration, scenario);
-
-        for (int i = 0, imax = repetitions; i < imax; i++)
-        {
-            SPJQuery generatedQuery = new SPJQuery();
-
-            // decide the number of elements
-            int E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-            // decide the number of keys,i.e. the number of join attributes
-            int K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
-            E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
-            // decide the size of the join
-            int JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
-
-            if (JN == 0)
-                continue;
-
-            SMarkElement srcRel = createSubElements(source, target, E, K, JN, i, pquery, generatedQuery);
-            
-            setScenario(scenario, generatedQuery, pquery, srcRel);
-        }
+//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
+//    {
+//        if (configuration.getScenarioRepetitions(Constants.ScenarioName.GLAV.ordinal()) != 0) { return; }
+//        init(configuration, scenario);
+//
+//        for (int i = 0, imax = repetitions; i < imax; i++)
+//        {
+//            SPJQuery generatedQuery = new SPJQuery();
+//
+//            // decide the number of elements
+//            int E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+//            // decide the number of keys,i.e. the number of join attributes
+//            int K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
+//            E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
+//            // decide the size of the join
+//            int JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
+//
+//            if (JN == 0)
+//                continue;
+//
+//            SMarkElement srcRel = createSubElements(source, target, E, K, JN, i, pquery, generatedQuery);
+//            
+//            setScenario(scenario, generatedQuery, pquery, srcRel);
+//        }
+//    }
+    
+    protected void initPartialMapping () {
+    	super.initPartialMapping();
+        E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+        K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
+        E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
+        JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
+        
+        if (JN == 0)
+            JN =1;
+        
+        F = E - (2 * K);
     }
 
-    private Character getAttrLetter(String attrName) {
-    	if (attrMap.containsKey(attrName))
-    		return attrMap.get(attrName);
-    	Character letter = _attributes.charAt(_currAttributeIndex++);
-    	attrMap.put(attrName, letter);
-    	return letter;
-    }
 
-    private void resetAttrLetters() {
-    	_currAttributeIndex = 0;
-    	attrMap.clear();
-    }
-
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement srcRel) throws Exception {
-		SelectClauseList gselect = generatedQuery.getSelect();
-		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
-		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
-		
-		String mKey = scenario.getNextMid();
-
-		ArrayList<String> corrsList = new ArrayList<String>();
-		
-		ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
-		for (int j = 0; j < srcRel.size(); j++) {
-			Element attr = srcRel.getSubElement(j);
-			sourceRelAttrs.add(getAttrLetter(attr.getLabel()));
-		}
-    	String sourceName = srcRel.getLabel();
-		sourceAttrs.put(sourceName, sourceRelAttrs);
-		
-		ArrayList<String> targets = generatedQuery.getTargets();
-
-		for (int i = 0; i < targets.size(); i++) {
-			String tKey = scenario.getNextTid();
-			String targetName = targets.get(i);
-			ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
-
-			SPJQuery e = (SPJQuery)(gselect.getTerm(i));
-        	FromClauseList fcl = e.getFrom();
-        	SelectClauseList scl = e.getSelect();
-        	String key = fcl.getKey(0).toString();
-        	String[] sclArray = scl.toString().split(",");
-        	for (int k = 0; k < sclArray.length; k++) {
-        		String attr = sclArray[k];
-        		if (attr.contains(key)) {  // there is a correspondence
-        			attr = attr.replaceFirst("\\"+key+"/", "").trim();
-        			String sourceRelAttr = sourceName + "." + attr;
-        			String targetRelAttr = targetName + "." + attr;
-        			String cKey = scenario.getNextCid();
-        			String cVal = sourceRelAttr + "=" + targetRelAttr;
-        			scenario.putCorrespondences(cKey, cVal);
-        			corrsList.add(cKey);
-        		}
-    			targetRelAttrs.add(getAttrLetter(attr));
-        	}
-        	targetAttrs.put(targetName, targetRelAttrs);
-    		ArrayList<String> mList = new ArrayList<String>();
-    		mList.add(mKey);
-    		scenario.putTransformation2Mappings(tKey, mList);
-    		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
-    		scenario.putTransformationRelName(tKey, targetName);
-    			
-		}
-        	
-		scenario.putMappings2Correspondences(mKey, corrsList);
-        scenario.putMappings2Sources(mKey, sourceAttrs);
-        scenario.putMappings2Targets(mKey, targetAttrs);
-
-		resetAttrLetters();
-	}
-	
-	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
-		return origQ.toTrampStringOneMap(mKey);
-//		String retVal = origQ.toString();
-//		FromClauseList from = origQ.getFrom();
-//		for (int i = 0; i < from.size(); i++) {
-//			String key = from.getKey(i).toString();
-//			String relAlias = key.replace("$", "");
-//			retVal = retVal.replace(key+"/", relAlias+".");
-//			retVal = retVal.replace("${" + i + "}", mKey);
-//		}
-//		retVal = retVal.replaceAll("/", "");
-//		
-//		return retVal;
-	}
+//	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
+//		return origQ.toTrampStringOneMap(mKey);
+////		String retVal = origQ.toString();
+////		FromClauseList from = origQ.getFrom();
+////		for (int i = 0; i < from.size(); i++) {
+////			String key = from.getKey(i).toString();
+////			String relAlias = key.replace("$", "");
+////			retVal = retVal.replace(key+"/", relAlias+".");
+////			retVal = retVal.replace("${" + i + "}", mKey);
+////		}
+////		retVal = retVal.replaceAll("/", "");
+////		
+////		return retVal;
+//	}
 
     // the Source schema has one table with E number of elements, from which K
     // are keys, other K are foreign keys
@@ -160,9 +109,9 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         String[] FkeyS = new String[K];
         // create the source table
         String name = Modules.nameFactory.getARandomName();
-        String nameS = name + "_" + _stamp + repetition;
+        String nameS = name + "_" + getStamp() + repetition;
         SMarkElement srcEl = new SMarkElement(nameS, new Set(), null, 0, 0);
-        srcEl.setHook(new String(_stamp + repetition));
+        srcEl.setHook(new String(getStamp() + repetition));
         source.addSubElement(srcEl);
 
         // create the first table in the target schema; it contains the keys
@@ -170,7 +119,7 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         // it is the Basic target table
         String nameT = nameS + "_B";
         SMarkElement trgEl = new SMarkElement(nameT, new Set(), null, 0, 0);
-        trgEl.setHook(new String(_stamp + repetition+ "_B"));
+        trgEl.setHook(new String(getStamp() + repetition+ "_B"));
         target.addSubElement(trgEl);
         // create the first intermediate query
         SPJQuery query = new SPJQuery();
@@ -193,16 +142,16 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < K; i++)
         {
             name = Modules.nameFactory.getARandomName();
-            name = name + "_" + _stamp + repetition + "KE" + i;
+            name = name + "_" + getStamp() + repetition + "KE" + i;
             keyS[i] = name;
             SMarkElement el = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            el.setHook(new String( _stamp + repetition + "KE" + i));
+            el.setHook(new String( getStamp() + repetition + "KE" + i));
             srcEl.addSubElement(el);
             // add the attribute that is part of the key constraint of the source
             keySrc.addKeyAttr(new Projection(varKey.clone(),name));
             
             el = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            el.setHook(new String( _stamp + repetition + "KE" + i));
+            el.setHook(new String( getStamp() + repetition + "KE" + i));
             trgEl.addSubElement(el);
             // add the attribute that is part of the key constraint of the target
             keyTrg.addKeyAttr(new Projection(varKey.clone(),name));
@@ -224,10 +173,10 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < K; i++)
         {
             name = Modules.nameFactory.getARandomName();
-            name = name + "_" + _stamp + repetition + "FK" + i;
+            name = name + "_" + getStamp() + repetition + "FK" + i;
             FkeyS[i] = name;
             SMarkElement el = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            el.setHook(new String( _stamp + repetition + "FE" + i));
+            el.setHook(new String( getStamp() + repetition + "FE" + i));
             srcEl.addSubElement(el);
             // add the attributes that make up the foreign key
             fKeySrc.addFKeyAttr(new Projection(varKey2.clone(),keyS[i]), 
@@ -242,12 +191,12 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < F; i++)
         {
             name = Modules.nameFactory.getARandomName();
-            name = name + "_" + _stamp + repetition + "FE" + i;
+            name = name + "_" + getStamp() + repetition + "FE" + i;
             SMarkElement el = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            el.setHook(new String( _stamp + repetition + "FE" + i));
+            el.setHook(new String( getStamp() + repetition + "FE" + i));
             srcEl.addSubElement(el);
             el = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            el.setHook(new String( _stamp + repetition + "FE" + i));
+            el.setHook(new String( getStamp() + repetition + "FE" + i));
             trgEl.addSubElement(el);
             // add the free elements to the select clause of the query
             Projection att = new Projection(var.clone(), name);
@@ -274,7 +223,7 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         // it is obtained by self-join-ing the source table for JN times
         String nameT2 = nameS + "_J";
         SMarkElement trgEl2 = new SMarkElement(nameT2, new Set(), null, 0, 0);
-        trgEl2.setHook(new String(_stamp + repetition+ "_J"));
+        trgEl2.setHook(new String(getStamp() + repetition+ "_J"));
         
         target.addSubElement(trgEl2);
         // create the second intermediate query
@@ -330,9 +279,9 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < K; i++)
         {
             name = Modules.nameFactory.getARandomName();
-            name = name + "_" + _stamp + repetition + "RE" + i;
+            name = name + "_" + getStamp() + repetition + "RE" + i;
             SMarkElement el = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            el.setHook(new String(_stamp + repetition + "RE" + i));
+            el.setHook(new String(getStamp() + repetition + "RE" + i));
             trgEl2.addSubElement(el);
             Projection att = new Projection(new Variable("X" + JN), keyS[i]);
             select2.add(name, att);
@@ -366,30 +315,198 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
 
 
 	@Override
-	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+	protected void genSourceRels() throws Exception {
+		String srcName = randomRelName(0);
+		String[] attrs = new String[E];
+		keys = new String[K];
+		fks = new String[K];
+		String hook = getRelHook(0);
 		
+		// create key and foreign key attrs
+		for(int i = 0; i < K; i++) {
+			String randAtt = randomAttrName(0, i);
+			keys[i] = randAtt + "KE";
+			fks[i] = randAtt + "FK";
+			attrs[i] = keys[i];
+			attrs[i + K] = fks[i];
+		}
+		// create free attrs
+		for(int i = 2 * K; i < E; i++)
+			attrs[i] = randomAttrName(0, i);
+		
+		fac.addRelation(hook, srcName, attrs, true);
+		fac.addPrimaryKey(srcName, keys, true);
+		fac.addForeignKey(srcName, fks, srcName, keys, true);
+		//TODO tox gene script is produced without the FK
 	}
 
 	@Override
-	protected void genTargetRels() {
-		// TODO Auto-generated method stub
+	protected void genTargetRels() throws Exception {
+		String bRelName = m.getRelName(0, true) + "_b";
+		String fkRelName = m.getRelName(0, true) + "_fk";
+		String[] bAttrs = new String[K + F];
+		String[] fkAttrs = new String[2 * K];
+
+		// add keys to basic table and keys and fks to fk table
+		for(int i = 0; i < K; i++) {
+			bAttrs[i] = m.getAttrId(0, i, true);
+			fkAttrs[i] = m.getAttrId(0, i, true);
+			fkAttrs[i + K] = m.getAttrId(0, i + K, true);
+		}
+		// add free attrs to basic table
+		for(int i = 2 * K; i < E; i++)
+			bAttrs[i - K] = m.getAttrId(0, i, true);
 		
+		// create relations and foreign keys
+		fac.addRelation(getRelHook(0), bRelName, bAttrs, false);
+		fac.addRelation(getRelHook(1), fkRelName, fkAttrs, false);
+		
+		fac.addPrimaryKey(bRelName, keys, false);
+		fac.addPrimaryKey(fkRelName, keys, false);
+		
+		addFK(1, fks, 0, keys, false);
 	}
 
 	@Override
-	protected void genMappings() {
+	protected void genMappings() throws Exception {
+		String[] keyVars = fac.getFreshVars(0, K);
+		String[] fkVars = fac.getFreshVars(K, K);
+		String[] fVars = fac.getFreshVars(2 * K, F);
+
+		MappingType m1 = fac.addMapping(m.getCorrs(0, false));
+		fac.addForeachAtom(m1, 0, CollectionUtils.concatArrays(keyVars, fkVars, 
+				fVars));
+		fac.addExistsAtom(m1, 0, CollectionUtils.concatArrays(keyVars, fVars));
 		
+		MappingType m2 = fac.addMapping(m.getCorrs(1, false));
+		fac.addForeachAtom(m1, 0, CollectionUtils.concatArrays(keyVars, fkVars, 
+				fVars));
+		fac.addForeachAtom(m1, 0, CollectionUtils.concatArrays(keyVars, 
+				fac.getFreshVars(E, E - K)));
+		fac.addExistsAtom(m2, 0, CollectionUtils.concatArrays(keyVars, fkVars));
 	}
 	
 	@Override
-	protected void genTransformations() {
+	protected void genTransformations() throws Exception {
+		SPJQuery genQuery = new SPJQuery();
+		SPJQuery q;
+		String mapId;
+		genQueries(genQuery);
 		
+		q = (SPJQuery) genQuery.getSelect().getTerm(0);
+		mapId = m.getMaps().get(0).getId();
+		fac.addTransformation(q.toTrampStringOneMap(mapId), mapId, 
+				m.getRelName(0, false));
+		
+		q = (SPJQuery) genQuery.getSelect().getTerm(1);
+		mapId = m.getMaps().get(1).getId();
+		fac.addTransformation(q.toTrampStringOneMap(mapId), mapId, 
+				m.getRelName(1, false));
 	}
 	
+	
+	
+	private void genQueries(SPJQuery generatedQuery) {
+		String nameS = m.getRelName(0, true);
+		String nameTB = m.getRelName(0, false);
+		String nameTFK = m.getRelName(1, false);
+
+		SPJQuery query = new SPJQuery();
+		// create the from clause of the query
+		Variable var = new Variable("X");
+		query.getFrom().add(var.clone(), new Projection(Path.ROOT, nameS));
+
+		// generate the keys in the source and Basic target table
+		// add the keys constraints to the source and to the target
+		SelectClauseList select = query.getSelect();
+		Variable varKey = new Variable("K");
+		// the key constraint in the source
+		for (int i = 0; i < K; i++) {
+			// add the keys to the select clause of the query
+			Projection att = new Projection(var.clone(), keys[i]);
+			select.add(keys[i], att);
+		}
+
+		// generate the free elements in the source table and in the Basic
+		// target table only
+		for (int i = 0; i < F; i++) {
+			// add the free elements to the select clause of the query
+			Projection att = new Projection(var.clone(), fks[i]);
+			select.add(fks[i], att);
+		}
+
+		// add the first query to the final query
+		query.setSelect(select);
+		SelectClauseList pselect = pquery.getSelect();
+		SelectClauseList gselect = generatedQuery.getSelect();
+		pselect.add(nameTB, query);
+		gselect.add(nameTB, query);
+		pquery.setSelect(pselect);
+		generatedQuery.setSelect(gselect);
+		generatedQuery.addTarget(nameTB);
+		
+        // create the second intermediate query
+		SPJQuery query2 = new SPJQuery();
+		// create the from clause of the second query
+		for (int i = 1; i <= JN; i++)
+			query2.getFrom().add(new Variable("X" + i), new Projection(Path.ROOT, nameS));
+	        
+		// generate the first part of the Select clause of the second query
+		// add as attr all the keys that belong to the first relation
+		// that appears in the From clause
+		SelectClauseList select2 = query2.getSelect();
+		for (int i = 0; i < K; i++) {
+			Projection att = new Projection(new Variable("X1"), keys[i]);
+			select2.add(keys[i], att);
+		}
+
+		// generate in the Join target table the pointers to the keys
+		// of the source; RE stands for Reference element
+		// also generate the second part of the Select clause of the second
+		// query by adding as attr all the keys that
+		// belong to the last relation that appears in the From clause
+		for (int i = 0; i < K; i++) {
+			Projection att = new Projection(new Variable("X" + JN), fks[i]);
+			select2.add(fks[i], att);
+		}
+
+		// generate the Where clause of the second query; that
+		// constructs the joining of the source for JN times
+		AND where = new AND();
+		for (int j = 1; j < JN; j++)
+			for (int i = 0; i < K; i++) {
+				Projection att1 =
+						new Projection(new Variable("X" + (j + 1)), keys[i]);
+				Projection att2 =
+						new Projection(new Variable("X" + j), fks[i]);
+				where.add(new EQ(att1, att2));
+			}
+
+		// add the second query to the final query
+		query2.setSelect(select2);
+		query2.setWhere(where);
+		pselect = pquery.getSelect();
+		gselect = generatedQuery.getSelect();
+		pselect.add(nameTFK, query2);
+		gselect.add(nameTFK, query2);
+		pquery.setSelect(pselect);
+		generatedQuery.setSelect(gselect);
+		generatedQuery.addTarget(nameTFK);
+	}
+
 	@Override
 	protected void genCorrespondences() {
-		
+		// keys from source to both target relations
+		for(int i = 0; i < K; i++) {
+			addCorr(0, i, 0, i);
+			addCorr(0, i, 1, i);
+		}
+		// FKs from source to target FK relation
+		for(int i = 0; i < K; i++)
+			addCorr(0, i + K, 1, i + K);
+		// free attrs from source to basic target relation
+		for(int i = 0; i < F; i++)
+			addCorr(0, i + (2 * K), 0, i + K);
 	}
 	
 	@Override

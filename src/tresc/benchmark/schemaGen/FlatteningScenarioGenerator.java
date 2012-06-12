@@ -39,18 +39,18 @@ public class FlatteningScenarioGenerator extends ScenarioGenerator
      * nested schema and of a set of a target schema that has all the attributes
      * that appear in the source schema.
      */
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
-    {
-    	init(configuration, scenario);
-    	
-        for (int i = 0, imax = repetitions; i < imax; i++)
-        {
-            _atElCounter = 0;
-            _setElCounter = 0;
-            createRootElement(source, target, i, numOfElements, numOfElementsDeviation, numOfSetElements,
-                numOfSetElementsDeviation, nesting, nestingDeviation, pquery);
-        }
-    }
+//    public void generateScenario(MappingScenario scenario, Configuration configuration)
+//    {
+//    	init(configuration, scenario);
+//    	
+//        for (int i = 0, imax = repetitions; i < imax; i++)
+//        {
+//            _atElCounter = 0;
+//            _setElCounter = 0;
+//            createRootElement(source, target, i, numOfElements, numOfElementsDeviation, numOfSetElements,
+//                numOfSetElementsDeviation, nesting, nestingDeviation, pquery);
+//        }
+//    }
 
     /*
      * Creates one root element that will be the nested element.
@@ -181,5 +181,23 @@ public class FlatteningScenarioGenerator extends ScenarioGenerator
 	@Override
 	public ScenarioName getScenType() {
 		return ScenarioName.FLATTENING;
+	}
+
+	@Override
+	protected void genCorrespondences() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genMappings() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTransformations() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -9,18 +9,22 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.xmlbeans.XmlException;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.mapping.model.ModelLoader;
+import org.vagabond.mapping.model.ValidationException;
 import org.vagabond.mapping.scenarioToDB.DatabaseScenarioLoader;
 import org.vagabond.util.ConnectionManager;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
+import tresc.benchmark.Constants.JoinKind;
+import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.STBenchmark;
 import tresc.benchmark.Constants.ScenarioName;
 
@@ -111,32 +115,46 @@ public class TestLoadToDBWithData {
 	
 	
 	@Test
-	public void testLoadAllScenariosWithData () throws Exception {
+	public void testLoadEachBasicScenariosWithData () throws Exception {
+		for(ScenarioName n: scens)
+			testSingleScenarioLoadToDBWithData(n);
+	}
+	
+	@Test
+	public void testLoadEachBasicScenariosWithDataStarJoin () throws Exception {
+		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
 		for(ScenarioName n: scens)
 			testSingleScenarioLoadToDBWithData(n);
 	}
 
+	@Test
+	public void testLoadAllBasicScenariosWithData () throws Exception {
+		for(ScenarioName n: scens)
+			conf.setScenarioRepetitions(n, 3);
+		b.runConfig(conf);
+		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
+		log.info(doc.getScenario().toString());
+		Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
+		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
+		dbCon.close();
+	}
+	
 	private void testSingleScenarioLoadToDBWithData(ScenarioName n)
 			throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);
 		b.runConfig(conf);
-		testLoad(n, true, true);
+		testLoad(n);
 		conf.setScenarioRepetitions(n, 0);
 	}
 
 
-	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
+	private void testLoad(ScenarioName n) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-			if (toDB) {
-				Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-				if (withData)
-					DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-				else
-					DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
-				dbCon.close();
-			}
+			Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
+			DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
+			dbCon.close();			
 		}
 		catch (Exception e) {
 			log.error(n + "\n\n" + loadToString());

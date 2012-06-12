@@ -15,6 +15,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.vagabond.util.LoggerUtil;
 
+import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper;

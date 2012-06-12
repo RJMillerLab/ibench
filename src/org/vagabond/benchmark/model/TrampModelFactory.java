@@ -6,9 +6,11 @@ import java.util.List;
 
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.AttrListType;
+import org.vagabond.xmlmodel.AttrRefType;
 import org.vagabond.xmlmodel.ConnectionInfoType;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.CorrespondencesType;
+import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.MappingType.Uses;
 import org.vagabond.xmlmodel.RelAtomType;
@@ -19,12 +21,14 @@ import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
 import smark.support.MappingScenario;
+import smark.support.PartialMapping;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.DBOption;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
+import vtools.dataModel.expression.ForeignKey;
 import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
@@ -45,13 +49,18 @@ public class TrampModelFactory {
 	private UniqueIdGen idGen;
 	private MappingScenario stScen;
 	private Configuration conf;
-
+	private PartialMapping p;
+	
 	public TrampModelFactory(MappingScenario stScen) {
 		this.setStScen(stScen);
 		this.doc = stScen.getDoc();
 		initIdGen();
 	}
 
+	public void setPartialMapping (PartialMapping p) {
+		this.p = p;
+	}
+	
 	public void initAllElem(Configuration conf) {
 		this.conf = conf;
 		if (conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences))
@@ -81,6 +90,10 @@ public class TrampModelFactory {
 		idGen.createIdType("FD", "FD");
 	}
 
+	public String getNextId(String idType) {
+		return idGen.createId(idType);
+	}
+	
 	public CorrespondenceType addCorrespondence(String fromRel,
 			String fromAttr, String toRel, String toAttr) {
 		return addCorrespondence(fromRel, new String[] { fromAttr }, toRel,
@@ -103,6 +116,8 @@ public class TrampModelFactory {
 		for (String a : toAttrs)
 			c.getTo().addAttr(a);
 
+		p.addCorr(c);
+		
 		return c;
 	}
 
@@ -125,6 +140,11 @@ public class TrampModelFactory {
 				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
 			addDataElement(name);
 
+		if (source)
+			p.addSourceRel(rel);
+		else
+			p.addTargetRel(rel);
+		
 		return rel;
 	}
 
@@ -172,7 +192,15 @@ public class TrampModelFactory {
 		s.addSubElement(es);
 	}
 
-	private Atomic getDT(String string) {
+	public String getDT(Atomic dt) {
+		if (dt == Atomic.INTEGER)
+			return "INT8";
+		if (dt == Atomic.STRING)
+			return "TEXT";
+		return null;
+	}
+	
+	public Atomic getDT(String string) {
 		if (string.equals("TEXT"))
 			return Atomic.STRING;
 		if (string.equals("INT8"))
@@ -197,6 +225,43 @@ public class TrampModelFactory {
 
 		return key;
 	}
+	
+	public void addSymForeignKey (String fromRel, String[] fromA, String toRel, 
+			String[] toA, boolean source) {
+		addForeignKey(fromRel, fromA, toRel, toA, source);
+		addForeignKey(toRel, toA, fromRel, fromA, source);
+	}
+	
+	public void addForeignKey (String fromRel, String fromA, String toRel, 
+			String toA, boolean source) {
+		addForeignKey(fromRel, new String[] {fromA}, toRel, new String[] {toA}, source);
+	}
+	
+	public void addForeignKey (String fromRel, String[] fromA, String toRel, 
+			String[] toA, boolean source) {
+		Schema s = source ? stScen.getSource() : stScen.getTarget();
+		SchemaType st = source ? doc.getScenario().getSchemas().getSourceSchema() :
+			doc.getScenario().getSchemas().getTargetSchema();
+		
+		ForeignKeyType fk = st.addNewForeignKey();
+		AttrRefType from = fk.addNewFrom();
+		from.setTableref(fromRel);
+		for(String a: fromA)
+			from.addAttr(a);
+		AttrRefType to = fk.addNewTo();
+		to.setTableref(toRel);
+		for(String a: toA)
+			to.addAttr(a);
+		
+		ForeignKey stFK = new ForeignKey();
+		Variable fromVar = new Variable("F");
+		stFK.addLeftTerm(fromVar, new Projection(Path.ROOT, fromRel));
+		Variable toVar = new Variable("K");
+		stFK.addRightTerm(toVar, new Projection(Path.ROOT, toRel));
+		stFK.addFKeyAttr(new Projection(toVar, toA[0]), 
+				new Projection(fromVar, fromA[0])); //TODO check whether supports more than one attr in FK
+		s.addConstraint(stFK);
+	}
 
 	public MappingType addMapping(List<CorrespondenceType> cs) {
 		return addMapping(cs.toArray(new CorrespondenceType[] {}));
@@ -217,9 +282,16 @@ public class TrampModelFactory {
 				u.addNewCorrespondence().setRef(c.getId());
 		}
 
+		p.addMapping(map);
+		
 		return map;
 	}
 
+	public void addForeachAtom(MappingType m, int rel, String[] vars) 
+			throws Exception {
+		addForeachAtom(m.getId(), doc.getRelName(rel, true), vars);
+	}
+	
 	public void addForeachAtom(String mKey, String relName, String[] vars)
 			throws Exception {
 		MappingType m = doc.getMapping(mKey);
@@ -233,6 +305,11 @@ public class TrampModelFactory {
 			a.addNewVar().setStringValue(var);
 	}
 
+	public void addExistsAtom(MappingType m, int rel, String[] vars) 
+			throws Exception {
+		addExistsAtom(m.getId(), doc.getRelName(rel, false), vars);
+	}
+	
 	public void addExistsAtom(String mKey, String relName, String[] vars)
 			throws Exception {
 		MappingType m = doc.getMapping(mKey);
@@ -243,6 +320,13 @@ public class TrampModelFactory {
 			a.addNewVar().setStringValue(var);
 	}
 
+
+	
+	public TransformationType addTransformation(String code, String map,
+			String creates) throws Exception {
+		return addTransformation(code, doc.getMappings(new String[] {map}), creates);
+	}
+	
 	public TransformationType addTransformation(String code, String[] maps,
 			String creates) throws Exception {
 		return addTransformation(code, doc.getMappings(maps), creates);
@@ -261,6 +345,7 @@ public class TrampModelFactory {
 		for (MappingType m : maps)
 			i.addNewMapping().setRef(m.getId());
 
+		p.addTrans(t);
 		return t;
 	}
 

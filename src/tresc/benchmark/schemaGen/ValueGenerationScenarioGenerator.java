@@ -161,8 +161,7 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator {
 		for (int i = 0, imax = ranNumOfEl; i < imax; i++)
 			attrs[i] = randomAttrName(0, i);	
 		
-		RelationType tRel = fac.addRelation(hook, relName, attrs, false);
-		m.addTargetRel(tRel);
+		fac.addRelation(hook, relName, attrs, false);
 	}
 
 	@Override
@@ -172,13 +171,10 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator {
 		RelationType tRel = m.getTargetRels().get(0);
 		fac.addExistsAtom(m1.getId(), tRel.getName(), 
 				fac.getFreshVars(0, tRel.sizeOfAttrArray()));
-		
-		m.addMapping(m1);
 	}
 
 	@Override
 	protected void genTransformations() throws Exception {
-		TransformationType t;
 		String[] attrs = m.getAttrIds(0, false);
 		String nameT = m.getTargetRels().get(0).getName();
 		
@@ -204,9 +200,8 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator {
 		generatedQuery.setSelect(gselect);
 		
 		// gen trans
-		t = fac.addTransformation(query.toTrampString(m.getMapIds()), 
+		fac.addTransformation(query.toTrampString(m.getMapIds()), 
 				m.getMapIds(), nameT);
-		m.addTrans(t);
 	}
 
 	@Override

@@ -259,9 +259,7 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		String[] vars = fac.getFreshVars(0, source.getAttrArray().length);
 		MappingType m1 = fac.addMapping(m.getCorrs());
 		fac.addForeachAtom(m1.getId(), source.getName(), vars);
-		fac.addExistsAtom(m1.getId(), target.getName(), vars);
-		
-		m.addMapping(m1);	
+		fac.addExistsAtom(m1.getId(), target.getName(), vars);	
 	}
 
 	@Override
@@ -272,7 +270,6 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		for(AttrDefType attr: source.getAttrArray()) {
 			CorrespondenceType c = fac.addCorrespondence(source.getName(), 
 					attr.getName(), target.getName(), attr.getName());
-			m.addCorr(c);
 		}
 	}
 	
@@ -308,7 +305,6 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		
 		// add Tramp transformation
 		t = fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), tRelName);
-		m.addTrans(t);
 	}
 	
 	
@@ -325,7 +321,6 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		}
 		RelationType rel = fac.addRelation(hook, relName, attrs, true);
 		fac.addPrimaryKey(rel.getName(), new String[] {attrs[0]}, true);
-		m.addSourceRel(rel);
 	}
 
 	@Override
@@ -337,7 +332,7 @@ public class CopyScenarioGenerator extends ScenarioGenerator {
 		
 		for(int i = 0; i < s.getAttrArray().length; i++)
 			attrs[i] = s.getAttrArray()[i].getName();
-		m.addTargetRel(fac.addRelation(hook, relName, attrs, false));
+		fac.addRelation(hook, relName, attrs, false);
 	}
 
 	@Override

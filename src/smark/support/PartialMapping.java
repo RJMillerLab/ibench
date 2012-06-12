@@ -94,6 +94,20 @@ public class PartialMapping {
 	public List<CorrespondenceType> getCorrs() {
 		return corrs;
 	}
+	
+	public List<CorrespondenceType> getCorrs(int rel, boolean source) {
+		String relName = getRelName(rel, source);
+		List<CorrespondenceType> result = new ArrayList<CorrespondenceType> ();
+		for(CorrespondenceType c: corrs) {
+			if (source)
+				if (c.getFrom().getTableref().equals(relName))
+					result.add(c);
+			else
+				if (c.getTo().getTableref().equals(relName))
+					result.add(c);
+		}
+		return result;
+	}
 
 	public void setCorrs(List<CorrespondenceType> corrs) {
 		this.corrs = corrs;
@@ -136,6 +150,12 @@ public class PartialMapping {
 		return result.toString();
 	}
 	
+	public String getAttrId (int relId, int attrId, boolean source) {
+		RelationType rel = source ? sourceRels.get(relId) 
+				: targetRels.get(relId);
+		return rel.getAttrArray()[attrId].getName();
+	}
+	
 	public String[] getAttrIds (int relId, boolean source) {
 		RelationType rel = source ? sourceRels.get(relId) 
 				: targetRels.get(relId);
@@ -144,6 +164,20 @@ public class PartialMapping {
 			result[i] = rel.getAttrArray(i).getName();
 		
 		return result;
+	}
+
+	public String getRelName(int sRel, boolean source) {
+		if (source)
+			return sourceRels.get(sRel).getName();
+		else
+			return targetRels.get(sRel).getName();
+	}
+	
+	public int getNumRelAttr (int relId, boolean source) {
+		if (source)
+			return sourceRels.get(relId).getAttrArray().length;
+		else
+			return targetRels.get(relId).getAttrArray().length;
 	}
 
 }

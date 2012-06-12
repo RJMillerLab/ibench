@@ -56,6 +56,9 @@ public abstract class ScenarioGenerator {
 	protected int joinKind;	
 	protected int numOfParams;
 	protected int numOfParamsDeviation;
+	protected int numNewAttr;
+	protected int typeOfSkolem;
+	protected int numDelAttr;
 	
 	protected int curRep;
 	
@@ -65,6 +68,9 @@ public abstract class ScenarioGenerator {
 	
 	protected TrampModelFactory fac;
 	protected TrampXMLModel model;
+
+	
+
 	
 	public void generateScenario(MappingScenario scenario,
 			Configuration configuration) throws Exception {
@@ -83,11 +89,11 @@ public abstract class ScenarioGenerator {
 		}
 	}
 
-	protected void genCorrespondences() {}
+	protected abstract void genCorrespondences();
 	
-	protected void genMappings() throws Exception {}
+	protected abstract void genMappings() throws Exception;
 	
-	protected void genTransformations() throws Exception {}
+	protected abstract void genTransformations() throws Exception;
 	
 	protected void genSchemas() throws Exception {
 		// TODO switch on schema reuse
@@ -107,6 +113,7 @@ public abstract class ScenarioGenerator {
 		m = null;
 		_generator = configuration.getRandomGenerator();
 
+		// get parameters from configuration
 		repetitions =
 				configuration.getScenarioRepetitions(getScenType().ordinal());
 		numOfElements = configuration
@@ -126,6 +133,9 @@ public abstract class ScenarioGenerator {
         joinKind = configuration.getParam(Constants.ParameterName.JoinKind);
         numOfParams = configuration.getParam(Constants.ParameterName.NumOfParamsInFunctions);
         numOfParamsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfParamsInFunctions);
+        numNewAttr = configuration.getParam(Constants.ParameterName.NumOfNewAttributes);
+        typeOfSkolem = configuration.getParam(Constants.ParameterName.SkolemKind);
+        numDelAttr = configuration.getParam(Constants.ParameterName.NumofAttributestoDelete);
 
 		
 		source = scen.getSource();
@@ -136,6 +146,7 @@ public abstract class ScenarioGenerator {
 
 	protected void initPartialMapping() {
 		m = new PartialMapping();
+		fac.setPartialMapping(m);
 	}
 
 	public abstract ScenarioName getScenType();
@@ -212,7 +223,20 @@ public abstract class ScenarioGenerator {
 		String fromRel = m.getSourceRels().get(sRel).getName();
 		String fromAttr = model.getRelAttr(sRel, sAttr, true);
 		String toAttr = model.getRelAttr(tRel, tAttr, false);
-		CorrespondenceType c = fac.addCorrespondence(fromRel, fromAttr, toRel, toAttr);
-		m.addCorr(c);
+		fac.addCorrespondence(fromRel, fromAttr, toRel, toAttr);
+	}
+	
+	protected void addFK (int fRel, String[] fAttr, int tRel, String[] tAttr, boolean source) {
+		String fromRel = m.getRelName(fRel, source);
+		String toRel = m.getRelName(tRel, source);
+		fac.addForeignKey(fromRel, fAttr, toRel, tAttr, source);
+	}
+	
+	protected void addFK (int fRel, int fAttr, int tRel, int tAttr, boolean source) {
+		String fromRel = m.getRelName(fRel, source);
+		String fromAttr = m.getAttrId(fRel, fAttr, source);
+		String toRel = m.getRelName(tRel, source);
+		String toAttr = m.getAttrId(tRel, tAttr, source);
+		fac.addForeignKey(fromRel, fromAttr, toRel, toAttr, source);
 	}
 }

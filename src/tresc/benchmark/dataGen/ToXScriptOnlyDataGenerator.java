@@ -9,9 +9,19 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
+import org.vagabond.benchmark.model.TrampModelFactory;
+import org.vagabond.util.CollectionUtils;
+import org.vagabond.xmlmodel.AttrDefType;
+import org.vagabond.xmlmodel.AttrListType;
+import org.vagabond.xmlmodel.ForeignKeyType;
+import org.vagabond.xmlmodel.RelationType;
 
+import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
+import vtools.dataModel.expression.EQ;
+import vtools.dataModel.expression.Key;
+import vtools.dataModel.expression.Path;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
@@ -21,9 +31,9 @@ import vtools.dataModel.types.Type;
 public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	static Logger log = Logger.getLogger(ToXScriptOnlyDataGenerator.class);
-	
+
 	public static final String LIST_NAME_SUFFIX = "_List";
-	
+
 	List<StringBuffer> toxLists;
 	List<StringBuffer> toxTypes;
 	StringBuffer documentBuffer;
@@ -32,14 +42,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	List<SMarkElement> coveredAtomicElements;
 	String outputPath;
 	String instanceXMLFile;
-	
+
 	String template;
-	
+
 	public ToXScriptOnlyDataGenerator(Configuration config) {
 		super(config);
 		initBuffers();
 	}
-	
+
 	public ToXScriptOnlyDataGenerator(Schema schema, Configuration config) {
 		super(schema, config);
 		initBuffers();
@@ -67,7 +77,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		generateToxTemplate();
 	}
 
-	protected void generateToxTemplate() throws IOException {
+	protected void generateToxTemplate() throws Exception {
 		// just to make sure we start with empty buffers
 		initBuffers();
 
@@ -179,32 +189,125 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	private SMarkElement[][] findConstraint(SMarkElement schemaElement) {
 		for (SMarkElement[][] constraint : constraints)
 			for (int i = 0; i < constraint.length; i++)
-				if (constraint[i][0] == schemaElement)
+				if (constraint[i][0].toString()
+						.equals(schemaElement.toString()))
 					return constraint;
 		return null;
 	}
 
-	private void generateToxList(SMarkElement schemaElement, int eltCount) {
+	private void generateToxList(SMarkElement schemaElement, int eltCount)
+			throws Exception {
 		StringBuffer listBuf = new StringBuffer();
 
 		String label = schemaElement.getLabel();
 		Type type = schemaElement.getType();
 
-		generateListOpening(label, listBuf, eltCount);
+		if (!hasSelfFK(schemaElement)) {
+			String unique = generateUnique(schemaElement);
+			generateListOpening(label, listBuf, eltCount, unique, "");
 
-		for (int i = 0; i < schemaElement.size(); i++)
-			visitSchemaElement((SMarkElement) schemaElement.getSubElement(i),
-					listBuf);
+			for (int i = 0; i < schemaElement.size(); i++)
+				visitSchemaElement(
+						(SMarkElement) schemaElement.getSubElement(i), listBuf);
 
+			generateListClosing(listBuf);
+			toxLists.add(listBuf);
+		}
+		else {
+			generateSetWithSelfJoin(schemaElement, eltCount);
+		}
+	}
+
+	private boolean hasSelfFK(SMarkElement schemaElement) {
+		String rel = schemaElement.getLabel();
+		return scen.getDoc().getFKs(rel, rel, true).length != 0;
+	}
+
+	// generate self-join constraints
+	private void generateSetWithSelfJoin(SMarkElement schemaElement,
+			int eltCount) throws Exception {
+		StringBuffer listBuf = new StringBuffer();
+		String label = schemaElement.getLabel();
+		String keyLabel = label + "_keys";
+		AttrDefType[] keyAttrs = scen.getDoc().getKeyAttrs(label, true);
+		String[] keyAttrNames = new String[keyAttrs.length];
+		
+		// generate list for the key attribute values
+		generateListOpening(keyLabel, listBuf, eltCount, 
+				getUniqueCode(keyLabel, keyAttrs[0].getName()), "");
+//TODO right now unique in one attribute as a workaround unil clear how to do uniqueness over multiple attrs
+		for(int i = 0; i < keyAttrs.length;i ++) {
+			keyAttrNames[i] = keyAttrs[i].getName();
+			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
+					scen.getDocFac().getDT(keyAttrs[i].getDataType()));
+		}
+		
 		generateListClosing(listBuf);
-
 		toxLists.add(listBuf);
+		listBuf = new StringBuffer();
+		
+		// generate the list with the elements
+		ForeignKeyType fk = scen.getDoc().getFKs(label, label, true)[0];
+		AttrDefType[] fkAttrs = scen.getDoc().getAttrs(label, 
+				fk.getFrom().getAttrArray(), true);
+		AttrDefType[] attrs = scen.getDoc().getRelForName(label, false).getAttrArray();
+		generateListOpening(label, listBuf, eltCount, "", "");
+		String keyListPath = keyLabel + LIST_NAME_SUFFIX + "/" + keyLabel;
+		
+		// loop through attributes and 
+		for(AttrDefType a: attrs) {
+			Atomic dt = scen.getDocFac().getDT(a.getDataType());
+			
+			// is a key attr
+			int pos = CollectionUtils.searchPos(keyAttrs, a);
+			int fkPos = CollectionUtils.searchPos(fkAttrs, a);
+			
+			if (pos != -1) {
+				String expr = a.getName();
+				generateAtomicFromSamplePathConstruct(a.getName(), listBuf, dt, keyListPath, expr);
+			}
+			// is FK
+			else if (fkPos != -1) {
+				String expr = keyAttrs[fkPos].getName();
+				generateAtomicFromPathConstruct(a.getName(), listBuf, dt, keyListPath, expr);	
+			} 
+			// normal attr
+			else {
+				generateAtomicElementConstruct(a.getName(), listBuf, dt);
+			}
+		}
+		generateListClosing(listBuf);
+		toxLists.add(listBuf);
+	}
 
+	// generate primary key constraints
+	private String generateUnique(SMarkElement schemaElement) throws Exception {
+		RelationType rel =
+				scen.getDoc().getRelForName(schemaElement.getLabel(), false);
+
+		if (!rel.isSetPrimaryKey())
+			return "";
+
+		AttrListType key = rel.getPrimaryKey();
+
+//		if (key.getAttrArray().length == 1) {
+			return getUniqueCode(rel.getName(), key.getAttrArray(0));
+//		}
+
+		//TODO how to do multiple attr keys in toxgene?
+
+//		return "unique";
+	}
+
+	private String getUniqueCode(String rel, String keyAttr) {
+		return " unique=\"" + rel + "/" + keyAttr
+				+ "\" ";
 	}
 
 	private void generateListOpening(String eltName, StringBuffer buf,
-			int eltCount) {
-		buf.append("<tox-list name=\"" + eltName + LIST_NAME_SUFFIX + "\">\n");
+			int eltCount, String unique, String where) {
+		buf.append("<tox-list name=\"" + eltName + LIST_NAME_SUFFIX + "\""
+				+ unique + where + ">\n");
 		generateComplexElementOpening(eltName, buf, eltCount);
 	}
 
@@ -231,9 +334,38 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\"/>\n");
-
 	}
-
+	
+	private void generateAtomicFromPathConstruct (String eltName,
+			StringBuffer buf, Atomic atomicType, String path, String expr) {
+		String typeString =
+				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
+				+ "\">\n");
+		buf.append("\t<simpleType>\n" + 
+				"\t\t<restriction base=\"string\">\n");
+		buf.append("\t\t\t<tox-sample path=\"[" + path + "]\">\n");		
+		buf.append("\t\t\t\t<tox-expr value=\"[" + expr + "]\"/>\n");
+		buf.append("\t\t\t</tox-sample>\n");
+		buf.append("\t\t</restriction>\n\t</simpleType>");
+		buf.append("</element>\n");
+	}
+	
+	private void generateAtomicFromSamplePathConstruct (String eltName,
+			StringBuffer buf, Atomic atomicType, String path, String expr) {
+		String typeString =
+				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
+				+ "\">\n");
+		buf.append("\t<simpleType>\n" + 
+				"\t\t<restriction base=\"string\">\n");
+		buf.append("\t\t\t<tox-scan path=\"[" + path + "]\">\n");		
+		buf.append("\t\t\t\t<tox-expr value=\"[" + expr + "]\"/>\n");
+		buf.append("\t\t\t</tox-scan>\n");
+		buf.append("\t\t</restriction>\n\t</simpleType>");
+		buf.append("</element>\n");
+	}
+	
 	private void
 			generateListIterationConstruct(String eltName, StringBuffer buf) {
 		buf.append("<tox-foreach path=\"[" + eltName + LIST_NAME_SUFFIX + "/"

@@ -3,6 +3,8 @@ package tresc.benchmark.dataGen;
 import vtools.dataModel.schema.Schema;
 
 import java.util.Vector;
+
+import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 
@@ -10,7 +12,7 @@ public abstract class DataGenerator
 {
 	Schema schema;
 	Vector<SMarkElement[][]> constraints;
-	
+	MappingScenario scen;
 	Configuration config;
 	// how many appearances for a repeatable element
 	int repElemCount;
@@ -22,6 +24,7 @@ public abstract class DataGenerator
 	public DataGenerator(Configuration config)
 	{
 		this.config = config;
+		this.scen = scen;
 		initFromConfig();
 	}
 	
@@ -35,6 +38,10 @@ public abstract class DataGenerator
 	{
 		this(config);
 		schema=__schema;
+	}
+	
+	public void setScenario (MappingScenario scen) {
+		this.scen = scen;
 	}
 	
 	public void setSchema(Schema __schema)

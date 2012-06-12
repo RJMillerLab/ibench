@@ -12,46 +12,36 @@
 <maxInclusive value="1000"/>
 </restriction>
 </simpleType>
-<tox-list name="Test_VP0_List">
-<element name="Test_VP0" minOccurs="1" maxOccurs="1">
+<tox-list name="test_cf0nl0ce0_keys_List" unique="test_cf0nl0ce0_keys/Key" >
+<element name="test_cf0nl0ce0_keys" minOccurs="5" maxOccurs="5">
 <complexType>
-<element name="Nut_VP0A0" type="bench_string"/>
-<element name="Art_VP0A1" type="bench_string"/>
-<element name="Slope_VP0A2" type="bench_string"/>
-<element name="Measure_VP0A3" type="bench_string"/>
+<element name="nut_cf0nl0ae0KE" type="bench_string"/>
 </complexType>
 </element>
 </tox-list>
-<tox-list name="Compare_VP1_List">
-<element name="Compare_VP1" minOccurs="1" maxOccurs="1">
+
+<tox-list name="test_cf0nl0ce0_List">
+<element name="test_cf0nl0ce0" minOccurs="5" maxOccurs="5">
 <complexType>
-<element name="Branch_VP1A0" type="bench_string"/>
-<element name="Demand_VP1A1" type="bench_string"/>
-<element name="Great_VP1A2" type="bench_string"/>
-<element name="Board_VP1A3" type="bench_string"/>
+<element name="nut_cf0nl0ae0KE" type="bench_string">
+	<simpleType>
+		<restriction base="string">
+	<tox-sample path="[test_cf0nl0ce0_keys_List/test_cf0nl0ce0_keys]">
+		<tox-expr value="[nut_cf0nl0ae0KE]"/>
+	</tox-sample>
+		</restriction>
+	</simpleType>
+</element>
+<element name="nut_cf0nl0ae0FK" type="bench_string" />
+<element name="art_cf0nl0ae2" type="bench_string"/>
 </complexType>
 </element>
 </tox-list>
-<tox-list name="Warn_VP2_List">
-<element name="Warn_VP2" minOccurs="1" maxOccurs="1">
-<complexType>
-<element name="Tail_VP2A0" type="bench_string"/>
-<element name="Red_VP2A1" type="bench_string"/>
-<element name="Wrong_VP2A2" type="bench_string"/>
-<element name="Past_VP2A3" type="bench_string"/>
-</complexType>
-</element>
-</tox-list>
-<tox-document name="I_VP_4_0_2_1_1_2">
+
+<tox-document name="I_3_0_2_0_1_2_1_1_1">
 <element name="Source">
 <complexType>
-<tox-foreach path="[Test_VP0_List/Test_VP0]">
-<tox-expr value="[!]"/>
-</tox-foreach>
-<tox-foreach path="[Compare_VP1_List/Compare_VP1]">
-<tox-expr value="[!]"/>
-</tox-foreach>
-<tox-foreach path="[Warn_VP2_List/Warn_VP2]">
+<tox-foreach path="[test_cf0nl0ce0_List/test_cf0nl0ce0]">
 <tox-expr value="[!]"/>
 </tox-foreach>
 </complexType>

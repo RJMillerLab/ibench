@@ -38,7 +38,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
     public MergingScenarioGenerator()
     {		;		}
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+    public void enerateScenario(MappingScenario scenario, Configuration configuration)
     {
     	init(configuration, scenario);
         // generate the generator based on the seed

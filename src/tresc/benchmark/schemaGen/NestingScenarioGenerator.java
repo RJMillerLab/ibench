@@ -176,4 +176,22 @@ public class NestingScenarioGenerator extends ScenarioGenerator
 	public ScenarioName getScenType() {
 		return ScenarioName.NESTING;
 	}
+
+	@Override
+	protected void genCorrespondences() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genMappings() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void genTransformations() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

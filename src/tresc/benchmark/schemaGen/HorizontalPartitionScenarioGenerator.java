@@ -45,20 +45,7 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
     public HorizontalPartitionScenarioGenerator()
     {		;		}
 
-//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-//    {
-//    	init(configuration, scenario);
-//        SPJQuery generatedQuery = new SPJQuery();
-//
-//        for (int i = 0, imax = repetitions; i < imax; i++)
-//        {
-//        	initPartialMapping();
-//            createHorizPartitionCase(source, target, randomElements, randomFragments, i, pquery, generatedQuery);
-//        }
-//        
-//        setScenario(scenario, generatedQuery);
-//    }
-//    
+
     @Override
     protected void initPartialMapping () {
     	super.initPartialMapping();
@@ -249,7 +236,6 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
         }
 
         srcRel = fac.addRelation(getRelHook(0), srcName, attrs, dTypes, true);
-        m.addSourceRel(srcRel);
 	}
 
 	@Override
@@ -267,7 +253,6 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
             String name = srcName + "_" + hook;
             
         	RelationType tRel = fac.addRelation(hook, name, attrs, false);
-        	m.addTargetRel(tRel);
         }
 	}
 
@@ -277,7 +262,6 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 		
 		for(int i = 0; i < randomFragments; i++) {
 			MappingType m1 = fac.addMapping(getCorrForFrag(i));
-			m.addMapping(m1);
 			String trgName = m.getTargetRels().get(i).getName();
 			
 			fac.addForeachAtom(m1.getId(), srcName, fac.getFreshVars(0, randomElements + 1));
@@ -298,11 +282,10 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 	protected void genTransformations() throws Exception {
         SPJQuery genQuery = genQueries();
 		for(int i = 0; i < randomFragments; i++) {
-			TransformationType t;
 			String targetName = m.getTargetRels().get(i).getName();
 			String map = m.getMapIds()[i];
 			SPJQuery q = (SPJQuery) genQuery.getSelect().getTerm(i);
-			t = fac.addTransformation(q.toTrampString(map), new String[] {map}, targetName);
+			fac.addTransformation(q.toTrampString(map), new String[] {map}, targetName);
 		}
 	}
 	
