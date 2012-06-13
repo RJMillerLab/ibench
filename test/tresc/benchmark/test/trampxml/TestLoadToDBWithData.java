@@ -36,7 +36,18 @@ public class TestLoadToDBWithData {
 	private Configuration conf;
 	private static final String OUT_DIR = "./testout";
 	
-	private static final ScenarioName[] scens = ScenarioName.values();
+//	private static final ScenarioName[] scens = ScenarioName.values();
+	private static final ScenarioName[] scens = new ScenarioName[] {
+			ScenarioName.COPY,
+			ScenarioName.FUSION,
+			ScenarioName.HORIZPARTITION,
+			ScenarioName.MERGING,
+			ScenarioName.SELFJOINS,
+			ScenarioName.SURROGATEKEY,
+			ScenarioName.VALUEGEN,
+			ScenarioName.VALUEMANAGEMENT,
+			ScenarioName.VERTPARTITION
+			};
 	
 	@BeforeClass
 	public static void setUp () {

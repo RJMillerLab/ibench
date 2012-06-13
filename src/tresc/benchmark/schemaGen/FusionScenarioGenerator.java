@@ -729,7 +729,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator {
 		}
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < F; j++)
-				attrs[(i * N) + j + K] = freeAttrs[i][j];
+				attrs[(i * F) + j + K] = freeAttrs[i][j];
 		}
 
 		targetRel = fac.addRelation(hook, relName, attrs, false);

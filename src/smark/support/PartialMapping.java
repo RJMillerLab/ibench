@@ -129,27 +129,6 @@ public class PartialMapping {
 		this.trans.add(t);
 	}
 	
-	@Override
-	public String toString() {
-		StringBuffer result = new StringBuffer(); 
-		
-		result.append("PARTIAL MAPPING:\n\n");
-		for(RelationType rel: sourceRels)
-			result.append(rel.toString());
-		for(RelationType rel: targetRels)
-			result.append(rel.toString());
-		for(MappingType map: maps)
-			result.append(map.toString());
-		for(Query q: queries)
-			try {
-				result.append(q.toTrampString());
-			}
-			catch (Exception e) {
-				LoggerUtil.logException(e, log);
-			}
-		return result.toString();
-	}
-	
 	public String getAttrId (int relId, int attrId, boolean source) {
 		RelationType rel = source ? sourceRels.get(relId) 
 				: targetRels.get(relId);
@@ -178,6 +157,31 @@ public class PartialMapping {
 			return sourceRels.get(relId).getAttrArray().length;
 		else
 			return targetRels.get(relId).getAttrArray().length;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer result = new StringBuffer(); 
+		
+		result.append("PARTIAL MAPPING:\n\n");
+		for(RelationType rel: sourceRels)
+			result.append(rel.toString());
+		for(RelationType rel: targetRels)
+			result.append(rel.toString());
+		for(CorrespondenceType c: corrs)
+			result.append(c.toString());
+		for(MappingType map: maps)
+			result.append(map.toString());
+		for(TransformationType t: trans)
+			result.append(t.toString());
+		for(Query q: queries)
+			try {
+				result.append(q.toTrampString());
+			}
+			catch (Exception e) {
+				LoggerUtil.logException(e, log);
+			}
+		return result.toString();
 	}
 
 }
