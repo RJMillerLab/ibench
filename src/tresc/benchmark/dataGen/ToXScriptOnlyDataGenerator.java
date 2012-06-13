@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+
+import org.apache.commons.collections.primitives.IntList;
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.util.CollectionUtils;
@@ -110,8 +112,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		for (StringBuffer typeBuf : toxTypes)
 			templateBuffer.append(typeBuf);
 
-		for (StringBuffer listBuf : toxLists)
-			templateBuffer.append(listBuf);
+		outputToxLists(templateBuffer);
 
 		templateBuffer.append(documentBuffer);
 
@@ -125,6 +126,18 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 						config.getSourceInstanceFile())));
 		bufWriter.write(templateBuffer.toString());
 		bufWriter.close();
+	}
+
+	private void outputToxLists(StringBuffer templateBuffer2) throws Exception {
+		List<String> topoSort = dependencies.topologicalSort();
+		
+		log.debug("sorted as " + topoSort.toString() 
+				+ "\n\n base on\n" + dependencies.toString());
+		
+		for(int i = 0; i < topoSort.size(); i++) {
+			int pos = toxListPos.getId(topoSort.get(i));
+			templateBuffer.append(toxLists.get(pos));
+		}
 	}
 
 	private void generateToxTypes() {
@@ -297,7 +310,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		}
 		generateListClosing(listBuf);
 		memToxList(listBuf, labelListName);
-		dependencies.addEdge(keyListName, labelListName);
+		dependencies.addNodesAndEdge(keyListName, labelListName);
 	}
 
 	// generate primary key constraints
@@ -441,8 +454,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	private void generateToxSampleConstruct(SMarkElement[][] constraint,
 			StringBuffer buf) {
 		// we get the set of the target and generate the tox-sample header
-		generateToxSampleOpening((SMarkElement) constraint[0][1].getParent(),
-				buf);
+		SMarkElement parent = (SMarkElement) constraint[0][1].getParent();
+		generateToxSampleOpening(parent, buf);
 
 		for (int i = 0; i < constraint.length; i++) {
 			SMarkElement thisElement = constraint[i][0];
@@ -459,6 +472,10 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		generateToxSampleClosing(buf);
 
+		String thisList = getParentList(constraint[0][0]);
+		String otherList = getParentList(parent);
+		dependencies.addNodesAndEdge(otherList, thisList);
+		log.debug("added dependency from <" + thisList + "> to <" + otherList + ">");
 	}
 
 	private void generateToxSampleOpening(SMarkElement schemaElement,
@@ -474,6 +491,13 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		buf.append("]\">\n");
 	}
 
+	private String getParentList (Element schemaElement) {
+		Element parent = schemaElement;
+		while(parent.getParent().getParent() != null)
+			parent = parent.getParent();
+		return parent.getLabel() + LIST_NAME_SUFFIX;
+	}
+	
 	private String getSamplePath(Element schemaElement) {
 		Element parent = schemaElement.getParent();
 		if (parent == null)

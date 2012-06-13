@@ -207,7 +207,7 @@ public class TrampModelFactory {
 			return Atomic.INTEGER;
 		return null;
 	}
-
+	
 	public Key addPrimaryKey(String relName, String[] attrs, boolean source)
 			throws Exception {
 		RelationType rel = doc.getRelForName(relName, !source);

@@ -454,7 +454,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
     // .....
     //
 	@Override
-	protected void genSourceRels() {
+	protected void genSourceRels() throws Exception {
 		String[] sourceNames = new String[numOfTables];
 		String[][] attrs  = new String[numOfTables][];
 		joinAttrs = new String[numOfJoinAttributes];
@@ -488,7 +488,12 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 			createChainConstraints(attrs);
 	}
 
-	private void createChainConstraints(String[][] attrs) {
+	private void createChainConstraints(String[][] attrs) throws Exception {
+		// create primary keys
+		for(int i = 0; i < numOfTables - 1; i++) {
+			String relName = m.getRelName(i, true);
+			fac.addPrimaryKey(relName, getJoinAttrs(i), true);
+		}
 		// join every table with the previous one
 		for(int i = 1; i < numOfTables; i++) {
 			String[] fAttr, tAttr;
@@ -498,8 +503,12 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		}
 	}
 
-	private void createStarConstraints(String[][] attrs) {
-		//TODO PKs
+	private void createStarConstraints(String[][] attrs) throws Exception {
+		// create primary keys
+		for(int i = 1; i < numOfTables; i++) {
+			String relName = m.getRelName(i, true);
+			fac.addPrimaryKey(relName, getJoinAttrs(i), true);
+		}
 		// create fks from every table to the first table
 		for(int i = 1; i < numOfTables; i++) {
 			String[] fAttr, tAttr;
@@ -732,20 +741,19 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         // attributes in the first table. the foreign keys will point to 
         // all the join attributes from the other tables.
         // create the join conditions in the where clause and the fkeys.
-        int referencedTable = 0;
         AND andCond = new AND();
         andCond.toString();
         for (int tbli = 1, tblimax = numOfAttributes.length; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
         {    	
         	for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
         	{
-        		String attrName = getJoinAttr(tbli, i);
-        		String referencedAttrName = getJoinRef(tbli, i);
+        		String attrName = getJoinRef(tbli, i);
+        		String referencedAttrName = getJoinAttr(tbli, i);
         		
                 // create the where clause; the join attributes and the reference attributes that
                 // make the join condition
                 Projection att1 = new Projection(new Variable("X"+0), attrName);
-                Projection att2 = new Projection(new Variable("X"+referencedTable), referencedAttrName);
+                Projection att2 = new Projection(new Variable("X"+tbli), referencedAttrName);
                 andCond.add(new EQ(att1,att2));
         	}
         }	
@@ -775,9 +783,9 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         {     
             for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
             {
-            	String attrName = getJoinAttr(tbli, i);
-        		String referencedAttrName = getJoinRef(tbli - 1, i);
-        		
+            	String attrName = getJoinRef(tbli, i);
+        		String referencedAttrName = getJoinAttr(tbli - 1, i);
+        		int referencedTable = tbli - 1;
                 // create the where clause; the join attributes and the reference attributes that
                 // make the join condition
                 Projection att1 = new Projection(new Variable("X"+tbli), attrName);
