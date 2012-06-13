@@ -9,14 +9,12 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.xmlbeans.XmlException;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.mapping.model.ModelLoader;
-import org.vagabond.mapping.model.ValidationException;
 import org.vagabond.mapping.scenarioToDB.DatabaseScenarioLoader;
 import org.vagabond.util.ConnectionManager;
 import org.vagabond.util.LoggerUtil;
@@ -25,8 +23,8 @@ import org.vagabond.util.PropertyWrapper;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ParameterName;
-import tresc.benchmark.STBenchmark;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.STBenchmark;
 
 public class TestLoadToDBWithData {
 
@@ -126,13 +124,25 @@ public class TestLoadToDBWithData {
 	
 	
 	@Test
+	public void testDBWithDataChainMerging () throws Exception {
+		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
+		testSingleScenarioLoadToDBWithData(ScenarioName.MERGING);
+	}
+	
+	@Test
+	public void testDBWithDataChainVerticalPart () throws Exception {
+		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
+		testSingleScenarioLoadToDBWithData(ScenarioName.VERTPARTITION);
+	}
+	
+	@Test
 	public void testLoadEachBasicScenariosWithData () throws Exception {
 		for(ScenarioName n: scens)
 			testSingleScenarioLoadToDBWithData(n);
 	}
 	
 	@Test
-	public void testLoadEachBasicScenariosWithDataStarJoin () throws Exception {
+	public void testLoadEachBasicScenariosWithDataChainJoin () throws Exception {
 		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
 		for(ScenarioName n: scens)
 			testSingleScenarioLoadToDBWithData(n);
@@ -141,7 +151,7 @@ public class TestLoadToDBWithData {
 	@Test
 	public void testLoadAllBasicScenariosWithData () throws Exception {
 		for(ScenarioName n: scens)
-			conf.setScenarioRepetitions(n, 3);
+			conf.setScenarioRepetitions(n, 1);
 		b.runConfig(conf);
 		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
 		log.info(doc.getScenario().toString());
@@ -150,6 +160,17 @@ public class TestLoadToDBWithData {
 		dbCon.close();
 	}
 
+	@Test
+	public void testToxSizeProblem () throws Exception {
+		conf.setScenarioRepetitions(ScenarioName.COPY, 20);
+		b.runConfig(conf);
+		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
+		log.info(doc.getScenario().toString());
+		Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
+		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
+		dbCon.close();
+	}
+	
 	private void testSingleScenarioLoadToDBWithData(ScenarioName n)
 			throws Exception {
 		log.info(n);
