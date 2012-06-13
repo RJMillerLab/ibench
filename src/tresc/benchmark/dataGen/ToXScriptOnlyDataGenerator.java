@@ -11,6 +11,8 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.util.CollectionUtils;
+import org.vagabond.util.DirectedGraph;
+import org.vagabond.util.IdMap;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.ForeignKeyType;
@@ -36,6 +38,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	List<StringBuffer> toxLists;
 	List<StringBuffer> toxTypes;
+	DirectedGraph<String> dependencies;
+	IdMap<String> toxListPos; 
 	StringBuffer documentBuffer;
 	StringBuffer templateBuffer;
 	String documentName;
@@ -70,6 +74,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		templateBuffer = new StringBuffer();
 		coveredAtomicElements = new ArrayList<SMarkElement>();
 		documentName = config.getSourceDocumentName();
+		dependencies = new DirectedGraph<String> (false);
+		toxListPos = new IdMap<String> ();
 	}
 
 	@Override
@@ -200,8 +206,9 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		StringBuffer listBuf = new StringBuffer();
 
 		String label = schemaElement.getLabel();
+		String listName = label + LIST_NAME_SUFFIX;
 		Type type = schemaElement.getType();
-
+		
 		if (!hasSelfFK(schemaElement)) {
 			String unique = generateUnique(schemaElement);
 			generateListOpening(label, listBuf, eltCount, unique, "");
@@ -211,11 +218,20 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 						(SMarkElement) schemaElement.getSubElement(i), listBuf);
 
 			generateListClosing(listBuf);
-			toxLists.add(listBuf);
+			
+			// add to list of tox list and create node in dependency graph
+			memToxList(listBuf, listName);
 		}
 		else {
 			generateSetWithSelfJoin(schemaElement, eltCount);
 		}
+	}
+
+	private void memToxList(StringBuffer listBuf, String listName)
+			throws Exception {
+		toxLists.add(listBuf);
+		dependencies.addNode(listName);
+		toxListPos.put(toxLists.size() - 1, listName);
 	}
 
 	private boolean hasSelfFK(SMarkElement schemaElement) {
@@ -228,7 +244,9 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			int eltCount) throws Exception {
 		StringBuffer listBuf = new StringBuffer();
 		String label = schemaElement.getLabel();
+		String labelListName = label + LIST_NAME_SUFFIX;
 		String keyLabel = label + "_keys";
+		String keyListName = keyLabel + LIST_NAME_SUFFIX;
 		AttrDefType[] keyAttrs = scen.getDoc().getKeyAttrs(label, true);
 		String[] keyAttrNames = new String[keyAttrs.length];
 		
@@ -243,7 +261,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		}
 		
 		generateListClosing(listBuf);
-		toxLists.add(listBuf);
+		memToxList(listBuf, keyListName);
+		
 		listBuf = new StringBuffer();
 		
 		// generate the list with the elements
@@ -277,13 +296,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			}
 		}
 		generateListClosing(listBuf);
-		toxLists.add(listBuf);
+		memToxList(listBuf, labelListName);
+		dependencies.addEdge(keyListName, labelListName);
 	}
 
 	// generate primary key constraints
 	private String generateUnique(SMarkElement schemaElement) throws Exception {
-		RelationType rel =
-				scen.getDoc().getRelForName(schemaElement.getLabel(), false);
+		RelationType rel = scen.getDoc().getRelForName(
+				schemaElement.getLabel().toLowerCase(), false);
 
 		if (!rel.isSetPrimaryKey())
 			return "";

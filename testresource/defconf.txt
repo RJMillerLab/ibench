@@ -22,7 +22,7 @@ Scenarios.DELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3 
+ConfigOptions.NumOfSubElements = 5 
 ConfigOptions.NestingDepth = 0 
 ConfigOptions.JoinSize = 2 
 ConfigOptions.JoinKind = 0 

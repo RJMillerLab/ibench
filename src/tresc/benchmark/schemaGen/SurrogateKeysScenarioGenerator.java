@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.vagabond.xmlmodel.MappingType;
+
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
@@ -33,6 +35,10 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
     private final String _stamp = "SK";
 
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+
+	private int params;
+
+	private int elements;
     
     public SurrogateKeysScenarioGenerator()
     {
@@ -67,6 +73,20 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 //        
 //        setScenario(scenario, generatedQuery, pquery);
 //    }
+    
+    @Override
+	protected void initPartialMapping() {
+		super.initPartialMapping();
+		elements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+						numOfElementsDeviation);
+		params = Utils.getRandomNumberAroundSomething(_generator, numOfParams,
+						numOfParamsDeviation);
+		// make sure params are at least 2
+		params = (params < 2) ? 2 : params;
+		// and the elements are at least as many as the the params
+		if (params > elements)
+			elements = params;
+	}
 
     private Character getAttrLetter(String attrName) {
     	if (attrMap.containsKey(attrName))
@@ -231,29 +251,100 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 
 	@Override
 	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+		String relName = randomRelName(0);
+		String[] attrs = new String[elements];
 		
+		for(int i =0; i < elements; i++) {
+			attrs[i] = randomAttrName(0, i);
+		}
+		
+		fac.addRelation(getRelHook(0), relName, attrs, true);
 	}
 
 	@Override
 	protected void genTargetRels() {
-		// TODO Auto-generated method stub
+		String tRelName = randomRelName(0);
+		int numTargetEl = elements + 2;
+		String[] attrs = new String[numTargetEl];
 		
+		for(int i = 0; i < elements; i++)
+			attrs[i] = m.getAttrId(0, i, true);
+		attrs[elements] = randomAttrName(0, elements) + "IDindep";
+		attrs[elements + 1] = randomAttrName(0, elements + 1) + "IDOnFirst";
+		
+		fac.addRelation(getRelHook(0), tRelName, attrs, false);
 	}
 	
 	@Override
-	protected void genMappings() {
+	protected void genMappings() throws Exception {
+		MappingType m1 = fac.addMapping(m.getCorrs());
 		
+		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, elements));
+		fac.addExistsAtom(m1, 0, fac.getFreshVars(0, elements + 2));
 	}
 	
 	@Override
-	protected void genTransformations() {
+	protected void genTransformations() throws Exception {
+		SPJQuery q;
+		String creates = m.getRelName(0, false);
 		
+		q = genQueries();
+		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), creates);
 	}
 	
+	private SPJQuery genQueries() {
+		String sourceName = m.getRelName(0, true);
+		String targetName = m.getRelName(0, false);
+		String[] attrNames = m.getAttrIds(0, false);
+		
+		// create the intermediate query
+		SPJQuery query = new SPJQuery();
+
+		// create the From Clause of the query
+		query.getFrom().add(new Variable("X"),
+				new Projection(Path.ROOT, sourceName));
+
+		SelectClauseList select = query.getSelect();
+		String[] args = new String[numOfParams];
+		String[] keyArgs = new String[elements];
+		
+		for (int i = 0; i < elements; i++) {
+			// create the atomic element in the source and the target
+			// add the subelements as attributes to the Select clause of the
+			// query
+			Projection att = new Projection(new Variable("X"), attrNames[i]);
+			select.add(attrNames[i], att);
+		}
+
+		// create the surrogate key elements now. The first one is the one that
+		// accepts no arguments
+		// create the Function corresponding to the key
+		// and add it to the select clause of query
+		SKFunction f = new SKFunction(fac.getNextId("SK"));
+		for (int i = 0; i < elements; i++)
+			f.addArg(new Projection(new Variable("X"), attrNames[i]));
+		select.add(attrNames[elements], f);
+
+		// create the Function corresponding to the key
+		// and add it to the select clause of query
+		f = new SKFunction(fac.getNextId("SK"));
+		for (int i = 0; i < numOfParams; i++)
+			f.addArg(new Projection(new Variable("X"), attrNames[i]));
+		select.add(attrNames[elements + 1], f);
+
+		// add the subquery to the final transformation query
+		query.setSelect(select);
+		SelectClauseList pselect = pquery.getSelect();
+		pselect.add(targetName, query);
+		pquery.setSelect(pselect);
+		
+		return query;
+	}
+
 	@Override
 	protected void genCorrespondences() {
-		
+		for(int i = 0; i < elements; i++)
+			addCorr(0, i, 0, i);
 	}
 
 	@Override

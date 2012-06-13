@@ -1,5 +1,6 @@
 package vtools.dataModel.expression;
 
+import vtools.dataModel.values.IntegerValue;
 import vtools.visitor.VisitorImpl;
 
 public class StringPrinter extends VisitorImpl
@@ -98,6 +99,16 @@ public class StringPrinter extends VisitorImpl
 
     public Object visit(Function o, Object[] args)
     {
+    	if (o.getName().toLowerCase().equals("concat")) {
+    		concatFunc(o, args);
+    		return null;
+    	}
+    	
+    	if (o.getName().toLowerCase().equals("extract")) {
+    		extractFunc(o, args);
+    		return null;
+    	}
+    	
         StringBuffer buf = (StringBuffer) args[0];
         buf.append(o.getName() + "(");
         for (int i = 0, imax = o.getNumOfArgs(); i < imax; i++)
@@ -110,8 +121,38 @@ public class StringPrinter extends VisitorImpl
         return null;
     }
     
+    private void extractFunc (Function o, Object[] args) {
+    	assert(o.getNumOfArgs() == 3);
+    	StringBuffer buf = (StringBuffer) args[0];
+    	int from, to;
+
+    	from = ((IntegerValue) ((ConstantAtomicValue) o.getArg(1)).getValue()).getValue();
+    	to = ((IntegerValue) ((ConstantAtomicValue) o.getArg(2)).getValue()).getValue();
+    	buf.append("substring(");
+    	
+    	ValueExpression exp = o.getArg(0);
+        exp.accept(this, args);
+        
+        buf.append("," + from + "," + to + ")");
+    }
+    
+    private void concatFunc (Function o, Object[] args) {
+    	StringBuffer buf = (StringBuffer) args[0];
+    	if (o.getNumOfArgs() == 1) {
+    		ValueExpression exp = o.getArg(0);
+            exp.accept(this, args);
+    	}
+    		
+    	for (int i = 0, imax = o.getNumOfArgs(); i < imax; i++)
+        {
+            ValueExpression exp = o.getArg(i);
+            buf.append(((i != 0) ? " || " : ""));
+            exp.accept(this, args);
+        }
+    }
+    
     public Object visit(SKFunction o, Object[] args) {
-    	final String CONCAT = " || ";
+    	final String CONCAT = " || '|' || ";
     	final String QUOTE = "'";
     	
     	StringBuffer buf = (StringBuffer) args[0];

@@ -112,7 +112,8 @@ public abstract class ScenarioGenerator {
 		fac = scen.getDocFac();
 		m = null;
 		_generator = configuration.getRandomGenerator();
-
+		this.configuration = configuration;
+		
 		// get parameters from configuration
 		repetitions =
 				configuration.getScenarioRepetitions(getScenType().ordinal());

@@ -1,9 +1,13 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import org.vagabond.util.CollectionUtils;
+import org.vagabond.xmlmodel.MappingType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -29,63 +33,75 @@ import vtools.dataModel.types.Set;
 
 public class MergingScenarioGenerator extends ScenarioGenerator
 {
-    private Random _generator;
-
-    private final String _stamp = "MR";
 
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+
+	private int numOfTables;
+	private int numOfJoinAttributes;
+	private JoinKind jk;
+	private int[] numOfAttributes;
+
+	private int factor;
+
+	private String[] joinAttrs;
     
     public MergingScenarioGenerator()
     {		;		}
 
-    public void enerateScenario(MappingScenario scenario, Configuration configuration)
-    {
-    	init(configuration, scenario);
-        // generate the generator based on the seed
-        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.MERGING.ordinal());
-        //_generator = (seed == 0) ? new Random() : new Random(seed);
-
-        // how many tables to have
-        // whether we do star or chain joins
-        // int joinKindDeviation =
-        // configuration.getDeviation(Constants.ParameterName.JoinKind);
-        // how many attributes to be used in the joins.
-        
-        for (int i = 0, imax = repetitions; i < imax; i++)
+//    public void generateScenario(MappingScenario scenario, Configuration configuration)
+//    {
+//    	init(configuration, scenario);
+//    	
+//        // generate the generator based on the seed
+//        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.MERGING.ordinal());
+//        //_generator = (seed == 0) ? new Random() : new Random(seed);
+//
+//        // how many tables to have
+//        // whether we do star or chain joins
+//        // int joinKindDeviation =
+//        // configuration.getDeviation(Constants.ParameterName.JoinKind);
+//        // how many attributes to be used in the joins.
+//        
+//        for (int i = 0, imax = repetitions; i < imax; i++)
+//        {
+//        	initPartialMapping();
+//            SPJQuery generatedQuery = new SPJQuery();
+//            
+//            SMarkElement[] srcRels = new SMarkElement[numOfAttributes.length];
+//            SMarkElement tgtRel = createSubElements(source, target, numOfAttributes, numOfJoinAttributes, jk, i, pquery, generatedQuery, srcRels);
+//            
+//            setScenario(scenario, generatedQuery, tgtRel, srcRels);
+//            log.debug(scenario);
+//        }
+//   }
+//    
+    @Override
+    protected void initPartialMapping() {
+    	super.initPartialMapping();
+    	
+        numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+            numOfSetElementsDeviation);
+        numOfJoinAttributes = Utils.getRandomNumberAroundSomething(_generator, keyWidth,
+            keyWidthDeviation);
+        jk = JoinKind.values()[joinKind];
+        if (jk == JoinKind.VARIABLE)
         {
-            SPJQuery generatedQuery = new SPJQuery();
-
-            // number of tables we will use
-            int numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
-                numOfSetElementsDeviation);
-            // number of attributes we will use in the joins
-            int numOfJoinAttributes = Utils.getRandomNumberAroundSomething(_generator, keyWidth,
-                keyWidthDeviation);
-            // decide the kind of join we will follow.
-            JoinKind jk = JoinKind.values()[joinKind];
-            if (jk == JoinKind.VARIABLE)
-            {
-                int tmp = Utils.getRandomNumberAroundSomething(_generator, 0, 1);
-                if (tmp < 0)
-                    jk = JoinKind.STAR;
-                else jk = JoinKind.CHAIN;
-            }
-            // array to keep for each table how many attributes it will have
-            int[] numOfAttributes = new int[numOfTables];
-            for (int k = 0, kmax = numOfAttributes.length; k < kmax; k++)
-            {
-                int tmpInt = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-                    numOfElementsDeviation);
-                numOfAttributes[k] = (tmpInt < (2 * numOfJoinAttributes + 1)) ? (2 * numOfJoinAttributes + 1)
-                        : tmpInt;
-            }
-            
-            SMarkElement[] srcRels = new SMarkElement[numOfAttributes.length];
-            SMarkElement tgtRel = createSubElements(source, target, numOfAttributes, numOfJoinAttributes, jk, i, pquery, generatedQuery, srcRels);
-            
-            setScenario(scenario, generatedQuery, tgtRel, srcRels);
+            int tmp = Utils.getRandomNumberAroundSomething(_generator, 0, 1);
+            if (tmp < 0)
+                jk = JoinKind.STAR;
+            else jk = JoinKind.CHAIN;
         }
-   }
+        numOfAttributes = new int[numOfTables];
+        for (int k = 0, kmax = numOfAttributes.length; k < kmax; k++)
+        {
+            int tmpInt = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+                numOfElementsDeviation);
+            numOfAttributes[k] = (tmpInt < (2 * numOfJoinAttributes + 1)) ? (2 * numOfJoinAttributes + 1)
+                    : tmpInt;
+        }
+        
+        factor = (jk == JoinKind.STAR) ? 1 : 2;
+    }
 
     private Character getAttrSymbol(String attrName) {
     	if (attrInSymbolList(attrName))
@@ -209,15 +225,15 @@ public class MergingScenarioGenerator extends ScenarioGenerator
     	FromClauseList from = query.getFrom();
     	
         // create the target table
-        String nameT = Modules.nameFactory.getARandomName() + "_" + _stamp + repetition;
+        String nameT = Modules.nameFactory.getARandomName() + "_" + getStamp() + repetition;
         SMarkElement elTrg = new SMarkElement(nameT, new Set(), null, 0, 0);
-        elTrg.setHook(new String(_stamp + repetition));
+        elTrg.setHook(new String(getStamp() + repetition));
         target.addSubElement(elTrg);
     	
     	// auxiliary variable. When we are in a chain join we use double the
         // number of join attributes because we join with the next and the
         // previous table in the join chain.
-        int factor = (jk == JoinKind.STAR) ? 1 : 2;
+   
 
         // first we create the source tables and their attributes 
         // that do not participate in the joins.
@@ -226,9 +242,9 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         for (int i = 0, imax = tables.length; i < imax; i++)
         {
             String namePrefix = Modules.nameFactory.getARandomName();
-            String name = namePrefix + "_" + _stamp + repetition + "Comp" + i;
+            String name = namePrefix + "_" + getStamp() + repetition + "Comp" + i;
             SMarkElement el = new SMarkElement(name, new Set(), null, 0, 0);
-            el.setHook(new String(_stamp + repetition + "Comp" + i));
+            el.setHook(new String(getStamp() + repetition + "Comp" + i));
             source.addSubElement(el);
             tables[i] = el;
             // add the table to the from clause
@@ -239,13 +255,13 @@ public class MergingScenarioGenerator extends ScenarioGenerator
             for (int k = 0, kmax = numOfNonJoinAttr; k < kmax; k++)
             {
                 String tmpName = Modules.nameFactory.getARandomName();
-                String attrName = tmpName + "_" + _stamp + repetition + "Comp" + i + "Attr" + k;
+                String attrName = tmpName + "_" + getStamp() + repetition + "Comp" + i + "Attr" + k;
                 SMarkElement attrEl = new SMarkElement(attrName, Atomic.STRING, null, 0, 0);
-                attrEl.setHook(new String(_stamp + repetition + "Comp" + i + "Attr" + k));
+                attrEl.setHook(new String(getStamp() + repetition + "Comp" + i + "Attr" + k));
                 el.addSubElement(attrEl);
                 // add the non-join attribute to the target table
                 SMarkElement attrElT = new SMarkElement(attrName, Atomic.STRING, null, 0,0);
-                attrElT.setHook(new String(_stamp + repetition + "Comp" + i + "Attr" + k));
+                attrElT.setHook(new String(getStamp() + repetition + "Comp" + i + "Attr" + k));
                 elTrg.addSubElement(attrElT);
                 // add the non-join attribute to the select clause
                 Projection att = new Projection(new Variable("X"+i), attrName);
@@ -291,13 +307,13 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         {
             for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
             {
-                String attrName = joinAttrNames[i] + "_" + _stamp + repetition + "Comp" + tbli + "JoinAttr" + i;
+                String attrName = joinAttrNames[i] + "_" + getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i;
                 SMarkElement attrEl = new SMarkElement(attrName, Atomic.STRING, null, 0,0);
-                attrEl.setHook(new String(_stamp + repetition + "Comp" + tbli + "JoinAttr" + i));
+                attrEl.setHook(new String(getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i));
                 tables[tbli].addSubElement(attrEl);
                 // add the attribute to the target table
                 SMarkElement attrElT = new SMarkElement(attrName, Atomic.STRING, null, 0,0);
-                attrElT.setHook(new String(_stamp + repetition + "Comp" + tbli + "JoinAttr" + i));
+                attrElT.setHook(new String(getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i));
                 elTrg.addSubElement(attrElT);
                 // add the join attribute to the select clause
                 Projection att = new Projection(new Variable("X"+tbli), attrName);
@@ -323,14 +339,14 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         	
         	for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
         	{
-        		String attrName = joinAttrNames[i] + "_" + _stamp + repetition + "Comp" + tbli + 
+        		String attrName = joinAttrNames[i] + "_" + getStamp() + repetition + "Comp" + tbli + 
         		                    "JoinAttr" + i + "Ref" + referencedTable;
                 SMarkElement attrEl = new SMarkElement(attrName, Atomic.STRING, null, 0,0);
-                attrEl.setHook(new String(_stamp + repetition + "Comp" + tbli + "JoinAttr" + i + 
+                attrEl.setHook(new String(getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i + 
                 "Ref" + referencedTable));
                 tables[0].addSubElement(attrEl);
                 // we add attributes to the source foreign key constraint
-                String referencedAttrName=joinAttrNames[i] + "_" + _stamp + repetition + "Comp" + 
+                String referencedAttrName=joinAttrNames[i] + "_" + getStamp() + repetition + "Comp" + 
                                             referencedTable + "JoinAttr" + i;
                 fKeySrc.addFKeyAttr(new Projection(varKey2.clone(),referencedAttrName), 
                                     new Projection(varKey1.clone(),attrName));
@@ -352,13 +368,13 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         {
             for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
             {
-                String attrName = joinAttrNames[i] + "_" + _stamp + repetition + "Comp" + tbli + "JoinAttr" + i;
+                String attrName = joinAttrNames[i] + "_" + getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i;
                 SMarkElement attrEl = new SMarkElement(attrName, Atomic.STRING, null, 0,0);
-                attrEl.setHook(new String(_stamp + repetition + "Comp" + tbli + "JoinAttr" + i));
+                attrEl.setHook(new String(getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i));
                 tables[tbli].addSubElement(attrEl);
                 // add the attribute to the target table
                 SMarkElement attrElT = new SMarkElement(attrName, Atomic.STRING, null, 0,0);
-                attrElT.setHook(new String(_stamp + repetition + "Comp" + tbli + "JoinAttr" + i));
+                attrElT.setHook(new String(getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i));
                 elTrg.addSubElement(attrElT);
                 // add the join attribute to the select clause
                 Projection att = new Projection(new Variable("X"+tbli), attrName);
@@ -382,14 +398,14 @@ public class MergingScenarioGenerator extends ScenarioGenerator
            
             for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
             {
-                String attrName = joinAttrNames[i] + "_" + _stamp + repetition + "Comp" + tbli + "JoinAttr" + i + 
+                String attrName = joinAttrNames[i] + "_" + getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i + 
                 						"Ref" + referencedTable;
                 SMarkElement attrEl = new SMarkElement(attrName, Atomic.STRING, null, 0, 0);
-                attrEl.setHook(new String(_stamp + repetition + "Comp" + tbli + "JoinAttr" + i + 
+                attrEl.setHook(new String(getStamp() + repetition + "Comp" + tbli + "JoinAttr" + i + 
                                         "Ref" + referencedTable));
                 tables[tbli].addSubElement(attrEl);
                 // we add attributes to the source foreign key constraint
-                String referencedAttrName=joinAttrNames[i] + "_" + _stamp + repetition + "Comp" + referencedTable + "JoinAttr" + i;
+                String referencedAttrName=joinAttrNames[i] + "_" + getStamp() + repetition + "Comp" + referencedTable + "JoinAttr" + i;
                 fKeySrc.addFKeyAttr(new Projection(varKey2.clone(),referencedAttrName), 
                                     new Projection(varKey1.clone(),attrName));               
                 // create the where clause; the join attributes and the reference attributes that
@@ -415,32 +431,393 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         return elTrg;
     }
 
-
+    // The way the algorithm works is by generating the following situation
+    // where the left column describes the case of a star join
+    // and the right one the case of a chain join.
+    // 
+    // XXXXComp0JoinAttr0Ref1______________XXXXComp0JoinAttr0
+    // XXXXComp0JoinAttr1Ref1______________XXXXComp0JoinAttr1
+    // XXXXComp0JoinAttr0Ref2________________________________
+    // XXXXComp0JoinAttr0Ref2________________________________
+    //
+    //
+    // XXXXComp1JoinAttr0__________________XXXXComp1JoinAttr0Ref0
+    // XXXXComp1JoinAttr1__________________XXXXComp1JoinAttr1Ref0
+    // ____________________________________XXXXComp1JoinAttr0
+    // ____________________________________XXXXComp1JoinAttr1
+    //                              
+    //
+    // XXXXComp2JoinAttr0__________________XXXXComp2JoinAttr0Ref1
+    // XXXXComp2JoinAttr1__________________XXXXComp2JoinAttr1Ref1
+    // ____________________________________XXXXComp1JoinAttr0
+    // ____________________________________XXXXComp1JoinAttr1
+    // .....
+    //
 	@Override
 	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+		String[] sourceNames = new String[numOfTables];
+		String[][] attrs  = new String[numOfTables][];
+		joinAttrs = new String[numOfJoinAttributes];
+		// create join attr names
+		for(int i = 0; i < numOfJoinAttributes; i++)
+			joinAttrs[i] = randomAttrName(0, i);
 		
+		// create numOfTables in the source to be denormalized
+		for(int i = 0; i < numOfTables; i++) {
+			sourceNames[i] = randomRelName(i);
+			int numOfNonJoinAttr = numOfAttributes[i] - (factor * numOfJoinAttributes);
+			attrs[i] = new String[numOfAttributes[i]];
+		
+			for(int j = 0; j < numOfNonJoinAttr; j++)
+				attrs[i][j] = randomAttrName(i, j);
+		}
+		
+		if (jk == JoinKind.STAR)
+			createStarJoinAttrs(attrs);
+		if (jk == JoinKind.CHAIN)
+			createChainJoinAttrs(attrs);
+		
+		// create tables 
+		for(int i = 0; i < numOfTables; i++)
+			fac.addRelation(getRelHook(i), sourceNames[i], attrs[i], true);
+		
+		// create FK and key constraints
+		if (jk == JoinKind.STAR)
+			createStarConstraints(attrs);
+		if (jk == JoinKind.CHAIN)
+			createChainConstraints(attrs);
+	}
+
+	private void createChainConstraints(String[][] attrs) {
+		// join every table with the previous one
+		for(int i = 1; i < numOfTables; i++) {
+			String[] fAttr, tAttr;
+			fAttr = getJoinRefs(i);
+			tAttr = getJoinAttrs(i - 1);
+			addFK(i, fAttr, i - 1, tAttr, true);
+		}
+	}
+
+	private void createStarConstraints(String[][] attrs) {
+		//TODO PKs
+		// create fks from every table to the first table
+		for(int i = 1; i < numOfTables; i++) {
+			String[] fAttr, tAttr;
+			tAttr = getJoinAttrs(i);
+			fAttr = getJoinRefs(i);
+			addFK(0, fAttr, i, tAttr, true);
+		}
+	}
+	
+	private String[] getJoinRefs(int i) {
+		String[] result = new String[numOfJoinAttributes];
+		for(int j = 0; j < numOfJoinAttributes; j++)
+			result[j] = getJoinRef(i, j);
+		
+		return result;
+	}
+
+	private String[] getJoinAttrs (int i) {
+		String[] result = new String[numOfJoinAttributes];
+		for(int j = 0; j < numOfJoinAttributes; j++)
+			result[j] = getJoinAttr(i, j);
+		
+		return result;
+	}
+
+	private void createStarJoinAttrs(String[][] attrs) {
+		// create join attrs in all except the first table (center of star)
+		for(int i = 1; i < numOfTables; i++) {
+			int offset = numOfAttributes[i] - (numOfJoinAttributes);
+			for(int j = 0; j < numOfJoinAttributes; j++)
+				attrs[i][offset + j] = getJoinAttr(i, j);
+		}
+		
+		// create fk attributes in first table
+		int offset = numOfAttributes[0] - ((numOfTables - 1) * numOfJoinAttributes);
+		for(int i = 1; i < numOfTables; i++) {
+			for(int j = 0; j < numOfJoinAttributes; j++)
+				attrs[0][offset + j] = getJoinRef(i, j);
+			offset += numOfJoinAttributes;
+		}
+	}
+ 
+
+	private void createChainJoinAttrs(String[][] attrs) {
+		// create join attributes in all tables except the last one
+		for(int i = 0; i < numOfTables - 1; i++) {
+			int fac = i == 0 ? 1 : 2;
+			int offset = numOfAttributes[i] - (numOfJoinAttributes * fac);
+			for(int j = 0; j < numOfJoinAttributes; j++)
+				attrs[i][offset + j] = getJoinAttr(i, j);
+		}
+		
+		// create fk attributes in all tables except first
+		for (int i = 1; i < numOfTables; i++) {
+			int offset = numOfAttributes[i] - numOfJoinAttributes;
+			for(int j = 0; j < numOfJoinAttributes; j++)
+				attrs[i][offset + j] = getJoinRef( i, j);
+		}
+	}
+	
+	private String getJoinRef(int i, int j) {
+		return joinAttrs[j] + "comp" + i + "_joinref_" + j;
+	}
+
+	private String getJoinAttr(int i, int j) {
+		return joinAttrs[j] + "comp" + i +  "_joinattr_" + j;
+	}
+	
+	@Override
+	protected void genTargetRels() {
+		String targetName = randomRelName(0);
+		List<String> attrs = new ArrayList<String> ();
+		
+		if (jk == JoinKind.STAR) {
+			for(int i = 0; i < numOfTables; i++) {
+				int numAtt = numOfAttributes[i];
+				if (i == 0)
+					numAtt -= (numOfTables - 1) * numOfJoinAttributes;
+				for(int j = 0; j < numAtt; j++)
+					attrs.add(m.getAttrId(i, j, true));
+			}
+		}
+		if (jk == JoinKind.CHAIN) {
+			for(int i = 0; i < numOfTables; i++) {
+				int numAtt = numOfAttributes[i];
+				if (i != 0)
+					numAtt -= numOfJoinAttributes;
+				for(int j = 0; j < numAtt; j++)
+					attrs.add(m.getAttrId(i, j, true));				
+			}
+		}
+		
+		fac.addRelation(getRelHook(0), targetName, attrs.toArray(new String[] {}), false);
+	}
+	
+	@Override
+	protected void genMappings() throws Exception {
+		MappingType m1 = fac.addMapping(m.getCorrs());
+		String[][] vars = new String[numOfTables][];
+		String[] targetVars = new String[m.getNumRelAttr(0, false)];
+		int offset;
+		
+		// add foreach atoms for the the source fragments
+		offset = m.getNumRelAttr(0, true);
+		vars[0] = fac.getFreshVars(0, offset);
+		fac.addForeachAtom(m1, 0, vars[0]);
+		
+		// each table get fresh vars for its free and join attributes
+		// the fk vars are takes from the join attributes they reference
+		for(int i = 1; i < numOfTables; i++) {
+			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
+			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
+			String[] fkVars = null;
+			
+			// get vars for the referenced attributes from the first table 
+			if (jk == JoinKind.STAR) {
+				int from = numOfAttributes[0] - ((numOfTables - i) * numOfJoinAttributes);
+				fkVars = Arrays.copyOfRange(vars[0], from, from + numOfJoinAttributes);
+			}
+			// get vars for the referenced attributes from the previous table
+			if (jk == JoinKind.CHAIN) {
+				fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
+						numFreshVars + numOfJoinAttributes);
+			}
+			vars[i] = CollectionUtils.concat(freeVars, fkVars);
+			
+			fac.addForeachAtom(m1, i, vars[i]);
+		}
+		
+		// generate an array of vars for the target
+		// first we add vars for the free attributes of all table
+		// then we add the join attribute vars
+		offset = 0;
+		for(int i = 0; i < numOfTables; i++) {
+			int numVars = vars[i].length;
+			
+			if (jk == JoinKind.STAR) {
+				if (i == 0)
+					numVars -= (numOfTables - 1) * numOfJoinAttributes;
+				else
+					numVars -= numOfJoinAttributes;
+			}
+			if (jk == JoinKind.CHAIN) {
+				if (i > 0 && i != numOfTables - 1)
+					numVars -= numOfJoinAttributes * 2;
+				if (i == numOfTables)
+					numVars -= numOfJoinAttributes;
+			}
+			
+			System.arraycopy(vars[i], 0, targetVars, offset, numVars);
+			offset += numVars;
+		}
+		
+		// star join, add join attribute vars from first table
+		if (jk == JoinKind.STAR) {
+			int start = numOfAttributes[0] - ((numOfTables - 1) * numOfJoinAttributes);
+			for(int i = 1; i < numOfTables; i++) {
+				System.arraycopy(vars[0], start, targetVars, offset, numOfJoinAttributes);
+				offset += numOfJoinAttributes;
+				start += numOfJoinAttributes;
+			}
+		}
+		// chain join, take join attribute vars from each table
+		if (jk == JoinKind.CHAIN) {
+			for(int i = 1; i < numOfTables; i++) {
+				int start = numOfAttributes[i] - numOfJoinAttributes;
+				System.arraycopy(vars[i], start, targetVars, offset, numOfJoinAttributes);
+				offset += numOfJoinAttributes;
+			}
+		}
+		
+		fac.addExistsAtom(m1, 0, targetVars);
+	}
+	
+	@Override
+	protected void genTransformations() throws Exception {
+		SPJQuery q;
+		String creates = m.getRelName(0, false);
+		String mapping = m.getMapIds()[0];
+		
+		q = genQueries();
+		fac.addTransformation(q.toTrampStringOneMap(mapping), mapping, creates);
+	}
+	
+	private SPJQuery genQueries() {
+	  	String nameT = m.getRelName(0, false);
+		SPJQuery query = new SPJQuery();
+    	SelectClauseList sel = query.getSelect();
+    	FromClauseList from = query.getFrom();
+    	
+       // first we create the source tables and their attributes 
+        // that do not participate in the joins.
+        for (int i = 0, imax = numOfTables; i < imax; i++) {
+            // add the table to the from clause
+            from.add(new Variable("X"+i), new Projection(Path.ROOT, 
+            		m.getRelName(i, true)));
+
+            // create the non join attributes of the specific table/fragment/component
+            int numOfNonJoinAttr = numOfAttributes[i] - (factor * numOfJoinAttributes);
+            
+            for (int k = 0, kmax = numOfNonJoinAttr; k < kmax; k++) {
+            	String attrName = m.getAttrId(i, k, true);
+                // add the non-join attribute to the select clause
+                Projection att = new Projection(new Variable("X"+i), attrName);
+                sel.add(attrName, att);
+            }
+        }
+
+        // first create the join SMarkElements names
+        String joinAttrNames[] = new String[numOfJoinAttributes];
+        for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
+            joinAttrNames[i] = Modules.nameFactory.getARandomName();
+        //*******************************************************************
+        // for the case of a STAR join, create the join attributes for all the
+        // tables (apart from the first one) 
+        // also, all the join attributes will be added to the target table
+        // and to the select clause of the local query
+        for (int tbli = 1, tblimax = numOfAttributes.length; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
+        {
+            for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
+            {
+            	String attrName = getJoinAttr(tbli, i);
+                // add the join attribute to the select clause
+                Projection att = new Projection(new Variable("X"+tbli), attrName);
+                sel.add(attrName, att);
+            }
+        }
+        
+        // and now we add the reference (Foreign key if you like the term)
+        // attributes in the first table. the foreign keys will point to 
+        // all the join attributes from the other tables.
+        // create the join conditions in the where clause and the fkeys.
+        int referencedTable = 0;
+        AND andCond = new AND();
+        andCond.toString();
+        for (int tbli = 1, tblimax = numOfAttributes.length; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
+        {    	
+        	for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
+        	{
+        		String attrName = getJoinAttr(tbli, i);
+        		String referencedAttrName = getJoinRef(tbli, i);
+        		
+                // create the where clause; the join attributes and the reference attributes that
+                // make the join condition
+                Projection att1 = new Projection(new Variable("X"+0), attrName);
+                Projection att2 = new Projection(new Variable("X"+referencedTable), referencedAttrName);
+                andCond.add(new EQ(att1,att2));
+        	}
+        }	
+
+        // ********************************************************************
+        // for the case of a CHAIN join, create the join attributes for all the
+        // tables (apart from the last one of course since none is referencing
+        // that).also, all the join attributes will be added to the target table.
+        for (int tbli = 0, tblimax = numOfAttributes.length; ((tbli < (tblimax - 1)) && (jk == JoinKind.CHAIN)); tbli++)
+        {
+            for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
+            {
+            	String attrName = getJoinAttr(tbli, i);
+            	
+                // add the join attribute to the select clause
+                Projection att = new Projection(new Variable("X"+tbli), attrName);
+                sel.add(attrName, att);
+            }
+        }
+
+        // and now we add the reference (Foreign key if you like the term)
+        // attributes. The only difference between the CHAIN and the STAR join
+        // is that in the former case they reference the previous table, while
+        // in the STAR they all reference the first table
+        // in the case of CHAIN join, the foreign keys will not be added to the target table
+        for (int tbli = 1, tblimax = numOfAttributes.length; ((tbli < tblimax) && (jk == JoinKind.CHAIN)); tbli++)
+        {     
+            for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
+            {
+            	String attrName = getJoinAttr(tbli, i);
+        		String referencedAttrName = getJoinRef(tbli - 1, i);
+        		
+                // create the where clause; the join attributes and the reference attributes that
+                // make the join condition
+                Projection att1 = new Projection(new Variable("X"+tbli), attrName);
+                Projection att2 = new Projection(new Variable("X"+referencedTable), referencedAttrName);
+                andCond.add(new EQ(att1,att2));
+            }
+       }
+
+        query.setSelect(sel);
+        query.setFrom(from);
+        if(andCond.size() > 0)
+        	query.setWhere(andCond);
+        SelectClauseList pselect = pquery.getSelect();
+        pselect.add(nameT, query);
+        pquery.setSelect(pselect);
+        
+        return query;
 	}
 
 	@Override
-	protected void genTargetRels() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	protected void genMappings() {
-		
-	}
-	
-	@Override
-	protected void genTransformations() {
-		
-	}
-	
-	@Override
 	protected void genCorrespondences() {
-		
+		int tOffset = 0;
+		if (jk == JoinKind.STAR) {
+			for(int i = 0; i < numOfTables; i++) {
+				int numAtt = numOfAttributes[i];
+				if (i == 0)
+					numAtt -= (numOfTables - 1) * numOfJoinAttributes;
+				for(int j = 0; j < numAtt; j++)
+					addCorr(i, j, 0, tOffset++);
+			}
+		}
+		if (jk == JoinKind.CHAIN) {
+			for(int i = 0; i < numOfTables; i++) {
+				int numAtt = numOfAttributes[i];
+				if (i != 0)
+					numAtt -= numOfJoinAttributes;
+				for(int j = 0; j < numAtt; j++)
+					addCorr(i, j, 0, tOffset++);				
+			}
+		}
 	}
 
 	@Override
