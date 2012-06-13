@@ -43,32 +43,6 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
     {
         ;
     }
-
-//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-//    {
-//        if (configuration.getScenarioRepetitions(Constants.ScenarioName.GLAV.ordinal()) != 0) { return; }
-//        init(configuration, scenario);
-//
-//        for (int i = 0, imax = repetitions; i < imax; i++)
-//        {
-//            SPJQuery generatedQuery = new SPJQuery();
-//
-//            // decide the number of elements
-//            int E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-//            // decide the number of keys,i.e. the number of join attributes
-//            int K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
-//            E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
-//            // decide the size of the join
-//            int JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
-//
-//            if (JN == 0)
-//                continue;
-//
-//            SMarkElement srcRel = createSubElements(source, target, E, K, JN, i, pquery, generatedQuery);
-//            
-//            setScenario(scenario, generatedQuery, pquery, srcRel);
-//        }
-//    }
     
     protected void initPartialMapping () {
     	super.initPartialMapping();
@@ -83,21 +57,6 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
         F = E - (2 * K);
     }
 
-
-//	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
-//		return origQ.toTrampStringOneMap(mKey);
-////		String retVal = origQ.toString();
-////		FromClauseList from = origQ.getFrom();
-////		for (int i = 0; i < from.size(); i++) {
-////			String key = from.getKey(i).toString();
-////			String relAlias = key.replace("$", "");
-////			retVal = retVal.replace(key+"/", relAlias+".");
-////			retVal = retVal.replace("${" + i + "}", mKey);
-////		}
-////		retVal = retVal.replaceAll("/", "");
-////		
-////		return retVal;
-//	}
 
     // the Source schema has one table with E number of elements, from which K
     // are keys, other K are foreign keys
@@ -337,7 +296,6 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
 		fac.addRelation(hook, srcName, attrs, true);
 		fac.addPrimaryKey(srcName, keys, true);
 		fac.addForeignKey(srcName, fks, srcName, keys, true);
-		//TODO tox gene script is produced without the FK
 	}
 
 	@Override

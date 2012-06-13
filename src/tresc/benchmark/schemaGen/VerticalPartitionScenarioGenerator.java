@@ -32,11 +32,7 @@ import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Rcd;
 
 // very similar to merging scenario generator, with source and target schemas swapped
-public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
-{
-    private final String _stamp = "VP";
-
-    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
+public class VerticalPartitionScenarioGenerator extends ScenarioGenerator {
 
 	private JoinKind jk;
 	private int numOfSrcTblAttr;
@@ -49,30 +45,6 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
         ;
     }
 
-//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-//    {
-//    	init(configuration, scenario);
-//
-//        for (int i = 0, imax = repetitions; i < imax; i++)
-//        {
-//            SPJQuery generatedQuery = new SPJQuery();
-//
-//    
-//
-//            // decide the kind of join we will follow.
-//            JoinKind jk = JoinKind.values()[joinKind];
-//            if (jk == JoinKind.VARIABLE)
-//            {
-//                int tmp = Utils.getRandomNumberAroundSomething(_generator, 0, 1);
-//                if (tmp < 0)
-//                    jk = JoinKind.STAR;
-//                else jk = JoinKind.CHAIN;
-//            }
-//            SMarkElement srcRel = createSubElements(source, target, numOfSrcTblAttr, numOfTgtTables, jk, i, pquery, generatedQuery);
-//            
-//            setScenario(scenario, generatedQuery, pquery, srcRel);
-//        }
-//    }
     
     protected void initPartialMapping() {
     	super.initPartialMapping();
@@ -98,93 +70,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
         }
     }
 
-//    private Character getAttrLetter(String attrName) {
-//    	if (attrMap.containsKey(attrName))
-//    		return attrMap.get(attrName);
-//    	Character letter = _attributes.charAt(_currAttributeIndex++);
-//    	attrMap.put(attrName, letter);
-//    	return letter;
-//    }
-//
-//    private void resetAttrLetters() {
-//    	_currAttributeIndex = 0;
-//    	attrMap.clear();
-//    }
-//
-//	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery, SMarkElement srcRel) throws Exception {
-//		SelectClauseList gselect = generatedQuery.getSelect();
-//		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
-//		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
-//		
-//		String mKey = scenario.getNextMid();
-//
-//		ArrayList<String> corrsList = new ArrayList<String>();
-//		
-//		ArrayList<Character> sourceRelAttrs = new ArrayList<Character>();
-//		for (int j = 0; j < srcRel.size(); j++) {
-//			Element attr = srcRel.getSubElement(j);
-//			sourceRelAttrs.add(getAttrLetter(attr.getLabel()));
-//		}
-//    	String sourceName = srcRel.getLabel();
-//		sourceAttrs.put(sourceName, sourceRelAttrs);
-//		
-//		ArrayList<String> targets = generatedQuery.getTargets();
-//
-//		for (int i = 0; i < targets.size(); i++) {
-//			String tKey = scenario.getNextTid();
-//			String targetName = targets.get(i);
-//			ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
-//
-//			SPJQuery e = (SPJQuery)(gselect.getTerm(i));
-//        	FromClauseList fcl = e.getFrom();
-//        	SelectClauseList scl = e.getSelect();
-//        	String key = fcl.getKey(0).toString();
-//        	String[] sclArray = scl.toString().split(",");
-//        	for (int k = 0; k < sclArray.length; k++) {
-//        		String attr = sclArray[k];
-//        		if (attr.contains(key)) {  // there is a correspondence
-//        			attr = attr.replaceFirst("\\"+key+"/", "").trim();
-//        			String sourceRelAttr = sourceName + "." + attr;
-//        			String targetRelAttr = targetName + "." + attr;
-//        			String cKey = scenario.getNextCid();
-//        			String cVal = sourceRelAttr + "=" + targetRelAttr;
-//        			scenario.putCorrespondences(cKey, cVal);
-//        			corrsList.add(cKey);
-//        		}
-//    			targetRelAttrs.add(getAttrLetter(attr));
-//        	}
-//        	targetAttrs.put(targetName, targetRelAttrs);
-//    		ArrayList<String> mList = new ArrayList<String>();
-//    		mList.add(mKey);
-//    		scenario.putTransformation2Mappings(tKey, mList);
-//    		// scenario.putTransformationCode(tKey, getQueryString(realQ));
-//    		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
-//    		scenario.putTransformationRelName(tKey, targetName);
-//    			
-//		}
-//        	
-//		scenario.putMappings2Correspondences(mKey, corrsList);
-//        scenario.putMappings2Sources(mKey, sourceAttrs);
-//        scenario.putMappings2Targets(mKey, targetAttrs);
-//
-//		resetAttrLetters();
-//	}
 	
-	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
-		return origQ.toTrampStringOneMap(mKey);
-//		String retVal = origQ.toString();
-//		FromClauseList from = origQ.getFrom();
-//		for (int i = 0; i < from.size(); i++) {
-//			String key = from.getKey(i).toString();
-//			String relName = from.getValue(i).toString();
-//			relName = relName.substring(1)+"."; // remove the first "/"
-//			retVal = retVal.replace(key, relName).replace("/", "");
-//			retVal = retVal.replace(key.substring(1), "");
-//			retVal = retVal.replace("${" + i + "}", mKey);
-//		}
-//		
-//		return retVal;
-	}
 
     /**
      * This is the main function. It generates a table in the source, a number
@@ -195,7 +81,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
     {
         // First create the source table
         String sourceRelName = Modules.nameFactory.getARandomName();
-        String coding = _stamp + repetition;
+        String coding = getStamp() + repetition;
         sourceRelName = sourceRelName + "_" + coding;
         SMarkElement srcRel = new SMarkElement(sourceRelName, new Set(), null, 0, 0);
         srcRel.setHook(new String(coding));
@@ -206,7 +92,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < numOfSrcTblAttr; i++)
         {
             String namePrefix = Modules.nameFactory.getARandomName();
-            coding = _stamp + repetition + "A" + i;
+            coding = getStamp() + repetition + "A" + i;
             String srcAttName = namePrefix + "_" + coding;
             SMarkElement el = new SMarkElement(srcAttName, Atomic.STRING, null, 0, 0);
             el.setHook(new String(coding));
@@ -227,7 +113,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
             queries[i] = q;
 
             String targetRelNamePrefix = Modules.nameFactory.getARandomName();
-            coding = _stamp + repetition + "TT" + i;
+            coding = getStamp() + repetition + "TT" + i;
             String targetRelName = targetRelNamePrefix + "_" + coding;
             SMarkElement tgtRel = new SMarkElement(targetRelName, new Set(), null, 0, 0);
             tgtRel.setHook(new String(coding));
@@ -284,7 +170,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
         // now we generate the join attributes in the target tables
         if (jk == JoinKind.STAR)
         {
-            coding = _stamp + repetition + "JoinAtt";
+            coding = getStamp() + repetition + "JoinAtt";
             String joinAttName = Modules.nameFactory.getARandomName() + "_" + coding;
             String joinAttNameRef = joinAttName + "Ref";
 
@@ -351,7 +237,7 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
             for (int i = 0; i < numOfTgtTables - 1; i++)
             {
             	int tgtPos = repetition * numOfTgtTables + i;
-                coding = _stamp + repetition + "JoinAtt";
+                coding = getStamp() + repetition + "JoinAtt";
                 String joinAttName = Modules.nameFactory.getARandomName() + "_" + coding;
                 String joinAttNameRef = joinAttName + "Ref";
 
@@ -447,19 +333,25 @@ public class VerticalPartitionScenarioGenerator extends ScenarioGenerator
         			? 2 : 1);
         	int attWithFK = attrNum + fkAttrs;
         	attrs = new String[attWithFK];
-        	
+        
+        	// create normal attributes for table (copy from source)
             for (int j = 0; j < attrNum; j++)
             	attrs[j] = srcAttrs[offset + j];
             
+            // create the join attributes
+            // for star join the first one has the join attribute and the following ones 
+            // have the join reference (FK)
             if (jk == JoinKind.STAR) {
-            	if (i == 0)
+            	if (i == 0)//TODO check
             		attrs[attrs.length - 1] = joinAttName;
             	else 
             		attrs[attrs.length - 1] = joinAttNameRef;
+            // for chain join each one has a join and join ref to the previous
+            // thus, the first does not have a ref and the last one does not have a join attr
             } else { // chain
             	if (i == 0)
             		attrs[attrs.length - 1] = joinAttName;
-            	if (i == numOfTgtTables - 1)
+            	else if (i == numOfTgtTables - 1)
             		attrs[attrs.length - 1] = joinAttNameRef;
             	else {
             		attrs[attrs.length - 2] = joinAttName;

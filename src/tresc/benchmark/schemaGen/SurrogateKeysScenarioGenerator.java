@@ -32,12 +32,8 @@ import vtools.dataModel.values.StringValue;
 
 public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 {
-    private final String _stamp = "SK";
-
-    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
 
 	private int params;
-
 	private int elements;
     
     public SurrogateKeysScenarioGenerator()
@@ -45,35 +41,6 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         ;
     }
 
-//    public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception
-//    {
-//    	init(configuration, scenario);
-//        
-//        SPJQuery generatedQuery = new SPJQuery();
-//        
-//        for (int i = 0, imax = repetitions; i < imax; i++)
-//        {
-//            int elements = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-//            int params = Utils.getRandomNumberAroundSomething(_generator, numOfParams, numOfParamsDeviation);
-//            // make sure params are at least 2
-//            params = (params < 2) ? 2 : params;
-//            // and the elements are at least as many as the the params
-//            if (params > elements)
-//                elements = params;
-//            String randomName = Modules.nameFactory.getARandomName();
-//            String name = randomName + "_" + _stamp + "CE" + i;
-//            SMarkElement srcElem = new SMarkElement(name, new Set(), null, 0, 0);
-//            srcElem.setHook(new String(_stamp + "CE" + i));
-//            source.addSubElement(srcElem);
-//            SMarkElement trgElem = new SMarkElement(name + "Skey", new Set(), null, 0, 0);
-//            trgElem.setHook(new String(_stamp + "CE" + i));
-//            target.addSubElement(trgElem);
-//            createSubElements(srcElem, trgElem, elements, params, pquery, generatedQuery, scenario);
-//        }
-//        
-//        setScenario(scenario, generatedQuery, pquery);
-//    }
-    
     @Override
 	protected void initPartialMapping() {
 		super.initPartialMapping();
@@ -88,85 +55,7 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
 			elements = params;
 	}
 
-    private Character getAttrLetter(String attrName) {
-    	if (attrMap.containsKey(attrName))
-    		return attrMap.get(attrName);
-    	Character letter = _attributes.charAt(_currAttributeIndex++);
-    	attrMap.put(attrName, letter);
-    	return letter;
-    }
-    
-    private void resetAttrLetters() {
-    	_currAttributeIndex = 0;
-    	attrMap.clear();
-    }
 
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SPJQuery pquery) throws Exception {
-		SelectClauseList gselect = generatedQuery.getSelect();
-		for (int i = 0; i < gselect.size(); i++) {
-			String mKey = scenario.getNextMid();
-			String tKey = scenario.getNextTid();
-
-			ArrayList<String> corrsList = new ArrayList<String>();
-			HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
-			HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
-
-			SPJQuery e = (SPJQuery)(gselect.getTerm(i));
-			SPJQuery realQ = (SPJQuery)(pquery.getSelect().getTerm(i));
-        	SPJQuery subQ = (SPJQuery)(gselect.getValue(i));
-        	FromClauseList fcl = subQ.getFrom();
-        	String sourceName="";
-        	// String targetName=generatedQuery.getTarget(i);
-        	SelectClauseList scl = e.getSelect();
-        	for (int j = 0; j < fcl.size(); j++) {
-        		ArrayList<Character> attrLists = new ArrayList<Character>();
-        		String key = fcl.getKey(j).toString();
-        		sourceName = fcl.getValue(j).toString().substring(1);
-        		String[] sclArray = scl.toString().split(",");
-        		for (int k = 0; k < sclArray.length; k++) {
-        			String attr = sclArray[k];
-        			attr = attr.replaceFirst("\\"+key+"/", "").trim();
-        			attrLists.add(getAttrLetter(attr));
-        			String relAttr = sourceName + "." + attr;
-        			String cKey = scenario.getNextCid();
-        			String cVal = relAttr + "=" + relAttr;
-        			// correspondences.put(cKey, cVal);
-        			scenario.putCorrespondences(cKey, cVal);
-        			corrsList.add(cKey);
-        		}
-        		sourceAttrs.put(sourceName, attrLists);
-        		// targetAttrs.put(targetName, attrLists);
-        		targetAttrs.put(sourceName, attrLists);
-        	}
-        	scenario.putMappings2Correspondences(mKey, corrsList);
-        	scenario.putMappings2Sources(mKey, sourceAttrs);
-        	scenario.putMappings2Targets(mKey, targetAttrs);
-
-			ArrayList<String> mList = new ArrayList<String>();
-			mList.add(mKey);
-			scenario.putTransformation2Mappings(tKey, mList);
-			scenario.putTransformationCode(tKey, getQueryString(realQ, mKey));
-			scenario.putTransformationRelName(tKey, sourceName);
-			
-			resetAttrLetters();
-		}
-	}
-	
-	private String getQueryString(SPJQuery origQ, String mKey) throws Exception {
-		return origQ.toTrampStringOneMap(mKey);
-//		String retVal = origQ.toString();
-//		FromClauseList from = origQ.getFrom();
-//		for (int i = 0; i < from.size(); i++) {
-//			String key = from.getKey(i).toString();
-//			String relName = from.getValue(i).toString();
-//			relName = relName.substring(1)+"."; // remove the first "/"
-//			retVal = retVal.replace(key, relName).replace("/", "");
-//			retVal = retVal.replace(key.substring(1), "");
-//			retVal = retVal.replace("${" + i + "}", mKey);
-//		}
-//		
-//		return retVal;
-	}
 
     // it generates a copy case in which there are 2 keys one that is
     // independent of attributes and one that depends on the
@@ -188,16 +77,16 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         for (int i = 0; i < numOfElements; i++)
         {
             String randomName = Modules.nameFactory.getARandomName();
-            String name = randomName + "_" + _stamp + "AE" + i;
+            String name = randomName + "_" + getStamp() + "AE" + i;
             if (i < numOfParams)
                 args[i] = name;
             keyArgs[i] = name;
             // create the atomic element in the source and the target
             SMarkElement es = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            es.setHook(new String(_stamp + "AE" + i));
+            es.setHook(new String(getStamp() + "AE" + i));
             sourceParent.addSubElement(es);
             SMarkElement et = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-            et.setHook(new String(_stamp + "AE" + i));
+            et.setHook(new String(getStamp() + "AE" + i));
             targetParent.addSubElement(et);
             // add the subelements as attributes to the Select clause of the query
             Projection att = new Projection(new Variable("X"),name);
@@ -214,9 +103,9 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         // create the surrogate key elements now. The first one is the one that
         // accepts no arguments
         String randomName = Modules.nameFactory.getARandomName();
-        String name = randomName + "_" + _stamp + "IDindep";
+        String name = randomName + "_" + getStamp() + "IDindep";
         SMarkElement id = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-        id.setHook(new String( _stamp + "IDindep"));
+        id.setHook(new String( getStamp() + "IDindep"));
         targetParent.addSubElement(id);
         // create the Function corresponding to the key
         // and add it to the select clause of query
@@ -230,9 +119,9 @@ public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
         // It is supposed to be the id/skolem of the first numOfParams
         // attributes of the respective source complex element
         randomName = Modules.nameFactory.getARandomName();
-        name = randomName + "_" + _stamp + "IDOnFirst" + numOfParams + "elems";
+        name = randomName + "_" + getStamp() + "IDOnFirst" + numOfParams + "elems";
         id = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-        id.setHook(new String( _stamp + "IDOnFirst" + numOfParams + "elems"));
+        id.setHook(new String( getStamp() + "IDOnFirst" + numOfParams + "elems"));
         targetParent.addSubElement(id);
         // create the Function corresponding to the key
         // and add it to the select clause of query

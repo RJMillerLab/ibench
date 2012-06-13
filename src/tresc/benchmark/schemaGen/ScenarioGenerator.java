@@ -81,9 +81,14 @@ public abstract class ScenarioGenerator {
 		for (curRep = 0; curRep < repetitions; curRep++) {
 			initPartialMapping();
 			genSchemas();
+			log.debug("\n\nGENERATED SCHEMAS: \n " + m.getSourceRels().toString() 
+					+ "n\n" + m.getTargetRels().toString());
 			genCorrespondences();
+			log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());
 			genMappings();
+			log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());
 			genTransformations();
+			log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());
 			scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
 			log.debug("Repetition <" + curRep +"> is " + m.toString());
 		}
@@ -222,8 +227,8 @@ public abstract class ScenarioGenerator {
 	protected void addCorr (int sRel, int sAttr, int tRel, int tAttr) {
 		String toRel = m.getTargetRels().get(tRel).getName();
 		String fromRel = m.getSourceRels().get(sRel).getName();
-		String fromAttr = model.getRelAttr(sRel, sAttr, true);
-		String toAttr = model.getRelAttr(tRel, tAttr, false);
+		String fromAttr = m.getAttrId(sRel, sAttr, true);
+		String toAttr = m.getAttrId(tRel, tAttr, false);
 		fac.addCorrespondence(fromRel, fromAttr, toRel, toAttr);
 	}
 	

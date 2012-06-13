@@ -33,7 +33,6 @@ import vtools.visitor.Visitor;
 
 public class ValueManagementScenarioGenerator extends ScenarioGenerator
 {
-    private final String _stamp = "VM";
 	private int numOfSubElements;
 	private int X;
 	private int Y;
@@ -81,13 +80,13 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
             int numOfArgs, int numOfArgsDeviation, SPJQuery pquery)
     {
         // first create the name of the two tables
-        String randomName = Modules.nameFactory.getARandomName() + "_" + _stamp + repetition;
+        String randomName = Modules.nameFactory.getARandomName() + "_" + getStamp() + repetition;
         SMarkElement srcTbl = new SMarkElement(randomName, new Set(), null, 0, 0);
-        srcTbl.setHook(new String(_stamp + repetition));
+        srcTbl.setHook(new String(getStamp() + repetition));
         sourceParent.addSubElement(srcTbl);
         String randomNameTrg = randomName;
         SMarkElement trgTbl = new SMarkElement(randomName + "Target", new Set(), null, 0, 0);
-        trgTbl.setHook(new String(_stamp + repetition));
+        trgTbl.setHook(new String(getStamp() + repetition));
         targetParent.addSubElement(trgTbl);
         
         // create the intermediate query
@@ -101,9 +100,9 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
         SelectClauseList select = query.getSelect();
         for (int i = 0, imax = X; i < imax; i++)
         {
-            randomName = Modules.nameFactory.getARandomName() + "_" + _stamp + repetition + "AE" + i;
+            randomName = Modules.nameFactory.getARandomName() + "_" + getStamp() + repetition + "AE" + i;
             SMarkElement srcElem = new SMarkElement(randomName, Atomic.STRING, null, 0, 0);
-            srcElem.setHook(new String(_stamp + repetition + "AE" + i));
+            srcElem.setHook(new String(getStamp() + repetition + "AE" + i));
             srcTbl.addSubElement(srcElem);
             // decide in how many pieces you will split it
             int pieces = Utils.getRandomNumberAroundSomething(_generator, numOfArgs, numOfArgsDeviation);
@@ -113,7 +112,7 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
             for (int k = 0; k < pieces; k++)
             {
                 SMarkElement trgElem = new SMarkElement(randomName + "Part" + k, Atomic.STRING, null, 0, 0);
-                trgElem.setHook(new String(_stamp + repetition + "AE" + i + "Part" + k));
+                trgElem.setHook(new String(getStamp() + repetition + "AE" + i + "Part" + k));
                 trgTbl.addSubElement(trgElem);
                 // add the attributes to the select clause of the query
                 Function f = new Function("F"+fcount);
@@ -131,9 +130,9 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
         Y = (Y == 0) ? 1 : Y;
         for (int i = 0, imax = Y; i < imax; i++)
         {
-            randomName = Modules.nameFactory.getARandomName() + "_" + _stamp + repetition + "AE" + (i + X);
+            randomName = Modules.nameFactory.getARandomName() + "_" + getStamp() + repetition + "AE" + (i + X);
             SMarkElement trgElem = new SMarkElement(randomName, Atomic.STRING, null, 0, 0);
-            trgElem.setHook(new String( _stamp + repetition + "AE" + (i + X)));
+            trgElem.setHook(new String( getStamp() + repetition + "AE" + (i + X)));
             trgTbl.addSubElement(trgElem);
             // decide from how many pieces you will compose it
             int pieces = Utils.getRandomNumberAroundSomething(_generator, numOfArgs, numOfArgsDeviation);
@@ -144,7 +143,7 @@ public class ValueManagementScenarioGenerator extends ScenarioGenerator
             for (int k = 0; k < pieces; k++)
             {
                 SMarkElement srcElem = new SMarkElement(randomName + "Part" + k, Atomic.STRING, null, 0, 0);
-                srcElem.setHook(new String(_stamp + repetition + "AE" + (i + X)+ "Part" + k));
+                srcElem.setHook(new String(getStamp() + repetition + "AE" + (i + X)+ "Part" + k));
                 srcTbl.addSubElement(srcElem);
                 // add the attributes to the select clause of the query
                 Projection att = new Projection(new Variable("X"), randomName + "Part" + k);

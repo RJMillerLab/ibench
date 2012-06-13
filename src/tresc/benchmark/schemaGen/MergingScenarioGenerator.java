@@ -41,40 +41,13 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 	private JoinKind jk;
 	private int[] numOfAttributes;
 
-	private int factor;
+//	private int factor;
 
 	private String[] joinAttrs;
     
     public MergingScenarioGenerator()
     {		;		}
-
-//    public void generateScenario(MappingScenario scenario, Configuration configuration)
-//    {
-//    	init(configuration, scenario);
-//    	
-//        // generate the generator based on the seed
-//        //long seed = configuration.getScenarioSeeds(Constants.ScenarioName.MERGING.ordinal());
-//        //_generator = (seed == 0) ? new Random() : new Random(seed);
-//
-//        // how many tables to have
-//        // whether we do star or chain joins
-//        // int joinKindDeviation =
-//        // configuration.getDeviation(Constants.ParameterName.JoinKind);
-//        // how many attributes to be used in the joins.
-//        
-//        for (int i = 0, imax = repetitions; i < imax; i++)
-//        {
-//        	initPartialMapping();
-//            SPJQuery generatedQuery = new SPJQuery();
-//            
-//            SMarkElement[] srcRels = new SMarkElement[numOfAttributes.length];
-//            SMarkElement tgtRel = createSubElements(source, target, numOfAttributes, numOfJoinAttributes, jk, i, pquery, generatedQuery, srcRels);
-//            
-//            setScenario(scenario, generatedQuery, tgtRel, srcRels);
-//            log.debug(scenario);
-//        }
-//   }
-//    
+    
     @Override
     protected void initPartialMapping() {
     	super.initPartialMapping();
@@ -96,126 +69,12 @@ public class MergingScenarioGenerator extends ScenarioGenerator
         {
             int tmpInt = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
-            numOfAttributes[k] = (tmpInt < (2 * numOfJoinAttributes + 1)) ? (2 * numOfJoinAttributes + 1)
-                    : tmpInt;
+            // make sure that we have enough attribute for the join + at least on free one
+            tmpInt = (tmpInt < getNumJoinAttrs(k)) ? getNumJoinAttrs(k) + 1 : tmpInt; 
+            numOfAttributes[k] = tmpInt;
         }
-        
-        factor = (jk == JoinKind.STAR) ? 1 : 2;
     }
-
-    private Character getAttrSymbol(String attrName) {
-    	if (attrInSymbolList(attrName))
-    		return attrMap.get(attrName);
-    	Character letter = _attributes.charAt(_currAttributeIndex++);
-    	attrMap.put(attrName, letter);
-    	return letter;
-    }
-    
-    private boolean attrInSymbolList(String attrName) {
-    	return attrMap.containsKey(attrName);
-    }
-    
-    private void resetAttrSymbol() {
-    	_currAttributeIndex = 0;
-    	attrMap.clear();
-    }
-
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery, SMarkElement tgtRel, SMarkElement[] srcRels) {
-		SelectClauseList gselect = generatedQuery.getSelect();
-		HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
-		HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
-		
-		String mKey = scenario.getNextMid();
-
-		ArrayList<String> corrsList = new ArrayList<String>();
-		
-		ArrayList<Character> targetRelAttrs = new ArrayList<Character>();
-		HashMap<String, Character> targetAttrSymbols = new HashMap<String , Character>();
-
-		for (int j = 0; j < tgtRel.size(); j++) {
-			Element attr = tgtRel.getSubElement(j);
-			String attrName = attr.getLabel();
-			Character symbol = getAttrSymbol(attrName);
-			targetAttrSymbols.put(attrName, symbol);
-			targetRelAttrs.add(symbol);
-		}
-    	String targetName = tgtRel.getLabel();
-		targetAttrs.put(targetName, targetRelAttrs);
-
-		SPJQuery e = (SPJQuery)(gselect.getTerm(0));
-    	String[] whereArray = e.getWhere().toString().split("AND");
-    	
-    	// 2-way hashmap of the where clauses
-    	HashMap<String, String> whereExprs0 = new HashMap<String, String>();
-    	HashMap<String, String> whereExprs1 = new HashMap<String, String>();
-    	
-    	for (String wherecl : whereArray) {
-    		String[] expr = wherecl.split("=");
-    		String leftExpr = expr[0].replaceAll("^\\$(.*)/", "");
-    		String rightExpr = expr[1].replaceAll("^\\$(.*)/", "");
-    		whereExprs0.put(leftExpr, rightExpr);
-    		whereExprs1.put(rightExpr, leftExpr);
-    	}
-    	
-		String tKey = scenario.getNextTid();
-		for (int i = 0; i < srcRels.length; i++) {
-			List<Character> sourceRelAttrs = new ArrayList<Character>();
-			String sourceName = srcRels[i].getLabel();
-
-    		SMarkElement srcRel = srcRels[i];
-        	for (int j = 0; j < srcRels[i].size(); j++) {
-        		String attr = srcRel.getSubElement(j).getLabel();
-        		
-    			String sourceRelAttr = sourceName + "." + attr;
-    			String targetRelAttr = targetName + "." + attr;
-        		if (targetAttrSymbols.containsKey(attr)) {
-        			sourceRelAttrs.add(getAttrSymbol(attr));
-        		} else {
-        			String refAttrName = null;
-        			if (whereExprs0.containsKey(attr)) 
-        				refAttrName = whereExprs0.get(attr);
-        			else if (whereExprs1.containsKey(attr))
-        				refAttrName = whereExprs1.get(attr);
-        			else
-        				refAttrName = attr;
-        			targetRelAttr = targetName + "." + refAttrName;
-        			sourceRelAttrs.add(getAttrSymbol(refAttrName));
-        		}
-    			String cKey = scenario.getNextCid();
-    			String cVal = sourceRelAttr + "=" + targetRelAttr;
-    			scenario.putCorrespondences(cKey, cVal);
-    			corrsList.add(cKey);
-        	}
-        	sourceAttrs.put(sourceName, sourceRelAttrs);
-    			
-		}
-		ArrayList<String> mList = new ArrayList<String>();
-		mList.add(mKey);
-		scenario.putTransformation2Mappings(tKey, mList);
-		scenario.putTransformationCode(tKey, getQueryString(e, mKey));
-		scenario.putTransformationRelName(tKey, targetName);
-        	
-		scenario.putMappings2Correspondences(mKey, corrsList);
-        scenario.putMappings2Sources(mKey, sourceAttrs);
-        scenario.putMappings2Targets(mKey, targetAttrs);
-
-		resetAttrSymbol();
-	}
 	
-	private String getQueryString(SPJQuery origQ, String mKey) {
-		String retVal = origQ.toString();
-		FromClauseList from = origQ.getFrom();
-		for (int i = 0; i < from.size(); i++) {
-			String key = from.getKey(i).toString();
-			String relAlias = key.replace("$", "");
-			retVal = retVal.replace(key+"/", relAlias+".");
-			retVal = retVal.replace("${" + i + "}", mKey);
-		}
-		retVal = retVal.replaceAll("/", "");
-		
-		return retVal;
-	}
-
     private SMarkElement createSubElements(Schema source, Schema target, int[] numOfAttributes,int numOfJoinAttributes, 
     		    JoinKind jk, int repetition, SPJQuery pquery, SPJQuery generatedQuery, SMarkElement[] sources)
     {
@@ -251,7 +110,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
             from.add(new Variable("X"+i), new Projection(Path.ROOT,name));
 
             // create the non join attributes of the specific table/fragment/component
-            int numOfNonJoinAttr = numOfAttributes[i] - (factor * numOfJoinAttributes);
+            int numOfNonJoinAttr = numOfAttributes[i] - (2 * numOfJoinAttributes); // removed factor
             for (int k = 0, kmax = numOfNonJoinAttr; k < kmax; k++)
             {
                 String tmpName = Modules.nameFactory.getARandomName();
@@ -465,7 +324,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		// create numOfTables in the source to be denormalized
 		for(int i = 0; i < numOfTables; i++) {
 			sourceNames[i] = randomRelName(i);
-			int numOfNonJoinAttr = numOfAttributes[i] - (factor * numOfJoinAttributes);
+			int numOfNonJoinAttr = numOfAttributes[i] - getNumJoinAttrs(i);
 			attrs[i] = new String[numOfAttributes[i]];
 		
 			for(int j = 0; j < numOfNonJoinAttr; j++)
@@ -486,6 +345,24 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 			createStarConstraints(attrs);
 		if (jk == JoinKind.CHAIN)
 			createChainConstraints(attrs);
+	}
+
+	private int getNumJoinAttrs(int i) {
+		if (jk == JoinKind.STAR) {
+			if (i == 0)
+				return numOfJoinAttributes * (numOfTables - 1);
+			return numOfJoinAttributes;
+		}
+		if (jk == JoinKind.CHAIN) {
+			if (i == 0 || i == numOfTables - 1)
+				return numOfJoinAttributes;
+			return 2 * numOfJoinAttributes;
+		}
+		return -1;
+	}
+	
+	private int getNumNormalAttrs(int i) {
+		return numOfAttributes[i] - getNumJoinAttrs(i);
 	}
 
 	private void createChainConstraints(String[][] attrs) throws Exception {
@@ -582,22 +459,26 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		String targetName = randomRelName(0);
 		List<String> attrs = new ArrayList<String> ();
 		
+		// first copy normal attributes
+		for(int i = 0; i < numOfTables; i++) {
+			int numAtt = getNumNormalAttrs(i);
+			for(int j = 0; j < numAtt; j++)
+				attrs.add(m.getAttrId(i, j, true));
+		}
+		
+		// then copy join attributes
 		if (jk == JoinKind.STAR) {
-			for(int i = 0; i < numOfTables; i++) {
-				int numAtt = numOfAttributes[i];
-				if (i == 0)
-					numAtt -= (numOfTables - 1) * numOfJoinAttributes;
-				for(int j = 0; j < numAtt; j++)
-					attrs.add(m.getAttrId(i, j, true));
+			for(int i = 1; i < numOfTables; i++) {
+				int offset = getNumNormalAttrs(i);
+				for(int j = 0; j < numOfJoinAttributes; j++)
+					attrs.add(m.getAttrId(i, j + offset, true));		
 			}
 		}
 		if (jk == JoinKind.CHAIN) {
-			for(int i = 0; i < numOfTables; i++) {
-				int numAtt = numOfAttributes[i];
-				if (i != 0)
-					numAtt -= numOfJoinAttributes;
-				for(int j = 0; j < numAtt; j++)
-					attrs.add(m.getAttrId(i, j, true));				
+			for(int i = 0; i < numOfTables - 1; i++) {
+				int offset = getNumNormalAttrs(i);
+				for(int j = 0; j < numOfJoinAttributes; j++)
+					attrs.add(m.getAttrId(i, j + offset, true));				
 			}
 		}
 		
@@ -645,18 +526,19 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		for(int i = 0; i < numOfTables; i++) {
 			int numVars = vars[i].length;
 			
-			if (jk == JoinKind.STAR) {
-				if (i == 0)
-					numVars -= (numOfTables - 1) * numOfJoinAttributes;
-				else
-					numVars -= numOfJoinAttributes;
-			}
-			if (jk == JoinKind.CHAIN) {
-				if (i > 0 && i != numOfTables - 1)
-					numVars -= numOfJoinAttributes * 2;
-				if (i == numOfTables)
-					numVars -= numOfJoinAttributes;
-			}
+//			if (jk == JoinKind.STAR) {
+//				if (i == 0)
+//					numVars -= (numOfTables - 1) * numOfJoinAttributes;
+//				else
+//					numVars -= numOfJoinAttributes;
+//			}
+//			if (jk == JoinKind.CHAIN) {
+//				if (i > 0 && i != numOfTables - 1)
+//					numVars -= numOfJoinAttributes * 2;
+//				if (i == numOfTables)
+//					numVars -= numOfJoinAttributes;
+//			}
+			numVars = getNumNormalAttrs(i);
 			
 			System.arraycopy(vars[i], 0, targetVars, offset, numVars);
 			offset += numVars;
@@ -664,7 +546,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		
 		// star join, add join attribute vars from first table
 		if (jk == JoinKind.STAR) {
-			int start = numOfAttributes[0] - ((numOfTables - 1) * numOfJoinAttributes);
+			int start = getNumNormalAttrs(0);
 			for(int i = 1; i < numOfTables; i++) {
 				System.arraycopy(vars[0], start, targetVars, offset, numOfJoinAttributes);
 				offset += numOfJoinAttributes;
@@ -673,8 +555,8 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 		}
 		// chain join, take join attribute vars from each table
 		if (jk == JoinKind.CHAIN) {
-			for(int i = 1; i < numOfTables; i++) {
-				int start = numOfAttributes[i] - numOfJoinAttributes;
+			for(int i = 0; i < numOfTables - 1; i++) {
+				int start = getNumNormalAttrs(i);
 				System.arraycopy(vars[i], start, targetVars, offset, numOfJoinAttributes);
 				offset += numOfJoinAttributes;
 			}
@@ -707,7 +589,7 @@ public class MergingScenarioGenerator extends ScenarioGenerator
             		m.getRelName(i, true)));
 
             // create the non join attributes of the specific table/fragment/component
-            int numOfNonJoinAttr = numOfAttributes[i] - (factor * numOfJoinAttributes);
+            int numOfNonJoinAttr = numOfAttributes[i] - getNumJoinAttrs(i);
             
             for (int k = 0, kmax = numOfNonJoinAttr; k < kmax; k++) {
             	String attrName = m.getAttrId(i, k, true);
@@ -808,22 +690,27 @@ public class MergingScenarioGenerator extends ScenarioGenerator
 	@Override
 	protected void genCorrespondences() {
 		int tOffset = 0;
+		
+		// create correspondences for free attributes
+		for(int i = 0; i < numOfTables; i++) {
+			int numAtt = getNumNormalAttrs(i);
+			for(int j = 0; j < numAtt; j++)
+				addCorr(i, j, 0, tOffset++);
+		}
+		
+		// create correspondences for join attributes
 		if (jk == JoinKind.STAR) {
-			for(int i = 0; i < numOfTables; i++) {
-				int numAtt = numOfAttributes[i];
-				if (i == 0)
-					numAtt -= (numOfTables - 1) * numOfJoinAttributes;
-				for(int j = 0; j < numAtt; j++)
-					addCorr(i, j, 0, tOffset++);
+			for(int i = 1; i < numOfTables; i++) {
+				int offset = getNumNormalAttrs(i);
+				for(int j = 0; j < numOfJoinAttributes; j++)
+					addCorr(i, j + offset, 0, tOffset++);
 			}
 		}
 		if (jk == JoinKind.CHAIN) {
-			for(int i = 0; i < numOfTables; i++) {
-				int numAtt = numOfAttributes[i];
-				if (i != 0)
-					numAtt -= numOfJoinAttributes;
-				for(int j = 0; j < numAtt; j++)
-					addCorr(i, j, 0, tOffset++);				
+			for(int i = 0; i < numOfTables - 1; i++) {
+				int offset = getNumNormalAttrs(i);
+				for(int j = 0; j < numOfJoinAttributes; j++)
+					addCorr(i, j + offset, 0, tOffset++);
 			}
 		}
 	}

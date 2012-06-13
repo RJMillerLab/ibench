@@ -220,7 +220,6 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 	    String[] attrs = new String[randomElements + 1];
 	    String[] dTypes = new String[randomElements + 1];
 	    String nameSelector = "selector" + getStamp() + curRep;
-	    RelationType srcRel;
 	    
         // create the source attrs
         attrs[0] = nameSelector;
@@ -235,7 +234,7 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
             dTypes[i + 1] = "TEXT";
         }
 
-        srcRel = fac.addRelation(getRelHook(0), srcName, attrs, dTypes, true);
+        fac.addRelation(getRelHook(0), srcName, attrs, dTypes, true);
 	}
 
 	@Override

@@ -36,62 +36,6 @@ public class ValueGenerationScenarioGenerator extends ScenarioGenerator {
 		;
 	}
 
-	// public void generateScenario(MappingScenario scenario, Configuration
-	// configuration)
-	// {
-	// init(configuration, scenario);
-	// SPJQuery generatedQuery = new SPJQuery();
-	//
-	// for (int i = 0, imax = repetitions; i < imax; i++)
-	// createSubElements(source, target, numOfElements, numOfElementsDeviation,
-	// i, pquery, generatedQuery);
-	//
-	// setScenario(scenario, generatedQuery);
-	// }
-
-	private void setScenario(MappingScenario scenario, SPJQuery gquery) {
-		SelectClauseList scl = gquery.getSelect();
-
-		for (int i = 0; i < scl.size(); i++) {
-			String tKey = scenario.getNextTid();
-			String mKey = scenario.getNextMid();
-			String targetName = scl.getTermName(i);
-			SelectClauseList atts = ((SPJQuery) scl.getTerm(i)).getSelect();
-
-			HashMap<String, List<Character>> targetAttrs =
-					new HashMap<String, List<Character>>();
-			targetAttrs.put(targetName, new ArrayList<Character>());
-			for (int j = 0; j < atts.size(); j++) {
-				char attr = (char) ('a' + j);
-				targetAttrs.get(targetName).add(attr);
-			}
-			// sourceName = target.get fcl.getValue(j).toString().substring(1);
-			// targetName = sourceName + "Copy";
-			// String[] sclArray = scl.toString().split(",");
-			// for (int k = 0; k < sclArray.length; k++) {
-			// String attr = sclArray[k];
-			// attr = attr.replaceFirst("\\" + key + "/", "").trim();
-			// attrs.add(attr);
-			// attrLists.add(getAttrLetter(attr));
-			// //
-			// }
-			// targetAttrs.put(targetName, attrLists);
-
-			scenario.putTransformation2Mappings(tKey,
-					Collections.singletonList(mKey));
-			scenario.putTransformationCode(tKey, getQueryString(scl.getValue(i)
-					.toString()));
-			scenario.putTransformationRelName(tKey, targetName);
-			scenario.putMappings2Correspondences(mKey, null);
-			scenario.putMappings2Sources(mKey, null);
-			scenario.putMappings2Targets(mKey, targetAttrs);
-		}
-	}
-
-	private String getQueryString(String origQ) {
-		return origQ.replace("(", "").replace(")", ""); // remove brackets
-	}
-
 	//
 	// Algorithm: Schema generated is the following
 	// Target
