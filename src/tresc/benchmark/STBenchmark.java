@@ -243,9 +243,10 @@ public class STBenchmark {
 				_configuration.getMappingFileName(),
 				_configuration.getSchemaFile());
 
-		if (_configuration.getOutputOption(OutputOption.Data)) {
+		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(scenario);
-		}
+		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))
+			Modules.explGen.genearteExpls(scenario, _configuration);
 	}
 
 	public void run(String configLine) throws Exception {

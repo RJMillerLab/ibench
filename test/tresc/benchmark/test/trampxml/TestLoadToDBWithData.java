@@ -82,7 +82,7 @@ public class TestLoadToDBWithData {
 	public void testDBWithDataCopy () throws Exception {
 		testSingleScenarioLoadToDBWithData(ScenarioName.COPY);
 	}
-	
+
 	@Test
 	public void testDBWithDataFusion () throws Exception {
 		testSingleScenarioLoadToDBWithData(ScenarioName.FUSION);
@@ -149,7 +149,7 @@ public class TestLoadToDBWithData {
 		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
 		dbCon.close();
 	}
-	
+
 	private void testSingleScenarioLoadToDBWithData(ScenarioName n)
 			throws Exception {
 		log.info(n);
