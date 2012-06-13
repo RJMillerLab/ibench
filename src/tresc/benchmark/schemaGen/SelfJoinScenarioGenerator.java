@@ -410,9 +410,9 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
 		String nameS = m.getRelName(0, true);
 		String nameTB = m.getRelName(0, false);
 		String nameTFK = m.getRelName(1, false);
-
+		String[] sAttrs = m.getAttrIds(0, true);
+		// create the first query mapping to the K, F table
 		SPJQuery query = new SPJQuery();
-		// create the from clause of the query
 		Variable var = new Variable("X");
 		query.getFrom().add(var.clone(), new Projection(Path.ROOT, nameS));
 
@@ -431,8 +431,9 @@ public class SelfJoinScenarioGenerator extends ScenarioGenerator
 		// target table only
 		for (int i = 0; i < F; i++) {
 			// add the free elements to the select clause of the query
-			Projection att = new Projection(var.clone(), fks[i]);
-			select.add(fks[i], att);
+			String attName = sAttrs[2 * K + i];
+			Projection att = new Projection(var.clone(), attName);
+			select.add(attName, att);
 		}
 
 		// add the first query to the final query
