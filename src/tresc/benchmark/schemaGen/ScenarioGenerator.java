@@ -12,6 +12,7 @@ import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
@@ -60,7 +61,7 @@ public abstract class ScenarioGenerator {
 	protected int numNewAttr;
 	protected int typeOfSkolem;
 	protected int numDelAttr;
-	
+	protected MappingLanguageType mapLang;
 	protected int curRep;
 	
 	protected Schema source;
@@ -147,7 +148,7 @@ public abstract class ScenarioGenerator {
         numNewAttr = configuration.getParam(Constants.ParameterName.NumOfNewAttributes);
         typeOfSkolem = configuration.getParam(Constants.ParameterName.SkolemKind);
         numDelAttr = configuration.getParam(Constants.ParameterName.NumofAttributestoDelete);
-
+        mapLang = configuration.getMapType();
 		
 		source = scen.getSource();
 		target = scen.getTarget();

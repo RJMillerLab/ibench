@@ -19,6 +19,7 @@ import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
 
@@ -128,6 +129,11 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	
 	@Test
 	public void testAddAttr () throws Exception {
+		conf.setParam(ParameterName.SkolemKind, 0);
+		testSingleBasicScenario(ScenarioName.ADDATTRIBUTE);
+		conf.setParam(ParameterName.SkolemKind, 1);
+		testSingleBasicScenario(ScenarioName.ADDATTRIBUTE);
+		conf.setParam(ParameterName.SkolemKind, 2);
 		testSingleBasicScenario(ScenarioName.ADDATTRIBUTE);
 	}
 	

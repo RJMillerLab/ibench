@@ -16,6 +16,7 @@ import org.vagabond.xmlmodel.MappingType.Uses;
 import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelInstanceFileType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
@@ -305,6 +306,28 @@ public class TrampModelFactory {
 			a.addNewVar().setStringValue(var);
 	}
 
+	public RelAtomType addEmptyExistsAtom (MappingType m, int rel) {
+		return m.getExists().addNewAtom();
+	}
+	
+	public void addVarsToExistsAtom (MappingType m, int atom, String[] vars) {
+		RelAtomType a = m.getExists().getAtomArray(atom);
+		for(String var: vars)
+			a.addNewVar().setStringValue(var);
+	}
+	
+	public void addVarToExistsAtom (MappingType m, int atom, String var) {
+		m.getExists().getAtomArray(atom).addNewVar().setStringValue(var);
+	}
+	
+	public void addSKToExistsAtom (MappingType m, int atom, String[] params) {
+		RelAtomType a = m.getExists().getAtomArray(atom);
+		SKFunction f = a.addNewSKFunction();
+		f.setSkname(getNextId("SK"));
+		for(String p: params)
+			f.addNewVar().setStringValue(p);
+	}
+	
 	public void addExistsAtom(MappingType m, int rel, String[] vars) 
 			throws Exception {
 		addExistsAtom(m.getId(), doc.getRelName(rel, false), vars);
