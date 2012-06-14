@@ -271,7 +271,7 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator {
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0, i);
 
-			if (useKey)
+			if (useKey && i == 0)
 				attrName = keyName;
 			attrs[i] = attrName;
 		}
@@ -357,8 +357,7 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator {
 
 	@Override
 	protected void genTransformations() throws Exception {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override

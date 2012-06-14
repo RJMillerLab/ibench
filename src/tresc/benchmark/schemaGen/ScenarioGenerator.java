@@ -77,7 +77,6 @@ public abstract class ScenarioGenerator {
 	public void generateScenario(MappingScenario scenario,
 			Configuration configuration) throws Exception {
 		init(configuration, scenario);
-		initPartialMapping();
 		log.debug("CREATE " + repetitions + " scenarios of type <" + getScenType() + ">");
 		
 		for (curRep = 0; curRep < repetitions; curRep++) {

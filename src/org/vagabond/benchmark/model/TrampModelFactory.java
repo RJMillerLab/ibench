@@ -10,6 +10,7 @@ import org.vagabond.xmlmodel.AttrRefType;
 import org.vagabond.xmlmodel.ConnectionInfoType;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.CorrespondencesType;
+import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.MappingType.Uses;
@@ -120,6 +121,23 @@ public class TrampModelFactory {
 		p.addCorr(c);
 		
 		return c;
+	}
+	
+	public FDType addFD (String rel, String[] lAttrs, String[] rAttrs) {
+		FDType fd = doc.getScenario().getSchemas().getSourceSchema().addNewFD();
+		
+		fd.setId(getNextId("FD"));
+		fd.setTableref(rel);
+		fd.addNewFrom();
+		fd.addNewTo();
+		
+		for(String a: lAttrs)
+			fd.getFrom().addAttr(a);
+		
+		for(String a: rAttrs)
+			fd.getTo().addAttr(a);;
+		
+		return fd;
 	}
 
 	public RelationType addRelation(String hook, String name, String[] attrs,
