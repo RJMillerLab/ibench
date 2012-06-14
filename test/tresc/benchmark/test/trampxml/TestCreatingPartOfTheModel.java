@@ -129,6 +129,7 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	
 	@Test
 	public void testAddAttr () throws Exception {
+		conf.setParam(ParameterName.NumOfNewAttributes, 3);
 		conf.setParam(ParameterName.SkolemKind, 0);
 		testSingleBasicScenario(ScenarioName.ADDATTRIBUTE);
 		conf.setParam(ParameterName.SkolemKind, 1);
