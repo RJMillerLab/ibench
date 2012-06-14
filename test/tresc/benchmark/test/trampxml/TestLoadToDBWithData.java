@@ -162,7 +162,8 @@ public class TestLoadToDBWithData {
 
 	@Test
 	public void testToxSizeProblem () throws Exception {
-		conf.setScenarioRepetitions(ScenarioName.COPY, 20);
+		conf.setParam(ParameterName.NumOfSubElements, 127);
+		conf.setScenarioRepetitions(ScenarioName.COPY, 1);
 		b.runConfig(conf);
 		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
 		log.info(doc.getScenario().toString());

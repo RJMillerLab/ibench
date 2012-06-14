@@ -16,6 +16,7 @@ import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 
@@ -270,6 +271,10 @@ public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
 	
 	private CorrespondenceType[] getCorrForFrag (int frag) {
 		CorrespondenceType[] result = new CorrespondenceType[randomElements];
+		
+		if (!configuration.getTrampXMLOutputOption(
+				TrampXMLOutputSwitch.Correspondences))
+			return null;
 		
 		for(int i = 0; i < randomElements; i++)
 			result[i] = m.getCorrs().get(frag * randomElements + i);

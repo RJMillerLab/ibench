@@ -22,6 +22,7 @@ public class GlobalExplGen {
 	private ArrayList<ExplanationGenerator> explGens;
 	
 	public GlobalExplGen () {
+		explGens = new ArrayList<ExplanationGenerator> ();
 		// stores references to individual gens
 		CorrespondenceGen cg = new CorrespondenceGen();
 		SourceCopyGen scg = new SourceCopyGen();

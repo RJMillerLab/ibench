@@ -14,6 +14,7 @@ import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
 import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.schema.Schema;
@@ -83,12 +84,16 @@ public abstract class ScenarioGenerator {
 			genSchemas();
 			log.debug("\n\nGENERATED SCHEMAS: \n " + m.getSourceRels().toString() 
 					+ "n\n" + m.getTargetRels().toString());
-			genCorrespondences();
-			log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());
+			if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences)) {
+				genCorrespondences();
+				log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());
+			}
 			genMappings();
 			log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());
-			genTransformations();
-			log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());
+			if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Transformations)) {
+				genTransformations();
+				log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());
+			}
 			scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
 			log.debug("Repetition <" + curRep +"> is " + m.toString());
 		}

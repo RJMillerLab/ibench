@@ -276,7 +276,7 @@ public class TrampModelFactory {
 		;
 		map.addNewExists();
 
-		if (cs.length > 0) {
+		if (cs != null && cs.length > 0) {
 			Uses u = map.addNewUses();
 			for (CorrespondenceType c : cs)
 				u.addNewCorrespondence().setRef(c.getId());
