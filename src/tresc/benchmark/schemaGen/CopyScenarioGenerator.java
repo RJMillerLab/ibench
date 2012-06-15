@@ -1,36 +1,18 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
 import org.apache.log4j.Logger;
 import org.vagabond.xmlmodel.AttrDefType;
-import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
-import org.vagabond.xmlmodel.TransformationType;
 
-import smark.support.MappingScenario;
-import smark.support.SMarkElement;
-import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.expression.Expression;
-import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Element;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 
 public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 
@@ -56,14 +38,13 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		RelationType target = m.getTargetRels().get(0);
 		
 		for(AttrDefType attr: source.getAttrArray()) {
-			CorrespondenceType c = fac.addCorrespondence(source.getName(), 
+			fac.addCorrespondence(source.getName(), 
 					attr.getName(), target.getName(), attr.getName());
 		}
 	}
 	
 	@Override
 	protected void genTransformations () throws Exception {
-		TransformationType t;
 		String creates = m.getRelName(0, false);
 		Query q;
 		
