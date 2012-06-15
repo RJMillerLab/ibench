@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -15,15 +14,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.mapping.model.ModelLoader;
-import org.vagabond.mapping.scenarioToDB.DatabaseScenarioLoader;
-import org.vagabond.util.ConnectionManager;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
-import tresc.benchmark.STBenchmark;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.STBenchmark;
 
 public class TestCreationReusingSchemas {
 
@@ -123,7 +120,7 @@ public class TestCreationReusingSchemas {
 	
 	private void testSingleBasicScenarios (ScenarioName n) throws Exception {
 		log.info(n);
-		conf.setScenarioRepetitions(n, 1);
+		conf.setScenarioRepetitions(n, 2); // 2 so we can reuse
 		b.runConfig(conf);
 		testLoad(n, false, false);
 		conf.setScenarioRepetitions(n, 0);

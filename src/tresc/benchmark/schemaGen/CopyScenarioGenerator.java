@@ -64,35 +64,28 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genTransformations () throws Exception {
 		TransformationType t;
-		RelationType target = m.getTargetRels().get(0);
-		RelationType source = m.getSourceRels().get(0);
-		String tRelName = target.getName();
-		String sRelName = source.getName();
+		String creates = m.getRelName(0, false);
+		Query q;
 		
-		// create STBench query
-		SPJQuery lquery = new SPJQuery();
-		SelectClauseList lselect = lquery.getSelect();
+		q = genQuery();
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
+		
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+	}
+	
+	private Query genQuery () {
+		String sRelName = m.getRelName(0, true);
 		
 		SPJQuery query = new SPJQuery();
 		SelectClauseList qselect = query.getSelect();
 		Variable var = new Variable(("XL" + 0 + "V" + 0).toLowerCase());
 		query.getFrom().add(var, new Projection(Path.ROOT, sRelName));
-		lselect.add(sRelName, query);
 		
-		for(int i = 0; i < target.getAttrArray().length; i++) {
-			String attrName = target.getAttrArray()[i].getName();
-			qselect.add(attrName, new Projection(var, attrName));
-		}
+		for(String a: m.getAttrIds(0, false))
+			qselect.add(a, new Projection(var, a));
 		
-		SelectClauseList pselect = pquery.getSelect();
-		pselect.add(lquery.getSelect().getTermName(0), lquery.getSelect()
-				.getTerm(0));
-		SPJQuery q = (SPJQuery) pselect.getTerm(curRep);
-		
-		m.addQuery(q);
-		
-		// add Tramp transformation
-		t = fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), tRelName);
+		return query;
 	}
 	
 	
@@ -115,7 +108,7 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	protected void genTargetRels() {
 		RelationType s = m.getSourceRels().get(0);
 		String[] attrs = new String[s.getAttrArray().length];
-		String relName = s.getName() + "copy";
+		String relName = s.getName() + "copy" + curRep;
 		String hook = getRelHook(0);
 		
 		for(int i = 0; i < s.getAttrArray().length; i++)

@@ -294,7 +294,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			freeAttrs = cand.sizeOfAttrArray() - numNewAttr;
 			
 			// has enough attrs?
-			ok = cand.getAttrArray().length < requiredNumAttrs;
+			ok = cand.getAttrArray().length >= requiredNumAttrs;
 			
 			if (model.hasPK(relName, false)) {
 				for(String a: model.getPK(relName, false)) {
@@ -422,13 +422,12 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		Query q;
 		
 		q = genQueries();
-		
-		fac.addTransformation(q.toTrampString(m.getMapIds()), 
-				m.getMapIds(), creates);
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 	}
 
 	private Query genQueries() throws Exception {
-		String targetRelName = m.getRelName(0,false);
 		String sourceRelName = m.getRelName(0, true);
 		String[] attNames = m.getAttrIds(0, true);
 		String[] tAttrs = m.getAttrIds(0, false);
@@ -469,13 +468,6 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			q.setSelect(sel);
 		}
 
-
-		// add the partial queries to the parent query
-		// to form the whole transformation
-		SelectClauseList pselect = pquery.getSelect();
-		String tblTrgName = targetRelName;
-		pselect.add(tblTrgName, q);
-		pquery.setSelect(pselect);
 		return q;
 	}
 

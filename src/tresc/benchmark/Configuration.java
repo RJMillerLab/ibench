@@ -550,10 +550,11 @@ public class Configuration {
 	
 	public int getReuseThreshold () {
 		int totalNumScen = getTotalNumScen();
-		
-		return (int) Math.floor(totalNumScen * 0.01 * 
+		int thresh =  (int) Math.floor(totalNumScen * 0.01 * 
 				_configurations[Constants.ParameterName.
 				                NoReuseScenPerc.ordinal()][0]);
+		
+		return thresh;
 	}
 
 	public int getTotalNumScen() {

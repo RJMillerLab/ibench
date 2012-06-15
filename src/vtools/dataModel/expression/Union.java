@@ -20,7 +20,6 @@ public class Union extends SetOperation implements Visitable, Cloneable
 
     public int getCode()
     {
-
         return SetOperation.UNION;
     }
 

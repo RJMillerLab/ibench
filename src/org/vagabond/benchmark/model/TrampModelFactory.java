@@ -378,24 +378,42 @@ public class TrampModelFactory {
 	}
 
 	public TransformationType addTransformation(String code,
-			MappingType[] maps, String creates) {
-		TransformationType t =
-				doc.getScenario().getTransformations().addNewTransformation();
-
-		t.setId(idGen.createId("Trans"));
-		t.setCode(code);
-		t.setCreates(creates);
-		Implements i = t.addNewImplements();
-
-		for (MappingType m : maps)
-			i.addNewMapping().setRef(m.getId());
-
-		p.addTrans(t);
+			MappingType[] maps, String creates) throws Exception {
+		TransformationType t = getTransformation(creates);
+		
+		// no previous transformation for relation
+		if (t == null) {
+			t = doc.getScenario().getTransformations().addNewTransformation();
+	
+			t.setId(idGen.createId("Trans"));
+			t.setCode(code);
+			t.setCreates(creates);
+			Implements i = t.addNewImplements();
+	
+			for (MappingType m : maps)
+				i.addNewMapping().setRef(m.getId());
+	
+			p.addTrans(t);
+		}
+		// previous transformation just adapt code and add mappings
+		else {
+			t.setCode(code);
+			
+			for(MappingType m: maps)
+				t.getImplements().addNewMapping().setRef(m.getId());
+		}
 		return t;
+	}
+	
+	public TransformationType getTransformation (String relname) throws Exception {
+		List<TransformationType> ts = doc.getTransCreatingRel(relname);
+		if (ts.size() == 0)
+			return null;
+		return ts.get(0);
 	}
 
 	public TransformationType addTransformation(String code,
-			Collection<MappingType> maps, String creates) {
+			Collection<MappingType> maps, String creates) throws Exception {
 		return addTransformation(code, maps.toArray(new MappingType[] {}),
 				creates);
 	}

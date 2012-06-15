@@ -17,8 +17,10 @@ import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
+import vtools.dataModel.expression.Union;
 import vtools.dataModel.schema.Schema;
 import vtools.utils.structures.AssociativeArray;
 
@@ -83,12 +85,12 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	 */
 	public void generateNextScenario(MappingScenario scenario, 
 			Configuration configuration) throws Exception {
-		if (curRep < repetitions) {
+		if (curRep++ < repetitions) {
 			log.debug("CREATE " + curRep + "th scenario of type <" 
 					+ getScenType() + ">");
 			// already created enough basic scenarios to start reusing?
 			doSchemaElReuse = scenario.getNumBasicScen() 
-					> configuration.getReuseThreshold();
+					>= configuration.getReuseThreshold();
 			createOneInstanceOfScenario(scenario, configuration);
 		}
 	}
@@ -352,5 +354,32 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		String toRel = m.getRelName(tRel, source);
 		String toAttr = m.getAttrId(tRel, tAttr, source);
 		fac.addForeignKey(fromRel, fromAttr, toRel, toAttr, source);
+	}
+	
+	protected Query addQueryOrUnion (String tName, Query q) {
+		SelectClauseList pselect = pquery.getSelect();
+		String tblTrgName = tName;
+		
+		// if exists merge into one query
+		if (pselect.getTerm(tName) != null) {
+			Union u;
+			Query other = (Query) pselect.getValue(tName);
+			if (other instanceof Union) {
+				u = (Union) other;
+				u.add(q);
+			}
+			else {
+				u = new Union();
+				u.add(other);
+				u.add(q);
+				pselect.setValueOf(tName, u);
+			}
+			return u;
+		}
+		else {
+			pselect.add(tblTrgName, q);
+			pquery.setSelect(pselect);
+			return q;
+		}
 	}
 }

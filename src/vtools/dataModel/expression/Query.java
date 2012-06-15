@@ -11,6 +11,8 @@ import vtools.visitor.Visitor;
  */
 public abstract class Query extends Expression implements Visitable, Cloneable, Trampable
 {
+	protected String code;
+	
     public boolean equals(Object o)
     {
         if (!(o instanceof Query))
@@ -43,6 +45,14 @@ public abstract class Query extends Expression implements Visitable, Cloneable, 
     @Override
     public String toTrampString() throws Exception {
     	return toTrampString(new IdGen());
+    }
+    
+    public void storeCode(String code) {
+    	this.code = code;
+    }
+    
+    public String getStoredCode() {
+    	return code;
     }
     
     protected int findMaxId (String serializedQ) {

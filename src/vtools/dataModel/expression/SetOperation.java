@@ -34,6 +34,17 @@ public abstract class SetOperation extends Query implements Visitable, Cloneable
 
     public abstract int getCode();
 
+    public String getStoredCode() {
+       	StringBuffer result = new StringBuffer();
+    	for(int i = 0; i < _v.size(); i++) {
+    		Query q = _v.get(i);
+    		result.append(q.getStoredCode());
+    		if (i != _v.size() - 1)
+    			result.append("\n" + getSymbol() + "\n");
+    	}
+    	return result.toString();
+    }
+    
     public void set(Query rel, int n)
     {
         _v.setElementAt(rel, n);
