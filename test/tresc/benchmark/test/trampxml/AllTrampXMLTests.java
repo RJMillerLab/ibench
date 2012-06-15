@@ -7,7 +7,10 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	TestLoadingCreatedModel.class,
 	TestLoadToDB.class,
-	TestLoadToDBWithData.class
+	TestLoadToDBWithData.class,
+	TestCreatingPartOfTheModel.class,
+	TestCreationReusingSchemas.class,
+	TestLoadingToDBWithDataReusingSchema.class
 })
 public class AllTrampXMLTests {
 

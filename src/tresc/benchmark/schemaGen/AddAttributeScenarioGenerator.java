@@ -459,8 +459,9 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			vtools.dataModel.expression.SKFunction stSK = 
 					new vtools.dataModel.expression.SKFunction(sk.getSkname());
 			
-			for(String a: sk.getVarArray()) {
-				Projection att = new Projection(new Variable("X"), a);
+			for(int j = 0; j < sk.getVarArray().length; j++) {			
+				String sAttName = m.getAttrId(0, j, true);
+				Projection att = new Projection(new Variable("X"), sAttName);
 				stSK.addArg(att);
 			}
 			

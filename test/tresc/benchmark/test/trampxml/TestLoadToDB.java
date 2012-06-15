@@ -127,14 +127,9 @@ public class TestLoadToDB {
 	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-			if (toDB) {
-				Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-				if (!withData)
-					DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
-				else
-					DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-				dbCon.close();
-			}
+			Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
+			DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
+			dbCon.close();
 		}
 		catch (Exception e) {
 			log.error(n + "\n\n" + loadToString());
