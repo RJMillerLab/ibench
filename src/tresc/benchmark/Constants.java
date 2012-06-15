@@ -31,8 +31,53 @@ public class Constants
         NumOfNewAttributes,
         NumofAttributestoDelete,
         SkolemKind,
+        ReuseSourcePerc,	// reuse previously generated schema elements
+        ReuseTargetPerc,
+        NoReuseScenPerc,	// percentage of basic scenarios where we do not do a reuse
+        SourceSkolemPerc,	// associates skolems with source  
+        SourceSkolemNumAttr		// attributes and use them in mappings
     };
 
+    public static final Map<ParameterName, Integer> defaultParameterValues
+			= new HashMap<ParameterName, Integer> ();
+    
+    static {
+    	defaultParameterValues.put(ParameterName.NumOfSubElements, 3);
+    	defaultParameterValues.put(ParameterName.NestingDepth, 1);
+    	defaultParameterValues.put(ParameterName.JoinSize, 2);
+    	defaultParameterValues.put(ParameterName.JoinKind, 0);
+    	defaultParameterValues.put(ParameterName.NumOfJoinAttributes, 1);
+    	defaultParameterValues.put(ParameterName.NumOfParamsInFunctions, 2);
+    	defaultParameterValues.put(ParameterName.NumOfNewAttributes, 2);
+    	defaultParameterValues.put(ParameterName.NumofAttributestoDelete, 1);
+    	defaultParameterValues.put(ParameterName.SkolemKind, 0);
+    	defaultParameterValues.put(ParameterName.ReuseSourcePerc, 0);
+    	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
+    	defaultParameterValues.put(ParameterName.SourceSkolemPerc, 0);
+    	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
+    	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
+    }
+    
+    public static final Map<ParameterName, Integer> defaultParameterDeviation
+			= new HashMap<ParameterName, Integer> ();
+    
+    static {
+    	defaultParameterDeviation.put(ParameterName.NumOfSubElements, 0);
+    	defaultParameterDeviation.put(ParameterName.NestingDepth, 0);
+    	defaultParameterDeviation.put(ParameterName.JoinSize, 0);
+    	defaultParameterDeviation.put(ParameterName.JoinKind, 0);
+    	defaultParameterDeviation.put(ParameterName.NumOfJoinAttributes, 0);
+    	defaultParameterDeviation.put(ParameterName.NumOfParamsInFunctions, 0);
+    	defaultParameterDeviation.put(ParameterName.NumOfNewAttributes, 0);
+    	defaultParameterDeviation.put(ParameterName.NumofAttributestoDelete, 0);
+    	defaultParameterDeviation.put(ParameterName.SkolemKind, 0);
+    	defaultParameterDeviation.put(ParameterName.ReuseSourcePerc, 0);
+    	defaultParameterDeviation.put(ParameterName.ReuseTargetPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceSkolemPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceSkolemNumAttr, 0);
+    	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
+    }
+    
     public enum JoinKind {
         STAR,
         CHAIN,
@@ -120,7 +165,8 @@ public class Constants
     	Correspondences,
     	Transformations,
     	Data,
-    	ConnectionInfo
+    	ConnectionInfo,
+    	FDs
     }
     
     public static final Map<TrampXMLOutputSwitch, Boolean> trampXmlOutDefaults
@@ -131,6 +177,7 @@ public class Constants
     	trampXmlOutDefaults.put(TrampXMLOutputSwitch.Transformations, Boolean.TRUE);
     	trampXmlOutDefaults.put(TrampXMLOutputSwitch.Data, Boolean.TRUE);
     	trampXmlOutDefaults.put(TrampXMLOutputSwitch.ConnectionInfo, Boolean.TRUE);
+    	trampXmlOutDefaults.put(TrampXMLOutputSwitch.FDs, Boolean.FALSE);
     }
     
     public enum MappingLanguageType {

@@ -20,7 +20,7 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class FlatteningScenarioGenerator extends ScenarioGenerator
+public class FlatteningScenarioGenerator extends AbstractScenarioGenerator
 {
 
     private final String _stamp = "FL";

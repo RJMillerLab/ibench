@@ -19,7 +19,7 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class DeleteAttributeScenarioGenerator extends ScenarioGenerator
+public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 {
 
     public DeleteAttributeScenarioGenerator()

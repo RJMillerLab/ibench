@@ -22,7 +22,7 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class NestingScenarioGenerator extends ScenarioGenerator
+public class NestingScenarioGenerator extends AbstractScenarioGenerator
 {
     private Random _generator;
 

@@ -32,7 +32,7 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class CopyScenarioGenerator extends ScenarioGenerator {
+public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 
 	static Logger log = Logger.getLogger(CopyScenarioGenerator.class);
 

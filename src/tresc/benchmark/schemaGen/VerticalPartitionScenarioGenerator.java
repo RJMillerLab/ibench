@@ -32,7 +32,7 @@ import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Rcd;
 
 // very similar to merging scenario generator, with source and target schemas swapped
-public class VerticalPartitionScenarioGenerator extends ScenarioGenerator {
+public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
 
 	private JoinKind jk;
 	private int numOfSrcTblAttr;

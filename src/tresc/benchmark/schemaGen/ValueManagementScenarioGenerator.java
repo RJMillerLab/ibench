@@ -31,7 +31,7 @@ import vtools.dataModel.values.AtomicValue;
 import vtools.dataModel.values.IntegerValue;
 import vtools.visitor.Visitor;
 
-public class ValueManagementScenarioGenerator extends ScenarioGenerator
+public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 {
 	private int numOfSubElements;
 	private int X;

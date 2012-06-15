@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.kohsuke.args4j.Option;
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Constants.DBOption;
@@ -100,7 +101,8 @@ public class Configuration {
 		// read the scenario configuration parameters
 		prop.setPrefix("ConfigOptions");
 		for (ParameterName p : Constants.ParameterName.values()) {
-			int value = prop.getInt(p.toString(), 0);
+			int value = prop.getInt(p.toString(), 
+					Constants.defaultParameterValues.get(p));
 			_configurations[p.ordinal()][0] = value;
 			fileNameSuffix += "_" + value;
 		}
@@ -109,7 +111,8 @@ public class Configuration {
 		// read the standard derivations for the configuration parameters
 		prop.setPrefix("ConfigOptionsDerivation");
 		for (ParameterName p : Constants.ParameterName.values()) {
-			int value = prop.getInt(p.toString(), 0);
+			int value = prop.getInt(p.toString(), 
+					Constants.defaultParameterDeviation.get(p));
 			_configurations[p.ordinal()][1] = value;
 		}
 		prop.resetPrefix();
@@ -545,6 +548,17 @@ public class Configuration {
 		return _dbOptions[o.ordinal()];
 	}
 	
+	public int getReuseThreshold () {
+		int totalNumScen = getTotalNumScen();
+		
+		return (int) Math.floor(totalNumScen * 0.01 * 
+				_configurations[Constants.ParameterName.
+				                NoReuseScenPerc.ordinal()][0]);
+	}
+
+	public int getTotalNumScen() {
+		return CollectionUtils.sum(_repetitions);
+	}
 	
 
 }

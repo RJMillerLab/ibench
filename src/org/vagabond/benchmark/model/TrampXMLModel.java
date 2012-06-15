@@ -49,6 +49,19 @@ public class TrampXMLModel extends MapScenarioHolder {
 		RelationType relation = s.getRelationArray()[rel];
 		return relation.getName();
 	}
+
+	public int getNumRels (boolean source) {
+		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
+			getScenario().getSchemas().getTargetSchema();
+		return s.getRelationArray().length;
+	}
+	
+	public RelationType getRel (int pos, boolean source) {
+		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
+			getScenario().getSchemas().getTargetSchema();
+		return s.getRelationArray()[pos];
+	}
+	
 	
 	public AttrDefType[] getKeyAttrs (String rel, boolean source) throws Exception {
 		RelationType rela = getRelForName(rel, !source);

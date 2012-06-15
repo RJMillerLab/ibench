@@ -3,6 +3,7 @@ package tresc.benchmark.schemaGen;
 import java.util.Random;
 
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -23,7 +24,10 @@ import vtools.dataModel.types.Atomic;
 import vtools.dataModel.expression.Key;
 import vtools.dataModel.types.Set;
 
-public class AddAttributeScenarioGenerator extends ScenarioGenerator {
+public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
+
+	private static final int MAX_TRIES = 20;
+	
 	private int skolemCounter = 0;
 	private Boolean randomSkolem;
 	private Boolean useKey;
@@ -33,22 +37,8 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator {
 		;
 	}
 
-	// public void generateScenario(MappingScenario scenario, Configuration
-	// configuration)
-	// {
-	// init(configuration, scenario);
-	// SPJQuery pquery = scenario.getTransformation();
-	//
-	// for (int i = 0, imax = repetitions; i < imax; i++)
-	// {
-	//
-	// createSubElements(source, target, numOfSrcTblAttr, numNewAttr,
-	// typeOfSkolem, i, pquery);
-	// }
-	// }
-
 	@Override
-	protected void init(Configuration configuration, MappingScenario scenario) {
+	public void init(Configuration configuration, MappingScenario scenario) {
 		super.init(configuration, scenario);
 		// the configuration file allows three values for skValue
 		// 0 - use all attributes in source for skolem generation
@@ -262,6 +252,44 @@ public class AddAttributeScenarioGenerator extends ScenarioGenerator {
 		pquery.setSelect(pselect);
 	}
 
+	// override to adapt the local fields
+	/**
+	 * Also set the number of source attributes
+	 */
+	@Override
+	protected void chooseSourceRels() throws Exception {
+		super.chooseSourceRels();
+		// set number of src tbl attributes
+		numOfSrcTblAttr = m.getNumRelAttr(0, true);
+	}
+	
+	/**
+	 * Repeat picking until a target relation that is big enough has been found.
+	 * We need at least number of skolems + 1 (free attr) + 1 (key if there)
+	 * @throws Exception 
+	 */
+	@Override
+	protected void chooseTargetRels() throws Exception {
+		RelationType cand;
+		int tries = 0;
+		int requiredNumAttrs = numNewAttr + 
+				((useKey) ? 1 : 0) + 1;
+		
+		do {
+			cand = getRandomRel(false);
+		} while(cand.getAttrArray().length < requiredNumAttrs 
+				&& tries++ < MAX_TRIES);
+		
+		// did not find sufficient candidate
+		if (cand.getAttrArray().length < requiredNumAttrs)
+			genTargetRels();
+		// source should have the same attrs as target but no skolems
+		else {
+			numOfSrcTblAttr = cand.getAttrArray().length 
+					- numNewAttr;
+		}
+	}
+	
 	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);

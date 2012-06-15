@@ -30,7 +30,7 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class SelfJoinScenarioGenerator extends ScenarioGenerator
+public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
 	private int JN;
 	private int K;

@@ -30,7 +30,7 @@ import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.values.StringValue;
 
-public class SurrogateKeysScenarioGenerator extends ScenarioGenerator
+public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 {
 
 	private int params;

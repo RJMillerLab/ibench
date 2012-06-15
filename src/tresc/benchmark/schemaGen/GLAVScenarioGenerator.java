@@ -20,7 +20,7 @@ import vtools.dataModel.types.Type;
 import vtools.utils.structures.EqClassManager;
 
 
-public class GLAVScenarioGenerator extends ScenarioGenerator
+public class GLAVScenarioGenerator extends AbstractScenarioGenerator
 {
 	static Logger log = Logger.getLogger(GLAVScenarioGenerator.class);
 	

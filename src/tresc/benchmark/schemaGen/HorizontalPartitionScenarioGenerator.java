@@ -34,7 +34,7 @@ import vtools.dataModel.types.Set;
 import vtools.dataModel.values.IntegerValue;
 import vtools.dataModel.expression.LE;
 
-public class HorizontalPartitionScenarioGenerator extends ScenarioGenerator
+public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
 

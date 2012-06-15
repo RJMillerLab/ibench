@@ -31,7 +31,7 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class MergingScenarioGenerator extends ScenarioGenerator
+public class MergingScenarioGenerator extends AbstractScenarioGenerator
 {
 
     private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping

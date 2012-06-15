@@ -387,6 +387,9 @@ public class MappingScenario
 		_basicScens.put(key, p);
 	}
  
+	public int getNumBasicScen () {
+		return _basicScens.size();
+	}
 	
     
 }

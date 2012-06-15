@@ -23,7 +23,7 @@ import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
 // very similar to merging scenario generator, with source and target schemas swapped
-public class VPIsAScenarioGenerator extends ScenarioGenerator
+public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 {
     private Random _generator;
 

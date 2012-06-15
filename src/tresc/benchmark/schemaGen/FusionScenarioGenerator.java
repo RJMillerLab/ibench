@@ -39,7 +39,7 @@ import vtools.dataModel.types.Set;
 import vtools.dataModel.values.AtomicValue;
 import vtools.dataModel.values.NULL;
 
-public class FusionScenarioGenerator extends ScenarioGenerator {
+public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 
 	private static int _currAttributeIndex = 0; // this determines the letter
 												// used for the attribute in the
@@ -58,7 +58,7 @@ public class FusionScenarioGenerator extends ScenarioGenerator {
 	}
 
 	@Override
-	protected void init(Configuration configuration,
+	public void init(Configuration configuration,
 			MappingScenario mappingScenario) {
 		super.init(configuration, mappingScenario);
 		depth =

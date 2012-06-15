@@ -29,7 +29,7 @@ import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.values.StringValue;
 
-public class ValueGenerationScenarioGenerator extends ScenarioGenerator {
+public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator {
 	private final String _stamp = "VG";
 
 	public ValueGenerationScenarioGenerator() {
