@@ -4,6 +4,8 @@ import java.util.Random;
 
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
+import org.vagabond.xmlmodel.TransformationType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -16,6 +18,7 @@ import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -265,28 +268,58 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	
 	/**
 	 * Repeat picking until a target relation that is big enough has been found.
-	 * We need at least number of skolems + 1 (free attr) + 1 (key if there)
+	 * 
+	 * Conditions:
+	 * 	1) has at least number of skolems + 1 (free attr) + 1 (key if there).
+	 * 		-> needed to create a source with one free attribute
+	 *  2) if it has a key then the key shouldn't be one of the attributes reserved
+	 *  	for skolems.
+	 *  	-> the logic of adding preserves the source key, so the values for this
+	 *  	attribute in the target cannot be skolem terms
 	 * @throws Exception 
 	 */
 	@Override
 	protected void chooseTargetRels() throws Exception {
-		RelationType cand;
+		RelationType cand = null;
 		int tries = 0;
 		int requiredNumAttrs = numNewAttr + 
 				((useKey) ? 1 : 0) + 1;
+		int freeAttrs;
+		boolean ok = false;
+		String relName = null;
 		
-		do {
+		while(!ok  && tries++ < MAX_TRIES) {
 			cand = getRandomRel(false);
-		} while(cand.getAttrArray().length < requiredNumAttrs 
-				&& tries++ < MAX_TRIES);
+			relName = cand.getName();
+			freeAttrs = cand.sizeOfAttrArray() - numNewAttr;
+			
+			// has enough attrs?
+			ok = cand.getAttrArray().length < requiredNumAttrs;
+			
+			if (model.hasPK(relName, false)) {
+				for(String a: model.getPK(relName, false)) {
+					int aPos = model.getRelAttrPos(relName, a, false);
+					if (aPos >= freeAttrs) {
+						ok = false;
+						break;
+					}
+				}
+			}	
+		} 
 		
 		// did not find sufficient candidate
-		if (cand.getAttrArray().length < requiredNumAttrs)
+		if (!ok)
 			genTargetRels();
 		// source should have the same attrs as target but no skolems
 		else {
+			m.addTargetRel(cand);
+			
 			numOfSrcTblAttr = cand.getAttrArray().length 
 					- numNewAttr;
+			
+			// add primary key if it does not have one already
+			if (useKey && !model.hasPK(relName, false))
+				fac.addPrimaryKey(relName, m.getAttrId(0, 0, false), false);
 		}
 	}
 	
@@ -385,7 +418,65 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 	@Override
 	protected void genTransformations() throws Exception {
+		String creates = m.getRelName(0, false);
+		Query q;
 		
+		q = genQueries();
+		
+		fac.addTransformation(q.toTrampString(m.getMapIds()), 
+				m.getMapIds(), creates);
+	}
+
+	private Query genQueries() throws Exception {
+		String targetRelName = m.getRelName(0,false);
+		String sourceRelName = m.getRelName(0, true);
+		String[] attNames = m.getAttrIds(0, true);
+		String[] tAttrs = m.getAttrIds(0, false);
+		MappingType m1 = m.getMaps().get(0);
+		
+		// create the query for the target table
+		SPJQuery q = new SPJQuery();
+		q.getFrom().add(new Variable("X"),
+				new Projection(Path.ROOT, sourceRelName));
+
+		// populate this table with the same element created above for the
+		// source
+		SelectClauseList sel = q.getSelect();
+
+		// go through all the attributes put in the source table and pop them
+		// into the target
+		for (String a: attNames) {
+			// since we added an attr in the target, we add an entry in the
+			// respective select clause
+			Projection att = new Projection(new Variable("X"), a);
+			sel.add(a, att);
+		}
+		
+		for(int i = 0 ; i < numNewAttr; i++) {
+			int attPos = i + numOfSrcTblAttr;
+			String attName = tAttrs[attPos];
+			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+			
+			vtools.dataModel.expression.SKFunction stSK = 
+					new vtools.dataModel.expression.SKFunction(sk.getSkname());
+			
+			for(String a: sk.getVarArray()) {
+				Projection att = new Projection(new Variable("X"), a);
+				stSK.addArg(att);
+			}
+			
+			sel.add(attName, stSK);
+			q.setSelect(sel);
+		}
+
+
+		// add the partial queries to the parent query
+		// to form the whole transformation
+		SelectClauseList pselect = pquery.getSelect();
+		String tblTrgName = targetRelName;
+		pselect.add(tblTrgName, q);
+		pquery.setSelect(pselect);
+		return q;
 	}
 
 	@Override

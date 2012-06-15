@@ -245,6 +245,10 @@ public class TrampModelFactory {
 		return key;
 	}
 	
+	public void addPrimaryKey(String relName, String attrId, boolean source) throws Exception {
+		addPrimaryKey(relName, new String[] {attrId}, source);
+	}
+	
 	public void addSymForeignKey (String fromRel, String[] fromA, String toRel, 
 			String[] toA, boolean source) {
 		addForeignKey(fromRel, fromA, toRel, toA, source);
@@ -423,4 +427,6 @@ public class TrampModelFactory {
 	public void setStScen(MappingScenario stScen) {
 		this.stScen = stScen;
 	}
+
+
 }

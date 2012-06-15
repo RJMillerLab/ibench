@@ -64,6 +64,10 @@ public class TestCreationReusingSchemas {
 	}
 	
 	
+	@Test
+	public void testAddAttr () throws Exception {
+		testSingleBasicScenarios(ScenarioName.ADDATTRIBUTE);
+	}
 	
 	@Test
 	public void testCopy () throws Exception {

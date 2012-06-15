@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.CorrespondenceType;
+import org.vagabond.xmlmodel.MapExprType;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.TransformationType;
 
 import vtools.dataModel.expression.Query;
@@ -56,6 +61,18 @@ public class PartialMapping {
 	
 	public void addTargetRel (RelationType targetRel) {
 		this.targetRels.add(targetRel);
+	}
+	
+	public SKFunction getSkolemFromAtom (MappingType m, boolean foreach, 
+			int atomPos, int argPos) throws Exception {
+		MapExprType clause = foreach ? m.getForeach() : m.getExists();
+		RelAtomType atom = clause.getAtomArray(atomPos);
+		XmlCursor c = atom.newCursor();
+		c.toChild(argPos);
+		XmlObject o = (XmlObject) c.getObject();
+		if (!(o instanceof SKFunction))
+			throw new Exception ("Expected an SK function: " + o.toString());
+		return (SKFunction) o; 
 	}
 	
 	public String[] getMapIds () {

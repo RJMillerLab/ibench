@@ -37,28 +37,34 @@ public class TrampXMLModel extends MapScenarioHolder {
 	}
 	
 	public String getRelAttr (int rel, int attr, boolean source) {
-		SchemaType s = source ? doc.getMappingScenario().getSchemas().getSourceSchema() :
-			doc.getMappingScenario().getSchemas().getTargetSchema();
+		SchemaType s = getSchema(source);
 		RelationType relation = s.getRelationArray()[rel];
 		return relation.getAttrArray()[attr].getName();
 	}
 	
+	public int getRelAttrPos (String rel, String attr, boolean source) throws Exception {
+		RelationType r = getRelForName(rel, !source);
+		for(int i = 0; i < r.getAttrArray().length; i++) {
+			AttrDefType a = r.getAttrArray(i);
+			if (a.getName().equals(attr))
+				return i;
+		}
+		return -1;
+	}
+	
 	public String getRelName (int rel, boolean source) {
-		SchemaType s = source ? doc.getMappingScenario().getSchemas().getSourceSchema() :
-			doc.getMappingScenario().getSchemas().getTargetSchema();
+		SchemaType s = getSchema(source);
 		RelationType relation = s.getRelationArray()[rel];
 		return relation.getName();
 	}
 
 	public int getNumRels (boolean source) {
-		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
-			getScenario().getSchemas().getTargetSchema();
+		SchemaType s = getSchema(source);
 		return s.getRelationArray().length;
 	}
 	
 	public RelationType getRel (int pos, boolean source) {
-		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
-			getScenario().getSchemas().getTargetSchema();
+		SchemaType s = getSchema(source);
 		return s.getRelationArray()[pos];
 	}
 	
@@ -84,8 +90,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 	
 	public ForeignKeyType[] getFKs (String fromRel, String toRel, boolean source) {
 		List<ForeignKeyType> result = new ArrayList<ForeignKeyType> ();
-		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
-			getScenario().getSchemas().getTargetSchema();
+		SchemaType s = getSchema(source);
 		for(ForeignKeyType fk: s.getForeignKeyArray()) {
 			if (fk.getFrom().getTableref().equals(fromRel) 
 					&& fk.getTo().getTableref().equals(toRel))
@@ -93,6 +98,23 @@ public class TrampXMLModel extends MapScenarioHolder {
 		}
 		
 		return result.toArray(new ForeignKeyType[result.size()]);
+	}
+
+	private SchemaType getSchema(boolean source) {
+		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
+			getScenario().getSchemas().getTargetSchema();
+		return s;
+	}
+	
+	public boolean hasPK (String rel, boolean source) throws Exception {
+		return getRelForName(rel, !source).isSetPrimaryKey();
+	}
+	
+	public String[] getPK (String rel, boolean source) throws Exception {
+		RelationType r = getRelForName(rel, !source);
+		if (r.isSetPrimaryKey())
+			return r.getPrimaryKey().getAttrArray();
+		return null;
 	}
 	
 }
