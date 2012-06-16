@@ -1,28 +1,19 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
-import org.vagabond.xmlmodel.TransformationType;
 
-import smark.support.MappingScenario;
 import smark.support.SMarkElement;
-import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
-
 import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.ConstantAtomicValue;
-import vtools.dataModel.expression.FromClauseList;
+import vtools.dataModel.expression.LE;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
@@ -32,12 +23,9 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.values.IntegerValue;
-import vtools.dataModel.expression.LE;
 
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
-    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
-
 	private int randomElements;
 	private int randomFragments;
 
@@ -55,72 +43,6 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         randomFragments = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         fragmentWidth = 10000 / randomFragments;
     }
-
-    private Character getAttrLetter(String attrName) {
-    	if (attrMap.containsKey(attrName))
-    		return attrMap.get(attrName);
-    	Character letter = _attributes.charAt(_currAttributeIndex++);
-    	attrMap.put(attrName, letter);
-    	return letter;
-    }
-
-    private void resetAttrLetters() {
-    	_currAttributeIndex = 0;
-    	attrMap.clear();
-    }
-
-	private void setScenario(MappingScenario scenario, SPJQuery generatedQuery) throws Exception {
-		SelectClauseList pselect = generatedQuery.getSelect();
-		for (int i = 0; i < pselect.size(); i++) {
-			String mKey = scenario.getNextMid();
-			String tKey = scenario.getNextTid();
-
-			ArrayList<String> corrsList = new ArrayList<String>();
-			HashMap<String, List<Character>> sourceAttrs = new HashMap<String, List<Character>>();
-			HashMap<String, List<Character>> targetAttrs = new HashMap<String, List<Character>>();
-
-			SPJQuery e = (SPJQuery)(pselect.getTerm(i));
-        	SPJQuery subQ = (SPJQuery)(pselect.getValue(i));
-        	FromClauseList fcl = subQ.getFrom();
-        	String sourceName="";
-        	String targetName=generatedQuery.getTarget(i);
-        	SelectClauseList scl = e.getSelect();
-        	for (int j = 0; j < fcl.size(); j++) {
-        		ArrayList<Character> attrLists = new ArrayList<Character>();
-        		String key = fcl.getKey(j).toString();
-        		sourceName = fcl.getValue(j).toString().substring(1);
-        		String[] sclArray = scl.toString().split(",");
-        		for (int k = 0; k < sclArray.length; k++) {
-        			String attr = sclArray[k];
-        			attr = attr.replaceFirst("\\"+key+"/", "").trim();
-        			attrLists.add(getAttrLetter(attr));
-        			String relAttr = sourceName + "." + attr;
-        			String cKey = scenario.getNextCid();
-        			String cVal = relAttr + "=" + relAttr;
-        			// correspondences.put(cKey, cVal);
-        			scenario.putCorrespondences(cKey, cVal);
-        			corrsList.add(cKey);
-        		}
-        		sourceAttrs.put(sourceName, attrLists);
-        		targetAttrs.put(targetName, attrLists);
-        	}
-        	scenario.putMappings2Correspondences(mKey, corrsList);
-        	scenario.putMappings2Sources(mKey, sourceAttrs);
-        	scenario.putMappings2Targets(mKey, targetAttrs);
-
-			ArrayList<String> mList = new ArrayList<String>();
-			mList.add(mKey);
-			scenario.putTransformation2Mappings(tKey, mList);
-			scenario.putTransformationCode(tKey, getQueryString(e, mList));
-			scenario.putTransformationRelName(tKey, targetName);
-			
-			resetAttrLetters();
-		}
-	}
-	
-	private String getQueryString(SPJQuery origQ, List<String> mKeys) throws Exception {
-		return origQ.toTrampString(mKeys.toArray(new String[] {}));
-	}
 
     //
     // Algorithm: The schema generated is the following
@@ -228,8 +150,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         
         // and now populate the src SMarkElement and the target fragments with
         // the rest of the attributes.
-        for (int i = 0; i < randomElements; i++)
-        {
+        for (int i = 0; i < randomElements; i++) {
             String attName = randomAttrName(0, i); 
             attrs[i + 1] = attName;
             dTypes[i + 1] = "TEXT";
@@ -252,7 +173,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
                     + upperLimit;
             String name = srcName + "_" + hook;
             
-        	RelationType tRel = fac.addRelation(hook, name, attrs, false);
+        	fac.addRelation(hook, name, attrs, false);
         }
 	}
 

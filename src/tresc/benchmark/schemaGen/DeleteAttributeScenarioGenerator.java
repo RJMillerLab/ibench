@@ -118,7 +118,15 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
         pquery.setSelect(pselect);
     }
 
-
+    @Override
+    protected void chooseSourceRels() {
+    	
+    }
+    
+    @Override
+    protected void chooseTargetRels () {
+    	
+    }
 
 	@Override
 	protected void genSourceRels() {
