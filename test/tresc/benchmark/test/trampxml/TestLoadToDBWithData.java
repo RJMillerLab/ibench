@@ -161,7 +161,7 @@ public class TestLoadToDBWithData {
 	}
 
 	@Test
-	public void testToxSizeProblem () throws Exception {
+	public void testToxtSizeProblem () throws Exception {
 		conf.setParam(ParameterName.NumOfSubElements, 127);
 		conf.setScenarioRepetitions(ScenarioName.COPY, 1);
 		b.runConfig(conf);

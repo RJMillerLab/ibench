@@ -22,9 +22,12 @@ import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
+import com.sun.tools.internal.ws.processor.model.Model;
+
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import smark.support.SMarkElement;
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.DBOption;
 import tresc.benchmark.Constants.DataGenType;
@@ -166,7 +169,27 @@ public class TrampModelFactory {
 		
 		return rel;
 	}
-
+	
+	public void addRelation(String hook, RelationType r, boolean source) {
+		String[] attr = new String[r.sizeOfAttrArray()];
+		String[] dTypes = new String[r.sizeOfAttrArray()];
+		
+		for(int i = 0; i < attr.length; i++) {
+			AttrDefType a = r.getAttrArray(i);
+			attr[i] = a.getName();
+			attr[i] = a.getDataType();
+		}
+		
+		SchemaType s = doc.getSchema(source);
+		s.setRelationArray(s.sizeOfRelationArray(), r);
+		addSTRelation(hook, r.getName(), attr, dTypes, source);
+		
+		if (source)
+			p.addSourceRel(r);
+		else
+			p.addTargetRel(r);
+	}
+	
 	public RelationType addRelation(String hook, String name, String[] attrs,
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
@@ -192,6 +215,7 @@ public class TrampModelFactory {
 			break;
 		}
 	}
+
 
 	private void addSTRelation(String hook, String name, String[] attrs,
 			String[] dTypes, boolean source) {
@@ -243,6 +267,13 @@ public class TrampModelFactory {
 			key.addKeyAttr(new Projection(new Variable("X"), a));
 
 		return key;
+	}
+	
+	public void addPrimaryKey(String relName, int[] attrPos, boolean source) throws Exception {
+		String[] attrs = new String[attrPos.length];
+		for(int i = 0; i  < attrPos.length; i++)
+			attrs[i] = doc.getRelAttr(doc.getRelPos(relName, source), attrPos[i], source);
+		addPrimaryKey(relName, attrs, source);
 	}
 	
 	public void addPrimaryKey(String relName, String attrId, boolean source) throws Exception {

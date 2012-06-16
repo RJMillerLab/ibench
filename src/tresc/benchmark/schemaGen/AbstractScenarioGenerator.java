@@ -1,11 +1,14 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
+import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.RelationType;
 
@@ -191,6 +194,42 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		m.addTargetRel(rel);		
 	}
 	
+	protected RelationType getRandomRel (boolean source, int minAttrs) {
+		return getRandomRel(source, minAttrs, false);//TODO use xpath over XBeans?		
+	}
+	
+	protected RelationType getRandomRel (boolean source, int minAttrs, boolean key) {
+		List<RelationType> cand = new ArrayList<RelationType> ();
+		
+		for(RelationType r: model.getSchema(source).getRelationArray()) {
+			boolean ok = !key || r.isSetPrimaryKey();
+			ok &= r.sizeOfAttrArray() >= minAttrs;
+			if (ok)
+				cand.add(r);
+		}
+		
+		return pickRel(cand);//TODO use xpath over XBeans?
+	}
+	
+	protected RelationType getRandomRelWithNumAttr (boolean source, int numAttr) {
+		List<RelationType> cand = new ArrayList<RelationType> ();
+		
+		for(RelationType r: model.getSchema(source).getRelationArray()) {
+			if (r.sizeOfAttrArray() == numAttr)
+				cand.add(r);
+		}
+		
+		return pickRel(cand);
+	}
+	
+	private RelationType pickRel (List<RelationType> rels) {
+		int numRels = rels.size();
+		if (numRels == 0)
+			return null;
+		int pos = _generator.nextInt(numRels);
+		return rels.get(pos);
+	}
+	
 	protected RelationType getRandomRel (boolean source) {
 		int numRels = model.getNumRels(source);
 		int pos = _generator.nextInt(numRels);
@@ -311,6 +350,18 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		return Constants.nameForScenarios.get(getScenType()).substring(1);
 	}
 	
+	protected RelationType createFreeRandomRel (int relId, int numAttr) {
+		RelationType r = RelationType.Factory.newInstance();
+		r.setName(randomRelName(relId));
+		for(int i = 0; i < numAttr; i++) {
+			AttrDefType a = r.addNewAttr();
+			a.setName(randomAttrName(relId, i));
+			a.setDataType("TEXT");
+		}
+		
+		return r;
+	}
+	
 	protected String randomRelName(int relNum) {
 		String randomName = Modules.nameFactory.getARandomName();
 		String name =
@@ -359,8 +410,9 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected Query addQueryOrUnion (String tName, Query q) {
 		SelectClauseList pselect = pquery.getSelect();
 		String tblTrgName = tName;
+		m.addQuery(q);
 		
-		// if exists merge into one query
+		// if exists merge into one query //TODO outsource this to provide different types of merging?
 		if (pselect.getTerm(tName) != null) {
 			Union u;
 			Query other = (Query) pselect.getValue(tName);

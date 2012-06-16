@@ -289,15 +289,16 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		String relName = null;
 		
 		while(!ok  && tries++ < MAX_TRIES) {
-			cand = getRandomRel(false);
+			cand = getRandomRel(false, requiredNumAttrs);
+			// no such cand
+			if (cand == null)
+				break;
+				
 			relName = cand.getName();
 			freeAttrs = cand.sizeOfAttrArray() - numNewAttr;
 			
-			// has enough attrs?
-			ok = cand.getAttrArray().length >= requiredNumAttrs;
-			
-			if (model.hasPK(relName, false)) {
-				for(String a: model.getPK(relName, false)) {
+			if (cand.isSetPrimaryKey()) {
+				for(String a: cand.getPrimaryKey().getAttrArray()) {
 					int aPos = model.getRelAttrPos(relName, a, false);
 					if (aPos >= freeAttrs) {
 						ok = false;
@@ -318,7 +319,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 					- numNewAttr;
 			
 			// add primary key if it does not have one already
-			if (useKey && !model.hasPK(relName, false))
+			if (useKey && !cand.isSetPrimaryKey())
 				fac.addPrimaryKey(relName, m.getAttrId(0, 0, false), false);
 		}
 	}

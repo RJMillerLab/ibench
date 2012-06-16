@@ -42,6 +42,16 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return relation.getAttrArray()[attr].getName();
 	}
 	
+	public int getRelPos(String rel, boolean source) {
+		SchemaType s = getSchema(source);
+		for(int i = 0 ; i < s.sizeOfRelationArray(); i++) {
+			RelationType r = s.getRelationArray(i);
+			if (r.getName().equals(rel))
+				return i;
+		}
+		return -1;
+	}
+	
 	public int getRelAttrPos (String rel, String attr, boolean source) throws Exception {
 		RelationType r = getRelForName(rel, !source);
 		for(int i = 0; i < r.getAttrArray().length; i++) {
@@ -88,6 +98,16 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return atts.toArray(new AttrDefType[atts.size()]);
 	}
 	
+	public String[] getAttrNames (String rel, int[] attrPos, boolean source) throws Exception {
+		RelationType r = getRelForName(rel, !source);
+		String[] result = new String[attrPos.length];
+		
+		for(int i = 0; i < result.length; i++)
+			result[i] = r.getAttrArray(attrPos[i]).getName();
+		
+		return result;
+	}
+	
 	public ForeignKeyType[] getFKs (String fromRel, String toRel, boolean source) {
 		List<ForeignKeyType> result = new ArrayList<ForeignKeyType> ();
 		SchemaType s = getSchema(source);
@@ -100,7 +120,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return result.toArray(new ForeignKeyType[result.size()]);
 	}
 
-	private SchemaType getSchema(boolean source) {
+	public SchemaType getSchema(boolean source) {
 		SchemaType s = source ? getScenario().getSchemas().getSourceSchema() :
 			getScenario().getSchemas().getTargetSchema();
 		return s;
@@ -115,6 +135,20 @@ public class TrampXMLModel extends MapScenarioHolder {
 		if (r.isSetPrimaryKey())
 			return r.getPrimaryKey().getAttrArray();
 		return null;
+	}
+	
+	public int[] getPKPos (String rel, boolean source) throws Exception {
+		RelationType r = getRelForName(rel, !source);
+		int[] result;
+		
+		String[] attNames = r.getPrimaryKey().getAttrArray();
+		result = new int[attNames.length];
+		for(int i = 0; i < attNames.length; i++) {
+			String a = attNames[i];
+			result[i] = getRelAttrPos(rel, a, source);
+		}
+		
+		return result;
 	}
 	
 }
