@@ -120,8 +120,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			Configuration configuration) throws Exception {
 		initPartialMapping();
 		genSchemas();
-		log.debug("\n\nGENERATED SCHEMAS: \n " + m.getSourceRels().toString() 
-				+ "n\n" + m.getTargetRels().toString());
+		log.debug("\n\nGENERATED SCHEMAS: \nSOURCE:\n" + m.getSourceRels().toString() 
+				+ "\n\nTARGET:\n" + m.getTargetRels().toString());
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences)) {
 			genCorrespondences();
 			log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());

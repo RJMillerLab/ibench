@@ -1,6 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
@@ -16,6 +18,7 @@ import vtools.dataModel.expression.ConstantAtomicValue;
 import vtools.dataModel.expression.LE;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -133,23 +136,52 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         }
         pquery.setSelect(pselect);
         generatedQuery.setSelect(qselect);
-        for (int i=0; i < queries.length; i++) {
+        for (int i=0; i < queries.length; i++)
         	generatedQuery.addTarget(fragments[i].getLabel());
-        }
     }
 
+    /**
+     * Following requirements for the relation:
+     * 1) At least two attributes (one key, one free)
+     * 2) if it has a key then it should be the first attr only (could be 
+     * 		changed later)
+     * 
+     * @throws Exception 
+     */
     @Override
-    protected void chooseSourceRels() {
-    	RelationType r;
+    protected void chooseSourceRels() throws Exception {
+    	RelationType r = null;
     	boolean ok = false;
     	int tries = 0;
     	
     	while(!ok && tries < MAX_NUM_TRIES) {
     		r = getRandomRel(true, 2);
-//    		if (r.isSetPrimaryKey())
-    			
+    		if (r == null)
+    			break;
+    		if (r.isSetPrimaryKey()) {	
+    			int[] keyPos = model.getPKPos(r.getName(), true);
+    			if (keyPos.length == 1 && keyPos[0] == 0) {
+    				ok = true;
+    				break;
+    			}
+    		}
+    		else {
+    			ok = true;
+    			break;
+    		}
     	}
     	
+    	// did not find suitable relation
+    	if (r == null)
+    		genSourceRels();
+    	// adapt fields
+    	else {
+    		m.addSourceRel(r);
+    		// create PK if necessary
+    		if (!r.isSetPrimaryKey())
+    			fac.addPrimaryKey(r.getName(), 0, true);
+    		randomElements = r.sizeOfAttrArray() - 1;
+    	}
     }
     
 
@@ -175,6 +207,77 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         fac.addRelation(getRelHook(0), srcName, attrs, dTypes, true);
 	}
 
+	/**
+	 * We need "randomFragments" number of relations with the same number 
+	 * of attributes and the first attribute as key (or no key).
+	 * @throws Exception 
+	 */
+	@Override
+	protected void chooseTargetRels() throws Exception {
+		RelationType cand = null;
+		int tries = 0;
+		int numAttrs = 0;
+		List<RelationType> rels = new ArrayList<RelationType> (randomFragments);
+		
+		// first one
+		while (tries < MAX_NUM_TRIES && rels.size() == 0) {
+			cand = getRandomRel(false, 2);
+			if (relOk(cand)) {
+				rels.add(cand);
+				break;
+			}
+		}
+		
+		// didn't find one? generate target relations
+		if (rels.size() == 0) {
+			genTargetRels();
+			return;
+		}
+		
+		numAttrs = cand.sizeOfAttrArray();
+
+		// find additional relations with the same number of attributes 
+		// and no key or the first attr as key
+		while (tries < MAX_NUM_TRIES * randomFragments && cand != null 
+				&& rels.size() < randomFragments) {
+			cand = getRandomRelWithNumAttr(false, numAttrs);
+			if (relOk(cand))
+				rels.add(cand);
+		}
+		
+		// create additional target relations
+		for (int i = 0; i < rels.size(); i++)
+			m.addTargetRel(rels.get(i));
+		for (int i = rels.size(); i < randomFragments; i++) {
+			RelationType r = createFreeRandomRel(i, numAttrs);
+			rels.add(r);
+			fac.addRelation(getRelHook(i), r, false);
+		}
+		
+		// create primary keys
+		for (RelationType r: rels)
+			if (!r.isSetPrimaryKey())
+				fac.addPrimaryKey(r.getName(), 0, false);
+		
+		// adapt local parameters
+		randomElements = numAttrs;
+	}
+	
+	private boolean relOk (RelationType r) throws Exception {
+		if (r == null)
+			return false;
+		if (r.isSetPrimaryKey()) {
+			int[] pkPos = model.getPKPos(r.getName(), false);
+			if (pkPos.length == 1 & pkPos[0] == 0)
+				return true;
+		}
+		// no PK? we are fine
+		else
+			return true;
+		
+		return false;
+	}
+	
 	@Override
 	protected void genTargetRels() {
 		String srcName = m.getSourceRels().get(0).getName();
@@ -193,6 +296,8 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         }
 	}
 
+	
+	
 	@Override
 	protected void genMappings() throws Exception {
 		String srcName = m.getSourceRels().get(0).getName();
@@ -221,18 +326,22 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	
 	@Override
 	protected void genTransformations() throws Exception {
-        SPJQuery genQuery = genQueries();
+		Query q;
+		
 		for(int i = 0; i < randomFragments; i++) {
 			String targetName = m.getTargetRels().get(i).getName();
 			String map = m.getMapIds()[i];
-			SPJQuery q = (SPJQuery) genQuery.getSelect().getTerm(i);
-			fac.addTransformation(q.toTrampString(map), new String[] {map}, targetName);
+			
+			q = genQuery(i);
+			q.storeCode(q.toTrampString(m.getMapIds()[i]));
+			q = addQueryOrUnion(targetName, q);
+
+			fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
 		}
 	}
 	
-	private SPJQuery genQueries() {
-		SPJQuery generatedQuery = new SPJQuery();
-		SPJQuery[] queries = new SPJQuery[randomFragments];
+	private SPJQuery genQuery(int i) {
+		SPJQuery q = new SPJQuery();
 		String srcName = m.getSourceRels().get(0).getName();
 		
         // create the selector attribute for the Where condition of the query
@@ -240,47 +349,30 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         Variable var = new Variable("X");
         Projection attSelector = new Projection(var.clone(), nameSelector);
 		
-		for(int i = 0; i < randomFragments; i++) {
-            int lowerLimit = i * fragmentWidth;
-            int upperLimit = ((i + 1) * fragmentWidth) - 1;
-			queries[i] = new SPJQuery();
-			// create the From Clause for each subquery
-			queries[i].getFrom().add(var.clone(),
-					new Projection(Path.ROOT, srcName));
-			// create the Where Clause for each subquery
-			AND andCond = new AND();
-			andCond.add(new LE(new ConstantAtomicValue(new IntegerValue(
-					lowerLimit)), attSelector));
-			andCond.add(new LE(attSelector, new ConstantAtomicValue(
-					new IntegerValue(upperLimit))));
-			queries[i].setWhere(andCond);
-		}
-		
-		for(int i = 0; i < randomElements; i++) {
-			String elementName = m.getAttrIds(0, true)[i + 1];
+        int lowerLimit = i * fragmentWidth;
+        int upperLimit = ((i + 1) * fragmentWidth) - 1;
+        
+		// create the From Clause for each subquery
+		q.getFrom().add(var.clone(),
+				new Projection(Path.ROOT, srcName));
+		// create the Where Clause for each subquery
+		AND andCond = new AND();
+		andCond.add(new LE(new ConstantAtomicValue(new IntegerValue(
+				lowerLimit)), attSelector));
+		andCond.add(new LE(attSelector, new ConstantAtomicValue(
+				new IntegerValue(upperLimit))));
+		q.setWhere(andCond);
+	
+		String[] attrIds = m.getAttrIds(0, true);
+		for(int j = 1; j <= randomElements; j++) {
+			String elementName = attrIds[j];
 			Projection sourceAtt = new Projection(var.clone(), elementName);
-			for (int k = 0; k < randomFragments; k++) {
-				SelectClauseList select = queries[k].getSelect();
-				select.add(elementName, sourceAtt.clone());
-				queries[k].setSelect(select);
-			}
+			SelectClauseList select = q.getSelect();
+			select.add(elementName, sourceAtt.clone());
+			q.setSelect(select);
 		}
 		
-		// add all the subqueries to the final query 
-        SelectClauseList pselect = pquery.getSelect();
-        SelectClauseList qselect = generatedQuery.getSelect();
-        for (int i = 0; i < queries.length; i++){
-        	String tName = m.getTargetRels().get(i).getName();
-        	pselect.add(tName, queries[i]);
-        	qselect.add(tName, queries[i]);
-        }
-        pquery.setSelect(pselect);
-        generatedQuery.setSelect(qselect);
-        for (int i=0; i < queries.length; i++) {
-        	String tName = m.getTargetRels().get(i).getName();
-        	generatedQuery.addTarget(tName);
-        }
-        return generatedQuery;
+        return q;
 	}
 
 	@Override

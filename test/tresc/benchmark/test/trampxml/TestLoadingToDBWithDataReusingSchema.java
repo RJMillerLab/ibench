@@ -181,11 +181,22 @@ public class TestLoadingToDBWithDataReusingSchema {
 			throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 2);
+		// reuse source
+		setReuse(100,0,conf);
+		b.runConfig(conf);
+		testLoad(n);
+		// reuse target
+		setReuse(0,100,conf);
 		b.runConfig(conf);
 		testLoad(n);
 		conf.setScenarioRepetitions(n, 0);
 	}
 
+	private void setReuse(int src, int target, Configuration conf) {
+		conf.setParam(ParameterName.ReuseSourcePerc, src);
+		conf.setParam(ParameterName.ReuseTargetPerc, target);
+	}
+	
 
 	private void testLoad(ScenarioName n) throws Exception {
 		try {

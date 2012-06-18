@@ -177,11 +177,12 @@ public class TrampModelFactory {
 		for(int i = 0; i < attr.length; i++) {
 			AttrDefType a = r.getAttrArray(i);
 			attr[i] = a.getName();
-			attr[i] = a.getDataType();
+			dTypes[i] = a.getDataType();
 		}
 		
 		SchemaType s = doc.getSchema(source);
-		s.setRelationArray(s.sizeOfRelationArray(), r);
+		s.addNewRelation();
+		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
 		addSTRelation(hook, r.getName(), attr, dTypes, source);
 		
 		if (source)
@@ -267,6 +268,10 @@ public class TrampModelFactory {
 			key.addKeyAttr(new Projection(new Variable("X"), a));
 
 		return key;
+	}
+	
+	public void addPrimaryKey(String relName, int attrPos, boolean source) throws Exception {
+		addPrimaryKey(relName, new int[] {attrPos}, source);
 	}
 	
 	public void addPrimaryKey(String relName, int[] attrPos, boolean source) throws Exception {

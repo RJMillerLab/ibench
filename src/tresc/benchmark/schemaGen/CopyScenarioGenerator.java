@@ -57,14 +57,18 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	
 	private Query genQuery () {
 		String sRelName = m.getRelName(0, true);
+		int numAttrs = m.getNumRelAttr(0, true);
 		
 		SPJQuery query = new SPJQuery();
 		SelectClauseList qselect = query.getSelect();
 		Variable var = new Variable(("XL" + 0 + "V" + 0).toLowerCase());
 		query.getFrom().add(var, new Projection(Path.ROOT, sRelName));
 		
-		for(String a: m.getAttrIds(0, false))
-			qselect.add(a, new Projection(var, a));
+		for(int i = 0; i < numAttrs; i++) {
+			String srcA =  m.getAttrId(0, i, true);
+			String targetA  = m.getAttrId(0, i, false);
+			qselect.add(targetA, new Projection(var, srcA));
+		}
 		
 		return query;
 	}

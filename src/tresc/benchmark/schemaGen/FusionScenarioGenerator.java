@@ -52,8 +52,8 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 	private int F; // #free attributes in source relations
 	private String[][] freeAttrs;
 	private String[][] keyAttrs;
-
 	private int[][] keyAttrPos;
+	private int targetExistsNum = 0;
 
 	public FusionScenarioGenerator() {
 		;
@@ -646,7 +646,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		}
 
 		// generate the remaining ones
-		for (int i = 0; i < N; i++)
+		for (int i = 0; i < rels.size(); i++)
 			m.addSourceRel(rels.get(i));
 		for (int i = rels.size(); i < N; i++) {
 			RelationType r = createFreeRandomRel(i, numAttrs);
@@ -700,7 +700,6 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		
 		while(cand != null && tries < NUM_TRIES) {
 			if (!cand.isSetPrimaryKey()) {
-				m.addTargetRel(cand);
 				break;
 			}
 			else {
@@ -720,9 +719,16 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		// found ok one
 		if (cand != null) {
 			m.addTargetRel(cand);
+			if (!cand.isSetPrimaryKey())
+				fac.addPrimaryKey(cand.getName(), 
+						CollectionUtils.createSequence(0, K), false);
+			else
+				K = cand.getPrimaryKey().sizeOfAttrArray();
 			E = cand.sizeOfAttrArray();
-			F = (E - K);
+			F = (E - K) / N;
+			targetExistsNum  = m.getNumRelAttr(0, false) - K - (F * N);
 		}
+		// create new one
 		else
 			genTargetRels();
 	}
@@ -796,7 +802,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		String[] keyVars = fac.getFreshVars(0, K);
 		String[] attrVars = fac.getFreshVars(K, F);
 		String[] exists = fac.getFreshVars(E, (N - 1) * F);
-
+		String[] freeTVars = fac.getFreshVars(N * F + E, targetExistsNum);
 		String tRelName= m.getRelName(0, false);
 		
 		/*
@@ -818,7 +824,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 			// create exists
 			tVars = CollectionUtils.insertAtPositions(exists, attrVars,
 							CollectionUtils.createSequence(F * i, F));
-			tVars = CollectionUtils.concat(keyVars, tVars);
+			tVars = CollectionUtils.concatArrays(keyVars, tVars, freeTVars);
 			fac.addExistsAtom(m1.getId(), tRelName, tVars);
 		}
 	}
@@ -930,7 +936,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		for (int i = 0; i < N; i++) {
 			int srcOffset = 0, keyPos = 0;
 			for (int j = 0; j < F; j++, srcOffset++) {
-				int tAttr = K + (i * N) + j;
+				int tAttr = K + (i * F) + j;
 				
 				// skip keys in the source
 				if (keyPos < K && srcOffset == keyAttrPos[i][keyPos]) {

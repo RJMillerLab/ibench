@@ -19,6 +19,7 @@ import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
 
@@ -121,11 +122,21 @@ public class TestCreationReusingSchemas {
 	private void testSingleBasicScenarios (ScenarioName n) throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 2); // 2 so we can reuse
+		// reuse source
+		setReuse(100,0,conf);
+		b.runConfig(conf);
+		testLoad(n, false, false);
+		// reuse target
+		setReuse(0,100,conf);
 		b.runConfig(conf);
 		testLoad(n, false, false);
 		conf.setScenarioRepetitions(n, 0);
 	}
 
+	private void setReuse(int src, int target, Configuration conf) {
+		conf.setParam(ParameterName.ReuseSourcePerc, src);
+		conf.setParam(ParameterName.ReuseTargetPerc, target);
+	}
 	
 	
 	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
