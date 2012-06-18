@@ -26,6 +26,8 @@ import vtools.dataModel.values.IntegerValue;
 
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
+	private static final int MAX_NUM_TRIES = 10;
+	
 	private int randomElements;
 	private int randomFragments;
 
@@ -136,6 +138,20 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         }
     }
 
+    @Override
+    protected void chooseSourceRels() {
+    	RelationType r;
+    	boolean ok = false;
+    	int tries = 0;
+    	
+    	while(!ok && tries < MAX_NUM_TRIES) {
+    		r = getRandomRel(true, 2);
+//    		if (r.isSetPrimaryKey())
+    			
+    	}
+    	
+    }
+    
 
 	@Override
 	protected void genSourceRels() {	
