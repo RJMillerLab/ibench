@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
@@ -23,6 +24,7 @@ import vtools.dataModel.expression.ForeignKey;
 import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -31,18 +33,14 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
-public class MergingScenarioGenerator extends AbstractScenarioGenerator
-{
-
-    private static int _currAttributeIndex = 0; // this determines the letter used for the attribute in the mapping
-
+public class MergingScenarioGenerator extends AbstractScenarioGenerator {
+	
+	public static final int MAX_NUM_TRIES = 10;
+	
 	private int numOfTables;
 	private int numOfJoinAttributes;
 	private JoinKind jk;
 	private int[] numOfAttributes;
-
-//	private int factor;
-
 	private String[] joinAttrs;
     
     public MergingScenarioGenerator()
@@ -70,7 +68,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
             int tmpInt = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
             // make sure that we have enough attribute for the join + at least on free one
-            tmpInt = (tmpInt < getNumJoinAttrs(k)) ? getNumJoinAttrs(k) + 1 : tmpInt; 
+            tmpInt = (tmpInt <= getNumJoinAttrs(k)) ? getNumJoinAttrs(k) + 1 : tmpInt; 
             numOfAttributes[k] = tmpInt;
         }
     }
@@ -289,8 +287,36 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
         generatedQuery.setSelect(gselect);
         return elTrg;
     }
+    
+    /**
+     * Find source rels that have enough attributes and either have no key or
+     * have a key on the last numOfJoinAttributes attrs (except for the first
+     * one in a STAR join)
+     */
+    @Override
+	protected void chooseSourceRels() {
+		if (jk == JoinKind.STAR)
+			chooseStarSourceRels();
+		else if (jk == JoinKind.CHAIN)
+			chooseChainSourceRels();
+		
+	}
 
-    // The way the algorithm works is by generating the following situation
+    /**
+     * 
+     */
+    private void chooseChainSourceRels() {
+		//TODO
+	}
+
+    /**
+     * 
+     */
+	private void chooseStarSourceRels() {
+		//TODO
+	}
+
+	// The way the algorithm works is by generating the following situation
     // where the left column describes the case of a star join
     // and the right one the case of a chain join.
     // 
@@ -454,10 +480,68 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
 		return joinAttrs[j] + "comp" + i +  "_joinattr_" + j;
 	}
 	
+	/**
+	 * Find a table that has at least numOfTables * (numOfJoinAttributes + 1)
+	 * attributes and either no key or the key is on the last 
+	 * numOfJoin Attributes * (numOfTables - 1) attributes.  
+	 * @throws Exception 
+	 */
 	@Override
-	protected void genTargetRels() {
+	protected void chooseTargetRels() throws Exception { //TODO more flexible to adapt numOfJoinAttributes
+		RelationType r = null;
+		int tries = 0;
+		int minAttrs = numOfTables * (numOfJoinAttributes + 1);
+		int numTJoinAttrs = getTargetNumJoinAttrs();
+		boolean ok = false;
+		int numNormalAttr = 0;
+		int[] joinAttPos = null;
+		
+		while(tries < MAX_NUM_TRIES && !ok) {
+			r = getRandomRel(false, minAttrs);
+			
+			if (r == null)
+				break;
+			
+			numNormalAttr = r.sizeOfAttrArray() - numTJoinAttrs;
+			joinAttPos = CollectionUtils.createSequence(numNormalAttr, 
+					numTJoinAttrs);
+			
+			if (r.isSetPrimaryKey()) {
+				int[] pkPos = model.getPKPos(r.getName(), false);
+				
+				// PK has to be on the numTJoinAttrs last attributes
+				if (pkPos.length ==  numTJoinAttrs 
+						&& Arrays.equals(pkPos, joinAttPos))
+					ok = true;
+			}
+			else
+				ok = true;
+		}
+		
+		// didn't find suiting rel? Create it
+		if (!ok)
+			genTargetRels();
+		// add keys and distribute the normal attributes of rel
+		else {
+			m.addTargetRel(r);
+			
+			if (!r.isSetPrimaryKey())
+				fac.addPrimaryKey(r.getName(), joinAttPos, false);
+			
+			// adapt number of attribute per source rel
+			int numPerSrcRel = numNormalAttr / numOfTables;
+			for(int i = 0; i < numOfTables; i++)
+				numOfAttributes[i] = numPerSrcRel; 
+			numOfAttributes[numOfTables - 1] = numNormalAttr % numOfTables;
+		}
+	}
+	
+	@Override
+	protected void genTargetRels() throws Exception {
 		String targetName = randomRelName(0);
 		List<String> attrs = new ArrayList<String> ();
+		int numNormalAttrs;
+		int numJoinAttrs;
 		
 		// first copy normal attributes
 		for(int i = 0; i < numOfTables; i++) {
@@ -465,6 +549,8 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
 			for(int j = 0; j < numAtt; j++)
 				attrs.add(m.getAttrId(i, j, true));
 		}
+		
+		numNormalAttrs = attrs.size();
 		
 		// then copy join attributes
 		if (jk == JoinKind.STAR) {
@@ -482,7 +568,19 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
 			}
 		}
 		
-		fac.addRelation(getRelHook(0), targetName, attrs.toArray(new String[] {}), false);
+		numJoinAttrs = attrs.size() - numNormalAttrs;
+		
+		fac.addRelation(getRelHook(0), targetName, 
+				attrs.toArray(new String[] {}), false);
+		
+		// add PK on join attributes
+		fac.addPrimaryKey(targetName, CollectionUtils.
+				createSequence(numNormalAttrs, getTargetNumJoinAttrs()), 
+				false);
+	}
+	
+	protected int getTargetNumJoinAttrs () {
+		return numOfJoinAttributes * (numOfTables - 1);
 	}
 	
 	@Override
@@ -567,12 +665,15 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
+		Query q;
 		String creates = m.getRelName(0, false);
 		String mapping = m.getMapIds()[0];
 		
 		q = genQueries();
-		fac.addTransformation(q.toTrampStringOneMap(mapping), mapping, creates);
+		q.storeCode(q.toTrampStringOneMap(mapping));
+		q = addQueryOrUnion(creates, q);
+		
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 	}
 	
 	private SPJQuery genQueries() {
@@ -680,9 +781,6 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator
         query.setFrom(from);
         if(andCond.size() > 0)
         	query.setWhere(andCond);
-        SelectClauseList pselect = pquery.getSelect();
-        pselect.add(nameT, query);
-        pquery.setSelect(pselect);
         
         return query;
 	}

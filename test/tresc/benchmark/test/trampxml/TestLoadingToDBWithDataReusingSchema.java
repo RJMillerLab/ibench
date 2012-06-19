@@ -164,18 +164,6 @@ public class TestLoadingToDBWithDataReusingSchema {
 		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
 		dbCon.close();
 	}
-
-	@Test
-	public void testToxSizeProblem () throws Exception {
-		conf.setParam(ParameterName.NumOfSubElements, 127);
-		conf.setScenarioRepetitions(ScenarioName.COPY, 1);
-		b.runConfig(conf);
-		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-		log.info(doc.getScenario().toString());
-		Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-		dbCon.close();
-	}
 	
 	private void testSingleScenarioLoadToDBWithData(ScenarioName n)
 			throws Exception {
