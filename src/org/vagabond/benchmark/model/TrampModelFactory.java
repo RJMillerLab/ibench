@@ -9,7 +9,6 @@ import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.AttrRefType;
 import org.vagabond.xmlmodel.ConnectionInfoType;
 import org.vagabond.xmlmodel.CorrespondenceType;
-import org.vagabond.xmlmodel.CorrespondencesType;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MappingType;
@@ -22,15 +21,11 @@ import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
-import com.sun.tools.internal.ws.processor.model.Model;
-
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import smark.support.SMarkElement;
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.DBOption;
-import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import vtools.dataModel.expression.ForeignKey;
