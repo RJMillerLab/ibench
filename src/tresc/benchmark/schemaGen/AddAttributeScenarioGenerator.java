@@ -5,12 +5,11 @@ import java.util.Random;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
-import org.vagabond.xmlmodel.TransformationType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
@@ -24,7 +23,6 @@ import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
-import vtools.dataModel.expression.Key;
 import vtools.dataModel.types.Set;
 
 public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
@@ -32,9 +30,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	private static final int MAX_TRIES = 20;
 	
 	private int skolemCounter = 0;
-	private Boolean randomSkolem;
-	private Boolean useKey;
 	private int numOfSrcTblAttr;
+	private SkolemKind sk;
 
 	public AddAttributeScenarioGenerator() {
 		;
@@ -43,31 +40,6 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	public void init(Configuration configuration, MappingScenario scenario) {
 		super.init(configuration, scenario);
-		// the configuration file allows three values for skValue
-		// 0 - use all attributes in source for skolem generation
-		// 1 - use a random subset of attributes in the source
-		// 2 - generate a key for the source, and use only that for skolem
-		// generation
-		// if any other values are used in the configuration file, use case 0
-		// (use all attributes)
-		switch (typeOfSkolem) {
-		case 0:
-			randomSkolem = false;
-			useKey = false;
-			break;
-		case 1:
-			randomSkolem = true;
-			useKey = false;
-			break;
-		case 2:
-			randomSkolem = false;
-			useKey = true;
-			break;
-		default:
-			randomSkolem = false;
-			useKey = false;
-			break;
-		}
 	}
 
 	@Override
@@ -76,6 +48,10 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		numOfSrcTblAttr =
 				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
 						numOfElementsDeviation);
+		
+		sk = SkolemKind.values()[typeOfSkolem];
+		
+		System.out.println("sk: " + sk.ordinal());
 	}
 
 	/**
@@ -110,7 +86,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		String randomName = Modules.nameFactory.getARandomName();
 		String keyName = randomName + "_" + getStamp() + repetition + "KE0";
 
-		if (useKey) {
+		if (sk == SkolemKind.KEY) {
 			// create key for source table
 			Key srcKey = new Key();
 			srcKey.addLeftTerm(new Variable("X"), new Projection(Path.ROOT,
@@ -214,7 +190,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 			// if we are using a key in the original relation then we base the
 			// skolem on just that key
-			if (useKey) {
+			if (sk == SkolemKind.KEY) {
 				Projection att = new Projection(new Variable("X"), keyName);
 				f0.addArg(att);
 			}
@@ -223,7 +199,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 				// if configuration specifies that we need to randomly decide
 				// how many arguments the skolem will take, generate a random
 				// number
-				if (randomSkolem)
+				if (sk == SkolemKind.RANDOM)
 					numArgsForSkolem =
 							Utils.getRandomNumberAroundSomething(_generator,
 									numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
@@ -283,7 +259,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		RelationType cand = null;
 		int tries = 0;
 		int requiredNumAttrs = numNewAttr + 
-				((useKey) ? 1 : 0) + 1;
+				((sk == SkolemKind.KEY) ? 1 : 0) + 1;
 		int freeAttrs;
 		boolean ok = false;
 		String relName = null;
@@ -319,7 +295,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 					- numNewAttr;
 			
 			// add primary key if it does not have one already
-			if (useKey && !cand.isSetPrimaryKey())
+			if (sk == SkolemKind.KEY && !cand.isSetPrimaryKey())
 				fac.addPrimaryKey(relName, m.getAttrId(0, 0, false), false);
 		}
 	}
@@ -333,14 +309,14 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0, i);
 
-			if (useKey && i == 0)
+			if (sk == SkolemKind.KEY && i == 0)
 				attrName = keyName;
 			attrs[i] = attrName;
 		}
 
 		fac.addRelation(getRelHook(0), srcName, attrs, true);
 
-		if (useKey)
+		if (sk == SkolemKind.KEY)
 			fac.addPrimaryKey(srcName, new String[] { keyName }, true);
 	}
 
@@ -359,7 +335,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
 
-		if (useKey)
+		if (sk == SkolemKind.KEY)
 			fac.addPrimaryKey(trgName, new String[] { srcAttrs[0] }, false);
 	}
 
@@ -396,13 +372,13 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 		// if we are using a key in the original relation then we base the
 		// skolem on just that key
-		if (useKey)
+		if (sk == SkolemKind.KEY)
 			for (int i = 0; i < numNewAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, 1));
 		else {
 			// if configuration specifies that we need to randomly decide how
 			// many arguments the skolem will take, generate a random number
-			if (randomSkolem)
+			if (sk == SkolemKind.RANDOM)
 				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator,
 								numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
 

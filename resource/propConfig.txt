@@ -8,7 +8,7 @@ InstancePathPrefix=out
 Scenarios.COPY = 0 
 Scenarios.VALUEGEN = 0 
 Scenarios.HORIZPARTITION = 0 
-Scenarios.SURROGATEKEY = 30 
+Scenarios.SURROGATEKEY = 0 
 Scenarios.MERGING = 0 
 Scenarios.VALUEMANAGEMENT = 0 
 Scenarios.FUSION = 0 
@@ -19,10 +19,10 @@ Scenarios.VERTPARTITION = 0
 Scenarios.GLAV = 0 
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
+Scenarios.VERTPARTITIONISA = 1
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 2 
+ConfigOptions.NumOfSubElements = 5 
 ConfigOptions.NestingDepth = 0 
 ConfigOptions.JoinSize = 2 
 ConfigOptions.JoinKind = 1 
@@ -30,7 +30,7 @@ ConfigOptions.NumOfJoinAttributes = 1
 ConfigOptions.NumOfParamsInFunctions = 2 
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumofAttributestoDelete = 1
-ConfigOptions.SkolemKind = 1
+ConfigOptions.SkolemKind = 2
 
 # Derivations for each of the parameters
 ConfigOptionsDerivation.NumOfSubElements = 0 
@@ -49,7 +49,7 @@ RepElementCount = 5
 MaxStringLength = 5
 MaxNumValue = 1000
 DataGenerator = TrampCSV
-MappingLanguage = FOtgds
+MappingLanguage = SOtgds
 
 # Optional overwriting file names
 # FileNames.SourceSchema = 

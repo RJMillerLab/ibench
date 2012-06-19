@@ -1,17 +1,15 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.Random;
-
+import org.vagabond.xmlmodel.MappingType;
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -21,13 +19,26 @@ import vtools.dataModel.types.Set;
 
 public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 {
-
+	private int numOfSrcTblAttr;
+	
     public DeleteAttributeScenarioGenerator()
     {
         ;
     }
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+	@Override
+	protected void initPartialMapping() {
+		super.initPartialMapping();
+		numOfSrcTblAttr =
+				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+						numOfElementsDeviation);
+		
+		// to prevent out of bounds errors, check if we are going to be trying to delete more attributes than we have available
+		// if that's the case, delete only one attribute
+		numDelAttr = (numDelAttr < numOfSrcTblAttr) ? numDelAttr : (numOfSrcTblAttr-1);
+	}
+	
+   /* public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
     	init(configuration, scenario);
         SPJQuery pquery = scenario.getTransformation();
@@ -48,7 +59,7 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
             
             createSubElements(source, target, numOfSrcTblAttr, numDelAttr, i, pquery);
         }
-    }
+    }*/
 
     /**
      * This is the main function. It generates a table in the source, a number
@@ -118,44 +129,76 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
         pquery.setSelect(pselect);
     }
 
-    @Override
-    protected void chooseSourceRels() {
-    	
-    }
-    
-    @Override
-    protected void chooseTargetRels () {
-    	
-    }
-
 	@Override
 	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+		String srcName = randomRelName(0);
+		String[] attrs = new String[numOfSrcTblAttr];
+
+		// generate all the source attributes
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
+			String attrName = randomAttrName(0, i);
+			attrs[i] = attrName;
+		}
 		
+		fac.addRelation(getRelHook(0), srcName, attrs, true);
 	}
 
 	@Override
 	protected void genTargetRels() {
-		// TODO Auto-generated method stub
-		
+		String trgName = randomRelName(0);
+		String[] attrs = new String[numOfSrcTblAttr-numDelAttr];
+		String[] srcAttrs = m.getAttrIds(0, true);
+
+		// copy all the source attributes except the last few (to account for the ones we want to delete)
+		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr-numDelAttr);
+
+		fac.addRelation(getRelHook(0), trgName, attrs, false);
 	}
 
 	@Override
 	protected void genCorrespondences() {
-		// TODO Auto-generated method stub
-		
+		for (int i = 0; i < numOfSrcTblAttr-numDelAttr; i++)
+			addCorr(0, i, 0, i);
 	}
 
 	@Override
 	protected void genMappings() throws Exception {
-		// TODO Auto-generated method stub
+		MappingType m1 = fac.addMapping(m.getCorrs());
 		
+		// source and target tables get fresh variables
+		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
+		fac.addExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr - numDelAttr));
 	}
 
 	@Override
 	protected void genTransformations() throws Exception {
-		// TODO Auto-generated method stub
+		String creates = m.getRelName(0, false);
+		Query q;
 		
+		q = genQueries();
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+	}
+	
+	private Query genQueries() throws Exception {
+		String sourceRelName = m.getRelName(0, true);
+		String[] tAttrs = m.getAttrIds(0, false);
+		
+		// create the query for the source table and add the from clause
+		SPJQuery q = new SPJQuery();
+		q.getFrom().add(new Variable("X"),
+				new Projection(Path.ROOT, sourceRelName));
+
+		SelectClauseList sel = q.getSelect();
+
+		// add entries to the select clause
+		for (String a: tAttrs) {
+			Projection att = new Projection(new Variable("X"), a);
+			sel.add(a, att);
+		}
+
+		return q;
 	}
 	
 	@Override

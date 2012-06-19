@@ -83,6 +83,12 @@ public class Constants
         CHAIN,
         VARIABLE;
     };
+    
+    public enum SkolemKind {
+        ALL,
+        RANDOM,
+        KEY;
+    };
 
     public enum ScenarioName {
         COPY,

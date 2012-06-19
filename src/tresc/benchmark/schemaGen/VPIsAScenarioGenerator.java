@@ -1,17 +1,16 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.Random;
+import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.ForeignKey;
-import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
@@ -25,16 +24,31 @@ import vtools.dataModel.types.Set;
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 {
-    private Random _generator;
-
-    private final String _stamp = "VP";
+	private int numOfSrcTblAttr;
+	private int numOfTgtTables;
+	private int attsPerTargetRel;
+	private int attrRemainder;
 
     public VPIsAScenarioGenerator()
     {
         ;
     }
+    
+    protected void initPartialMapping() 
+    {
+    	super.initPartialMapping();
+    	
+        numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
+            numOfElementsDeviation);
 
-    public void generateScenario(MappingScenario scenario, Configuration configuration)
+        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+            numOfSetElementsDeviation);
+    	
+        attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+        attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
+    }
+
+    /*public void generateScenario(MappingScenario scenario, Configuration configuration)
     {
     	init(configuration, scenario);
        
@@ -61,7 +75,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             createSubElements(source, target, numOfSrcTblAttr, numOfTgtTables, jk, i, pquery);
         }
 
-    }
+    }*/
 
     /**
      * This is the main function. It generates a table in the source, a number
@@ -75,7 +89,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             
         // First create the source table
         String sourceRelName = Modules.nameFactory.getARandomName();
-        String coding = _stamp + repetition;
+        String coding = getStamp() + repetition;
         sourceRelName = sourceRelName + "_" + coding;
         SMarkElement srcRel = new SMarkElement(sourceRelName, new Set(), null, 0, 0);
         srcRel.setHook(new String(coding));
@@ -87,7 +101,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         for (int i = 0; i < numOfSrcTblAttr; i++)
         {
             String namePrefix = Modules.nameFactory.getARandomName();
-            coding = _stamp + repetition + "A" + i;
+            coding = getStamp() + repetition + "A" + i;
             String srcAttName = namePrefix + "_" + coding;
             SMarkElement el = new SMarkElement(srcAttName, Atomic.STRING, null, 0, 0);
             el.setHook(new String(coding));
@@ -102,9 +116,9 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         
         // create the actual key and add it to the source schema
         String randomName = Modules.nameFactory.getARandomName();
-        String keyName = randomName + "_" + _stamp + repetition + "KE0";
+        String keyName = randomName + "_" + getStamp() + repetition + "KE0";
         SMarkElement es = new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
-        es.setHook(new String(_stamp + repetition + "KE0"));
+        es.setHook(new String(getStamp() + repetition + "KE0"));
         srcRel.addSubElement(es);
         // add the key attribute to the source key
         srcKey.addKeyAttr(new Projection(new Variable("X"),keyName));
@@ -123,7 +137,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             queries[i] = q;
 
             String targetRelNamePrefix = Modules.nameFactory.getARandomName();
-            coding = _stamp + repetition + "TT" + i;
+            coding = getStamp() + repetition + "TT" + i;
             String targetRelName = targetRelNamePrefix + "_" + coding;
             SMarkElement tgtRel = new SMarkElement(targetRelName, new Set(), null, 0, 0);
             tgtRel.setHook(new String(coding));
@@ -177,7 +191,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         // now we generate the join attributes in the target tables
         if (jk == JoinKind.STAR)
         {
-            /*coding = _stamp + repetition + "JoinAtt";
+            /*coding = getStamp() + repetition + "JoinAtt";
             String joinAttName = Modules.nameFactory.getARandomName() + "_" + coding;
             String joinAttNameRef = joinAttName + "Ref";
 
@@ -203,7 +217,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             
             // add the key to the target schema
             SMarkElement et = new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
-            et.setHook(new String(_stamp + repetition + "KE0"));
+            et.setHook(new String(getStamp() + repetition + "KE0"));
             target.getSubElement(0).addSubElement(et);
             // add the key attribute to the target key
             tgtKey.addKeyAttr(new Projection(new Variable("Y"),keyName));
@@ -263,30 +277,176 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 
 
 	@Override
-	protected void genSourceRels() {
-		// TODO Auto-generated method stub
+	protected void genSourceRels() throws Exception 
+	{
+		String sourceRelName = randomRelName(0);
+		String[] attNames = new String[numOfSrcTblAttr];
+		String hook = getRelHook(0);
 		
+		String keyName = randomAttrName(0, 0) + "KE0";
+		
+		for (int i = 0; i < numOfSrcTblAttr; i++)
+		{
+			String attrName = randomAttrName(0, i);
+
+			if (i == numOfSrcTblAttr-1)
+				attrName = keyName;
+			
+			attNames[i] = attrName;
+		}
+		
+		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		m.addSourceRel(sRel);
+		
+		fac.addPrimaryKey(sourceRelName, new String[] { keyName }, true);
 	}
 
 	@Override
-	protected void genTargetRels() {
-		// TODO Auto-generated method stub
-		
+	protected void genTargetRels() throws Exception 
+	{
+		String[] attrs;
+		String[] srcAttrs = m.getAttrIds(0, true);
+        
+        String keyAttName = srcAttrs[srcAttrs.length-1] + "JoinAttr";
+        String keyAttNameRef = keyAttName + "Ref";
+
+        for (int i = 0; i < numOfTgtTables; i++)
+        {
+        	// offset determines which source attributes go to which table (so there is no overlap)
+        	int offset = i * attsPerTargetRel;
+        	
+        	String trgName = randomRelName(i);
+        	String hook = getRelHook(i);
+        	
+        	int attrNum = (i < numOfTgtTables - 1) ? (attsPerTargetRel + 1) : (attsPerTargetRel + attrRemainder);
+        	attrs = new String[attrNum];
+        	
+        	// create normal attributes for table (copy from source)
+            for (int j = 0; j < attrNum-1; j++)
+            	attrs[j] = srcAttrs[offset + j];
+            
+            if (i == 0)
+            	attrs[attrs.length - 1] = keyAttName;
+            else 
+            	attrs[attrs.length - 1] = keyAttNameRef;
+            
+            for (int k = 0; k < attrs.length; k++)
+            	System.out.println(attrs[k]);
+            
+            fac.addRelation(hook, trgName, attrs, false);
+            
+            if (i==0)
+            	fac.addPrimaryKey(trgName, new String[] { keyAttName }, false);
+        }
+        
+        addFKs();
+	}
+	
+	private void addFKs() 
+	{
+		for(int i = 1; i < numOfTgtTables; i++) 
+		{
+			int toA = m.getNumRelAttr(0, false) - 1;
+			int fromA = m.getNumRelAttr(i, false) - 1;
+			addFK(i, fromA, 0, toA, false);
+		}
 	}
 	
 	@Override
-	protected void genMappings() {
+	protected void genMappings() throws Exception 
+	{
+		MappingType m1 = fac.addMapping(m.getCorrs());
+		String[] srcVars = fac.getFreshVars(0, numOfSrcTblAttr);
 		
+		String tgtKey = srcVars[srcVars.length-1];
+		
+		fac.addForeachAtom(m1, 0, srcVars);
+		
+		for(int i = 0; i < numOfTgtTables; i++) {
+			int offset = i * attsPerTargetRel;
+        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel+1 :
+    				attsPerTargetRel + attrRemainder;
+        	
+        	String[] tgtVars = new String[numAtts];
+        	
+        	for (int k = 0; k < numAtts-1; k++)
+        		tgtVars[k] = srcVars[k+offset];
+        		
+        	tgtVars[numAtts-1] = tgtKey;
+
+        	fac.addExistsAtom(m1, i, tgtVars);
+		}
 	}
 	
 	@Override
-	protected void genTransformations() {
+	protected void genTransformations() throws Exception 
+	{
+		SPJQuery q;
+		SPJQuery genQuery = genQuery(new SPJQuery());
 		
+		for(int i = 0; i < numOfTgtTables; i++) {
+			String creates = m.getTargetRels().get(i).getName();
+			q = (SPJQuery) genQuery.getSelect().getTerm(i);
+			
+			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+		}
+	}
+	
+	private SPJQuery genQuery(SPJQuery generatedQuery) {
+		String sourceRelName = m.getSourceRels().get(0).getName();
+		SPJQuery[] queries = new SPJQuery[numOfTgtTables];
+		String[] srcAttrs = m.getAttrIds(0, true);
+
+		String keyAttName = m.getAttrId(0, 0, false);
+        String keyAttNameRef = m.getAttrId(1, 0, false);
+		
+		// gen query
+		for(int i = 0; i < numOfTgtTables; i++) {
+			String targetRelName = m.getTargetRels().get(i).getName();
+			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
+			int offset = i * attsPerTargetRel;
+			
+			// gen query for the target table
+			SPJQuery q = new SPJQuery();
+			queries[i] = q;
+	        q.getFrom().add(new Variable("X"), new Projection(Path.ROOT, sourceRelName));
+	        generatedQuery.addTarget(targetRelName);
+	        SelectClauseList sel = q.getSelect();
+	        
+	        for (int j = 0; j < numAttr; j++) {
+	        	String trgAttrName = m.getAttrId(i, j, false);
+				Projection att = new Projection(new Variable("X"), trgAttrName);
+				sel.add(trgAttrName, att);
+	        }
+		}
+        
+        // add the partial queries to the parent query
+        // to form the whole transformation
+        SelectClauseList pselect = pquery.getSelect();
+        SelectClauseList gselect = generatedQuery.getSelect();
+        for (int i = 0; i < numOfTgtTables; i++)
+        {
+            String tblTrgName = m.getRelName(i, false);
+            pselect.add(tblTrgName, queries[i]);
+            gselect.add(tblTrgName, queries[i]);
+        }
+        pquery.setSelect(pselect);
+        generatedQuery.setSelect(gselect);
+		return generatedQuery;
 	}
 	
 	@Override
-	protected void genCorrespondences() {
-		
+	protected void genCorrespondences() 
+	{
+		for (int i = 0; i < numOfTgtTables; i++)
+        {
+        	int offset = i * attsPerTargetRel;
+        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+    				attsPerTargetRel + attrRemainder;
+        	
+            for (int j = 0; j < numAtts; j++)
+            	addCorr(0, offset + j, i, j);         
+        }
 	}
 
 	@Override
