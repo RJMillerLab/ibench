@@ -232,6 +232,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	protected RelationType getRandomRel (boolean source) {
 		int numRels = model.getNumRels(source);
+		if (numRels == 0)
+			return null;
 		int pos = _generator.nextInt(numRels);
 		RelationType rel = model.getRel(pos, source);
 		return rel;

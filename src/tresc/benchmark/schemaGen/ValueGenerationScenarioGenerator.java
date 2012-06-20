@@ -30,7 +30,6 @@ import vtools.dataModel.types.Set;
 import vtools.dataModel.values.StringValue;
 
 public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator {
-	private final String _stamp = "VG";
 
 	public ValueGenerationScenarioGenerator() {
 		;
@@ -53,9 +52,9 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 			int numOfElements, int numOfElementsDeviation, int repetition,
 			SPJQuery pquery, SPJQuery generatedQuery) {
 		String randomName = Modules.nameFactory.getARandomName();
-		String nameT = randomName + "_" + _stamp + "CE" + repetition;
+		String nameT = randomName + "_" + getStamp() + "CE" + repetition;
 		SMarkElement ce = new SMarkElement(nameT, new Set(), null, 0, 0);
-		ce.setHook(new String(_stamp + "CE" + repetition));
+		ce.setHook(new String(getStamp() + "CE" + repetition));
 		targetParent.addSubElement(ce);
 
 		// decide randomly how many elements to create
@@ -68,9 +67,9 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 						numOfElementsDeviation);
 		for (int i = 0, imax = ranNumOfEl; i < imax; i++) {
 			randomName = Modules.nameFactory.getARandomName();
-			name = randomName + "_" + _stamp + "CE" + repetition + "AE" + i;
+			name = randomName + "_" + getStamp() + "CE" + repetition + "AE" + i;
 			SMarkElement et = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-			et.setHook(new String(_stamp + "CE" + repetition + "AE" + i));
+			et.setHook(new String(getStamp() + "CE" + repetition + "AE" + i));
 			ce.addSubElement(et);
 
 			// add the constants value to the select clause
@@ -89,9 +88,22 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 	}
 
 	@Override
+	protected void chooseSourceRels() {
+		
+	}
+	
+	@Override
 	protected void genSourceRels() {
 	}
 
+	
+	
+	@Override
+	protected void chooseTargetRels() {
+		RelationType r = getRandomRel(false);
+		m.addTargetRel(r);
+	}
+	
 	@Override
 	protected void genTargetRels() {
 		String relName = randomRelName(0);
