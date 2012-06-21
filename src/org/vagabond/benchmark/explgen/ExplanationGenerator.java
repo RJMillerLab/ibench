@@ -10,7 +10,8 @@ import tresc.benchmark.Configuration;
 public interface ExplanationGenerator {
 
 	void generateExpl(MappingScenario scenario, Connection dbCon,
-			ExplanationAndErrorsDocument eDoc, Configuration conf);
+			ExplanationAndErrorsDocument eDoc, Configuration conf) 
+			throws Exception;
 
 //	public boolean requiredDBAccess ();
 //	public void generate(Configuration conf, MappingScenario map);

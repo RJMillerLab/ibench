@@ -27,6 +27,8 @@ public class Configuration {
 
 	private int[][] _configurations;
 	private boolean[] _outputOpts;
+	private int[] _groundTruthValues;
+	private int[] _groundTruthDev;
 	private boolean[] _trampXMLoutputOpts;
 	private String[] _dbOptions;
 	
@@ -124,7 +126,21 @@ public class Configuration {
 			_outputOpts[o.ordinal()] = b;
 		}
 		prop.resetPrefix();
-
+		
+		prop.setPrefix("GroundTruthValues");
+		for (DESErrorType v : Constants.DESErrorType.values()) {
+			int b = prop.getInt(v.toString(), _groundTruthValues[v.ordinal()]);
+			_groundTruthValues[v.ordinal()] = b;
+		}
+		prop.resetPrefix();
+		
+		prop.setPrefix("GroundTruthDev");
+		for (DESErrorType v : Constants.DESErrorType.values()) {
+			int b = prop.getInt(v.toString(), _groundTruthDev[v.ordinal()]);
+			_groundTruthDev[v.ordinal()] = b;
+		}
+		prop.resetPrefix();
+		
 		// read switches for omitting parts of the Tramp XML document
 		prop.setPrefix("TrampXMLOutput");
 		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values()) {
@@ -270,6 +286,8 @@ public class Configuration {
 		_repetitions = new int[Constants.ScenarioName.values().length];
 		_configurations = new int[Constants.ParameterName.values().length][2];
 		_outputOpts = new boolean[Constants.OutputOption.values().length];
+		_groundTruthValues = new int[Constants.DESErrorType.values().length];
+		_groundTruthDev = new int[Constants.DESErrorType.values().length];
 		_trampXMLoutputOpts =
 				new boolean[Constants.TrampXMLOutputSwitch.values().length];
 		_numExplsForType = new int[Constants.DESErrorType.values().length];
@@ -283,6 +301,14 @@ public class Configuration {
 		for (OutputOption o : Constants.OutputOption.values())
 			_outputOpts[o.ordinal()] =
 					Constants.defaultOutputOptionValues.get(o);
+		
+		for (DESErrorType v : Constants.DESErrorType.values())
+			_groundTruthValues[v.ordinal()] = 
+					Constants.defaultGroundTruthValues.get(v);
+		
+		for (DESErrorType v : Constants.DESErrorType.values())
+			_groundTruthDev[v.ordinal()] = 
+					Constants.defaultGroundTruthDeviation.get(v);
 		
 		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values())
 			_trampXMLoutputOpts[s.ordinal()] =
@@ -398,6 +424,14 @@ public class Configuration {
 	public boolean getOutputOption(OutputOption o) {
 		return _outputOpts[o.ordinal()];
 	}
+	
+	public int getGroundTruthValues(DESErrorType v) {
+		return _groundTruthValues[v.ordinal()];
+	}
+	
+	public int getGroundTruthDev(DESErrorType v) {
+		return _groundTruthDev[v.ordinal()];
+	}
 
 	public boolean getTrampXMLOutputOption (TrampXMLOutputSwitch s) {
 		return _trampXMLoutputOpts[s.ordinal()];
@@ -505,6 +539,12 @@ public class Configuration {
 		for (OutputOption p : Constants.OutputOption.values()) {
 			boolean val = _outputOpts[p.ordinal()];
 			result.append(p.toString() + ": <" + val + ">\n");
+		}
+		
+		result.append("\n\n---- GROUND TRUTH VALUES ----\n");
+		for (DESErrorType v : Constants.DESErrorType.values()) {
+			int val = _groundTruthValues[v.ordinal()];
+			result.append(v.toString() + ": <" + val + ">\n");
 		}
 		
 		result.append("\n\n---- TRAMP XML OUTPUT OPTIONS ----\n");

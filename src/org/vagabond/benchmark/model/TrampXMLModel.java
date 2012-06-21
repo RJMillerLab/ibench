@@ -2,6 +2,7 @@ package org.vagabond.benchmark.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.vagabond.mapping.model.MapScenarioHolder;
@@ -10,6 +11,7 @@ import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MappingScenarioDocument;
+import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SchemaType;
 
@@ -34,6 +36,14 @@ public class TrampXMLModel extends MapScenarioHolder {
 	@Override
 	public String toString() {
 		return doc.toString(); 
+	}
+	
+	public Vector<String> getMapIds () {
+		Vector<String> result = new Vector<String> ();
+		for(MappingType m: doc.getMappingScenario().getMappings().getMappingArray()) {
+			result.add(m.getId());
+		}
+		return result;
 	}
 	
 	public String getRelAttr (int rel, int attr, boolean source) {

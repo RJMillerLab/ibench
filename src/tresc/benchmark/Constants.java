@@ -150,6 +150,25 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
     }
     
+  
+    public static final Map<DESErrorType, Integer> defaultGroundTruthValues
+    		= new HashMap<DESErrorType, Integer> ();
+    		
+    static {
+    	defaultGroundTruthValues.put(DESErrorType.SuperfluousMapping, 1);
+    	//TODO add others
+    	
+    }
+    
+    public static final Map<DESErrorType, Integer> defaultGroundTruthDeviation
+	= new HashMap<DESErrorType, Integer> ();
+	
+	static {
+		defaultGroundTruthDeviation.put(DESErrorType.SuperfluousMapping, 0);
+	//TODO add others
+	
+	}
+    
     public enum DataGenType {
     	ToXGeneScriptOnly,
     	ToXGene,

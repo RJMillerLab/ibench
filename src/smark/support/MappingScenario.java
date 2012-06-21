@@ -62,10 +62,12 @@ public class MappingScenario
     // this is a set of strings that describe how the mapping will be done.
     private Vector<String> _spec;
     private TrampModelFactory docFac;
-
+    private ExplanationAndErrors _explsAndErrors;
+    
     public MappingScenario(Configuration conf)
     {
         _doc = new TrampXMLModel();
+        _explsAndErrors = new ExplanationAndErrors();
         init();
         setDocFac(new TrampModelFactory(this), conf);
     }
@@ -77,6 +79,16 @@ public class MappingScenario
     	setDocFac(new TrampModelFactory(this));
     }
 	
+	public ExplanationAndErrors getErr() {
+		return _explsAndErrors;
+	}
+
+
+	public void setErr(ExplanationAndErrors err) {
+		this._explsAndErrors = err;
+	}
+
+
 	private void init () {
         _source = new Schema("Source");
         _target = new Schema("Target");
