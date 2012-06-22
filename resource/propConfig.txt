@@ -15,11 +15,11 @@ Scenarios.FUSION = 0
 Scenarios.FLATTENING = 0 
 Scenarios.NESTING = 0 
 Scenarios.SELFJOINS = 0 
-Scenarios.VERTPARTITION = 0 
+Scenarios.VERTPARTITION = 1 
 Scenarios.GLAV = 0 
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 1
+Scenarios.VERTPARTITIONISA = 0
 
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 5 
@@ -31,17 +31,18 @@ ConfigOptions.NumOfParamsInFunctions = 2
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumofAttributestoDelete = 1
 ConfigOptions.SkolemKind = 2
+ConfigOptions.SourceFDPerc = 90
 
-# Derivations for each of the parameters
-ConfigOptionsDerivation.NumOfSubElements = 0 
-ConfigOptionsDerivation.NestingDepth = 0 
-ConfigOptionsDerivation.JoinSize = 0 
-ConfigOptionsDerivation.JoinKind = 0 
-ConfigOptionsDerivation.NumOfJoinAttributes = 0 
-ConfigOptionsDerivation.NumOfParamsInFunctions = 0 
-ConfigOptionsDerivation.NumOfNewAttributes = 0
-ConfigOptionsDerivation.NumofAttributestoDelete = 0
-ConfigOptionsDerivation.SkolemKind = 0
+# Deviations for each of the parameters
+ConfigOptionsDeviation.NumOfSubElements = 0 
+ConfigOptionsDeviation.NestingDepth = 0 
+ConfigOptionsDeviation.JoinSize = 0 
+ConfigOptionsDeviation.JoinKind = 0 
+ConfigOptionsDeviation.NumOfJoinAttributes = 0 
+ConfigOptionsDeviation.NumOfParamsInFunctions = 0 
+ConfigOptionsDeviation.NumOfNewAttributes = 0
+ConfigOptionsDeviation.NumofAttributestoDelete = 0
+ConfigOptionsDeviation.SkolemKind = 0
 
 # Random number generator and max values and DataGenerator
 RandomSeed = 0
@@ -62,7 +63,7 @@ MappingLanguage = SOtgds
 # OutputOption.HTMLSchemas = false
 OutputOption.Data = false
 # OutputOption.XMLSchemas = false
-# OutputOption.HTMLMapping = false
+OutputOption.HTMLMapping = true
 OutputOption.TrampXML = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
@@ -70,3 +71,4 @@ TrampXMLOutput.Correspondences = false
 TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true

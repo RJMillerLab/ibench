@@ -1,7 +1,5 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.Random;
-
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
@@ -58,7 +56,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	 * This is the main function. It generates a table in the source, a number
 	 * of tables in the target and a respective number of queries.
 	 */
-	private void createSubElements(Schema source, Schema target,
+	/*private void createSubElements(Schema source, Schema target,
 			int numOfSrcTblAttr, int numNewAttr, int typeOfSkolem,
 			int repetition, SPJQuery pquery) {
 
@@ -229,7 +227,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		pselect.add(tblTrgName, q);
 
 		pquery.setSelect(pselect);
-	}
+	}*/
 
 	// override to adapt the local fields
 	/**
@@ -403,31 +401,27 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		q = addQueryOrUnion(creates, q);
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 	}
-
+	
 	private Query genQueries() throws Exception {
 		String sourceRelName = m.getRelName(0, true);
 		String[] attNames = m.getAttrIds(0, true);
 		String[] tAttrs = m.getAttrIds(0, false);
 		MappingType m1 = m.getMaps().get(0);
 		
-		// create the query for the target table
+		// create the query for the source? table
 		SPJQuery q = new SPJQuery();
 		q.getFrom().add(new Variable("X"),
 				new Projection(Path.ROOT, sourceRelName));
 
-		// populate this table with the same element created above for the
-		// source
 		SelectClauseList sel = q.getSelect();
 
-		// go through all the attributes put in the source table and pop them
-		// into the target
+		// add all attribute names to the select clause
 		for (String a: attNames) {
-			// since we added an attr in the target, we add an entry in the
-			// respective select clause
 			Projection att = new Projection(new Variable("X"), a);
 			sel.add(a, att);
 		}
 		
+		// retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
 		for(int i = 0 ; i < numNewAttr; i++) {
 			int attPos = i + numOfSrcTblAttr;
 			String attName = tAttrs[attPos];
@@ -436,6 +430,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			vtools.dataModel.expression.SKFunction stSK = 
 					new vtools.dataModel.expression.SKFunction(sk.getSkname());
 			
+			// this works because the key is always the first attribute 
 			for(int j = 0; j < sk.getVarArray().length; j++) {			
 				String sAttName = m.getAttrId(0, j, true);
 				Projection att = new Projection(new Variable("X"), sAttName);

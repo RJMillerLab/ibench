@@ -49,7 +49,6 @@ public class STBenchmark {
 			throw e;
 		}
 	}
-	
 
 	public void parseConfigFile(String scenarioListFile) throws Exception {
 		if (!new File(scenarioListFile).exists())

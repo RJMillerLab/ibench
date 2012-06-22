@@ -1,40 +1,24 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.SKFunction;
 
-import smark.support.MappingScenario;
-import smark.support.SMarkElement;
-import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
+import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 
-import vtools.dataModel.expression.ConstantAtomicValue;
-import vtools.dataModel.expression.FromClauseList;
-import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
-import vtools.dataModel.expression.SKFunction;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Element;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
-import vtools.dataModel.values.StringValue;
 
 public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 {
 
 	private int params;
 	private int elements;
+	private SkolemKind sk = SkolemKind.ALL;
     
     public SurrogateKeysScenarioGenerator()
     {
@@ -60,7 +44,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
     // it generates a copy case in which there are 2 keys one that is
     // independent of attributes and one that depends on the
     // first two attributes.
-    private void createSubElements(Element sourceParent, Element targetParent, int numOfElements, 
+    /*private void createSubElements(Element sourceParent, Element targetParent, int numOfElements, 
     								int numOfParams, SPJQuery pquery, SPJQuery generatedQuery, MappingScenario scenario)
     {
         // create the intermediate query
@@ -135,7 +119,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
         SelectClauseList pselect = pquery.getSelect();
         pselect.add(targetParent.getLabel(), query);
         pquery.setSelect(pselect);
-    }
+    }*/
 
 
 	@Override
@@ -169,7 +153,42 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		MappingType m1 = fac.addMapping(m.getCorrs());
 		
 		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, elements));
-		fac.addExistsAtom(m1, 0, fac.getFreshVars(0, elements + 2));
+
+		switch (mapLang) 
+		{
+			case FOtgds:
+				fac.addExistsAtom(m1, 0, fac.getFreshVars(0, elements + 2));
+				break;
+				
+			case SOtgds:
+				fac.addEmptyExistsAtom(m1, 0);
+				fac.addVarsToExistsAtom(m1, 0, fac.getFreshVars(0, elements));
+				generateSKs(m1);
+				break;
+		}
+	}
+	
+	private void generateSKs(MappingType m1) {
+		int numArgsForSkolem = elements;
+
+		// if we are using a key in the original relation then we base the skolem on just that key
+		if (sk == SkolemKind.KEY)
+			for (int i = 0; i < numNewAttr; i++)
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, 1));
+		else {
+			// generate random number arguments for skolem function
+			if (sk == SkolemKind.RANDOM)
+				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, elements / 2, elements / 2);
+
+			// ensure that we are still within the bounds of the number of source attributes
+			numArgsForSkolem = (numArgsForSkolem > elements) ? elements : numArgsForSkolem;
+
+			// add all the source attributes as arguments for the IDIndep skolem
+			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
+			
+			// add only amount specified in config file for the IDOnFirst skolem
+			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfParams));
+		}
 	}
 	
 	@Override
@@ -181,10 +200,12 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), creates);
 	}
 	
-	private SPJQuery genQueries() {
+	private SPJQuery genQueries() throws Exception {
 		String sourceName = m.getRelName(0, true);
 		String targetName = m.getRelName(0, false);
 		String[] attrNames = m.getAttrIds(0, false);
+		
+		MappingType m1 = m.getMaps().get(0);
 		
 		// create the intermediate query
 		SPJQuery query = new SPJQuery();
@@ -194,8 +215,6 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 				new Projection(Path.ROOT, sourceName));
 
 		SelectClauseList select = query.getSelect();
-		String[] args = new String[numOfParams];
-		String[] keyArgs = new String[elements];
 		
 		for (int i = 0; i < elements; i++) {
 			// create the atomic element in the source and the target
@@ -205,21 +224,29 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			select.add(attrNames[i], att);
 		}
 
-		// create the surrogate key elements now. The first one is the one that
-		// accepts no arguments
 		// create the Function corresponding to the key
 		// and add it to the select clause of query
-		SKFunction f = new SKFunction(fac.getNextId("SK"));
-		for (int i = 0; i < elements; i++)
-			f.addArg(new Projection(new Variable("X"), attrNames[i]));
-		select.add(attrNames[elements], f);
+ 		SKFunction sk = m.getSkolemFromAtom(m1, false, 0, elements);
+ 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
+ 			
+ 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+ 			String sAttName = m.getAttrId(0, k, true);
+ 			Projection att = new Projection(new Variable("X"), sAttName);
+ 			stSK.addArg(att);
+ 		}
 
-		// create the Function corresponding to the key
-		// and add it to the select clause of query
-		f = new SKFunction(fac.getNextId("SK"));
-		for (int i = 0; i < numOfParams; i++)
-			f.addArg(new Projection(new Variable("X"), attrNames[i]));
-		select.add(attrNames[elements + 1], f);
+ 		// second skolem function
+ 		SKFunction sk2 = m.getSkolemFromAtom(m1, false, 0, elements + 1);
+ 		vtools.dataModel.expression.SKFunction stSK2 = new vtools.dataModel.expression.SKFunction(sk2.getSkname());
+ 			
+ 		for(int k = 0; k < sk2.getVarArray().length; k++) {			
+ 			String sAttName = m.getAttrId(0, k, true);
+ 			Projection att = new Projection(new Variable("X"), sAttName);
+ 			stSK2.addArg(att);
+ 		}
+ 		
+ 		select.add(attrNames[elements], stSK);
+ 		select.add(attrNames[elements + 1], stSK2);
 
 		// add the subquery to the final transformation query
 		query.setSelect(select);

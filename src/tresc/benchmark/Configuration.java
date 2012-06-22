@@ -111,7 +111,7 @@ public class Configuration {
 		prop.resetPrefix();
 
 		// read the standard derivations for the configuration parameters
-		prop.setPrefix("ConfigOptionsDerivation");
+		prop.setPrefix("ConfigOptionsDeviation");
 		for (ParameterName p : Constants.ParameterName.values()) {
 			int value = prop.getInt(p.toString(), 
 					Constants.defaultParameterDeviation.get(p));

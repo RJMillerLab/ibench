@@ -1,24 +1,19 @@
 package tresc.benchmark.schemaGen;
 
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelationType;
 
-import smark.support.SMarkElement;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
+import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.expression.ForeignKey;
-import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
-import vtools.dataModel.expression.SKFunction;
+import org.vagabond.xmlmodel.SKFunction;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
@@ -28,6 +23,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	private int numOfTgtTables;
 	private int attsPerTargetRel;
 	private int attrRemainder;
+	private SkolemKind sk = SkolemKind.ALL;
     
     public VerticalPartitionScenarioGenerator()
     {
@@ -65,7 +61,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
      * This is the main function. It generates a table in the source, a number
      * of tables in the target and a respective number of queries.
      */
-    private SMarkElement createSubElements(Schema source, Schema target, int numOfSrcTblAttr, int numOfTgtTables,
+    /*private SMarkElement createSubElements(Schema source, Schema target, int numOfSrcTblAttr, int numOfTgtTables,
             JoinKind jk, int repetition, SPJQuery pquery, SPJQuery generatedQuery)
     {
         // First create the source table
@@ -166,6 +162,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             SMarkElement joinAttElement = new SMarkElement(joinAttName, Atomic.STRING, null, 0, 0);
             joinAttElement.setHook(new String(coding));
             target.getSubElement(0).addSubElement(joinAttElement);
+            
             // add to the first partial query a skolem function to generate
             // the join attribute in the first target table
             SelectClauseList sel0 = queries[0].getSelect();
@@ -285,9 +282,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
         return srcRel;
-    }
-
-
+    }*/
 
 	@Override
 	protected void genSourceRels() {
@@ -376,16 +371,54 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	@Override
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
-		String[] vars = fac.getFreshVars(0, numOfSrcTblAttr);
 		
-		fac.addForeachAtom(m1, 0, vars);
-		
-		for(int i = 0; i < numOfTgtTables; i++) {
-			int offset = i * attsPerTargetRel;
-        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
-    				attsPerTargetRel + attrRemainder;
-        	
-        	fac.addExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
+		// source table gets fresh variables
+		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
+
+		switch (mapLang) 
+		{
+			case FOtgds:
+				for(int i = 0; i < numOfTgtTables; i++) {
+					int offset = i * attsPerTargetRel;
+		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+		    				attsPerTargetRel + attrRemainder;
+		        	
+		        	fac.addExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
+				}
+				break;
+				
+			case SOtgds:
+				for(int i = 0; i < numOfTgtTables; i++) {
+					int offset = i * attsPerTargetRel;
+		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+		    				attsPerTargetRel + attrRemainder;
+		        	
+		        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
+		        	fac.addEmptyExistsAtom(m1, i);
+		        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
+		        	generateSKs(m1,i);
+				}
+				break;
+		}
+	}
+	
+	private void generateSKs(MappingType m1, int rel) {
+		int numArgsForSkolem = numOfSrcTblAttr;
+
+		// if we are using a key in the original relation then we base the skolem on just that key
+		if (sk == SkolemKind.KEY)
+			for (int i = 0; i < numNewAttr; i++)
+				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, 1));
+		else {
+			// generate random number arguments for skolem function
+			if (sk == SkolemKind.RANDOM)
+				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+
+			// ensure that we are still within the bounds of the number of source attributes
+			numArgsForSkolem = (numArgsForSkolem > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
+
+			// add all the source attributes as arguments for the skolem function
+			fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem));
 		}
 	}
 	
@@ -402,13 +435,13 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		}
 	}
 	
-	private SPJQuery genQuery(SPJQuery generatedQuery) {
+	private SPJQuery genQuery(SPJQuery generatedQuery) throws Exception {
 		String sourceRelName = m.getSourceRels().get(0).getName();
 		SPJQuery[] queries = new SPJQuery[numOfTgtTables];
-		String[] srcAttrs = m.getAttrIds(0, true);
+		MappingType m1 = m.getMaps().get(0);
+		
 		String joinAttName;
 		String joinAttNameRef;
-		SKFunction skFunc;
 		
 		// join attrs different for star and chain join.
 		if (jk == JoinKind.STAR) {
@@ -422,21 +455,12 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			joinAttName = m.getAttrId(0, numAttr - 1, false);
             joinAttNameRef = m.getAttrId(0, numAttr - 2, false);
 		}
-		
-        skFunc = new SKFunction(fac.getNextId("SK"));
-        for (int i = 0; i < srcAttrs.length; i++)
-        {
-            Projection att = new Projection(new Variable("X"), srcAttrs[i]);
-            skFunc.addArg(att);
-        }
-		
-		
+
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String targetRelName = m.getTargetRels().get(i).getName();
 			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel :
 					attsPerTargetRel + attrRemainder;
-			int offset = i * attsPerTargetRel;
 			
 			// gen query for the target table
 			SPJQuery q = new SPJQuery();
@@ -451,30 +475,56 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				sel.add(trgAttrName, att);
 	        }
 		}
-
+		
 		// add skolem function for join
 		if (jk == JoinKind.STAR) {
-			SelectClauseList sel0 = queries[0].getSelect();
-			sel0.add(joinAttName, skFunc);
-			for(int i = 1; i < numOfTgtTables; i++) {
+
+			for(int i = 0; i < numOfTgtTables; i++) {
 				SelectClauseList seli = queries[i].getSelect();
-	            Function fi = (Function) skFunc.clone();
-	            seli.add(joinAttNameRef, fi);
+				
+				int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
+
+		 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+		 			
+		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
+		 			
+		 		// this works because the key is always the first attribute 
+		 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+		 			String sAttName = m.getAttrId(0, k, true);
+		 			Projection att = new Projection(new Variable("X"), sAttName);
+		 			stSK.addArg(att);
+		 		}
+				
+		 		if(i == 0)
+		 			seli.add(joinAttName, stSK);
+		 		
+	            seli.add(joinAttNameRef, stSK);
 			}
 		}
-
+		
         if (jk == JoinKind.CHAIN)
         {
             for (int i = 0; i < numOfTgtTables - 1; i++)
             {
-            	  SelectClauseList sel1 = queries[i].getSelect();
-                  Function f1 = (Function) skFunc.clone();
-                  sel1.add(joinAttName, f1);
-                  queries[i].setSelect(sel1);
-                  SelectClauseList sel2 = queries[i + 1].getSelect();
-                  Function f2 = (Function) skFunc.clone();
-                  sel2.add(joinAttNameRef, f2);
-                  queries[i + 1].setSelect(sel2);
+            	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
+
+		 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+		 			
+		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
+		 			
+		 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+		 			String sAttName = m.getAttrId(0, k, true);
+		 			Projection att = new Projection(new Variable("X"), sAttName);
+		 			stSK.addArg(att);
+		 		}
+            	
+            	SelectClauseList sel1 = queries[i].getSelect();
+                sel1.add(joinAttName, stSK);
+                queries[i].setSelect(sel1);
+                
+                SelectClauseList sel2 = queries[i + 1].getSelect();
+                sel2.add(joinAttNameRef, stSK);
+                queries[i + 1].setSelect(sel2);
             }
         }
         
@@ -491,7 +541,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
 		return generatedQuery;
-	}
+	} 
 
 	@Override
 	protected void genCorrespondences() {

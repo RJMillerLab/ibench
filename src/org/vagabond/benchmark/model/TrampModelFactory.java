@@ -21,6 +21,8 @@ import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
+import com.sun.media.sound.ModelAbstractChannelMixer;
+
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import smark.support.SMarkElement;
@@ -360,7 +362,9 @@ public class TrampModelFactory {
 	}
 
 	public RelAtomType addEmptyExistsAtom (MappingType m, int rel) {
-		return m.getExists().addNewAtom();
+		RelAtomType atom = m.getExists().addNewAtom();
+		atom.setTableref(p.getRelName(rel, false));
+		return atom;
 	}
 	
 	public void addVarsToExistsAtom (MappingType m, int atom, String[] vars) {

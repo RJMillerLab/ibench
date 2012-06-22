@@ -152,6 +152,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		int[] result;
 		
 		String[] attNames = r.getPrimaryKey().getAttrArray();
+		 
 		result = new int[attNames.length];
 		for(int i = 0; i < attNames.length; i++) {
 			String a = attNames[i];

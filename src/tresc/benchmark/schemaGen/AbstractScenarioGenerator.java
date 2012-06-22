@@ -69,6 +69,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected int numDelAttr;
 	protected int srcReusePerc;
 	protected int trgReusePerc;
+	protected int srcFDPerc;
 	protected MappingLanguageType mapLang;
 	protected int curRep;
 	protected boolean doSchemaElReuse = false;

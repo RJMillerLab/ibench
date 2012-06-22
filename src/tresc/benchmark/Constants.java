@@ -35,6 +35,7 @@ public class Constants
         ReuseTargetPerc,
         NoReuseScenPerc,	// percentage of basic scenarios where we do not do a reuse
         SourceSkolemPerc,	// associates skolems with source  
+        SourceFDPerc,	// associate FDs with source
         SourceSkolemNumAttr		// attributes and use them in mappings
     };
 
@@ -54,6 +55,7 @@ public class Constants
     	defaultParameterValues.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceSkolemPerc, 0);
+    	defaultParameterValues.put(ParameterName.SourceFDPerc, 40);
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
     }
@@ -74,6 +76,7 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterDeviation.put(ParameterName.ReuseTargetPerc, 0);
     	defaultParameterDeviation.put(ParameterName.SourceSkolemPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceFDPerc, 0);
     	defaultParameterDeviation.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
     }
