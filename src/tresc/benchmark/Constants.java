@@ -156,8 +156,11 @@ public class Constants
     		
     static {
     	defaultGroundTruthValues.put(DESErrorType.SuperfluousMapping, 1);
-    	//TODO add others
-    	
+    	defaultGroundTruthValues.put(DESErrorType.CorrespondenceError, 0);
+    	defaultGroundTruthValues.put(DESErrorType.SourceCopyError, 0);
+    	defaultGroundTruthValues.put(DESErrorType.SourceJoinValueError, 0);
+    	defaultGroundTruthValues.put(DESErrorType.SourceSkeletonError, 0);
+    	defaultGroundTruthValues.put(DESErrorType.TargetSkeletonError, 0);
     }
     
     public static final Map<DESErrorType, Integer> defaultGroundTruthDeviation
@@ -165,8 +168,11 @@ public class Constants
 	
 	static {
 		defaultGroundTruthDeviation.put(DESErrorType.SuperfluousMapping, 0);
-	//TODO add others
-	
+		defaultGroundTruthDeviation.put(DESErrorType.CorrespondenceError, 0);
+		defaultGroundTruthDeviation.put(DESErrorType.SourceCopyError, 0);
+		defaultGroundTruthDeviation.put(DESErrorType.SourceJoinValueError, 0);
+		defaultGroundTruthDeviation.put(DESErrorType.SourceSkeletonError, 0);
+		defaultGroundTruthDeviation.put(DESErrorType.TargetSkeletonError, 0);	
 	}
     
     public enum DataGenType {
