@@ -1,5 +1,6 @@
 package tresc.benchmark.schemaGen;
 
+import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
@@ -9,7 +10,6 @@ import tresc.benchmark.Constants;
 import java.util.Arrays;
 import java.util.Random;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.types.FD;
 
 public class SourceFDGenerator implements ScenarioGenerator 
 {	
@@ -48,8 +48,6 @@ public class SourceFDGenerator implements ScenarioGenerator
 				
 			// if there is a primary key then we must strip out the attributes associated with it, otherwise we just grab all the attributes
 			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(), attrPos, true);
-			
-			numFDs = numAtts;
 			
 			// randomly select attributes for each run of FD generation
 			for (int i = 0; i < numFDs; i++)
@@ -106,11 +104,11 @@ public class SourceFDGenerator implements ScenarioGenerator
 						RHSAtt = nonKeyAttrs[position];
 				} while (!done);
 				
-				// look through all of the existing FDs and check if we would be adding a duplicate 
-				FD[] funcDep = scenario.getDocFac().getFDs(r.getName());
+				// look through all of the existing FDs and check if we would be adding a duplicates
+				FDType[] functionalDep = scenario.getDocFac().getRelFDs(r.getName());
 				Boolean duplicate = false;
-				for (FD fd : funcDep)
-					if (fd.getTo()[0].equals(RHSAtt) && Arrays.equals(fd.getFrom(), LHSAtts))
+				for (FDType fd : functionalDep)
+					if (fd.getTo().getAttrArray(0).equals(RHSAtt) && Arrays.equals(fd.getFrom().getAttrArray(), LHSAtts))
 						duplicate = true;
 				
 				// if the FD was a duplicate then we must create a new FD in its place so decrement the counter, otherwise we add the FD to the relation
