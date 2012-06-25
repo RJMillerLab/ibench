@@ -21,8 +21,6 @@ import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
-import com.sun.media.sound.ModelAbstractChannelMixer;
-
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import smark.support.SMarkElement;
@@ -38,6 +36,7 @@ import vtools.dataModel.expression.Variable;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
+import vtools.dataModel.types.FD;
 
 /**
  * Convenience methods to create new Java model elements for an Tramp mapping
@@ -138,6 +137,28 @@ public class TrampModelFactory {
 			fd.getTo().addAttr(a);;
 		
 		return fd;
+	}
+
+	public FD[] getFDs (String rel) {
+		FDType[] functionalDep = doc.getScenario().getSchemas().getSourceSchema().getFDArray();
+		
+		FD[] ret = new FD[functionalDep.length];
+		
+		int i = 0;
+		for (FDType fd : functionalDep)
+		{
+			String[] from = fd.getFrom().getAttrArray();
+			String[] to = fd.getTo().getAttrArray();
+			
+			ret[i] = new FD();
+			
+			ret[i].setFrom(from);
+			ret[i].setTo(to);
+			
+			i++;
+		}
+		
+		return ret;
 	}
 
 	public RelationType addRelation(String hook, String name, String[] attrs,

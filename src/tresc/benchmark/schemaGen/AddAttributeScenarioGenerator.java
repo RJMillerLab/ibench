@@ -5,23 +5,16 @@ import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
 import smark.support.MappingScenario;
-import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.expression.Function;
-import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 
 public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
