@@ -59,12 +59,8 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
             
             createSubElements(source, target, numOfSrcTblAttr, numDelAttr, i, pquery);
         }
-    }*/
+    }
 
-    /**
-     * This is the main function. It generates a table in the source, a number
-     * of tables in the target and a respective number of queries.
-     */
     private void createSubElements(Schema source, Schema target, int numOfSrcTblAttr,
             int numDelAttr, int repetition, SPJQuery pquery)
     {
@@ -127,7 +123,7 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
         pselect.add(tblTrgName, q);
             
         pquery.setSelect(pselect);
-    }
+    }*/
 
 	@Override
 	protected void genSourceRels() {

@@ -20,7 +20,6 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 	private static final int MAX_TRIES = 20;
 	
-	private int skolemCounter = 0;
 	private int numOfSrcTblAttr;
 	private SkolemKind sk;
 

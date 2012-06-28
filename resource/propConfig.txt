@@ -30,8 +30,9 @@ ConfigOptions.NumOfJoinAttributes = 1
 ConfigOptions.NumOfParamsInFunctions = 2 
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumofAttributestoDelete = 1
-ConfigOptions.SkolemKind = 2
-ConfigOptions.SourceFDPerc = 80
+ConfigOptions.SkolemKind = 0
+ConfigOptions.SourceFDPerc = 60
+ConfigOptions.SourceSkolemPerc = 20
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 0 
@@ -42,7 +43,7 @@ ConfigOptionsDeviation.NumOfJoinAttributes = 0
 ConfigOptionsDeviation.NumOfParamsInFunctions = 0 
 ConfigOptionsDeviation.NumOfNewAttributes = 0
 ConfigOptionsDeviation.NumofAttributestoDelete = 0
-ConfigOptionsDeviation.SkolemKind = 0
+ConfigOptionsDeviation.SkolemKind = 2
 
 # Random number generator and max values and DataGenerator
 RandomSeed = 0
@@ -68,7 +69,7 @@ OutputOption.TrampXML = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = false
-TrampXMLOutput.Transformations = true
+TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = true

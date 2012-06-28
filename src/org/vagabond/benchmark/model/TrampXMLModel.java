@@ -12,6 +12,7 @@ import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MappingScenarioDocument;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SchemaType;
 
@@ -44,6 +45,35 @@ public class TrampXMLModel extends MapScenarioHolder {
 			result.add(m.getId());
 		}
 		return result;
+	}
+	
+	/** 
+	 * Retrieves all the mappings associated with a specified relation
+	 * 
+	 * @author mdangelo
+	 * 
+	 * @param rel	The name of the relation
+	 * @return		An array of mappings
+	 */
+	public MappingType[] getMappings(String rel)
+	{
+		// use a vector for the convenience of not having to determine the size
+		Vector<MappingType> result = new Vector<MappingType> ();
+		
+		// loop through the mappings and check if any of the for each refer to the relation in question
+		// if they do, add them to our result
+		for(MappingType m: doc.getMappingScenario().getMappings().getMappingArray())
+			for (RelAtomType a: m.getForeach().getAtomArray())
+				if(a.getTableref().equals(rel))
+					result.add(m);
+		
+		// convert the vector into an array
+		MappingType[] ret = new MappingType[result.size()];
+		int i = 0;
+		for (MappingType m : result)
+			ret[i++] = m;
+			
+		return ret;
 	}
 	
 	public String getRelAttr (int rel, int attr, boolean source) {
