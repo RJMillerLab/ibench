@@ -44,7 +44,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		Random _generator = configuration.getRandomGenerator();
 		fac = scenario.getDocFac();
 		model = scenario.getDoc();
-		sk = SkolemKind.values()[configuration.getParam(Constants.ParameterName.SkolemKind)];
 				
 		for(RelationType r: scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
@@ -94,8 +93,13 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						rsk.setPosition(position);
 				rsk.setAttrVar(fac.getFreshVars(position, 1)[0]);
 				
-				// TODO remove the attrVar from the list of skolemVars
-				// TODO roll the dice to pick the skolem mode
+				// roll the dice to pick the skolem mode
+				int mode = position = Utils.getRandomNumberAroundSomething(_generator, 2, 2);
+				mode = (mode > 3) ? 3 : mode;
+				mode = (mode < 0) ? 0 : mode;
+				
+				sk = SkolemKind.values()[mode];
+				System.out.println("sk: " + sk.ordinal());
 
 				// if we are using a key in the original relation then we will base the skolem on only the primary key
 				if (sk == SkolemKind.KEY)
@@ -120,23 +124,64 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					else
 					{
 						System.out.println("No key, switching mode");
-						sk = SkolemKind.values()[Constants.SkolemKind.ALL.ordinal()];
+						sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
 					}
 				}
-				
-				if (sk != SkolemKind.KEY)
+				else if (sk == SkolemKind.EXCHANGED)
+				{					
+					System.out.println("Skolem depends on exchanged");
+					
+					// get the relation(s) for the target and store the vars used in them
+					MappingType[] maps = model.getMappings(r.getName());
+					Vector<String> tgtVars = new Vector<String> ();
+					
+					for (MappingType m : maps)
+						for (RelAtomType a : m.getExists().getAtomArray())
+							for (int i=0; i < a.getVarArray().length; i++)
+								tgtVars.add(a.getVarArray(i));
+					
+					// get the intersection of the set of vars used in the source and the set of vars used in the target
+					Vector<String> exchangedVars = new Vector<String> ();
+					String[] allVars = fac.getFreshVars(0, allAttrs.length);
+					
+					for (String v : tgtVars)
+						for (String av : allVars)
+							if (v.equals(av))
+								exchangedVars.add(v);
+					
+					rsk.setSkolemVars(convertVectorToString(exchangedVars));
+				}
+				else if (sk == SkolemKind.RANDOM)
 				{
-					System.out.println("Skolem not dependent on key");
+					System.out.println("Skolem random");
 					
-					int numArgsForSkolem = allAttrs.length;
+					int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, allAttrs.length/2, allAttrs.length/2);
+					// ensure that we are still within bounds
+					numArgsForSkolem = (numArgsForSkolem > allAttrs.length) ? allAttrs.length : numArgsForSkolem;
 					
-					// pick random number of attributes 
-					if (sk == SkolemKind.RANDOM)
+					// generate the random vars to be arguments for the skolem
+					Vector<String> randomVars = new Vector<String> ();
+					for (int i=0; i < numArgsForSkolem; i++)
 					{
-						numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, allAttrs.length/2, allAttrs.length/2);
-						// ensure that we are still within bounds
-						numArgsForSkolem = (numArgsForSkolem > allAttrs.length) ? allAttrs.length : numArgsForSkolem;
+						int pos = Utils.getRandomNumberAroundSomething(_generator, allAttrs.length/2, allAttrs.length/2);
+						pos = (pos > allAttrs.length) ? allAttrs.length : pos;
+						
+						// initially check that we are not trying to add a var as an argument to its own skolem function
+						// then make sure we're not adding duplicate vars
+						if (allAttrs[pos].equals(rsk.getAttr()))
+							i--;
+						else
+							if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+								randomVars.add(fac.getFreshVars(pos, 1)[0]);
+							else
+								i--;
 					}
+					
+					rsk.setSkolemVars(convertVectorToString(randomVars));
+				}
+				else if (sk == SkolemKind.ALL)
+				{
+					System.out.println("Skolem depends on all");
 
 					// ensure that we are not adding the attribute itself as an argument to the skolem
 					Vector<String> skAtts = new Vector<String>();
@@ -152,20 +197,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						}
 					}
 					
-					// convert the vectors to strings
-					String[] skAttrs = new String[skAtts.size()];
-					int j = 0;
-					for (String str: skAtts)
-						skAttrs[j++] = str;
-					
-					j = 0;
-					String[] skVars = new String[vars.size()];
-					for (String var: vars)
-						skVars[j++] = var;
-					
-					// add them to the RandSrcSkolem
-					rsk.setSkolemArgs(skAttrs);
-					rsk.setSkolemVars(skVars);
+					rsk.setSkolemArgs(convertVectorToString(skAtts));
+					rsk.setSkolemVars(convertVectorToString(vars));
 				}
 				
 				MappingType[] mappings = model.getMappings(r.getName());
@@ -283,5 +316,24 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		}
 		
 		return nonKeyPos;
+	}
+	
+	/**
+	 * Converts a string vector to an array of strings
+	 * 
+	 * @param	vStr		A string vector
+	 * @return				An array of strings
+	 * 
+	 * @author mdangelo
+	 */
+	static String[] convertVectorToString(Vector<String> vStr)
+	{
+		String[] ret = new String[vStr.size()];
+		
+		int j = 0;
+		for (String str: vStr)
+			ret[j++] = str;
+		
+		return ret;
 	}
 }

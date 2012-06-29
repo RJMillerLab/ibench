@@ -89,6 +89,7 @@ public class Constants
     
     public enum SkolemKind {
         ALL,
+        EXCHANGED,
         RANDOM,
         KEY;
     };
