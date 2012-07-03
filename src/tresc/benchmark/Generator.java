@@ -11,6 +11,7 @@ import tresc.benchmark.Constants.DESErrorType;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.schemaGen.AddAttributeScenarioGenerator;
+import tresc.benchmark.schemaGen.AddDeleteScenarioGenerator;
 import tresc.benchmark.schemaGen.CopyScenarioGenerator;
 import tresc.benchmark.schemaGen.DeleteAttributeScenarioGenerator;
 import tresc.benchmark.schemaGen.FlatteningScenarioGenerator;
@@ -78,7 +79,9 @@ public class Generator {
 				new DeleteAttributeScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISA.ordinal()] =
 				new VPIsAScenarioGenerator();
-
+		scenarioGenerators[Constants.ScenarioName.ADDDELATTRIBUTE.ordinal()] =
+				new AddDeleteScenarioGenerator();
+		
 		// create an FD generator
 		fdGen = new SourceFDGenerator();
 	

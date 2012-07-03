@@ -44,12 +44,14 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		Random _generator = configuration.getRandomGenerator();
 		fac = scenario.getDocFac();
 		model = scenario.getDoc();
+		
+		Vector<String> SKVars = new Vector<String> ();
 				
 		for(RelationType r: scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceSkolemPerc))/(double) 100;
 			int numAtts = r.getAttrArray().length;
-			int numSKs = (int) Math.floor(percentage * numAtts);
+			int numSKs = (int) Math.ceil((percentage/2) * numAtts);
 			
 			System.out.println("numSKs: " + numSKs);
 			String[] addedSKs = new String[numSKs];
@@ -80,6 +82,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					rsk = new RandSrcSkolem();
 					rsk.setAttr(nonKeyAttrs[position]);
 					
+					// TODO populate addedSKs?
 					for (String str : addedSKs)
 						if (rsk.getAttr().equals(str))
 							alreadyAdded = true;
@@ -99,7 +102,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				mode = (mode < 0) ? 0 : mode;
 				
 				sk = SkolemKind.values()[mode];
-				System.out.println("sk: " + sk.ordinal());
+				
+				SKVars.add(rsk.getAttrVar());
 
 				// if we are using a key in the original relation then we will base the skolem on only the primary key
 				if (sk == SkolemKind.KEY)
@@ -127,7 +131,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
 					}
 				}
-				else if (sk == SkolemKind.EXCHANGED)
+				if (sk == SkolemKind.EXCHANGED)
 				{					
 					System.out.println("Skolem depends on exchanged");
 					
@@ -149,9 +153,34 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 							if (v.equals(av))
 								exchangedVars.add(v);
 					
-					rsk.setSkolemVars(convertVectorToString(exchangedVars));
+					@SuppressWarnings("unchecked")
+					Vector<String> exchVars = (Vector<String>)exchangedVars.clone();
+					
+					// make sure that the vars we are adding as arguments to the new skolem are not skolems themselves
+					Boolean addVar = true;
+					for (String var : exchangedVars)
+					{
+						for (String skvar : SKVars)
+							if(var.equals(skvar))
+								addVar = false;
+						
+						if(!addVar)
+						{
+							System.out.println("removing var: " + var);
+							exchVars.remove(var);
+						}
+					}
+					
+					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
+					if(exchVars.size() == 0)
+					{
+						System.out.println("switching modes");
+						sk = SkolemKind.RANDOM;
+					}
+					
+					rsk.setSkolemVars(convertVectorToStringArray(exchVars));
 				}
-				else if (sk == SkolemKind.RANDOM)
+				if (sk == SkolemKind.RANDOM)
 				{
 					System.out.println("Skolem random");
 					
@@ -164,7 +193,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					for (int i=0; i < numArgsForSkolem; i++)
 					{
 						int pos = Utils.getRandomNumberAroundSomething(_generator, allAttrs.length/2, allAttrs.length/2);
-						pos = (pos > allAttrs.length) ? allAttrs.length : pos;
+						pos = (pos >= allAttrs.length) ? allAttrs.length-1 : pos;
 						
 						// initially check that we are not trying to add a var as an argument to its own skolem function
 						// then make sure we're not adding duplicate vars
@@ -172,14 +201,30 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 							i--;
 						else
 							if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
-								randomVars.add(fac.getFreshVars(pos, 1)[0]);
+							{
+								Boolean addVar = true;
+								
+								for (String skvar : SKVars)
+									if(fac.getFreshVars(pos, 1)[0].equals(skvar))
+										addVar = false;
+								
+								if(addVar)
+									randomVars.add(fac.getFreshVars(pos, 1)[0]);
+							}
 							else
 								i--;
 					}
 					
-					rsk.setSkolemVars(convertVectorToString(randomVars));
+					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
+					if(randomVars.size() == 0)
+					{
+						System.out.println("switching modes");
+						sk = SkolemKind.ALL;
+					}
+					
+					rsk.setSkolemVars(convertVectorToStringArray(randomVars));
 				}
-				else if (sk == SkolemKind.ALL)
+				if (sk == SkolemKind.ALL)
 				{
 					System.out.println("Skolem depends on all");
 
@@ -197,8 +242,23 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						}
 					}
 					
-					rsk.setSkolemArgs(convertVectorToString(skAtts));
-					rsk.setSkolemVars(convertVectorToString(vars));
+					Boolean addVar = true;
+					for (String var : vars)
+					{
+						for (String skvar : SKVars)
+							if(var.equals(skvar))
+								addVar = false;
+						
+						if(!addVar)
+							vars.remove(var);
+					}
+					
+					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
+					if(vars.size() == 0)
+						vars.add("*");
+					
+					rsk.setSkolemArgs(convertVectorToStringArray(skAtts));
+					rsk.setSkolemVars(convertVectorToStringArray(vars));
 				}
 				
 				MappingType[] mappings = model.getMappings(r.getName());
@@ -228,13 +288,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								sk.setSkname(fac.getNextId("SK"));
 								sk.setVarArray(rsk.getSkolemVars());
 								
-								System.out.println("skName: " + sk.getSkname());
-								
-								System.out.println("skAttVar: " + rsk.getAttrVar());
-								System.out.println("skArgVar: ");
-								for (String str : rsk.getSkolemVars())
-									System.out.println(str);
-								
 								// restore the deleted vars
 								for (int k=i; k < numVars; k++)
 								{
@@ -255,6 +308,38 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						}
 					}
 			}
+
+			MappingType[] mappings = model.getMappings(r.getName());
+			
+			// go through all the relations in all the mappings and check if any of the existing skolem functions contain
+			// any of the vars we made into skolem functions, if they do we remove those references 
+			for (MappingType m : mappings)
+				for (RelAtomType a : m.getExists().getAtomArray())
+				{
+					for (int i=0; i < a.sizeOfSKFunctionArray(); i++)
+					{
+						String[] vars = a.getSKFunctionArray(i).getVarArray();
+						Vector<String> varVector = new Vector<String> ();
+
+						Boolean addVar = true;
+						for (String var : vars)
+						{
+							for (String skvar : SKVars)
+								if(var.equals(skvar))
+									addVar = false;
+							
+							if(addVar)
+								varVector.add(var);
+						}
+						
+						if(varVector.size() == 0)
+							varVector.add("*");
+						
+						String[] varArray = convertVectorToStringArray(varVector);
+						
+						a.getSKFunctionArray(i).setVarArray(varArray);
+					}
+				}
 		}
 	}
 	
@@ -326,7 +411,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 * 
 	 * @author mdangelo
 	 */
-	static String[] convertVectorToString(Vector<String> vStr)
+	static String[] convertVectorToStringArray(Vector<String> vStr)
 	{
 		String[] ret = new String[vStr.size()];
 		

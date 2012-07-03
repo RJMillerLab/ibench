@@ -1,5 +1,7 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Vector;
+
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.SKFunction;
 
@@ -175,14 +177,28 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		if (sk == SkolemKind.KEY)
 			for (int i = 0; i < numNewAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, 1));
-		else {
-			// generate random number arguments for skolem function
-			if (sk == SkolemKind.RANDOM)
-				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, elements / 2, elements / 2);
-
-			// ensure that we are still within the bounds of the number of source attributes
-			numArgsForSkolem = (numArgsForSkolem > elements) ? elements : numArgsForSkolem;
-
+		else if (sk == SkolemKind.RANDOM)
+		{
+			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, elements/2, elements/2);
+			// ensure that we are still within bounds
+			numArgsForSkolem = (numArgsForSkolem >= elements) ? elements : numArgsForSkolem;
+			
+			// generate the random vars to be arguments for the skolem
+			Vector<String> randomVars = new Vector<String> ();
+			for (int i=0; i < numArgsForSkolem; i++)
+			{
+				int pos = Utils.getRandomNumberAroundSomething(_generator, elements/2, elements/2);
+				pos = (pos >= elements) ? elements-1 : pos;
+				
+				// if we haven't already added this variable as an argument, add it
+				if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+						randomVars.add(fac.getFreshVars(pos, 1)[0]);
+				else
+					i--;
+			}
+		}
+		else 
+		{
 			// add all the source attributes as arguments for the IDIndep skolem
 			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 			

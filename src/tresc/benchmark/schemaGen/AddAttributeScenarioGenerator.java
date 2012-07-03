@@ -16,6 +16,11 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+/**
+ * Copies the source relation and adds a new attribute (whose value is a skolem function with variable arguments) to the target relation.
+ * 
+ * @author mdangelo
+ */
 public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 	private static final int MAX_TRIES = 20;
@@ -379,7 +384,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 			// add all the source attributes as arguments for the skolem
 			// function
-			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
+			for (int i = 0; i < numNewAttr; i++)
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 		}
 	}
 

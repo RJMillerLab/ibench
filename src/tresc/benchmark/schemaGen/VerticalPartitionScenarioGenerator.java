@@ -396,30 +396,32 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
 		        	fac.addEmptyExistsAtom(m1, i);
 		        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
-		        	generateSKs(m1,i);
+		        	generateSKs(m1, i, offset, numAtts);
 				}
 				break;
 		}
 	}
 	
-	private void generateSKs(MappingType m1, int rel) {
+	private void generateSKs(MappingType m1, int rel, int offset, int numAtts) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
-		// if we are using a key in the original relation then we base the skolem on just that key
-		if (sk == SkolemKind.KEY)
-			for (int i = 0; i < numNewAttr; i++)
-				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, 1));
-		else {
-			// generate random number arguments for skolem function
-			if (sk == SkolemKind.RANDOM)
-				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+		// generate random number arguments for skolem function
+		if (sk == SkolemKind.RANDOM)
+			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
 
-			// ensure that we are still within the bounds of the number of source attributes
-			numArgsForSkolem = (numArgsForSkolem > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
+		// ensure that we are still within the bounds of the number of source attributes
+		numArgsForSkolem = (numArgsForSkolem > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 
-			// add all the source attributes as arguments for the skolem function
-			fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem));
+		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
+		int start = 0;
+		if(sk == SkolemKind.EXCHANGED)
+		{
+			start = offset;
+			numArgsForSkolem = numAtts;
 		}
+		
+		// add all the source attributes as arguments for the skolem function
+		fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem));
 	}
 	
 	@Override

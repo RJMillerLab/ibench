@@ -11,6 +11,11 @@ import java.util.Arrays;
 import java.util.Random;
 import tresc.benchmark.utils.Utils;
 
+/**
+ * Randomly generates functional dependencies after all scenarios have been generated.
+ * 
+ * @author mdangelo
+ */
 public class SourceFDGenerator implements ScenarioGenerator 
 {	
 	@Override

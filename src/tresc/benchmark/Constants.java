@@ -109,6 +109,7 @@ public class Constants
         GLAV,
         ADDATTRIBUTE,
         DELATTRIBUTE,
+        ADDDELATTRIBUTE,
         VERTPARTITIONISA
     };
     
@@ -131,6 +132,7 @@ public class Constants
     	nameForScenarios.put(ScenarioName.VERTPARTITIONISA, "_VI");
     	nameForScenarios.put(ScenarioName.ADDATTRIBUTE, "_AD");
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
+    	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
     }
     
     public enum OutputOption {

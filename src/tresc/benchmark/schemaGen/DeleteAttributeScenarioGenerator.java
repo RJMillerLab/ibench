@@ -17,6 +17,11 @@ import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 
+/**
+ * Copies the source relation and deletes an attribute from the target relation.
+ * 
+ * @author mdangelo
+ */
 public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 {
 	private int numOfSrcTblAttr;
