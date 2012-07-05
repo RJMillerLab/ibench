@@ -26,14 +26,35 @@ import vtools.dataModel.schema.Schema;
 import vtools.xml.XSDWriter;
 import vtools.xml.XMLWriter;
 
+// PRG ADD July 5, 2011
+// PRG ADD Instance Variable to hold the schema mapping currently being generated
+// PRG ADD STBenchmark's to-be generated schema mapping is called "Mapping Scenario"
+
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);
 
 	private Configuration _configuration;
+	// PRG ADD Instance Variable to hold the schema mapping currently being generated
+	private MappingScenario _scenario;
 
 	public STBenchmark() {
 		_configuration = new Configuration();
+		// PRG ADD Initialization of instance variable
+		_scenario = new MappingScenario();
+		
 	}
+	
+	// PRG ADD Instance Method	
+	public Configuration getConfiguration()
+	{ 
+		return _configuration;
+	}
+	
+	// PRG ADD Instance Method
+	public MappingScenario getMappingScenario()
+    {
+        return _scenario;
+    }
 	
 	public void parseArgs (String[] args) throws CmdLineException {
 		CmdLineParser parser;
@@ -209,6 +230,7 @@ public class STBenchmark {
 	}
 
 	public void run(String[] args) throws Exception {
+		
 		if (_configuration.configurationFile != null) {
 			parseConfigFile(_configuration.configurationFile);
 		}
@@ -231,21 +253,26 @@ public class STBenchmark {
 	}
 	
 	public void runConfig() throws Exception {
+		//PRG ADD Logging Statement 
+		log.info("\n*** IN RunConfig  ***\n");
 		Modules.scenarioGenerator = new Generator(_configuration);
-		MappingScenario scenario =
+		// PRG MODIFY next lines to use instance variable instead of local variable
+		// PRG REPLACED "scenario" with "_scenario" in runConfig() source code
+		// MappingScenario scenario =
+		_scenario = 
 				Modules.scenarioGenerator.generateScenario(_configuration);
 		// printResults(scenario, "S", "T", "M");
-		log.info("---- GENERATED SCENARIO -----\n\n\n" + scenario.toString());
+		log.info("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 
-		printResults(scenario, _configuration.getSourceSchemaFile(),
+		printResults(_scenario, _configuration.getSourceSchemaFile(),
 				_configuration.getTargetSchemaFile(),
 				_configuration.getMappingFileName(),
 				_configuration.getSchemaFile());
 
 		if (_configuration.getOutputOption(OutputOption.Data))
-			Modules.scenarioGenerator.generateSourceData(scenario);
+			Modules.scenarioGenerator.generateSourceData(_scenario);
 		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))
-			Modules.explGen.genearteExpls(scenario, _configuration);
+			Modules.explGen.genearteExpls(_scenario, _configuration);
 	}
 
 	public void run(String configLine) throws Exception {
@@ -254,4 +281,13 @@ public class STBenchmark {
 		runConfig();
 	}
 
+	// public MappingScenario generateSingleMappingScenario(String[] args) throws Exception {
+	
+	//	PropertyConfigurator.configure("resource/log4jproperties.txt");
+
+	//	STBenchmark benchmark = new STBenchmark();
+	//	benchmark.parseArgs(args);
+	//	benchmark.run(args);
+		
+	//}
 }

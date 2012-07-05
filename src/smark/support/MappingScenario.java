@@ -63,6 +63,15 @@ public class MappingScenario
     private Vector<String> _spec;
     private TrampModelFactory docFac;
     private ExplanationAndErrors _explsAndErrors;
+
+    // PRG ADD July 5, 2012
+    // PRG ADD MappingScenario Constructor without Arguments
+    public MappingScenario()
+    {
+        _doc = new TrampXMLModel();
+        _explsAndErrors = new ExplanationAndErrors();
+        init();
+    }
     
     public MappingScenario(Configuration conf)
     {
