@@ -16,8 +16,6 @@ import org.vagabond.util.PropertyWrapper;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
-import tresc.benchmark.dataGen.ToXDataGenerator;
-import tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper;
 import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.HTMLPresenter;
 import vtools.dataModel.expression.SPJQuery;

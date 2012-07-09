@@ -153,7 +153,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 							if (v.equals(av))
 								exchangedVars.add(v);
 					
-					@SuppressWarnings("unchecked")
+					/*@SuppressWarnings("unchecked")
 					Vector<String> exchVars = (Vector<String>)exchangedVars.clone();
 					
 					// make sure that the vars we are adding as arguments to the new skolem are not skolems themselves
@@ -176,9 +176,9 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					{
 						System.out.println("switching modes");
 						sk = SkolemKind.RANDOM;
-					}
+					}*/
 					
-					rsk.setSkolemVars(convertVectorToStringArray(exchVars));
+					rsk.setSkolemVars(convertVectorToStringArray(exchangedVars));
 				}
 				if (sk == SkolemKind.RANDOM)
 				{
@@ -202,13 +202,13 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						else
 							if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
 							{
-								Boolean addVar = true;
+								/*Boolean addVar = true;
 								
 								for (String skvar : SKVars)
 									if(fac.getFreshVars(pos, 1)[0].equals(skvar))
 										addVar = false;
 								
-								if(addVar)
+								if(addVar)*/
 									randomVars.add(fac.getFreshVars(pos, 1)[0]);
 							}
 							else
@@ -242,7 +242,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						}
 					}
 					
-					Boolean addVar = true;
+					/*Boolean addVar = true;
 					for (String var : vars)
 					{
 						for (String skvar : SKVars)
@@ -255,7 +255,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					
 					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
 					if(vars.size() == 0)
-						vars.add("*");
+						vars.add("*");*/
 					
 					rsk.setSkolemArgs(convertVectorToStringArray(skAtts));
 					rsk.setSkolemVars(convertVectorToStringArray(vars));
@@ -309,7 +309,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					}
 			}
 
-			MappingType[] mappings = model.getMappings(r.getName());
+			/*MappingType[] mappings = model.getMappings(r.getName());
 			
 			// go through all the relations in all the mappings and check if any of the existing skolem functions contain
 			// any of the vars we made into skolem functions, if they do we remove those references 
@@ -339,7 +339,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						
 						a.getSKFunctionArray(i).setVarArray(varArray);
 					}
-				}
+				}*/
 		}
 	}
 	

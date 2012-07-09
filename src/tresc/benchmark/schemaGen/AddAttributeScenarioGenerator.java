@@ -373,6 +373,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		else {
 			// if configuration specifies that we need to randomly decide how
 			// many arguments the skolem will take, generate a random number
+			// generates the same random skolemization for each new attribute that we've added
+			// if we want to force different skolemizations then move the random number generation into the loop
 			if (sk == SkolemKind.RANDOM)
 				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator,
 								numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
