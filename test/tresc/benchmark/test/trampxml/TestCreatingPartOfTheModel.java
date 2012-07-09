@@ -153,7 +153,7 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);
 		b.runConfig(conf);
-		testLoad(n, false, false);
+		//testLoad(n, false, false);
 		conf.setScenarioRepetitions(n, 0);
 	}
 

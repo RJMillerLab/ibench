@@ -9,6 +9,8 @@ import tresc.benchmark.Constants;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Vector;
+
 import tresc.benchmark.utils.Utils;
 
 /**
@@ -54,37 +56,40 @@ public class SourceFDGenerator implements ScenarioGenerator
 			// if there is a primary key then we must strip out the attributes associated with it, otherwise we just grab all the attributes
 			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(), attrPos, true);
 			
+			int max_tries = 20;
 			// randomly select attributes for each run of FD generation
 			for (int i = 0; i < numFDs; i++)
-			{
-				int numLHSAtts = Utils.getRandomNumberAroundSomething(_generator, numAtts/4, numAtts/4);
-				numLHSAtts = (numLHSAtts < 1) ? 1 : numLHSAtts;
+			{	
+				int numLHSAtts = _generator.nextInt(nonKeyAttrs.length/2) + 1;
 				
-				String[] LHSAtts = new String[numLHSAtts];
+				Vector<String> LHSAtts = new Vector<String> ();
 				String RHSAtt = "";
 				
 				Boolean add = true;
 				int j = 0;
-				
+				int tries = 0;
 				// pick the attributes to go on the left hand side
-				while (j < numLHSAtts)
+				while (j < numLHSAtts && tries < max_tries)
 				{
-					int position = Utils.getRandomNumberAroundSomething(_generator, numAtts/2, numAtts/2);
-					position = (position > nonKeyAttrs.length) ? nonKeyAttrs.length-1 : position;
+					int position = _generator.nextInt(nonKeyAttrs.length);
 					
 					// make sure that we haven't already added this to our LHS FDs to avoid redundancy 
 					// ex. ABA -> C
-					for (int k = 0; k < LHSAtts.length; k++)
-						if (nonKeyAttrs[position] == LHSAtts[k])
-							add = false;
+					if (LHSAtts.indexOf(nonKeyAttrs[position]) != -1)
+						add = false;
 					
 					if (add)	
 					{
-						LHSAtts[j] = nonKeyAttrs[position];
+						LHSAtts.add(nonKeyAttrs[position]);
 						j++;
 					}
+					else
+						tries++;
 				}
-			
+				
+				System.out.println("tries: " + tries);
+				
+				//String[] LHSAtts = convertVectorToStringArray(LHSAtts);
 				Boolean done;
 				
 				// keep trying to find a RHS attribute until we have added one
@@ -93,17 +98,12 @@ public class SourceFDGenerator implements ScenarioGenerator
 					done = true;
 					
 					// pick the attribute to go on the right hand side
-					int position = Utils.getRandomNumberAroundSomething(_generator, nonKeyAttrs.length/2, nonKeyAttrs.length/2);
-					position = (position >= nonKeyAttrs.length) ? nonKeyAttrs.length-1: position;
+					int position = _generator.nextInt(nonKeyAttrs.length);
 					
 					// make sure it hasn't been added to the LHS attributes to avoid nonsensical FDs
 					// ex. AB -> A
-					for (int k = 0; k < LHSAtts.length; k++)
-						if (nonKeyAttrs[position] == LHSAtts[k])
-						{
-							done = false;
-							break;
-						}
+					if (LHSAtts.indexOf(nonKeyAttrs[position]) != -1)
+						done = false;
 					
 					if (done)	
 						RHSAtt = nonKeyAttrs[position];
@@ -113,14 +113,14 @@ public class SourceFDGenerator implements ScenarioGenerator
 				FDType[] functionalDep = scenario.getDocFac().getRelFDs(r.getName());
 				Boolean duplicate = false;
 				for (FDType fd : functionalDep)
-					if (fd.getTo().getAttrArray(0).equals(RHSAtt) && Arrays.equals(fd.getFrom().getAttrArray(), LHSAtts))
+					if (fd.getTo().getAttrArray(0).equals(RHSAtt) && Arrays.equals(fd.getFrom().getAttrArray(), convertVectorToStringArray(LHSAtts)))
 						duplicate = true;
 				
 				// if the FD was a duplicate then we must create a new FD in its place so decrement the counter, otherwise we add the FD to the relation
 				if (duplicate)
 					i--;
 				else
-					scenario.getDocFac().addFD(r.getName(), LHSAtts, new String[] { RHSAtt });
+					scenario.getDocFac().addFD(r.getName(), convertVectorToStringArray(LHSAtts), new String[] { RHSAtt });
 			}
 		}
 	}
@@ -181,4 +181,22 @@ public class SourceFDGenerator implements ScenarioGenerator
 		return nonKeyPos;
 	}
 	
+	/**
+	 * Converts a string vector to an array of strings
+	 * 
+	 * @param	vStr		A string vector
+	 * @return				An array of strings
+	 * 
+	 * @author mdangelo
+	 */
+	static String[] convertVectorToStringArray(Vector<String> vStr)
+	{
+		String[] ret = new String[vStr.size()];
+		
+		int j = 0;
+		for (String str: vStr)
+			ret[j++] = str;
+		
+		return ret;
+	}
 }

@@ -14,7 +14,6 @@ import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.SkolemKind;
-import tresc.benchmark.utils.Utils;
 import vtools.dataModel.types.RandSrcSkolem;
 
 /**
@@ -27,6 +26,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	protected TrampModelFactory fac;
 	protected TrampXMLModel model;
 	private SkolemKind sk;
+	private int skCount;
 	
 	/**
 	 * Randomly picks source attributes to turn into skolem terms after all scenarios have been generated.
@@ -66,7 +66,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			RandSrcSkolem[] randSK = new RandSrcSkolem[numSKs];
 			
-			int skCount = 0;
+			skCount = 0;
 			for (RandSrcSkolem rsk : randSK)
 			{
 				int position;
@@ -77,8 +77,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					alreadyAdded = false;
 					
 					// pick a nonkey attribute at random to be the skolem
-					position = Utils.getRandomNumberAroundSomething(_generator, nonKeyAttrs.length/2, nonKeyAttrs.length/2);
-					position = (position >= nonKeyAttrs.length) ? nonKeyAttrs.length-1 : position;
+					position = _generator.nextInt(nonKeyAttrs.length);
 					rsk = new RandSrcSkolem();
 					rsk.setAttr(nonKeyAttrs[position]);
 					
@@ -96,10 +95,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						rsk.setPosition(position);
 				rsk.setAttrVar(fac.getFreshVars(position, 1)[0]);
 				
-				// roll the dice to pick the skolem mode
-				int mode = position = Utils.getRandomNumberAroundSomething(_generator, 2, 2);
-				mode = (mode > 3) ? 3 : mode;
-				mode = (mode < 0) ? 0 : mode;
+				// roll the dice to pick the skolem mode (there are 4 modes with ordinals from 0 to 3)
+				int mode = position = _generator.nextInt(4);
 				
 				sk = SkolemKind.values()[mode];
 				
@@ -144,13 +141,14 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 							for (int i=0; i < a.getVarArray().length; i++)
 								tgtVars.add(a.getVarArray(i));
 					
+					
 					// get the intersection of the set of vars used in the source and the set of vars used in the target
 					Vector<String> exchangedVars = new Vector<String> ();
 					String[] allVars = fac.getFreshVars(0, allAttrs.length);
 					
 					for (String v : tgtVars)
 						for (String av : allVars)
-							if (v.equals(av))
+							if (v.equals(av) && (exchangedVars.indexOf(av) == -1) && !v.equals(rsk.getAttrVar()))
 								exchangedVars.add(v);
 					
 					/*@SuppressWarnings("unchecked")
@@ -184,16 +182,13 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				{
 					System.out.println("Skolem random");
 					
-					int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, allAttrs.length/2, allAttrs.length/2);
-					// ensure that we are still within bounds
-					numArgsForSkolem = (numArgsForSkolem > allAttrs.length) ? allAttrs.length : numArgsForSkolem;
+					int numArgsForSkolem = _generator.nextInt(allAttrs.length);
 					
 					// generate the random vars to be arguments for the skolem
 					Vector<String> randomVars = new Vector<String> ();
 					for (int i=0; i < numArgsForSkolem; i++)
-					{
-						int pos = Utils.getRandomNumberAroundSomething(_generator, allAttrs.length/2, allAttrs.length/2);
-						pos = (pos >= allAttrs.length) ? allAttrs.length-1 : pos;
+					{						
+						int pos = _generator.nextInt(allAttrs.length);
 						
 						// initially check that we are not trying to add a var as an argument to its own skolem function
 						// then make sure we're not adding duplicate vars
@@ -261,7 +256,18 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					rsk.setSkolemVars(convertVectorToStringArray(vars));
 				}
 				
+				System.out.println(r.getName());
+				
+				for(String s: rsk.getSkolemVars())
+					System.out.print(s + " ");
+				
+				System.out.println("<- " + rsk.getAttrVar());
+				
 				MappingType[] mappings = model.getMappings(r.getName());
+				
+				String skID = fac.getNextId("SK");
+				
+				System.out.println("skid: " + skID);
 				
 				// go through all relations within each mapping and further go through all of the variables
 				// if the variable we are seeking is the same as the one we have turned into a skolem remove the var 
@@ -284,8 +290,12 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								for (int j=i; j < numVars; j++)
 									a.removeVar(i);
 								
-								SKFunction sk = a.insertNewSKFunction(skCount);
-								sk.setSkname(fac.getNextId("SK"));
+								SKFunction sk;
+								if(a.sizeOfSKFunctionArray() == 0)
+									sk = a.addNewSKFunction();
+								else
+									sk = a.insertNewSKFunction(skCount);
+								sk.setSkname(skID);
 								sk.setVarArray(rsk.getSkolemVars());
 								
 								// restore the deleted vars
@@ -297,7 +307,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								}
 								
 								// move the old sks down
-								for (int l=++skCount; l < a.sizeOfSKFunctionArray(); l++)
+								for (int l=skCount; l < a.sizeOfSKFunctionArray(); l++)
 								{
 									SKFunction sk1 = a.addNewSKFunction();
 									sk1.setSkname(a.getSKFunctionArray(l).getSkname());
