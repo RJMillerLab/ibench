@@ -7,6 +7,7 @@ public class RandSrcSkolem
 	private String[] _skolemArgs;
 	private String _attrVar;
 	private String[] _skolemVars;
+	private String _skId;
 	
 	public int getPosition()
 	{
@@ -56,5 +57,13 @@ public class RandSrcSkolem
 	public void setSkolemVars (String[] skolemVars)
 	{
 		_skolemVars = skolemVars;
+	}
+
+	public String getSkId() {
+		return _skId;
+	}
+
+	public void setSkId(String skId) {
+		_skId = skId;
 	}
 }

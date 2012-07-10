@@ -5,15 +5,18 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.AttrDefType;
-import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.ForeignKeyType;
+import org.vagabond.xmlmodel.MapExprType;
 import org.vagabond.xmlmodel.MappingScenarioDocument;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.SchemaType;
 
 public class TrampXMLModel extends MapScenarioHolder {
@@ -192,4 +195,54 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return result;
 	}
 	
+	public Object[] getAtomParameters (MappingType m, boolean foreach, int atomPos) 
+	{
+		MapExprType clause = foreach ? m.getForeach() : m.getExists();
+		RelAtomType atom = clause.getAtomArray(atomPos);
+		XmlCursor c = atom.newCursor();
+		
+		int size = atom.sizeOfSKFunctionArray() + atom.sizeOfVarArray();
+		Object[] result = new Object[size];
+		int varPos = 0;
+		
+		for(int i = 0; i < size; i++) 
+		{
+			if(i == 0)
+				c.toChild(i);
+			else
+				c.toNextSibling();
+			
+			XmlObject x = c.getObject();
+			
+			if (x instanceof SKFunction)
+				result[i] = x;
+			else
+				result[i] = atom.getVarArray(varPos++);
+		}
+
+		return result;
+	}
+	
+	public void setAtomParameters (Object[] params, RelAtomType a) 
+	{
+		// remove elements
+		a.setSKFunctionArray(new SKFunction[] {});
+		a.setVarArray(new String[] {});
+		
+		for(Object x: params) 
+		{
+			if (x instanceof SKFunction) 
+			{
+				SKFunction in = (SKFunction) x;
+				SKFunction f = a.addNewSKFunction();
+				f.setSkname(in.getSkname());
+				f.setVarArray(in.getVarArray());
+			}
+			else 
+			{
+				System.out.println("var: " + x);
+				a.addVar((String) x);
+			}
+		}
+	}
 }

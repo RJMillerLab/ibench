@@ -46,6 +46,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		model = scenario.getDoc();
 		
 		Vector<String> SKVars = new Vector<String> ();
+		Vector<RandSrcSkolem> RandomSkolems = new Vector<RandSrcSkolem> ();
 				
 		for(RelationType r: scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
@@ -176,7 +177,10 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						sk = SkolemKind.RANDOM;
 					}*/
 					
-					rsk.setSkolemVars(convertVectorToStringArray(exchangedVars));
+					String[] exchVars = convertVectorToStringArray(exchangedVars);
+					java.util.Arrays.sort(exchVars);
+					
+					rsk.setSkolemVars(exchVars);
 				}
 				if (sk == SkolemKind.RANDOM)
 				{
@@ -210,14 +214,17 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								i--;
 					}
 					
-					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
+					/*// if all of the random variables have been skolemized then we need to switch modes so we have arguments for our skolem
 					if(randomVars.size() == 0)
 					{
 						System.out.println("switching modes");
 						sk = SkolemKind.ALL;
-					}
+					}*/
 					
-					rsk.setSkolemVars(convertVectorToStringArray(randomVars));
+					String[] randVars = convertVectorToStringArray(randomVars);
+					java.util.Arrays.sort(randVars);
+					
+					rsk.setSkolemVars(randVars);
 				}
 				if (sk == SkolemKind.ALL)
 				{
@@ -256,100 +263,66 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					rsk.setSkolemVars(convertVectorToStringArray(vars));
 				}
 				
-				System.out.println(r.getName());
+				rsk.setSkId(fac.getNextId("SK"));
 				
-				for(String s: rsk.getSkolemVars())
+				RandomSkolems.add(rsk);
+			}
+			
+			for (RandSrcSkolem rsk : RandomSkolems)
+			{
+				System.out.println("relName: " + r.getName());
+				System.out.println("skID: " + rsk.getSkId());
+				System.out.println("SkolemVar: " + rsk.getAttrVar());
+				
+				System.out.print("Args: ");
+				for (String s : rsk.getSkolemVars())
 					System.out.print(s + " ");
 				
-				System.out.println("<- " + rsk.getAttrVar());
+				System.out.println();
+			}
+			
+			// get all the mappings associated with the relation in question and go through them
+			MappingType[] mappings = model.getMappings(r.getName());
+			
+			for (MappingType m : mappings)
+			{
+				System.out.println("Retrieving objects associated with mapping");
 				
-				MappingType[] mappings = model.getMappings(r.getName());
+				// retrieve all the objects associated with the exists clause of the mapping (aka. vars and skolems in one array)
+				Object[] mappingObjects = scenario.getDoc().getAtomParameters(m, false, scenario.getDoc().getRelPos(r.getName(), false));
 				
-				String skID = fac.getNextId("SK");
-				
-				System.out.println("skid: " + skID);
-				
-				// go through all relations within each mapping and further go through all of the variables
-				// if the variable we are seeking is the same as the one we have turned into a skolem remove the var 
-				// and add a skolem function in its place with the arguments determined above
-				for (MappingType m : mappings)
-					for (RelAtomType a : m.getExists().getAtomArray())
+				// go through the objects and if there is a var that should be replaced with one of the skolem functions we generated 
+				// go through all the relations in the exists clause of the mapping
+				for(int j = 0; j < mappingObjects.length; j++)
+					if(!(mappingObjects[j] instanceof SKFunction))
 					{
-						for (int i=0; i < a.getVarArray().length; i++)
-						{
-							// store all of the vars and then delete them from the relation
-							String[] vars = a.getVarArray();
-							Vector<String> varVect = new Vector<String> ();
-							
-							for (String str: vars)
-								varVect.add(str);
-							
-							if (a.getVarArray(i).equals(rsk.getAttrVar()))
+						System.out.println("Looking at var: " + mappingObjects[j]);
+						
+						for (RandSrcSkolem rsk : RandomSkolems)
+							if(mappingObjects[j].equals(rsk.getAttrVar()))
 							{
-								int numVars = a.sizeOfVarArray();
-								for (int j=i; j < numVars; j++)
-									a.removeVar(i);
+								System.out.println("Found a match");
 								
-								SKFunction sk;
-								if(a.sizeOfSKFunctionArray() == 0)
-									sk = a.addNewSKFunction();
-								else
-									sk = a.insertNewSKFunction(skCount);
-								sk.setSkname(skID);
-								sk.setVarArray(rsk.getSkolemVars());
-								
-								// restore the deleted vars
-								for (int k=i; k < numVars; k++)
-								{
-									if (!(varVect.elementAt(i).equals(rsk.getAttrVar())))
-										a.addVar(varVect.elementAt(i));
-									varVect.remove(i);
-								}
-								
-								// move the old sks down
-								for (int l=skCount; l < a.sizeOfSKFunctionArray(); l++)
-								{
-									SKFunction sk1 = a.addNewSKFunction();
-									sk1.setSkname(a.getSKFunctionArray(l).getSkname());
-									sk1.setVarArray(a.getSKFunctionArray(l).getVarArray());
-									a.removeSKFunction(l);
+								for(RelAtomType a : m.getExists().getAtomArray())
+								{						
+									// create the skolem function object
+									SKFunction sk = a.addNewSKFunction();
+									sk.setSkname(rsk.getSkId());
+									sk.setVarArray(rsk.getSkolemVars());
+
+									// switch out the var for the new SKFunction
+									mappingObjects[j] = sk;
+									
+									System.out.println("sk: " + ((SKFunction) mappingObjects[j]).getSkname());
+									
+									// now replace the atom parameters we retrieved earlier with the modified version
+									//scenario.getDoc().setAtomParameters(mappingObjects, a);
+									
+									System.out.println("Swapped it out and set the parameters");
 								}
 							}
-						}
 					}
 			}
-
-			/*MappingType[] mappings = model.getMappings(r.getName());
-			
-			// go through all the relations in all the mappings and check if any of the existing skolem functions contain
-			// any of the vars we made into skolem functions, if they do we remove those references 
-			for (MappingType m : mappings)
-				for (RelAtomType a : m.getExists().getAtomArray())
-				{
-					for (int i=0; i < a.sizeOfSKFunctionArray(); i++)
-					{
-						String[] vars = a.getSKFunctionArray(i).getVarArray();
-						Vector<String> varVector = new Vector<String> ();
-
-						Boolean addVar = true;
-						for (String var : vars)
-						{
-							for (String skvar : SKVars)
-								if(var.equals(skvar))
-									addVar = false;
-							
-							if(addVar)
-								varVector.add(var);
-						}
-						
-						if(varVector.size() == 0)
-							varVector.add("*");
-						
-						String[] varArray = convertVectorToStringArray(varVector);
-						
-						a.getSKFunctionArray(i).setVarArray(varArray);
-					}
-				}*/
 		}
 	}
 	

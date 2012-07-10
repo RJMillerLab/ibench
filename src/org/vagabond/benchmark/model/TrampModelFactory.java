@@ -349,7 +349,7 @@ public class TrampModelFactory {
 
 	public void addForeachAtom(MappingType m, int rel, String[] vars) 
 			throws Exception {
-		addForeachAtom(m.getId(), doc.getRelName(rel, true), vars);
+		addForeachAtom(m.getId(), p.getRelName(rel, true), vars);
 	}
 	
 	public void addForeachAtom(String mKey, String relName, String[] vars)
@@ -391,7 +391,7 @@ public class TrampModelFactory {
 	
 	public void addExistsAtom(MappingType m, int rel, String[] vars) 
 			throws Exception {
-		addExistsAtom(m.getId(), doc.getRelName(rel, false), vars);
+		addExistsAtom(m.getId(), p.getRelName(rel, false), vars);
 	}
 	
 	public void addExistsAtom(String mKey, String relName, String[] vars)
