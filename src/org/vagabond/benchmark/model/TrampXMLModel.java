@@ -19,6 +19,9 @@ import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.SchemaType;
 
+// PRG ADD July 10, 2012
+// PRG ADD Instance Method to Retrieve Array of Mappings: public MappingType[] getMappings()
+
 public class TrampXMLModel extends MapScenarioHolder {
 
 	static Logger log = Logger.getLogger(TrampXMLModel.class);
@@ -48,6 +51,25 @@ public class TrampXMLModel extends MapScenarioHolder {
 			result.add(m.getId());
 		}
 		return result;
+	}
+	
+	/** 
+	 * Retrieves all mappings generated as part of STBenchmark's current mapping scenario (a.k.a. schema mapping). 
+	 * Two important notes. (1) When running STBenchmark with "MappingLanguage = FOtgds", the returned array of mappings
+	 * (MappingType[]) represents a set of s-t tgds. (2) On the contrary, when running STBenchmark with 
+	 * "MappingLanguage = SOtgds", the returned array of mappings models a single SO tgd. Thus, in this case, 
+	 * each element in the array can be treated as a SO Clause.
+	 *  
+	 * @author prg
+	 * 
+	 * @return An array of mappings 
+	 */
+	
+	// PRG ADD July 10, 2012
+	public MappingType[] getMappings()
+	{		
+		return doc.getMappingScenario().getMappings().getMappingArray();
+
 	}
 	
 	/** 
