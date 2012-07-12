@@ -18,9 +18,9 @@ Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
 Scenarios.GLAV = 0 
 Scenarios.ADDATTRIBUTE = 1
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
+Scenarios.DELATTRIBUTE = 1
+Scenarios.ADDDELATTRIBUTE = 1
+Scenarios.VERTPARTITIONISA = 1
 
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 5 

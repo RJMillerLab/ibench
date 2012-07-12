@@ -28,7 +28,6 @@ public class SourceFDGenerator implements ScenarioGenerator
 		// create PK FDs R(A,B,C) if A is key then add A -> B,C
 		for(RelationType r: scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
-			System.out.println("Generating PK FDs");
 			if (r.isSetPrimaryKey()) 
 			{
 				String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
@@ -41,8 +40,6 @@ public class SourceFDGenerator implements ScenarioGenerator
 		// create random FDs by randomly selecting non primary key attributes and linking them
 		for(RelationType r: scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
-			System.out.println("Generating Random FDs");
-			
 			// determine how many FDs we should generate for the relation based on the number of attributes it has
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceFDPerc))/(double) 100;
 			int numAtts = r.getAttrArray().length;

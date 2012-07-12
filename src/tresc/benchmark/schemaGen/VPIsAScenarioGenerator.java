@@ -3,23 +3,13 @@ package tresc.benchmark.schemaGen;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
-import smark.support.MappingScenario;
-import smark.support.SMarkElement;
-import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
-import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.expression.ForeignKey;
-import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
@@ -81,7 +71,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
      * This is the main function. It generates a table in the source, a number
      * of tables in the target and a respective number of queries.
      */
-    private void createSubElements(Schema source, Schema target, int numOfSrcTblAttr, int numOfTgtTables,
+    /*private void createSubElements(Schema source, Schema target, int numOfSrcTblAttr, int numOfTgtTables,
             JoinKind jk, int repetition, SPJQuery pquery)
     {   
         // since we add a key to the tables, we add one less free element to the source and target
@@ -191,7 +181,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         // now we generate the join attributes in the target tables
         if (jk == JoinKind.STAR)
         {
-            /*coding = getStamp() + repetition + "JoinAtt";
+            /~coding = getStamp() + repetition + "JoinAtt";
             String joinAttName = Modules.nameFactory.getARandomName() + "_" + coding;
             String joinAttNameRef = joinAttName + "Ref";
 
@@ -208,7 +198,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
                 f0.addArg(att);
             }
             sel0.add(joinAttName, f0);
-            queries[0].setSelect(sel0);*/
+            queries[0].setSelect(sel0);~/
         	
         	// create key for target fragment
             Key tgtKey = new Key();
@@ -273,7 +263,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             pselect.add(tblTrgName, queries[i]);
         }
         pquery.setSelect(pselect);
-    }
+    }*/
 
 
 	@Override
@@ -395,16 +385,11 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	private SPJQuery genQuery(SPJQuery generatedQuery) {
 		String sourceRelName = m.getSourceRels().get(0).getName();
 		SPJQuery[] queries = new SPJQuery[numOfTgtTables];
-		String[] srcAttrs = m.getAttrIds(0, true);
-
-		String keyAttName = m.getAttrId(0, 0, false);
-        String keyAttNameRef = m.getAttrId(1, 0, false);
 		
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String targetRelName = m.getTargetRels().get(i).getName();
 			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
-			int offset = i * attsPerTargetRel;
 			
 			// gen query for the target table
 			SPJQuery q = new SPJQuery();

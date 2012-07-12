@@ -101,6 +101,33 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return ret;
 	}
 	
+	/** 
+	 * Returns the position of an atom in a given mapping
+	 * 
+	 * @author mdangelo
+	 * 
+	 * @param rel	The name of the relation (the atoms tableref should be passed in)
+	 * @param m		The mapping for which we want to find the position
+	 * 
+	 * @return		The position of the atom if it exists, -1 otherwise
+	 */
+	public int getAtomPos(MappingType m, String rel) 
+	{
+		// go through each atom, increment i every time we don't find it
+		int i = 0;
+		for (RelAtomType a: m.getExists().getAtomArray())
+		{
+			// return the index if found
+			if(a.getTableref().equals(rel))
+				return i;
+							
+			i++;
+		}
+		
+		// not found
+		return -1;
+	}
+	
 	public String getRelAttr (int rel, int attr, boolean source) {
 		SchemaType s = getSchema(source);
 		RelationType relation = s.getRelationArray()[rel];
@@ -217,6 +244,17 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return result;
 	}
 	
+	/** 
+	 * Retrieves all of the parameters of an atom in order (including skolems and vars)
+	 * 
+	 * @author mdangelo
+	 * 
+	 * @param m			The mapping to get the atomParameters of
+	 * @param foreach	A boolean to determine whether to check the for each or exist clauses for the atom
+	 * @param atomPos	The position of the atom within the mapping
+	 * 
+	 * @return			An array of objects
+	 */
 	public Object[] getAtomParameters (MappingType m, boolean foreach, int atomPos) 
 	{
 		MapExprType clause = foreach ? m.getForeach() : m.getExists();
@@ -245,6 +283,14 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return result;
 	}
 	
+	/** 
+	 * Given an array of objects, sets them in the order to received as the parameters of an atom.
+	 * 
+	 * @author mdangelo
+	 * 
+	 * @param params	An array of objects (in order) which includes SKFunctions and vars
+	 * @param a			The atom for which to set the parameters
+	 */
 	public void setAtomParameters (Object[] params, RelAtomType a) 
 	{
 		// remove elements
@@ -261,10 +307,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 				f.setVarArray(in.getVarArray());
 			}
 			else 
-			{
-				System.out.println("var: " + x);
 				a.addVar((String) x);
-			}
 		}
 	}
 }

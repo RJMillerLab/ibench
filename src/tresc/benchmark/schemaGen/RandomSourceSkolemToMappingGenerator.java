@@ -26,7 +26,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	protected TrampModelFactory fac;
 	protected TrampXMLModel model;
 	private SkolemKind sk;
-	private int skCount;
 	
 	/**
 	 * Randomly picks source attributes to turn into skolem terms after all scenarios have been generated.
@@ -54,8 +53,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			int numAtts = r.getAttrArray().length;
 			int numSKs = (int) Math.ceil((percentage/2) * numAtts);
 			
-			System.out.println("numSKs: " + numSKs);
-			String[] addedSKs = new String[numSKs];
+			Vector<String> addedSKs = new Vector<String> ();
 			
 			// get positions for all of the attributes
 			int[] attrPos = new int[r.getAttrArray().length];
@@ -67,7 +65,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			RandSrcSkolem[] randSK = new RandSrcSkolem[numSKs];
 			
-			skCount = 0;
 			for (RandSrcSkolem rsk : randSK)
 			{
 				int position;
@@ -82,10 +79,12 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					rsk = new RandSrcSkolem();
 					rsk.setAttr(nonKeyAttrs[position]);
 					
-					// TODO populate addedSKs?
-					for (String str : addedSKs)
-						if (rsk.getAttr().equals(str))
-							alreadyAdded = true;
+					// check if we already picked this one to be a skolem
+					if(addedSKs.indexOf(rsk.getAttr()) == -1)
+						addedSKs.add(rsk.getAttr());
+					else
+						alreadyAdded = true;
+					
 				} while (alreadyAdded);
 					
 				
@@ -105,9 +104,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 
 				// if we are using a key in the original relation then we will base the skolem on only the primary key
 				if (sk == SkolemKind.KEY)
-				{
-					System.out.println("Trying key for skolem");
-					
+				{	
 					// make sure there is a key for the relation, if there is not then we will switch to using all attributes for the skolem
 					if (r.isSetPrimaryKey()) 
 					{
@@ -125,14 +122,11 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					}
 					else
 					{
-						System.out.println("No key, switching mode");
 						sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
 					}
 				}
 				if (sk == SkolemKind.EXCHANGED)
 				{					
-					System.out.println("Skolem depends on exchanged");
-					
 					// get the relation(s) for the target and store the vars used in them
 					MappingType[] maps = model.getMappings(r.getName());
 					Vector<String> tgtVars = new Vector<String> ();
@@ -152,31 +146,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 							if (v.equals(av) && (exchangedVars.indexOf(av) == -1) && !v.equals(rsk.getAttrVar()))
 								exchangedVars.add(v);
 					
-					/*@SuppressWarnings("unchecked")
-					Vector<String> exchVars = (Vector<String>)exchangedVars.clone();
-					
-					// make sure that the vars we are adding as arguments to the new skolem are not skolems themselves
-					Boolean addVar = true;
-					for (String var : exchangedVars)
-					{
-						for (String skvar : SKVars)
-							if(var.equals(skvar))
-								addVar = false;
-						
-						if(!addVar)
-						{
-							System.out.println("removing var: " + var);
-							exchVars.remove(var);
-						}
-					}
-					
-					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
-					if(exchVars.size() == 0)
-					{
-						System.out.println("switching modes");
-						sk = SkolemKind.RANDOM;
-					}*/
-					
 					String[] exchVars = convertVectorToStringArray(exchangedVars);
 					java.util.Arrays.sort(exchVars);
 					
@@ -184,8 +153,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				}
 				if (sk == SkolemKind.RANDOM)
 				{
-					System.out.println("Skolem random");
-					
 					int numArgsForSkolem = _generator.nextInt(allAttrs.length);
 					
 					// generate the random vars to be arguments for the skolem
@@ -200,26 +167,10 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 							i--;
 						else
 							if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
-							{
-								/*Boolean addVar = true;
-								
-								for (String skvar : SKVars)
-									if(fac.getFreshVars(pos, 1)[0].equals(skvar))
-										addVar = false;
-								
-								if(addVar)*/
 									randomVars.add(fac.getFreshVars(pos, 1)[0]);
-							}
 							else
 								i--;
 					}
-					
-					/*// if all of the random variables have been skolemized then we need to switch modes so we have arguments for our skolem
-					if(randomVars.size() == 0)
-					{
-						System.out.println("switching modes");
-						sk = SkolemKind.ALL;
-					}*/
 					
 					String[] randVars = convertVectorToStringArray(randomVars);
 					java.util.Arrays.sort(randVars);
@@ -228,8 +179,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				}
 				if (sk == SkolemKind.ALL)
 				{
-					System.out.println("Skolem depends on all");
-
 					// ensure that we are not adding the attribute itself as an argument to the skolem
 					Vector<String> skAtts = new Vector<String>();
 					Vector<String> vars = new Vector<String>();
@@ -244,21 +193,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						}
 					}
 					
-					/*Boolean addVar = true;
-					for (String var : vars)
-					{
-						for (String skvar : SKVars)
-							if(var.equals(skvar))
-								addVar = false;
-						
-						if(!addVar)
-							vars.remove(var);
-					}
-					
-					// if all of the exchanged variables have been skolemized then we need to switch modes so we have arguments for our skolem
-					if(vars.size() == 0)
-						vars.add("*");*/
-					
 					rsk.setSkolemArgs(convertVectorToStringArray(skAtts));
 					rsk.setSkolemVars(convertVectorToStringArray(vars));
 				}
@@ -267,6 +201,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				
 				RandomSkolems.add(rsk);
 			}
+			
+			System.out.println("---------NEW SKOLEMS---------");
 			
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
@@ -283,46 +219,60 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			// get all the mappings associated with the relation in question and go through them
 			MappingType[] mappings = model.getMappings(r.getName());
+
+			// create a new mapping to temporarily store the SKFunctions (because we need to destroy the ones in the atom before we can add new ones)
+			// the old ones would be deallocated (and all information lost) if we did not clone them
+			MappingType map = model.getScenario().getMappings().addNewMapping();
+			RelAtomType tmp = map.addNewExists().addNewAtom();
 			
 			for (MappingType m : mappings)
 			{
-				System.out.println("Retrieving objects associated with mapping");
-				
-				// retrieve all the objects associated with the exists clause of the mapping (aka. vars and skolems in one array)
-				Object[] mappingObjects = scenario.getDoc().getAtomParameters(m, false, scenario.getDoc().getRelPos(r.getName(), false));
-				
-				// go through the objects and if there is a var that should be replaced with one of the skolem functions we generated 
-				// go through all the relations in the exists clause of the mapping
-				for(int j = 0; j < mappingObjects.length; j++)
-					if(!(mappingObjects[j] instanceof SKFunction))
+				// for each relation we go through all the objects and check if they are skolem functions
+				for(RelAtomType a : m.getExists().getAtomArray())
+				{
+					// retrieve all the objects associated with the exists clause of the mapping (aka. vars and skolems in one array)
+					Object[] mappingObjects = scenario.getDoc().getAtomParameters(m, false, scenario.getDoc().getAtomPos(m, a.getTableref())); 
+					
+					for(int j = 0; j < mappingObjects.length; j++)
 					{
-						System.out.println("Looking at var: " + mappingObjects[j]);
-						
-						for (RandSrcSkolem rsk : RandomSkolems)
-							if(mappingObjects[j].equals(rsk.getAttrVar()))
-							{
-								System.out.println("Found a match");
-								
-								for(RelAtomType a : m.getExists().getAtomArray())
+						if(!(mappingObjects[j] instanceof SKFunction))
+						{
+							// if it's a var we must check if it should be swapped out with a skolem so we go through all the skolems we 
+							// must replace and insert it into the mapping object array
+							for (RandSrcSkolem rsk : RandomSkolems)
+								if(mappingObjects[j].equals(rsk.getAttrVar()))
 								{						
 									// create the skolem function object
-									SKFunction sk = a.addNewSKFunction();
+									SKFunction sk = tmp.addNewSKFunction();
 									sk.setSkname(rsk.getSkId());
 									sk.setVarArray(rsk.getSkolemVars());
 
 									// switch out the var for the new SKFunction
 									mappingObjects[j] = sk;
-									
-									System.out.println("sk: " + ((SKFunction) mappingObjects[j]).getSkname());
-									
-									// now replace the atom parameters we retrieved earlier with the modified version
-									//scenario.getDoc().setAtomParameters(mappingObjects, a);
-									
-									System.out.println("Swapped it out and set the parameters");
 								}
-							}
+						}
+						else
+						{
+							// if it's not a var, then we have to clone the existing skolem object so that when we
+							// use it later we are not referencing an object that has already been destroyed
+							SKFunction sk = tmp.addNewSKFunction();
+							sk.setSkname(((SKFunction) mappingObjects[j]).getSkname());
+							sk.setVarArray(((SKFunction) mappingObjects[j]).getVarArray());
+							
+							mappingObjects[j] = sk;
+						}
 					}
+					
+					// now replace the atom parameters we retrieved earlier with the modified version
+					scenario.getDoc().setAtomParameters(mappingObjects, a);
+				}
 			}
+			
+			// delete the mapping we temporarily created
+			model.getScenario().getMappings().removeMapping(model.getScenario().getMappings().sizeOfMappingArray()-1);
+			
+			// clear the vector of random skolems
+			RandomSkolems.removeAllElements();
 		}
 	}
 	
