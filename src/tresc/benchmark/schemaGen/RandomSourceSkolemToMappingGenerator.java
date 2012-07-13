@@ -155,21 +155,29 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				{
 					int numArgsForSkolem = _generator.nextInt(allAttrs.length);
 					
+					int max_tries = 20;
+					
 					// generate the random vars to be arguments for the skolem
 					Vector<String> randomVars = new Vector<String> ();
 					for (int i=0; i < numArgsForSkolem; i++)
-					{						
-						int pos = _generator.nextInt(allAttrs.length);
+					{		
+						// try 20 times per argument slot to find an argument
+						int tries = 0;
 						
-						// initially check that we are not trying to add a var as an argument to its own skolem function
-						// then make sure we're not adding duplicate vars
-						if (allAttrs[pos].equals(rsk.getAttr()))
-							i--;
-						else
-							if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
-									randomVars.add(fac.getFreshVars(pos, 1)[0]);
-							else
-								i--;
+						while (tries < max_tries)
+						{
+							int pos = _generator.nextInt(allAttrs.length);
+						
+							// initially check that we are not trying to add a var as an argument to its own skolem function
+							// then make sure we're not adding duplicate vars
+							if (!(allAttrs[pos].equals(rsk.getAttr())) && randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+							{
+								randomVars.add(fac.getFreshVars(pos, 1)[0]);
+								break;
+							}
+							
+							tries++;
+						}
 					}
 					
 					String[] randVars = convertVectorToStringArray(randomVars);
@@ -177,6 +185,11 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					
 					rsk.setSkolemVars(randVars);
 				}
+				
+				// make sure the random selection yielded at least one argument, switch modes if it didn't
+				if(rsk.getSkolemVars() == null)
+					sk = SkolemKind.ALL;
+				
 				if (sk == SkolemKind.ALL)
 				{
 					// ensure that we are not adding the attribute itself as an argument to the skolem
@@ -207,7 +220,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
 				System.out.println("relName: " + r.getName());
-				System.out.println("skID: " + rsk.getSkId());
+				System.out.println("skID: " + rsk.getSKId());
 				System.out.println("SkolemVar: " + rsk.getAttrVar());
 				
 				System.out.print("Args: ");
@@ -244,7 +257,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								{						
 									// create the skolem function object
 									SKFunction sk = tmp.addNewSKFunction();
-									sk.setSkname(rsk.getSkId());
+									sk.setSkname(rsk.getSKId());
 									sk.setVarArray(rsk.getSkolemVars());
 
 									// switch out the var for the new SKFunction
