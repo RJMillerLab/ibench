@@ -412,5 +412,9 @@ public class MappingScenario
 		return _basicScens.size();
 	}
 	
-    
+    // PRG ADD July 16, 2012
+	// Instance Method getNumOfDistinctSkolems returns the number of distinct unique Skolems generated so far
+	public int getNumOfDistinctSkolems () {
+		return docFac.getNumUniqueId("SK");
+	}
 }
