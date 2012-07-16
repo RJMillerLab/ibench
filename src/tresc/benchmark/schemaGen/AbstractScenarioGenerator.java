@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
 import org.vagabond.xmlmodel.AttrDefType;
-import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
@@ -17,15 +16,14 @@ import smark.support.PartialMapping;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.MappingLanguageType;
-import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
+import tresc.benchmark.Modules;
 import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Union;
 import vtools.dataModel.schema.Schema;
-import vtools.utils.structures.AssociativeArray;
 
 /*
  * Each generator of a scenario case subclasses this class.
@@ -70,6 +68,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected int srcReusePerc;
 	protected int trgReusePerc;
 	protected int srcFDPerc;
+	protected int keySize;
 	protected MappingLanguageType mapLang;
 	protected int curRep;
 	protected boolean doSchemaElReuse = false;
@@ -292,7 +291,11 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		srcReusePerc =
 				configuration.getParam(Constants.ParameterName.ReuseSourcePerc);
 		trgReusePerc = configuration.getParam(Constants.ParameterName.ReuseTargetPerc);
+		keySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
         
+		// ensure that the key size is not greater than the number of elements
+		keySize = (keySize >= numOfElements) ? numOfElements - 1 : keySize;
+		
         mapLang = configuration.getMapType();
 
 		source = scen.getSource();

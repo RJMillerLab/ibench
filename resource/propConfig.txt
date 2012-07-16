@@ -5,9 +5,9 @@ SchemaPathPrefix=out
 InstancePathPrefix=out
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
+Scenarios.COPY = 1
 Scenarios.VALUEGEN = 0 
-Scenarios.HORIZPARTITION = 0 
+Scenarios.HORIZPARTITION = 1 
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0 
 Scenarios.VALUEMANAGEMENT = 0 

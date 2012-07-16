@@ -1,16 +1,15 @@
 package tresc.benchmark.schemaGen;
 
 import org.vagabond.xmlmodel.MappingType;
-import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 
+import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.SkolemKind;
-import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
-import org.vagabond.xmlmodel.SKFunction;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;

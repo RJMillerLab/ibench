@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.vagabond.util.LoggerUtil;
-import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MapExprType;
 import org.vagabond.xmlmodel.MappingType;
@@ -17,7 +16,6 @@ import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.TransformationType;
 
 import vtools.dataModel.expression.Query;
-import vtools.dataModel.types.Set;
 
 public class PartialMapping {
 

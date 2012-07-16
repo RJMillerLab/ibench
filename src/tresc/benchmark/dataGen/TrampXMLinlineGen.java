@@ -1,6 +1,5 @@
 package tresc.benchmark.dataGen;
 
-import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 
 public class TrampXMLinlineGen extends ToXDataGenerator {

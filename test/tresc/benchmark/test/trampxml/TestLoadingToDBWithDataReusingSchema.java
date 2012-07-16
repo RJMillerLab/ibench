@@ -21,10 +21,10 @@ import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.STBenchmark;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.STBenchmark;
 
 public class TestLoadingToDBWithDataReusingSchema {
 

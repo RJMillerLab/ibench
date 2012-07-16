@@ -2,8 +2,6 @@ package vtools.visitor;
 
 import java.lang.reflect.Method;
 
-import vtools.dataModel.expression.Union;
-
 public class VisitorImpl implements Visitor
 {
 

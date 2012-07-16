@@ -1,30 +1,16 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
-import org.vagabond.xmlmodel.TransformationType;
 
-import smark.support.MappingScenario;
 import smark.support.SMarkElement;
-import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
-
 import vtools.dataModel.expression.ConstantAtomicValue;
-import vtools.dataModel.expression.Expression;
-import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.schema.Element;
-import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.values.StringValue;

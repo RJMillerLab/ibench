@@ -7,13 +7,13 @@ package tresc.benchmark.test.toxgene;
  * @date February 2005
  */
 
-import java.util.Vector;
-import java.text.DecimalFormat;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.util.Vector;
 
 import toxgene.core.Engine;
 import toxgene.core.ToXgeneErrorException;

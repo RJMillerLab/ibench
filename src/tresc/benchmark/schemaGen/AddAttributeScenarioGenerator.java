@@ -6,8 +6,8 @@ import org.vagabond.xmlmodel.SKFunction;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
@@ -47,6 +47,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		sk = SkolemKind.values()[typeOfSkolem];
 		
 		System.out.println("sk: " + sk.ordinal());
+		System.out.println("key size: " + keySize);
 	}
 
 	/**
@@ -299,20 +300,28 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
-		String keyName = randomAttrName(0, 0) + "KE0";
+		
+		// generate the appropriate number of keys
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "KE" + j;
 
+		int keyCount = 0;
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0, i);
 
-			if (sk == SkolemKind.KEY && i == 0)
-				attrName = keyName;
+			if (sk == SkolemKind.KEY && keyCount < keySize)
+				attrName = keys[keyCount];
+			
+			keyCount++;
+			
 			attrs[i] = attrName;
 		}
 
 		fac.addRelation(getRelHook(0), srcName, attrs, true);
 
 		if (sk == SkolemKind.KEY)
-			fac.addPrimaryKey(srcName, new String[] { keyName }, true);
+			fac.addPrimaryKey(srcName, keys, true);
 	}
 
 	@Override
@@ -329,9 +338,13 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			attrs[i] = randomAttrName(0, i);
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
-
+	
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = srcAttrs[j];
+		
 		if (sk == SkolemKind.KEY)
-			fac.addPrimaryKey(trgName, new String[] { srcAttrs[0] }, false);
+			fac.addPrimaryKey(trgName, keys, false);
 	}
 
 	@Override
@@ -369,7 +382,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		// skolem on just that key
 		if (sk == SkolemKind.KEY)
 			for (int i = 0; i < numNewAttr; i++)
-				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, 1));
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
 		else {
 			// if configuration specifies that we need to randomly decide how
 			// many arguments the skolem will take, generate a random number
@@ -430,7 +443,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			vtools.dataModel.expression.SKFunction stSK = 
 					new vtools.dataModel.expression.SKFunction(sk.getSkname());
 			
-			// this works because the key is always the first attribute 
+			// this works because the keys are always the first attributes 
 			for(int j = 0; j < sk.getVarArray().length; j++) {			
 				String sAttName = m.getAttrId(0, j, true);
 				Projection att = new Projection(new Variable("X"), sAttName);

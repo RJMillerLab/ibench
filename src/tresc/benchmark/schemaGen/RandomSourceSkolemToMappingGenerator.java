@@ -108,6 +108,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				// if we are using a key in the original relation then we will base the skolem on only the primary key
 				if (sk == SkolemKind.KEY)
 				{	
+					System.out.println("mode: KEY");
+					
 					// make sure there is a key for the relation, if there is not then we will switch to using all attributes for the skolem
 					if (r.isSetPrimaryKey()) 
 					{
@@ -128,8 +130,11 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
 					}
 				}
+				
 				if (sk == SkolemKind.EXCHANGED)
 				{					
+					System.out.println("mode: EXCHANGED");
+					
 					// get the relation(s) for the target and store the vars used in them
 					MappingType[] maps = model.getMappings(r.getName());
 					Vector<String> tgtVars = new Vector<String> ();
@@ -154,8 +159,11 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					
 					rsk.setSkolemVars(exchVars);
 				}
+				
 				if (sk == SkolemKind.RANDOM)
 				{
+					System.out.println("mode: RANDOM");
+					
 					int numArgsForSkolem = _generator.nextInt(allAttrs.length);
 					
 					int max_tries = 20;
@@ -186,15 +194,17 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					String[] randVars = convertVectorToStringArray(randomVars);
 					java.util.Arrays.sort(randVars);
 					
+					// make sure the random selection yielded at least one argument, switch modes if it didn't
+					if(randVars.length == 0)
+						sk = SkolemKind.ALL;
+					
 					rsk.setSkolemVars(randVars);
 				}
 				
-				// make sure the random selection yielded at least one argument, switch modes if it didn't
-				if(rsk.getSkolemVars() == null)
-					sk = SkolemKind.ALL;
-				
 				if (sk == SkolemKind.ALL)
 				{
+					System.out.println("mode: ALL");
+					
 					// ensure that we are not adding the attribute itself as an argument to the skolem
 					Vector<String> skAtts = new Vector<String>();
 					Vector<String> vars = new Vector<String>();

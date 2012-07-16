@@ -1,17 +1,15 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Vector;
+
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
-
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Vector;
-
-import tresc.benchmark.utils.Utils;
 
 /**
  * Randomly generates functional dependencies after all scenarios have been generated.

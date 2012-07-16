@@ -7,7 +7,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.IdGen;
 
-import vtools.dataModel.schema.Schema;
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 

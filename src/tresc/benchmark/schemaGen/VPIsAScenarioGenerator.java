@@ -273,6 +273,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
 		
+		// create keys and make them the first few attributes
 		String keyName = randomAttrName(0, 0) + "KE0";
 		
 		for (int i = 0; i < numOfSrcTblAttr; i++)
@@ -300,6 +301,12 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         String keyAttName = srcAttrs[srcAttrs.length-1] + "JoinAttr";
         String keyAttNameRef = keyAttName + "Ref";
 
+        // create all the key names (Join Attr / Ref)
+        // the offset should be (current offset) + keySize
+        // if its the first table add in the Join Attrs, otherwise add in the Refs
+        // then add in the normal attributes (copied directly from the source table)
+        // then set the primary key 
+        
         for (int i = 0; i < numOfTgtTables; i++)
         {
         	// offset determines which source attributes go to which table (so there is no overlap)
@@ -336,6 +343,8 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	{
 		for(int i = 1; i < numOfTgtTables; i++) 
 		{
+			// add a variable number of foreign keys per table, though they will always be the first 
+			// keySize attributes
 			int toA = m.getNumRelAttr(0, false) - 1;
 			int fromA = m.getNumRelAttr(i, false) - 1;
 			addFK(i, fromA, 0, toA, false);
@@ -347,6 +356,11 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	{
 		MappingType m1 = fac.addMapping(m.getCorrs());
 		String[] srcVars = fac.getFreshVars(0, numOfSrcTblAttr);
+		
+		// key is the first keySize attributes
+		// change offset as above
+		// set the first target vars to be the keys
+		// copy the rest as per normal
 		
 		String tgtKey = srcVars[srcVars.length-1];
 		

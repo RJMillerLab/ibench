@@ -1,13 +1,13 @@
 package vtools.xml;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Element; 
+
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Complex;
 import vtools.dataModel.types.Rcd;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Structured;

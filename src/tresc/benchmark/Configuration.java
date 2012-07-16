@@ -319,6 +319,7 @@ public class Configuration {
 					Constants.dbOptionDefaults.get(o);
 	}
 
+	@SuppressWarnings("static-access")
 	private void setDefaultConfiguration() {
 		for (int i = 0, imax = _repetitions.length; i < imax; i++) {
 			_repetitions[i] = 0;

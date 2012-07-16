@@ -82,15 +82,29 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		String relName = randomRelName(0);
 		String hook = getRelHook(0);
 		
-		for(int i = 0; i < A; i++) {
-			attrs[i] = randomAttrName(0, i);
+		// generate the appropriate number of keys
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "KE" + j;
+		
+		int keyCount = 0;
+		for (int i = 0; i < A; i++) {
+			String attrName = randomAttrName(0, i);
+
+			if (keyCount < keySize)
+				attrName = keys[keyCount];
+			
+			keyCount++;
+			
+			attrs[i] = attrName;
 		}
+		
 		RelationType rel = fac.addRelation(hook, relName, attrs, true);
-		fac.addPrimaryKey(rel.getName(), new String[] {attrs[0]}, true);
+		fac.addPrimaryKey(rel.getName(), keys, true);
 	}
 
 	@Override
-	protected void genTargetRels() {
+	protected void genTargetRels() throws Exception {
 		RelationType s = m.getSourceRels().get(0);
 		String[] attrs = new String[s.getAttrArray().length];
 		String relName = s.getName() + "copy" + curRep;
@@ -99,6 +113,12 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		for(int i = 0; i < s.getAttrArray().length; i++)
 			attrs[i] = s.getAttrArray()[i].getName();
 		fac.addRelation(hook, relName, attrs, false);
+		
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = attrs[j];
+		
+		fac.addPrimaryKey(relName, keys, false);
 	}
 
 	@Override

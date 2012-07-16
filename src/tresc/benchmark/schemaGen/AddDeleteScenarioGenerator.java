@@ -39,20 +39,28 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
-		String keyName = randomAttrName(0, 0) + "KE0";
+		
+		// generate the appropriate number of keys
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "KE" + j;
 
+		int keyCount = 0;
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0, i);
 
-			if (sk == SkolemKind.KEY && i == 0)
-				attrName = keyName;
+			if (sk == SkolemKind.KEY && keyCount < keySize)
+				attrName = keys[keyCount];
+			
+			keyCount++;
+			
 			attrs[i] = attrName;
 		}
 
 		fac.addRelation(getRelHook(0), srcName, attrs, true);
 
 		if (sk == SkolemKind.KEY)
-			fac.addPrimaryKey(srcName, new String[] { keyName }, true);
+			fac.addPrimaryKey(srcName, keys, true);
 
 	}
 
@@ -71,8 +79,12 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
 
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = srcAttrs[j];
+		
 		if (sk == SkolemKind.KEY)
-			fac.addPrimaryKey(trgName, new String[] { srcAttrs[0] }, false);
+			fac.addPrimaryKey(trgName, keys, false);
 	}
 	
 	@Override
@@ -116,7 +128,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// skolem on just that key
 		if (sk == SkolemKind.KEY)
 			for (int i = 0; i < numNewAttr; i++)
-				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, 1));
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
 		else {
 			// if configuration specifies that we need to randomly decide how
 			// many arguments the skolem will take, generate a random number
@@ -149,7 +161,6 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	
 	private Query genQueries() throws Exception {
 		String sourceRelName = m.getRelName(0, true);
-		String[] attNames = m.getAttrIds(0, true);
 		String[] tAttrs = m.getAttrIds(0, false);
 		MappingType m1 = m.getMaps().get(0);
 		
@@ -169,7 +180,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		
 		// retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
 		for(int i = 0 ; i < numNewAttr; i++) {
-			int attPos = i + numOfSrcTblAttr;
+			int attPos = i + numOfSrcTblAttr-numDelAttr;
 			String attName = tAttrs[attPos];
 			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
 			
