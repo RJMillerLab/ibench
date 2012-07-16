@@ -21,6 +21,9 @@ import vtools.dataModel.types.RandSrcSkolem;
  * 
  * @author mdangelo
  */
+
+// PRG FIXED Compilation Error on July 16th, 2012 - Replaced rsk.getSKId() with rsk.getSkId() (lines 223 and 260 in previous version)
+
 public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator 
 {
 	protected TrampModelFactory fac;
@@ -220,7 +223,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
 				System.out.println("relName: " + r.getName());
-				System.out.println("skID: " + rsk.getSKId());
+				System.out.println("skID: " + rsk.getSkId());
 				System.out.println("SkolemVar: " + rsk.getAttrVar());
 				
 				System.out.print("Args: ");
@@ -257,7 +260,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								{						
 									// create the skolem function object
 									SKFunction sk = tmp.addNewSKFunction();
-									sk.setSkname(rsk.getSKId());
+									sk.setSkname(rsk.getSkId());
 									sk.setVarArray(rsk.getSkolemVars());
 
 									// switch out the var for the new SKFunction
