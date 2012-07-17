@@ -82,8 +82,6 @@ public class SourceFDGenerator implements ScenarioGenerator
 						tries++;
 				}
 				
-				System.out.println("tries: " + tries);
-				
 				//String[] LHSAtts = convertVectorToStringArray(LHSAtts);
 				Boolean done;
 				

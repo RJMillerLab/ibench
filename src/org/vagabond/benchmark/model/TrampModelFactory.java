@@ -199,6 +199,7 @@ public class TrampModelFactory {
 		return addRelation(hook, name, attrs, dTypes, source);
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private void addDataElement(String name) {
 		if (!doc.getScenario().isSetData())
 			doc.getScenario().addNewData();

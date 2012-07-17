@@ -18,7 +18,6 @@ import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
@@ -31,6 +30,7 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	private STBenchmark b = new STBenchmark();
 	private Configuration conf;
 	private static final String OUT_DIR = "./testout";
+	private boolean useDB = false;
 	
 //	private static final ScenarioName[] scens = ScenarioName.values();
 	private static final ScenarioName[] scens = new ScenarioName[] {
@@ -40,7 +40,6 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 			ScenarioName.MERGING,
 			ScenarioName.SELFJOINS,
 			ScenarioName.SURROGATEKEY,
-			ScenarioName.VALUEGEN,
 			ScenarioName.VALUEMANAGEMENT,
 			ScenarioName.VERTPARTITION,
 			ScenarioName.ADDATTRIBUTE,
@@ -58,13 +57,13 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	
 	@AfterClass
 	public static void tearDown () {
-		File outDir = new File(OUT_DIR);
-//		if (outDir.exists()) {
-//			for(File child: outDir.listFiles()) {
-//				child.delete();
-//			}
-//			outDir.delete();
-//		}
+		/*File outDir = new File(OUT_DIR);
+		if (outDir.exists()) {
+			for(File child: outDir.listFiles()) {
+				child.delete();
+			}
+			outDir.delete();
+		}*/
 	}
 
 	@Before
@@ -145,15 +144,17 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	
 	@Test
 	public void testAllBasicScenarios () throws Exception {
-		for(ScenarioName n: Constants.ScenarioName.values())
+		//for(ScenarioName n: Constants.ScenarioName.values())
+		for(ScenarioName n: scens)
 			testSingleBasicScenario(n);
 	}
 	
 	private void testSingleBasicScenario (ScenarioName n) throws Exception {
 		log.info(n);
-		conf.setScenarioRepetitions(n, 1);
+		conf.setScenarioRepetitions(n, 10);
 		b.runConfig(conf);
-		//testLoad(n, false, false);
+		if(useDB)
+			testLoad(n, false, false);
 		conf.setScenarioRepetitions(n, 0);
 	}
 
@@ -178,6 +179,8 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 		while(in.ready()) {
 			result.append(in.readLine() + "\n");
 		}
+		
+		in.close();
 		
 		return result.toString();
 	}

@@ -31,6 +31,12 @@ ConfigOptions.NumOfParamsInFunctions = 2
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumofAttributestoDelete = 1
 ConfigOptions.SkolemKind = 1
+ConfigOptions.SourceFDPerc = 0
+ConfigOptions.SourceSkolemPerc = 60
+ConfigOptions.ReuseSourcePerc = 60
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.PrimaryKeySize = 2
 
 # Derivations for each of the parameters
 ConfigOptionsDerivation.NumOfSubElements = 0 

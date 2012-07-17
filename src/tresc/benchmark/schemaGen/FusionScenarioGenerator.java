@@ -727,9 +727,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 
 		// generate names for the keyAttrs
 		for (int i = 0; i < K; i++) {
-			keyAttrs[0][i] = randomAttrName(0, i)
-							+ ("_" + getStamp() + curRep + "KE" + i)
-									.toLowerCase();
+			keyAttrs[0][i] = randomAttrName(0, i) + ("_" + getStamp() + curRep + "KE" + i).toLowerCase();
 			keyAttrPos[0][i] = i;
 			for (int j = 1; j < N; j++) {
 				keyAttrs[j][i] = keyAttrs[0][i];

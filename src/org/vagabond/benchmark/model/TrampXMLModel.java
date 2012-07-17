@@ -88,9 +88,14 @@ public class TrampXMLModel extends MapScenarioHolder {
 		// loop through the mappings and check if any of the for each refer to the relation in question
 		// if they do, add them to our result
 		for(MappingType m: doc.getMappingScenario().getMappings().getMappingArray())
+		{
+			if(m.getForeach() == null)
+				System.out.println("ERROR: Scenario has no Foreach clause!");
+			
 			for (RelAtomType a: m.getForeach().getAtomArray())
 				if(a.getTableref().equals(rel))
 					result.add(m);
+		}
 		
 		// convert the vector into an array
 		MappingType[] ret = new MappingType[result.size()];
