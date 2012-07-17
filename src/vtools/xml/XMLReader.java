@@ -3,9 +3,9 @@ package vtools.xml;
 import java.io.IOException;
 
 import org.apache.xerces.parsers.DOMParser;
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 

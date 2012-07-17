@@ -3,16 +3,12 @@ package tresc.benchmark.schemaGen;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
-import smark.support.SMarkElement;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.ConstantAtomicValue;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
-import vtools.dataModel.schema.Element;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 import vtools.dataModel.values.StringValue;
 
 public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator {
@@ -34,7 +30,7 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 	// _____AttributeVGCE1AE1
 	// _____AttributeVGCE1AE2
 	// .....
-	private void createSubElements(Element sourceParent, Element targetParent,
+	/*private void createSubElements(Element sourceParent, Element targetParent,
 			int numOfElements, int numOfElementsDeviation, int repetition,
 			SPJQuery pquery, SPJQuery generatedQuery) {
 		String randomName = Modules.nameFactory.getARandomName();
@@ -71,7 +67,7 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 		gselect.add(nameT, query);
 		pquery.setSelect(pselect);
 		generatedQuery.setSelect(gselect);
-	}
+	}*/
 
 	@Override
 	protected void chooseSourceRels() {

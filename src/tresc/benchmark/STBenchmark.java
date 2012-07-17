@@ -21,8 +21,8 @@ import vtools.dataModel.expression.HTMLPresenter;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.schema.Schema;
-import vtools.xml.XMLWriter;
 import vtools.xml.XSDWriter;
+import vtools.xml.XMLWriter;
 
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated

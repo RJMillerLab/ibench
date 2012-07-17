@@ -1,5 +1,6 @@
 package smark.support;
 
+import java.util.List;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,18 +8,20 @@ import java.util.Vector;
 
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
+import org.vagabond.benchmark.model.UniqueIdGen;
+import org.vagabond.xmlmodel.MappingScenarioDocument;
 
 import tresc.benchmark.Configuration;
-import vtools.dataModel.expression.AND;
-import vtools.dataModel.expression.BooleanExpression;
-import vtools.dataModel.expression.EQ;
 import vtools.dataModel.expression.Expression;
-import vtools.dataModel.expression.ForeignKey;
-import vtools.dataModel.expression.FromClauseList;
-import vtools.dataModel.expression.Projection;
-import vtools.dataModel.expression.Rule;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
+import vtools.dataModel.expression.BooleanExpression;
+import vtools.dataModel.expression.AND;
+import vtools.dataModel.expression.EQ;
+import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Rule;
+import vtools.dataModel.expression.ForeignKey;
+import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.schema.Schema;
 
 /**
@@ -409,9 +412,5 @@ public class MappingScenario
 		return _basicScens.size();
 	}
 	
-    // PRG ADD July 16, 2012
-	// Instance Method getNumOfDistinctSkolems returns the number of distinct unique Skolems generated so far
-	public int getNumOfDistinctSkolems () {
-		return docFac.getNumUniqueId("SK");
-	}
+    
 }

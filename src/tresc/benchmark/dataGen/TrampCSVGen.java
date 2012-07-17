@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.io.StringReader;
 
 import javax.xml.transform.Transformer;
@@ -14,8 +15,10 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.vagabond.util.LoggerUtil;
 
+import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
+import tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper;
 import vtools.dataModel.schema.Schema;
 
 public class TrampCSVGen extends ToXDataGenerator {

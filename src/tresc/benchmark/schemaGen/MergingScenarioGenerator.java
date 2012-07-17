@@ -8,14 +8,12 @@ import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
-import smark.support.SMarkElement;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.EQ;
-import vtools.dataModel.expression.ForeignKey;
 import vtools.dataModel.expression.FromClauseList;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
@@ -23,9 +21,6 @@ import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 
 public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
@@ -67,7 +62,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
         }
     }
 	
-    private SMarkElement createSubElements(Schema source, Schema target, int[] numOfAttributes,int numOfJoinAttributes, 
+    /*private SMarkElement createSubElements(Schema source, Schema target, int[] numOfAttributes,int numOfJoinAttributes, 
     		    JoinKind jk, int repetition, SPJQuery pquery, SPJQuery generatedQuery, SMarkElement[] sources)
     {
     	// the local query which will be added to the final pquery
@@ -280,7 +275,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
         pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
         return elTrg;
-    }
+    }*/
     
     /**
      * Find source rels that have enough attributes and either have no key or
@@ -535,7 +530,6 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		String targetName = randomRelName(0);
 		List<String> attrs = new ArrayList<String> ();
 		int numNormalAttrs;
-		int numJoinAttrs;
 		
 		// first copy normal attributes
 		for(int i = 0; i < numOfTables; i++) {
@@ -561,8 +555,6 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 					attrs.add(m.getAttrId(i, j + offset, true));				
 			}
 		}
-		
-		numJoinAttrs = attrs.size() - numNormalAttrs;
 		
 		fac.addRelation(getRelHook(0), targetName, 
 				attrs.toArray(new String[] {}), false);
@@ -671,7 +663,6 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	}
 	
 	private SPJQuery genQueries() {
-	  	String nameT = m.getRelName(0, false);
 		SPJQuery query = new SPJQuery();
     	SelectClauseList sel = query.getSelect();
     	FromClauseList from = query.getFrom();
@@ -680,8 +671,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
         // that do not participate in the joins.
         for (int i = 0, imax = numOfTables; i < imax; i++) {
             // add the table to the from clause
-            from.add(new Variable("X"+i), new Projection(Path.ROOT, 
-            		m.getRelName(i, true)));
+            from.add(new Variable("X"+i), new Projection(Path.ROOT,  m.getRelName(i, true)));
 
             // create the non join attributes of the specific table/fragment/component
             int numOfNonJoinAttr = numOfAttributes[i] - getNumJoinAttrs(i);

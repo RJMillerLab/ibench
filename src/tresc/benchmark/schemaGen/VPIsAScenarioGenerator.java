@@ -34,8 +34,8 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);
     	
-        attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
-        attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
+        attsPerTargetRel = (numOfSrcTblAttr-keySize) / numOfTgtTables;
+        attrRemainder = (numOfSrcTblAttr-keySize) % numOfTgtTables; 
     }
 
     /*public void generateScenario(MappingScenario scenario, Configuration configuration)
@@ -270,26 +270,36 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	protected void genSourceRels() throws Exception 
 	{
 		String sourceRelName = randomRelName(0);
-		String[] attNames = new String[numOfSrcTblAttr];
+		String[] attrs = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
 		
-		// create keys and make them the first few attributes
-		String keyName = randomAttrName(0, 0) + "KE0";
-		
-		for (int i = 0; i < numOfSrcTblAttr; i++)
-		{
+		// generate the appropriate number of keys
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "ke" + j;
+
+		// make the first keySize elements part of the primary key and insert them into the relation
+		int keyCount = 0;
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0, i);
 
-			if (i == numOfSrcTblAttr-1)
-				attrName = keyName;
-			
-			attNames[i] = attrName;
+			if (keyCount < keySize)
+				attrName = keys[keyCount];
+
+			keyCount++;
+
+			attrs[i] = attrName;
 		}
 		
-		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		System.out.println("----------" + sourceRelName + "----------");
+		
+		for (String a : attrs)
+			System.out.println("attr: " + a);
+		
+		RelationType sRel = fac.addRelation(hook, sourceRelName, attrs, true);
 		m.addSourceRel(sRel);
 		
-		fac.addPrimaryKey(sourceRelName, new String[] { keyName }, true);
+		fac.addPrimaryKey(sourceRelName, keys, true);
 	}
 
 	@Override
@@ -297,11 +307,17 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	{
 		String[] attrs;
 		String[] srcAttrs = m.getAttrIds(0, true);
-        
-        String keyAttName = srcAttrs[srcAttrs.length-1] + "JoinAttr";
-        String keyAttNameRef = keyAttName + "Ref";
-
-        // create all the key names (Join Attr / Ref)
+		
+		// create key names with JoinAttr/Ref tacked on
+		String[] keyAttNames = new String[keySize];
+		String[] keyAttNameRef = new String[keySize];
+		
+		for(int i = 0; i < keySize; i++)
+		{
+			keyAttNames[i] = srcAttrs[i] + "JoinAttr";
+			keyAttNameRef[i] = srcAttrs[i] + "Ref";
+		}
+		
         // the offset should be (current offset) + keySize
         // if its the first table add in the Join Attrs, otherwise add in the Refs
         // then add in the normal attributes (copied directly from the source table)
@@ -309,31 +325,39 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         
         for (int i = 0; i < numOfTgtTables; i++)
         {
-        	// offset determines which source attributes go to which table (so there is no overlap)
-        	int offset = i * attsPerTargetRel;
-        	
         	String trgName = randomRelName(i);
         	String hook = getRelHook(i);
         	
-        	int attrNum = (i < numOfTgtTables - 1) ? (attsPerTargetRel + 1) : (attsPerTargetRel + attrRemainder);
+        	System.out.println("----------" + trgName + "----------");
+        	
+        	// offset determines which source attributes go to which table (so there is no overlap)
+        	int offset = i * attsPerTargetRel;
+        	
+        	int attrNum = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) : (attsPerTargetRel + attrRemainder + keySize);
         	attrs = new String[attrNum];
         	
+        	System.out.println("attrNum: " + attrNum);
+        	
+        	int j = 0;
+        	// if its the first relation then we add a join attribute, otherwise it is a foreign key so we use the ref attribute
+            if (i==0)
+	            for (String key : keyAttNames)
+	            	attrs[j++] = key;
+            else
+            	for (String key : keyAttNameRef)
+	            	attrs[j++] = key;
+            
         	// create normal attributes for table (copy from source)
-            for (int j = 0; j < attrNum-1; j++)
+            for (; j < attrNum; j++)
             	attrs[j] = srcAttrs[offset + j];
             
-            if (i == 0)
-            	attrs[attrs.length - 1] = keyAttName;
-            else 
-            	attrs[attrs.length - 1] = keyAttNameRef;
-            
-            for (int k = 0; k < attrs.length; k++)
-            	System.out.println(attrs[k]);
+            for (String s : attrs)
+        	   System.out.println("attr: " + s);
             
             fac.addRelation(hook, trgName, attrs, false);
             
             if (i==0)
-            	fac.addPrimaryKey(trgName, new String[] { keyAttName }, false);
+            	fac.addPrimaryKey(trgName, keyAttNames, false);
         }
         
         addFKs();
@@ -343,11 +367,9 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	{
 		for(int i = 1; i < numOfTgtTables; i++) 
 		{
-			// add a variable number of foreign keys per table, though they will always be the first 
-			// keySize attributes
-			int toA = m.getNumRelAttr(0, false) - 1;
-			int fromA = m.getNumRelAttr(i, false) - 1;
-			addFK(i, fromA, 0, toA, false);
+			// add a variable number of foreign keys per table (always the first keySize attributes)
+			for (int j = 0; j < keySize; j++)
+				addFK(i, j, 0, j, false);
 		}
 	}
 	
@@ -357,27 +379,27 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		MappingType m1 = fac.addMapping(m.getCorrs());
 		String[] srcVars = fac.getFreshVars(0, numOfSrcTblAttr);
 		
-		// key is the first keySize attributes
-		// change offset as above
-		// set the first target vars to be the keys
-		// copy the rest as per normal
-		
-		String tgtKey = srcVars[srcVars.length-1];
+		// get the variables to be used for the keys
+		String[] keyVars = fac.getFreshVars(0, keySize);
 		
 		fac.addForeachAtom(m1, 0, srcVars);
 		
-		for(int i = 0; i < numOfTgtTables; i++) {
+		for(int i = 0; i < numOfTgtTables; i++) 
+		{
 			int offset = i * attsPerTargetRel;
-        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel+1 :
-    				attsPerTargetRel + attrRemainder;
+        	int numAtts = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) : (attsPerTargetRel + attrRemainder + keySize);
         	
         	String[] tgtVars = new String[numAtts];
         	
-        	for (int k = 0; k < numAtts-1; k++)
+        	// add in the key vars first
+        	int k = 0;
+        	for (String key : keyVars)
+        		tgtVars[k++] = key;
+            
+        	// now split the remaining vars appropriately
+        	for (; k < numAtts; k++)
         		tgtVars[k] = srcVars[k+offset];
         		
-        	tgtVars[numAtts-1] = tgtKey;
-
         	fac.addExistsAtom(m1, i, tgtVars);
 		}
 	}
@@ -403,7 +425,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String targetRelName = m.getTargetRels().get(i).getName();
-			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
+			int numAttr = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) : (attsPerTargetRel + attrRemainder + keySize);
 			
 			// gen query for the target table
 			SPJQuery q = new SPJQuery();
@@ -414,7 +436,14 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	        
 	        for (int j = 0; j < numAttr; j++) {
 	        	String trgAttrName = m.getAttrId(i, j, false);
-				Projection att = new Projection(new Variable("X"), trgAttrName);
+	        	
+	        	Projection att;
+	        	
+	        	if(j < keySize)
+	        		att = new Projection(new Variable("X"), m.getAttrId(i, j, true));
+	        	else
+	        		att = new Projection(new Variable("X"), trgAttrName);
+	        	
 				sel.add(trgAttrName, att);
 	        }
 		}

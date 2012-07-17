@@ -10,6 +10,7 @@ import org.vagabond.benchmark.explgen.SourceJoinGen;
 import org.vagabond.benchmark.explgen.SourceSkeletonGen;
 import org.vagabond.benchmark.explgen.SuperfluousMappingGen;
 import org.vagabond.benchmark.explgen.TargetSkeletonGen;
+import org.vagabond.explanation.model.basic.SuperflousMappingError;
 
 import tresc.benchmark.dataGen.DataGenerator;
 import tresc.benchmark.dataGen.ToXDataGenerator;
@@ -35,8 +36,7 @@ public class Constants
         NoReuseScenPerc,	// percentage of basic scenarios where we do not do a reuse
         SourceSkolemPerc,	// associates skolems with source  
         SourceFDPerc,	// associate FDs with source
-        SourceSkolemNumAttr,	// attributes and use them in mappings
-        PrimaryKeySize
+        SourceSkolemNumAttr		// attributes and use them in mappings
     };
 
     public static final Map<ParameterName, Integer> defaultParameterValues
@@ -58,7 +58,6 @@ public class Constants
     	defaultParameterValues.put(ParameterName.SourceFDPerc, 40);
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
-    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 1);
     }
     
     public static final Map<ParameterName, Integer> defaultParameterDeviation
@@ -80,7 +79,6 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.SourceFDPerc, 0);
     	defaultParameterDeviation.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
-    	defaultParameterDeviation.put(ParameterName.PrimaryKeySize, 0);
     }
     
     public enum JoinKind {

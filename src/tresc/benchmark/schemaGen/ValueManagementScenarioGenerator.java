@@ -6,9 +6,7 @@ import java.util.List;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 
-import smark.support.SMarkElement;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.ConstantAtomicValue;
 import vtools.dataModel.expression.Function;
@@ -17,14 +15,11 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Element;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 import vtools.dataModel.values.IntegerValue;
 
 public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 {
-	private int numOfSubElements;
+	//private int numOfSubElements;
 	private int X;
 	private int Y;
 	private int[] splits;
@@ -36,22 +31,21 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
     }
 
 
-//    public void generateScenario(MappingScenario scenario, Configuration configuration)
-//    {
-//    	init(configuration, scenario);
-//        
-//        for (int i = 0, imax = repetitions; i < imax; i++)
-//        {
-//            createSubElements(source, target, numOfSubElements, i, numOfParams, numOfParamsDeviation, pquery);
-//        }
-//
-//    }
+    /*public void generateScenario(MappingScenario scenario, Configuration configuration)
+    {
+    	init(configuration, scenario);
+        
+        for (int i = 0, imax = repetitions; i < imax; i++)
+        {
+            createSubElements(source, target, numOfSubElements, i, numOfParams, numOfParamsDeviation, pquery);
+        }
+
+    }*/
 
     @Override
     protected void initPartialMapping () {
     	super.initPartialMapping();
-        numOfSubElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-                numOfElementsDeviation);
+        //numOfSubElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
         X = ((numOfElements) / (numOfParams + 1)) + 1;
         Y = numOfElements - X;
         // make sure we have at least one case
@@ -67,7 +61,7 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
     // (X*A)+(E-X)/A=E. Solving this equation gives us that X = E/(A+1)
     // In the following code, because I am playing with integers, and after all
     // everything is approximate, I take X to be (E/(A+1))+1
-    private void createSubElements(Element sourceParent, Element targetParent, int numOfElements, int repetition,
+    /*private void createSubElements(Element sourceParent, Element targetParent, int numOfElements, int repetition,
             int numOfArgs, int numOfArgsDeviation, SPJQuery pquery)
     {
         // first create the name of the two tables
@@ -148,7 +142,7 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
         SelectClauseList pselect = pquery.getSelect();
         pselect.add(randomNameTrg, query);
         pquery.setSelect(pselect);
-    }
+    }*/
 
 
 
@@ -234,7 +228,6 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
         query.getFrom().add(new Variable("X"), new Projection(Path.ROOT, sourceName));
         
         // create the elements that are going to split in the target
-        int fcount = 0;
         SelectClauseList select = query.getSelect();
         int offsetS = 0, offsetT = 0;
         
@@ -246,7 +239,6 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
             for (int k = 0; k < splits[offsetS]; k++) {              
             	// add the attributes to the select clause of the query
                 Function f = new Function("extract");
-                fcount++;
                 Projection att = new Projection(new Variable("X"),sAttrs[offsetS]);
                 f.addArg(att);
                 f.addArg(new ConstantAtomicValue(new IntegerValue(stOffset)));

@@ -9,14 +9,10 @@ import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
-import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Modules;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.utils.Utils;
-import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.ConstantAtomicValue;
-import vtools.dataModel.expression.EQ;
 import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
@@ -26,9 +22,6 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Union;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 import vtools.dataModel.values.AtomicValue;
 
 public class FusionScenarioGenerator extends AbstractScenarioGenerator {
@@ -87,7 +80,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 	// F will be free elements (FE) and S will be nested set elements (NE).
 	// Theoretically K + F + S = E
 	// K>=1, N>=2, hence, E>=3. If E< K+N, then E becomes = K + N
-	private SMarkElement createSubElements(Schema source, Schema target,
+	/*private SMarkElement createSubElements(Schema source, Schema target,
 			int repetition, int numOfElements, int numOfElementsDeviation,
 			int keyWidth, int keyWidthDeviation, int numOfSetElements,
 			int numOfSetElementsDeviation, int numOfFragments, int depth,
@@ -559,7 +552,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		gselect.add(elTrgName, query);
 
 		return trgTbl;
-	}
+	}*/
 
 	/**
 	 * Have to choose N source relations with the same number of attributes and

@@ -1,5 +1,6 @@
 package vtools.dataModel.values;
 
+import vtools.dataModel.expression.ConstantAtomicValue;
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 

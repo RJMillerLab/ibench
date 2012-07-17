@@ -5,6 +5,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import vtools.dataModel.schema.Element;
+import vtools.dataModel.schema.Schema;
+import vtools.dataModel.types.Any;
+import vtools.dataModel.types.Complex;
+import vtools.dataModel.types.Group;
+import vtools.dataModel.types.Int;
+import vtools.dataModel.types.NameTypePair;
+import vtools.dataModel.types.Rcd;
+import vtools.dataModel.types.Set;
+import vtools.dataModel.types.Str;
+import vtools.dataModel.types.Structured;
+import vtools.dataModel.types.Type;
 import vtools.visitor.VisitorImpl;
 
 public class HTMLPresenter extends VisitorImpl

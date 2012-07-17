@@ -2,19 +2,19 @@ package vtools.utils.homomorphism;
 
 import java.util.Vector;
 
-import vtools.dataModel.expression.AND;
-import vtools.dataModel.expression.BooleanExpression;
-import vtools.dataModel.expression.EQ;
-import vtools.dataModel.expression.FromClauseList;
-import vtools.dataModel.expression.SPJQuery;
-import vtools.utils.structures.SetAssociativeArray;
 //import vtools.SQLOld.ConstantValue;
 //import vtools.SQLOld.Length1PathExpression;
 //import vtools.SQLOld.Relation;
 //import vtools.SQLOld.RelationalAttributeExpression;
 //import vtools.SQLOld.RelationalTableReference;
 //import vtools.SQLOld.UnaryExpr;
+import vtools.dataModel.expression.AND;
+import vtools.dataModel.expression.BooleanExpression;
+import vtools.dataModel.expression.EQ;
+import vtools.dataModel.expression.FromClauseList;
 //import vtools.dataModel.expression.PathVariable;
+import vtools.dataModel.expression.SPJQuery;
+import vtools.utils.structures.SetAssociativeArray;
 
 /**
  * 

@@ -1,11 +1,12 @@
 package tresc.benchmark.dataGen;
 
+import vtools.dataModel.schema.Schema;
+
 import java.util.Vector;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import vtools.dataModel.schema.Schema;
 
 public abstract class DataGenerator 
 {

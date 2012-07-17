@@ -94,17 +94,6 @@ public class TrampModelFactory {
 		return idGen.createId(idType);
 	}
 	
-	/*
-	 * Instance Method getNumUniqueId() returns the total number of uniquely generated identifiers of a given idType 
-	 * 
-	 * @author prg
-	 */
-    // PRG ADD July 16, 2012
-	public Integer getNumUniqueId(String idType) {
-        return idGen.getNumIds(idType);
-        
-	}
-	
 	public CorrespondenceType addCorrespondence(String fromRel,
 			String fromAttr, String toRel, String toAttr) {
 		return addCorrespondence(fromRel, new String[] { fromAttr }, toRel,
@@ -210,7 +199,6 @@ public class TrampModelFactory {
 		return addRelation(hook, name, attrs, dTypes, source);
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	private void addDataElement(String name) {
 		if (!doc.getScenario().isSetData())
 			doc.getScenario().addNewData();

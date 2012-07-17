@@ -1,5 +1,6 @@
 package vtools.dataModel.values;
 
+import vtools.dataModel.types.Type;
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 

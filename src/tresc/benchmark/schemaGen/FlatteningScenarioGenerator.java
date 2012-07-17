@@ -1,11 +1,6 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.Random;
-
-import smark.support.MappingScenario;
 import smark.support.SMarkElement;
-import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
@@ -71,7 +66,6 @@ public class FlatteningScenarioGenerator extends AbstractScenarioGenerator
         src.addSubElement(srcRootSubElement);
         trg.addSubElement(trgRootSubElement);
 
-        int atomicElemCounter = 0;
         int setElemCounter = 0;
         int maxNesting = Utils.getRandomNumberAroundSomething(_generator, nesting, nestingDeviation) - 1;
 

@@ -3,22 +3,15 @@ package tresc.benchmark.schemaGen;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 
-import smark.support.SMarkElement;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.EQ;
-import vtools.dataModel.expression.ForeignKey;
-import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 
 public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -51,7 +44,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     // the Source schema has one table with E number of elements, from which K
     // are keys, other K are foreign keys
     // and the rest until E will be free elements
-    private SMarkElement createSubElements(Schema source, Schema target, int E, int K, int JN, int repetition,
+    /*private SMarkElement createSubElements(Schema source, Schema target, int E, int K, int JN, int repetition,
             SPJQuery pquery, SPJQuery generatedQuery)
     {
         String[] keyS = new String[K];
@@ -259,9 +252,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
         generatedQuery.setSelect(gselect);
         generatedQuery.addTarget(nameT2);
         return srcEl;
-    }
-
-
+    }*/
 
 	@Override
 	protected void genSourceRels() throws Exception {
@@ -367,7 +358,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		// generate the keys in the source and Basic target table
 		// add the keys constraints to the source and to the target
 		SelectClauseList select = query.getSelect();
-		Variable varKey = new Variable("K");
+		//Variable varKey = new Variable("K");
 		// the key constraint in the source
 		for (int i = 0; i < K; i++) {
 			// add the keys to the select clause of the query

@@ -8,10 +8,8 @@ import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
-import smark.support.SMarkElement;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
-import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.ConstantAtomicValue;
@@ -22,9 +20,6 @@ import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-import vtools.dataModel.schema.Schema;
-import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Set;
 import vtools.dataModel.values.IntegerValue;
 
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
@@ -57,7 +52,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
     // In addition, the source has an attribute called selector that is used to
     // do the selection of the tuples
     //
-    private void createHorizPartitionCase(Schema source, Schema target, int numOfElements, int numOfFragments,
+    /*private void createHorizPartitionCase(Schema source, Schema target, int numOfElements, int numOfFragments,
             int repetition, SPJQuery pquery, SPJQuery generatedQuery)
     {
         String srcName = Modules.nameFactory.getARandomName();
@@ -138,7 +133,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         generatedQuery.setSelect(qselect);
         for (int i=0; i < queries.length; i++)
         	generatedQuery.addTarget(fragments[i].getLabel());
-    }
+    }*/
 
     /**
      * Following requirements for the relation:
