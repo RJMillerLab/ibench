@@ -2,14 +2,14 @@ package smark.support;
 
 import java.util.List;
 import java.util.HashMap;
-import java.util.List;
+//import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
-import org.vagabond.benchmark.model.UniqueIdGen;
-import org.vagabond.xmlmodel.MappingScenarioDocument;
+//import org.vagabond.benchmark.model.UniqueIdGen;
+//import org.vagabond.xmlmodel.MappingScenarioDocument;
 
 import tresc.benchmark.Configuration;
 import vtools.dataModel.expression.Expression;
@@ -29,6 +29,9 @@ import vtools.dataModel.schema.Schema;
  * schema, and some specification on how to map from the source to the target.
  * Now we also include the Java model for a Tramp-style mapping scenario XML file.
  */
+
+// PRG ADD Instance Method getNumOfDistinctSkolems (from existing file version 351) - July 18, 2012 
+
 public class MappingScenario
 {
     private Schema _source;
@@ -412,5 +415,10 @@ public class MappingScenario
 		return _basicScens.size();
 	}
 	
+	// PRG ADD July 16, 2012
+	// Instance Method getNumOfDistinctSkolems returns the number of distinct unique Skolems generated so far
+	public int getNumOfDistinctSkolems () {	
+		return docFac.getNumUniqueId("SK");
+	}
     
 }

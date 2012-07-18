@@ -43,6 +43,9 @@ import vtools.dataModel.types.Set;
  * 
  * @author lord_pretzel
  */
+
+// PRG ADD Instance Method getNumUniqueId() (from existing file version 351) - July 18, 2012 
+
 public class TrampModelFactory {
 
 	private TrampXMLModel doc;
@@ -92,6 +95,16 @@ public class TrampModelFactory {
 
 	public String getNextId(String idType) {
 		return idGen.createId(idType);
+	}
+	
+	/*
+	 * Instance Method getNumUniqueId() returns the total number of uniquely generated identifiers of a given idType
+	 * 
+	 * @author prg
+	 */
+	// PRG ADD July 16, 2012
+	public Integer getNumUniqueId(String idType) {        
+		return idGen.getNumIds(idType);
 	}
 	
 	public CorrespondenceType addCorrespondence(String fromRel,
