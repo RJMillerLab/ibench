@@ -318,11 +318,10 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		fac.addExistsAtom(m1, 0, CollectionUtils.concatArrays(keyVars, fVars));
 		
 		MappingType m2 = fac.addMapping(m.getCorrs(1, false));
-		fac.addForeachAtom(m2, 0, CollectionUtils.concatArrays(keyVars, fkVars, 
-				fVars));
-		fac.addForeachAtom(m2, 0, CollectionUtils.concatArrays(keyVars, 
-				fac.getFreshVars(E, E - K)));
-		fac.addExistsAtom(m2, 0, CollectionUtils.concatArrays(keyVars, fkVars));
+		fac.addForeachAtom(m2, 0, CollectionUtils.concatArrays(keyVars, fac.getFreshVars(2 * K, E - K)));
+		fac.addForeachAtom(m2, 0, CollectionUtils.concatArrays(fkVars, keyVars,
+				fac.getFreshVars(E, F)));
+		fac.addExistsAtom(m2, 1, CollectionUtils.concatArrays(keyVars, fkVars));
 	}
 	
 	@Override
