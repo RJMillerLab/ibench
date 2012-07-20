@@ -294,7 +294,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		keySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
         
 		// ensure that the key size is not greater than the number of elements
-		keySize = (keySize >= numOfElements) ? numOfElements - 1 : keySize;
+		numOfElements = (numOfElements <= keySize) ? keySize + 1 : numOfElements;
 		
         mapLang = configuration.getMapType();
 

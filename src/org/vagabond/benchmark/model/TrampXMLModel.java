@@ -19,9 +19,6 @@ import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.SchemaType;
 
-// PRG ADD July 10, 2012
-// PRG ADD Instance Method to Retrieve Array of Mappings: public MappingType[] getMappings()
-
 public class TrampXMLModel extends MapScenarioHolder {
 
 	static Logger log = Logger.getLogger(TrampXMLModel.class);
@@ -193,6 +190,28 @@ public class TrampXMLModel extends MapScenarioHolder {
 		}
 		
 		return atts.toArray(new AttrDefType[atts.size()]);
+	}
+	
+	/** 
+	 * Retreives all of the variables associated with a source relation.
+	 * 
+	 * @author mdangelo
+	 * 
+	 * @param rel	The name of the relation
+	 * 
+	 * @return		An array of strings containing all the variables in a foreach clause associated with the relation
+	 */
+	public String[] getAttrVars(String rel) throws Exception 
+	{
+		MappingType[] maps = getMappings(rel);
+		String[] result = null;
+		
+		for (MappingType m : maps)
+			for (RelAtomType a : m.getForeach().getAtomArray())
+				if(a.getTableref().equals(rel))
+					result = a.getVarArray();
+		
+		return result;
 	}
 	
 	public String[] getAttrNames (String rel, int[] attrPos, boolean source) throws Exception {
