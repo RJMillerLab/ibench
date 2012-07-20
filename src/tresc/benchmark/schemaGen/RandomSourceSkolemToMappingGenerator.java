@@ -1,5 +1,7 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -79,6 +81,10 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				int position;
 				Boolean alreadyAdded;
 
+				// get all vars and attributes
+				String[] allVars = scenario.getDoc().getAttrVars(r.getName());
+				String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
+				
 				do 
 				{
 					alreadyAdded = false;
@@ -93,18 +99,28 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						addedSKs.add(rsk.getAttr());
 					else
 						alreadyAdded = true;
+					
+					// retrieve the variable associated with the skolem attribute
+					for (int i = 0; i < allAttrs.length; i++)
+						if (allAttrs[i].equals(rsk.getAttr()))
+							rsk.setPosition(position);
+					
+					rsk.setAttrVar(allVars[rsk.getPosition()]);
+					
+					// get the vars from the target
+					MappingType[] tgtMaps = model.getMappings(r.getName());
+					Vector<String> tgtVars = new Vector<String>();
+
+					for (MappingType m : tgtMaps)
+						for (RelAtomType a : m.getExists().getAtomArray())
+							for (int i = 0; i < a.getVarArray().length; i++)
+								tgtVars.add(a.getVarArray(i));
+					
+					// if the variable is not in the target (consider delete) then we keep picking
+					if(tgtVars.indexOf(rsk.getAttrVar()) == -1)
+						alreadyAdded = false;
 
 				} while (alreadyAdded);
-
-				// retrieve the variable associated with the skolem attribute
-				String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
-				for (int i = 0; i < allAttrs.length; i++)
-					if (allAttrs[i].equals(rsk.getAttr()))
-						rsk.setPosition(position);
-
-				String[] allVars = scenario.getDoc().getAttrVars(r.getName());
-				
-				rsk.setAttrVar(allVars[position]);
 
 				// roll the dice to pick the skolem mode (there are 4 modes with
 				// ordinals from 0 to 3)
@@ -257,12 +273,26 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 					rsk.setSkolemVars(convertVectorToStringArray(vars));
 				}
 
+				rsk.setSkId(fac.getNextId("SK"));
+				
 				RandomSkolems.add(rsk);
 			}
 
 			// get all the mappings associated with the relation in question and
 			// go through them
 			MappingType[] mappings = model.getMappings(r.getName());
+			
+			for (MappingType m : mappings)
+				for (RelAtomType a : m.getExists().getAtomArray())
+				{
+					System.out.println("atom tableref: " + a.getTableref());
+					
+					// convert to vector to facilitate printing
+			        List<String> varList = Arrays.asList(a.getVarArray());
+			        Vector<String> varVect = new Vector<String>(varList);
+			        
+			        System.out.println("vars: " + varVect.toString());
+				}
 
 			// create a new mapping to temporarily store the SKFunctions
 			// (because we need to destroy the ones in the atom before we can
@@ -297,7 +327,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 								{
 									// only generate the id when we are adding it in case we deleted the var we wanted to replace
 									// this is to prevent gaps in id's and to simply linearization
-									rsk.setSkId(fac.getNextId("SK"));
+									//rsk.setSkId(fac.getNextId("SK"));
 									
 									// create the skolem function object
 									SKFunction sk = tmp.addNewSKFunction();

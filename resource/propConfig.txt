@@ -5,7 +5,7 @@ SchemaPathPrefix=out
 InstancePathPrefix=out
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 2
+Scenarios.COPY = 0
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
@@ -14,7 +14,7 @@ Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
 Scenarios.ADDATTRIBUTE = 2
-Scenarios.DELATTRIBUTE = 0
+Scenarios.DELATTRIBUTE = 2
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 
@@ -36,9 +36,9 @@ ConfigOptions.NumofAttributestoDelete = 1
 ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceFDPerc = 60
 ConfigOptions.SourceSkolemPerc = 60
-ConfigOptions.ReuseSourcePerc = 25
+ConfigOptions.ReuseSourcePerc = 50
 ConfigOptions.ReuseTargetPerc = 0
-ConfigOptions.NoReuseScenPerc = 0
+ConfigOptions.NoReuseScenPerc = 25
 ConfigOptions.PrimaryKeySize = 2
 
 # Deviations for each of the parameters
