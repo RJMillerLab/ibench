@@ -265,8 +265,8 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		// create key and foreign key attrs
 		for(int i = 0; i < K; i++) {
 			String randAtt = randomAttrName(0, i);
-			keys[i] = randAtt + "KE";
-			fks[i] = randAtt + "FK";
+			keys[i] = randAtt + "ke";
+			fks[i] = randAtt + "fk";
 			attrs[i] = keys[i];
 			attrs[i + K] = fks[i];
 		}

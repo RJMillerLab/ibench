@@ -55,8 +55,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
 			System.out.println("---------GENERATING SKOLEMS---------");
-			System.out.println("relation: " + r.getName());
-
+			System.out.println("relName: " + r.getName());
+			
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceSkolemPerc)) / (double) 100;
 			int numAtts = r.getAttrArray().length;
 			int numSKs = (int) Math.ceil((percentage / 2) * numAtts);
@@ -333,8 +333,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			System.out.println("---------NEW SKOLEMS---------");
 
-			for (RandSrcSkolem rsk : RandomSkolems) {
-				System.out.println("relName: " + r.getName());
+			for (RandSrcSkolem rsk : RandomSkolems)
+			{
 				System.out.println("skID: " + rsk.getSkId());
 				System.out.println("SkolemVar: " + rsk.getAttrVar());
 

@@ -1,6 +1,7 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -26,13 +27,25 @@ public class SourceFDGenerator implements ScenarioGenerator
 
 		// create PK FDs R(A,B,C) if A is key then add A -> B,C
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray())
-		{
+		{	
 			if (r.isSetPrimaryKey()) 
 			{
 				String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
 				String[] nonKeyAttrs = getNonKeyAttributes(r, scenario);
 
 				scenario.getDocFac().addFD(r.getName(), pkAttrs, nonKeyAttrs);
+				
+				// convert to vector to facilitate printing
+		        List<String> pkList = Arrays.asList(pkAttrs);
+		        Vector<String> pkVect = new Vector<String>(pkList);
+		        List<String> nonkeyList = Arrays.asList(nonKeyAttrs);
+		        Vector<String> nonkeyVect = new Vector<String>(nonkeyList);
+				
+		        System.out.println("---------GENERATING PRIMARY KEY FD---------");
+		        
+				System.out.println("relName: " + r.getName());
+				System.out.println("LHS: " + pkVect.toString());
+				System.out.println("RHS: " + nonkeyVect.toString());
 			}
 		}
 
@@ -53,33 +66,50 @@ public class SourceFDGenerator implements ScenarioGenerator
 
 			// if there is a primary key then we must strip out the attributes
 			// associated with it, otherwise we just grab all the attributes
-			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
+			//String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
+			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
+			String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
 
 			int max_tries = 20;
 			// randomly select attributes for each run of FD generation
 			for (int i = 0; i < numFDs; i++) {
-				int numLHSAtts = _generator.nextInt(nonKeyAttrs.length / 2) + 1;
+				int numLHSAtts = _generator.nextInt(allAttrs.length / 2) + 1;
 
 				Vector<String> LHSAtts = new Vector<String>();
 				String RHSAtt = "";
 
-				Boolean add = true;
+				Boolean trivial = false;
 				int j = 0;
 				int tries = 0;
 				// pick the attributes to go on the left hand side
 				while (j < numLHSAtts && tries < max_tries) 
 				{
-					int position = _generator.nextInt(nonKeyAttrs.length);
+					int position = _generator.nextInt(allAttrs.length);
 
-					// make sure that we haven't already added this to our LHS FDs to avoid redundancy
+					// make sure that we haven't already added this to our LHS FDs to avoid trivial FDs
 					// ex. ABA -> C
-					if (LHSAtts.indexOf(nonKeyAttrs[position]) != -1)
-						add = false;
+					if (LHSAtts.indexOf(allAttrs[position]) != -1)
+						trivial = true;
 
-					if (add) 
+					if (!trivial) 
 					{
-						LHSAtts.add(nonKeyAttrs[position]);
+						LHSAtts.add(allAttrs[position]);
 						j++;
+						
+						// ensure that we are only adding a partial key to the LHS at most
+						Boolean partial = false;
+						if (r.isSetPrimaryKey())
+						{
+							for (String key : pkAttrs)
+								if(LHSAtts.indexOf(key) == -1)
+									partial = true;
+							
+							if (!partial)
+							{
+								LHSAtts.remove(allAttrs[position]);
+								j--;
+							}
+						}
 					} 
 					else
 						tries++;
@@ -94,15 +124,15 @@ public class SourceFDGenerator implements ScenarioGenerator
 					done = true;
 
 					// pick the attribute to go on the right hand side
-					int position = _generator.nextInt(nonKeyAttrs.length);
+					int position = _generator.nextInt(allAttrs.length);
 
 					// make sure it hasn't been added to the LHS attributes to avoid nonsensical FDs
 					// ex. AB -> A
-					if (LHSAtts.indexOf(nonKeyAttrs[position]) != -1)
+					if (LHSAtts.indexOf(allAttrs[position]) != -1)
 						done = false;
 
 					if (done)
-						RHSAtt = nonKeyAttrs[position];
+						RHSAtt = allAttrs[position];
 				} while (!done);
 
 				// look through all of the existing FDs and check if we would be adding a duplicates
@@ -120,6 +150,12 @@ public class SourceFDGenerator implements ScenarioGenerator
 					i--;
 				else
 					scenario.getDocFac().addFD(r.getName(),convertVectorToStringArray(LHSAtts),new String[] { RHSAtt });
+				
+				System.out.println("---------NEW FD---------");
+
+				System.out.println("relName: " + r.getName());
+				System.out.println("LHS: " + LHSAtts.toString());
+				System.out.println("RHS: " + RHSAtt);
 			}
 		}
 	}

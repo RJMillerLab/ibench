@@ -43,7 +43,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// generate the appropriate number of keys
 		String[] keys = new String[keySize];
 		for (int j = 0; j < keySize; j++)
-			keys[j] = randomAttrName(0, 0) + "KE" + j;
+			keys[j] = randomAttrName(0, 0) + "ke" + j;
 
 		int keyCount = 0;
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
