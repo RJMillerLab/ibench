@@ -185,7 +185,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	    String srcName = randomRelName(0);
 	    String[] attrs = new String[randomElements + 1];
 	    String[] dTypes = new String[randomElements + 1];
-	    String nameSelector = "selector" + getStamp() + curRep;
+	    String nameSelector = "selectorhp" + curRep;
 	    
         // create the source attrs
         attrs[0] = nameSelector;

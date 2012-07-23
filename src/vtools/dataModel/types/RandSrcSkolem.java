@@ -2,16 +2,25 @@ package vtools.dataModel.types;
 
 public class RandSrcSkolem 
 {
-	private int _position;
+	private int _attrPosition;
+	private int[] _argPositions;
+	
 	private String _attr;
-	private String[] _skolemArgs;
 	private String _attrVar;
-	private String[] _skolemVars;
+	
+	private String[] _argAttrs;
+	private String[] _argVars;
+	
 	private String _skId;
 	
-	public int getPosition()
+	public int getAttrPosition()
 	{
-		return _position;
+		return _attrPosition;
+	}
+	
+	public int[] getArgPositions() 
+	{
+		return _argPositions;
 	}
 	
 	public String getAttr()
@@ -19,9 +28,9 @@ public class RandSrcSkolem
 		return _attr;
 	}
 	
-	public String[] getSkolemArgs()
+	public String[] getArgAttrs()
 	{
-		return _skolemArgs;
+		return _argAttrs;
 	}
 	
 	public String getAttrVar()
@@ -29,14 +38,24 @@ public class RandSrcSkolem
 		return _attrVar;
 	}
 	
-	public String[] getSkolemVars()
+	public String[] getArgVars()
 	{
-		return _skolemVars;
+		return _argVars;
 	}
 	
-	public void setPosition(int position)
+	public String getSkId() 
 	{
-		_position = position;
+		return _skId;
+	}
+	
+	public void setAttrPosition(int attrPosition)
+	{
+		_attrPosition = attrPosition;
+	}
+	
+	public void setArgPositions(int[] argPositions) 
+	{
+		_argPositions = argPositions;
 	}
 	
 	public void setAttr (String attr)
@@ -44,9 +63,9 @@ public class RandSrcSkolem
 		_attr = attr;
 	}
 	
-	public void setSkolemArgs (String[] skolemArgs)
+	public void setArgAttrs (String[] argAttrs)
 	{
-		_skolemArgs = skolemArgs;
+		_argAttrs = argAttrs;
 	}
 
 	public void setAttrVar (String attrVar)
@@ -54,16 +73,13 @@ public class RandSrcSkolem
 		_attrVar = attrVar;
 	}
 	
-	public void setSkolemVars (String[] skolemVars)
+	public void setArgVars (String[] argVars)
 	{
-		_skolemVars = skolemVars;
+		_argVars = argVars;
 	}
 
-	public String getSkId() {
-		return _skId;
-	}
-
-	public void setSkId(String skId) {
+	public void setSkId(String skId) 
+	{
 		_skId = skId;
 	}
 }

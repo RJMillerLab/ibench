@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
+import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelAtomType;
 import org.vagabond.xmlmodel.RelationType;
@@ -24,11 +25,17 @@ import vtools.dataModel.types.RandSrcSkolem;
  * 
  * @author mdangelo
  */
+/**
+ * @author mdangelo
+ *
+ */
 public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator 
 {
-	protected TrampModelFactory fac;
-	protected TrampXMLModel model;
-	private SkolemKind sk;
+	protected static TrampModelFactory fac;
+	protected static TrampXMLModel model;
+	private static SkolemKind sk;
+	private static Random _generator;
+	private static Vector<RandSrcSkolem> RandomSkolems;
 
 	/**
 	 * Randomly picks source attributes to turn into skolem terms after all
@@ -47,337 +54,465 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	@Override
 	public void generateScenario(MappingScenario scenario, Configuration configuration) throws Exception 
 	{
-		Random _generator = configuration.getRandomGenerator();
+		_generator = configuration.getRandomGenerator();
 		fac = scenario.getDocFac();
 		model = scenario.getDoc();
 
-		Vector<String> SKVars = new Vector<String>();
-		Vector<RandSrcSkolem> RandomSkolems = new Vector<RandSrcSkolem>();
+		RandomSkolems = new Vector<RandSrcSkolem>();
 
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
 			System.out.println("---------GENERATING SKOLEMS---------");
-			System.out.println("relName: " + r.getName());
+			System.out.println("Relation: " + r.getName());
 			
+	        System.out.print("Attributes: ");
+	        for (AttrDefType ra : r.getAttrArray())
+	        	System.out.print(ra.getName() + " ");
+	        System.out.println();
+	        
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceSkolemPerc)) / (double) 100;
 			int numAtts = r.getAttrArray().length;
 			int numSKs = (int) Math.ceil((percentage / 2) * numAtts);
 
 			Vector<String> addedSKs = new Vector<String>();
-
-			// get positions for all of the attributes
-			int[] attrPos = new int[r.getAttrArray().length];
-			for (int i = 0; i < r.getAttrArray().length; i++)
-				attrPos[i] = i;
-
-			// if there is a primary key then we must strip out the attributes
-			// associated with it, otherwise we just grab all the attributes
-			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
-
-			RandSrcSkolem[] randSK = new RandSrcSkolem[numSKs];
-
-			for (RandSrcSkolem rsk : randSK) 
-			{
-				int position;
-				Boolean alreadyAdded;
-
-				// get all vars and attributes
-				String[] allVars = scenario.getDoc().getAttrVars(r.getName());
-				String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
-				
-				do 
-				{
-					alreadyAdded = false;
-
-					// pick a nonkey attribute at random to be the skolem
-					position = _generator.nextInt(nonKeyAttrs.length);
-					rsk = new RandSrcSkolem();
-					rsk.setAttr(nonKeyAttrs[position]);
-
-					// check if we already picked this one to be a skolem
-					if (addedSKs.indexOf(rsk.getAttr()) == -1)
-						addedSKs.add(rsk.getAttr());
-					else
-						alreadyAdded = true;
-					
-					// retrieve the variable associated with the skolem attribute
-					for (int i = 0; i < allAttrs.length; i++)
-						if (allAttrs[i].equals(rsk.getAttr()))
-							rsk.setPosition(position);
-					
-					rsk.setAttrVar(allVars[rsk.getPosition()]);
-					
-					// get the vars from the target
-					MappingType[] tgtMaps = model.getMappings(r.getName());
-					Vector<String> tgtVars = new Vector<String>();
-
-					for (MappingType m : tgtMaps)
-						for (RelAtomType a : m.getExists().getAtomArray())
-							for (int i = 0; i < a.getVarArray().length; i++)
-								tgtVars.add(a.getVarArray(i));
-					
-					// if the variable is not in the target (consider delete) then we keep picking
-					if(tgtVars.indexOf(rsk.getAttrVar()) == -1)
-						alreadyAdded = false;
-
-				} while (alreadyAdded);
-
-				// roll the dice to pick the skolem mode (there are 4 modes with
-				// ordinals from 0 to 3)
-				int mode = position = _generator.nextInt(4);
-
-				sk = SkolemKind.values()[mode];
-
-				SKVars.add(rsk.getAttrVar());
-
-				// if we are using a key in the original relation then we will
-				// base the skolem on only the primary key
-				if (sk == SkolemKind.KEY) 
-				{
-					System.out.println("mode: KEY");
-
-					// make sure there is a key for the relation, if there is
-					// not then we will switch to using all attributes for the
-					// skolem
-					if (r.isSetPrimaryKey()) 
-					{
-						String pkVar[] = new String[scenario.getDoc().getPK(r.getName(), true).length];
-						int pos = 0;
-
-						// TODO: reason about whether keys will ever not be a,b,c - that is, is the key always teh first few
-						// attributes of the first table? consider merge where there are two tables and a key spans across them
-						String[] pkAtts = scenario.getDoc().getPK(r.getName(),true);
-						rsk.setSkolemArgs(pkAtts);
-						
-						for (int i = 0; i < allAttrs.length; i++)
-							for (String str : pkAtts)
-								if (allAttrs[i].equals(str))
-									pkVar[pos++] = fac.getFreshVars(i, 1)[0];
-
-						rsk.setSkolemVars(pkVar);
-					} 
-					else 
-						sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
-				}
-
-				if (sk == SkolemKind.EXCHANGED) 
-				{
-					System.out.println("mode: EXCHANGED");
-
-					// get the relation(s) for the target and store the vars
-					// used in them
-					MappingType[] tgtMaps = model.getMappings(r.getName());
-					Vector<String> tgtVars = new Vector<String>();
-
-					for (MappingType m : tgtMaps)
-						for (RelAtomType a : m.getExists().getAtomArray())
-							for (int i = 0; i < a.getVarArray().length; i++)
-								tgtVars.add(a.getVarArray(i));
-
-					MappingType[] srcMaps = model.getMappings(r.getName());
-					Vector<String> srcVars = new Vector<String>();
-
-					for (MappingType m : srcMaps)
-						for (RelAtomType a : m.getForeach().getAtomArray())
-							if (a.getTableref().equals(r.getName()))
-								for (int i = 0; i < a.getVarArray().length; i++)
-									srcVars.add(a.getVarArray(i));
-
-					// get the intersection of the set of vars used in the
-					// source and the set of vars used in the target
-					Vector<String> exchangedVars = new Vector<String>();
-
-					for (String tv : tgtVars)
-						for (String sv : srcVars)
-							if (tv.equals(sv) && (exchangedVars.indexOf(sv) == -1) && !tv.equals(rsk.getAttrVar()))
-								exchangedVars.add(tv);
-
-					String[] exchVars = convertVectorToStringArray(exchangedVars);
-					java.util.Arrays.sort(exchVars);
-
-					rsk.setSkolemVars(exchVars);
-				}
-
-				if (sk == SkolemKind.RANDOM) 
-				{
-					System.out.println("mode: RANDOM");
-
-					int numArgsForSkolem = _generator.nextInt(allAttrs.length);
-
-					int max_tries = 20;
-
-					// generate the random vars to be arguments for the skolem
-					Vector<String> randomVars = new Vector<String>();
-					for (int i = 0; i < numArgsForSkolem; i++) 
-					{
-						// try 20 times per argument slot to find an argument
-						int tries = 0;
-
-						while (tries < max_tries) 
-						{
-							int pos = _generator.nextInt(allAttrs.length);
-
-							// initially check that we are not trying to add a
-							// var as an argument to its own skolem function
-							// then make sure we're not adding duplicate vars
-							if (!(allAttrs[pos].equals(rsk.getAttr())) && randomVars.indexOf(scenario.getDoc().getAttrVars(r.getName())[pos]) == -1) 
-							{
-								randomVars.add(scenario.getDoc().getAttrVars(r.getName())[pos]);
-								break;
-							}
-
-							tries++;
-						}
-					}
-
-					String[] randVars = convertVectorToStringArray(randomVars);
-					java.util.Arrays.sort(randVars);
-
-					// make sure the random selection yielded at least one argument, switch modes if it didn't
-					if (randVars.length == 0)
-						sk = SkolemKind.ALL;
-
-					rsk.setSkolemVars(randVars);
-				}
-
-				if (sk == SkolemKind.ALL) {
-					System.out.println("mode: ALL");
-					
-					Vector<String> allAttrVars = new Vector<String>();
-
-					// get all variables associated with each source relation in a mapping with this one (in case we are doing merge)
-					// and ensure there are no duplicates
-					MappingType[] srcMaps = model.getMappings(r.getName());
-					for (MappingType m : srcMaps)
-						for (RelAtomType a : m.getForeach().getAtomArray())
-							for (String av : model.getAttrVars(a.getTableref()))
-								if(allAttrVars.indexOf(av) == -1)
-									allAttrVars.add(av);
-
-					// ensure that we are not adding the attribute itself as an
-					// argument to the skolem
-					Vector<String> skAtts = new Vector<String>();
-					Vector<String> vars = new Vector<String>();
-					for (int i = 0; i < allAttrs.length; i++) 
-					{
-						if (allAttrs[i].equals(rsk.getAttr()))
-							;
-						else 
-						{
-							skAtts.add(allAttrs[i]);
-							vars.add(convertVectorToStringArray(allAttrVars)[i]);
-						}
-					}
-
-					rsk.setSkolemArgs(convertVectorToStringArray(skAtts));
-					rsk.setSkolemVars(convertVectorToStringArray(vars));
-				}
-
-				rsk.setSkId(fac.getNextId("SK"));
-				
-				RandomSkolems.add(rsk);
-			}
-
-			// get all the mappings associated with the relation in question and
-			// go through them
-			MappingType[] mappings = model.getMappings(r.getName());
 			
-			for (MappingType m : mappings)
-				for (RelAtomType a : m.getExists().getAtomArray())
-				{
-					System.out.println("atom tableref: " + a.getTableref());
-					
-					// convert to vector to facilitate printing
-			        List<String> varList = Arrays.asList(a.getVarArray());
-			        Vector<String> varVect = new Vector<String>(varList);
-			        
-			        System.out.println("vars: " + varVect.toString());
-				}
-
-			// create a new mapping to temporarily store the SKFunctions
-			// (because we need to destroy the ones in the atom before we can
-			// add new ones)
-			// the old ones would be deallocated (and all information lost) if
-			// we did not clone them
-			MappingType map = model.getScenario().getMappings().addNewMapping();
-			RelAtomType tmp = map.addNewExists().addNewAtom();
-
-			for (MappingType m : mappings) 
-			{
-				// for each relation we go through all the objects and check if
-				// they are skolem functions
-				for (RelAtomType a : m.getExists().getAtomArray()) 
-				{
-					// retrieve all the objects associated with the exists
-					// clause of the mapping (aka. vars and skolems in one
-					// array)
-					Object[] mappingObjects = scenario.getDoc().getAtomParameters(m, false, scenario.getDoc().getAtomPos(m, a.getTableref()));
-
-					for (int j = 0; j < mappingObjects.length; j++) 
-					{
-						if (!(mappingObjects[j] instanceof SKFunction)) 
-						{
-							// if it's a var we must check if it should be
-							// swapped out with a skolem so we go through all
-							// the skolems we
-							// must replace and insert it into the mapping
-							// object array
-							for (RandSrcSkolem rsk : RandomSkolems)
-								if (mappingObjects[j].equals(rsk.getAttrVar())) 
-								{
-									// only generate the id when we are adding it in case we deleted the var we wanted to replace
-									// this is to prevent gaps in id's and to simply linearization
-									//rsk.setSkId(fac.getNextId("SK"));
-									
-									// create the skolem function object
-									SKFunction sk = tmp.addNewSKFunction();
-									sk.setSkname(rsk.getSkId());
-									sk.setVarArray(rsk.getSkolemVars());
-
-									// switch out the var for the new SKFunction
-									mappingObjects[j] = sk;
-								}
-						} 
-						else 
-						{
-							// if it's not a var, then we have to clone the
-							// existing skolem object so that when we
-							// use it later we are not referencing an object
-							// that has already been destroyed
-							SKFunction sk = tmp.addNewSKFunction();
-							sk.setSkname(((SKFunction) mappingObjects[j]).getSkname());
-							sk.setVarArray(((SKFunction) mappingObjects[j]).getVarArray());
-
-							mappingObjects[j] = sk;
-						}
-					}
-
-					// now replace the atom parameters we retrieved earlier with
-					// the modified version
-					scenario.getDoc().setAtomParameters(mappingObjects, a);
-				}
-			}
-
-			// delete the mapping we temporarily created
-			model.getScenario().getMappings().removeMapping(model.getScenario().getMappings().sizeOfMappingArray() - 1);
-			
+			generateVictims(r, scenario, RandomSkolems, addedSKs, numSKs);
+			generateSkolemArguments(r, scenario, RandomSkolems, numSKs);
+			addSkolemsToMappings(r, scenario);
+	        
 			System.out.println("---------NEW SKOLEMS---------");
-
+			
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
-				System.out.println("skID: " + rsk.getSkId());
-				System.out.println("SkolemVar: " + rsk.getAttrVar());
+				System.out.println("Victim: " + rsk.getAttr());
+				System.out.println("Victim Position: " + rsk.getAttrPosition());
+				System.out.println("Victim Variable: " + rsk.getAttrVar());
+				System.out.println("Identifier: " + rsk.getSkId());
+				
+				if(rsk.getArgAttrs().length != 0)
+				{
+					// convert to vector to facilitate printing
+			        List<String> argList = Arrays.asList(rsk.getArgAttrs());
+			        Vector<String> argVect = new Vector<String>(argList);
+			        System.out.println("Arguments: " + argVect.toString());
+			        
+			        System.out.print("Positions: ");
+			        for (int pos : rsk.getArgPositions())
+						System.out.print(pos + " ");
+			        System.out.println("");
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Generates victims to be skolemized for a given relation. 
+	 *		Checks:
+	 * 			a) That an attribute isn't being skolemized more than once 
+	 * 			b) That the attribute in question isn't deleted in the target mappings to avoid gaps in the skolem IDs
+	 * 
+	 * @param r	
+	 * 			The relation for which we are generating random skolems
+	 * @param scenario	
+	 * 			The mapping scenario in question
+	 * @param randomSkolems
+	 * 			A vector of RandSrcSkolems which keep track of victim names and positions
+	 * @param addedSKs
+	 * 			A vector of Strings to keep track of which attributes have already been picked as victims
+	 * @param numSKs
+	 * 			The number of random skolems to generate
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author mdangelo
+	 */
+	private static void generateVictims (RelationType r, MappingScenario scenario, Vector<RandSrcSkolem> randomSkolems, Vector<String> addedSKs, int numSKs) throws Exception
+	{
+		for(int i = 0; i < numSKs; i++)
+		{
+			RandSrcSkolem rsk = new RandSrcSkolem ();
+	
+			int position;
+			Boolean successful = false;
+			
+			// get all vars and attributes
+			String[] allVars = scenario.getDoc().getAttrVars(r.getName());
+			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),getAttrPositions(r.getAttrArray().length), true);
+	
+			// if there is a primary key then we must strip out the attributes associated with it, otherwise we just grab all the attributes
+			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),getAttrPositions(r.getAttrArray().length), true);
+	
+			int max_tries = 50;
+			int tries = 0;
+		
+			while (tries < max_tries) 
+			{
+				// pick a nonkey attribute at random to be the skolem
+				position = _generator.nextInt(nonKeyAttrs.length);
+				
+				rsk = new RandSrcSkolem();
+				rsk.setAttr(nonKeyAttrs[position]);
+	
+				for (int j = 0; j < allAttrs.length; j++)
+					if (allAttrs[j].equals(rsk.getAttr()))
+						rsk.setAttrPosition(j);
+				
+				rsk.setAttrVar(allVars[rsk.getAttrPosition()]);
 
-				System.out.print("Args: ");
-				for (String s : rsk.getSkolemVars())
-					System.out.print(s + " ");
-
-				System.out.println();
+				// check if the variable exists in any target mappings associated with the source relation
+				// this prevents "gaps" in SK IDs which are created when we generate a skolem that will never appear in a mapping
+				MappingType[] tgtMaps = model.getMappings(r.getName());
+				Vector<String> tgtVars = new Vector<String>();
+	
+				for (MappingType m : tgtMaps)
+					for (RelAtomType a : m.getExists().getAtomArray())
+						for (int k = 0; k < a.getVarArray().length; k++)
+							if (tgtVars.indexOf(a.getVarArray(k)) == -1)
+								tgtVars.add(a.getVarArray(k));
+	
+				// if the list of target variables includes the variable then we can add it in
+				if(tgtVars.indexOf(rsk.getAttrVar()) != -1)
+					// check if we already picked this one to be a skolem (prevent duplicates)
+					if (addedSKs.indexOf(rsk.getAttr()) == -1)
+					{
+						addedSKs.add(rsk.getAttr());
+						successful = true;
+						break;
+					}
+				
+				tries++;
 			}
 			
-			// clear the vector of random skolems
-			RandomSkolems.removeAllElements();
+			if(successful)
+			{
+				rsk.setSkId(fac.getNextId("SK"));
+				randomSkolems.add(rsk);
+			}
 		}
+	}
+
+	/**
+	 * Generates arguments for the skolems using different modes (which call on different methods to do the actual work).
+	 * 
+	 * @param r	
+	 * 			The relation for which we are generating random skolems
+	 * @param scenario	
+	 * 			The mapping scenario in question
+	 * @param randomSkolems
+	 * 			A vector of RandSrcSkolems which keep track of victim names and positions
+	 * @param numSKs
+	 * 			The number of random skolems to generate
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author mdangelo
+	 */
+	private static void generateSkolemArguments (RelationType r, MappingScenario scenario, Vector<RandSrcSkolem> randomSkolems, int numSKs) throws Exception
+	{
+		for (RandSrcSkolem rsk : randomSkolems)
+		{
+			// roll the dice to pick the skolem mode (only use modes 0 - KEY, 1 - ALL, 2 - RANDOM)
+			// we are not using the 4th mode (EXCHANGED) because we would need to look at all of the mappings associated with it
+			// and try to find some common ground (intersection) among the vars, which is an unnecessary complication
+			int mode = _generator.nextInt(3);
+			sk = SkolemKind.values()[mode];
+			
+			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),getAttrPositions(r.getAttrArray().length), true);
+			
+			// KEY and RANDOM cases include and if statement to check if the mode has been changed in the case of 
+			// a) a primary key not being set for KEY mode which causes it to switch to RANDOM, and 
+			// b) no arguments being chosen in RANDOM (because of the limit on the amount of tries) which causes it to switch to ALL
+			switch(sk)
+			{
+				case KEY:
+					useKeyAsArgument(r, scenario, rsk, allAttrs);
+					if (sk == SkolemKind.KEY)
+						break;
+				case RANDOM:
+					useRandomAsArgument(r, scenario, rsk, allAttrs);
+					if (sk == SkolemKind.RANDOM)
+						break;
+				case ALL:
+					useAllAsArgument(r, rsk, allAttrs);
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Pick the primary key attributes as the arguments of the skolem adds their names and positions to the RandSrcSkolem object.
+	 * 
+	 * @param r
+	 * 			The relation which we are adding the skolem to
+	 * @param scenario
+	 * 			The scenario which contains the relation
+	 * @param rsk
+	 * 			The RandSrcSkolem object which we wish to add the arguments to
+	 * @param allAttrs
+	 * 			All attributes in the source relation we are looking at
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author mdangelo
+	 */
+	private static void useKeyAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
+	{
+		System.out.println("mode: KEY");
+	
+		// make sure there is a key for the relation, if there is not then we will switch to using all attributes for the skolem
+		if (r.isSetPrimaryKey()) 
+		{
+			String pkVar[] = new String[scenario.getDoc().getPK(r.getName(), true).length];
+			String[] pkAtts = scenario.getDoc().getPK(r.getName(),true);
+			
+			rsk.setArgAttrs(pkAtts);
+			
+			int[] pkPos = getAttrPositions(allAttrs, pkAtts);
+			
+			int pos = 0;
+			for(int p : pkPos)
+				pkVar[pos++] = fac.getFreshVars(p, 1)[0];
+			
+			for (int i = 0; i < allAttrs.length; i++)
+				for (String str : pkAtts)
+					if (allAttrs[i].equals(str))
+						
+			rsk.setArgAttrs(pkAtts);
+			rsk.setArgPositions(pkPos);
+		} 
+		
+		else 
+			sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
+	}
+
+	/**
+	 * Picks random attributes to be the arguments of the skolem and adds their names and positions to the RandSrcSkolem object. 
+	 * Works by randomly generating a position and checking if that attribute was a) already an argument for the skolem, or 
+	 * b) was the victim of the skolemization. To avoid infinite looping, this method tries 20 times per argument slot to pick an
+	 * attribute meeting that criteria and if it cannot find one it moves on to the next "slot". Note that there is a final check 
+	 * to ensure that we didn't end up with 0 arguments which then changes the mode to ALL. 
+	 * 
+	 * @param r
+	 * 			The relation which we are adding the skolem to
+	 * @param scenario
+	 * 			The scenario which contains the relation
+	 * @param rsk
+	 * 			The RandSrcSkolem object which we wish to add the arguments to
+	 * @param allAttrs
+	 * 			All attributes in the source relation we are looking at
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author mdangelo
+	 */
+	private static void useRandomAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
+	{
+		System.out.println("mode: RANDOM");
+	
+		int numArgsForSkolem = _generator.nextInt(allAttrs.length);
+	
+		int max_tries = 20;
+	
+		// generate the random vars to be arguments for the skolem
+		Vector<String> randomAttrs = new Vector<String>();
+		for (int i = 0; i < numArgsForSkolem; i++) 
+		{
+			// try 20 times per argument slot to find an argument
+			int tries = 0;
+	
+			while (tries < max_tries) 
+			{
+				int pos = _generator.nextInt(allAttrs.length);
+	
+				// initially check that we are not trying to add a var as an argument to its own skolem function
+				// then make sure we're not adding duplicate vars
+				if (!(allAttrs[pos].equals(rsk.getAttr())) && randomAttrs.indexOf(allAttrs[pos]) == -1) 
+				{
+					randomAttrs.add(allAttrs[pos]);
+					break;
+				}
+	
+				tries++;
+			}
+		}
+	
+		String[] randAtts = convertVectorToStringArray(randomAttrs);
+		int[] attrPos = getAttrPositions(allAttrs, randAtts);
+		java.util.Arrays.sort(attrPos);
+	
+		// make sure the random selection yielded at least one argument, switch modes if it didn't
+		if (randAtts.length == 0)
+			sk = SkolemKind.ALL;
+	
+		rsk.setArgAttrs(randAtts);
+		rsk.setArgPositions(attrPos);
+	}
+
+	/**
+	 * Picks all attributes to be the arguments of the skolem and adds their names and positions to the RandSrcSkolem object.
+	 * 
+	 * @param r
+	 * 			The relation which we are adding the skolem to
+	 * @param scenario
+	 * 			The scenario which contains the relation
+	 * @param rsk
+	 * 			The RandSrcSkolem object which we wish to add the arguments to
+	 * @param allAttrs
+	 * 			All attributes in the source relation we are looking at
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author mdangelo
+	 */
+	private static void useAllAsArgument(RelationType r, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
+	{
+		System.out.println("mode: ALL");
+	
+		Vector<String> skAtts = new Vector<String>();
+		
+		for (String att : allAttrs)
+			skAtts.add(att);
+		
+		// ensure that we are not adding the attribute itself as an argument to the skolem
+		for (int i = 0; i < allAttrs.length; i++) 
+			if (skAtts.indexOf(rsk.getAttr()) != -1)
+				skAtts.remove(skAtts.indexOf(rsk.getAttr()));
+		
+		rsk.setArgAttrs(convertVectorToStringArray(skAtts));
+		rsk.setArgPositions(getAttrPositions(allAttrs, rsk.getArgAttrs()));
+	}
+
+	/**
+	 * Replaces the victims in mappings associated with the relation with the skolem function generated previously.
+	 * 
+	 * @param r	
+	 * 			The relation for which we generated the random skolems
+	 * @param scenario	
+	 * 			The mapping scenario in question
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author mdangelo
+	 */
+	private static void addSkolemsToMappings(RelationType r, MappingScenario scenario) 
+	{
+		// get all the mappings associated with the relation in question and go through them
+		MappingType[] mappings = model.getMappings(r.getName());
+
+		// create a new mapping to temporarily store the SKFunctions (because we need to destroy the ones in the atom before 
+		// we can add new ones) the old ones would be deallocated (and all information lost) if we did not clone them
+		MappingType map = model.getScenario().getMappings().addNewMapping();
+		RelAtomType tmp = map.addNewExists().addNewAtom();
+
+		for (MappingType m : mappings) 
+		{		
+			// for each relation we go through all the objects and check if they are skolem functions
+			for (RelAtomType a : m.getExists().getAtomArray()) 
+			{
+				// retrieve all the objects associated with the exists clause of the mapping (aka. vars and skolems in one array)
+				Object[] mappingObjects = scenario.getDoc().getAtomParameters(m, false, scenario.getDoc().getAtomPos(m, a.getTableref()));
+
+				for (int j = 0; j < mappingObjects.length; j++) 
+				{
+					if (!(mappingObjects[j] instanceof SKFunction)) 
+					{
+						// if it's a var we must check if it should be swapped out with a skolem so we go through all the skolems we
+						// must replace and insert it into the mapping object array
+						for (RandSrcSkolem rsk : RandomSkolems)
+						{
+							for (RelAtomType b : m.getForeach().getAtomArray()) 
+							{
+								if(b.getTableref().equals(r.getName()))
+								{
+									String[] allVars = b.getVarArray();
+								
+									Vector<String> argVars = new Vector<String> ();
+									for (int p : rsk.getArgPositions())
+										argVars.add(allVars[p]);
+									
+									rsk.setArgVars(convertVectorToStringArray(argVars));
+									rsk.setAttrVar(allVars[rsk.getAttrPosition()]);
+								}
+							}
+							
+							if (mappingObjects[j].equals(rsk.getAttrVar())) 
+							{
+								// create the skolem function object
+								SKFunction sk = tmp.addNewSKFunction();
+								sk.setSkname(rsk.getSkId());
+								sk.setVarArray(rsk.getArgVars());
+
+								// switch out the var for the new SKFunction
+								mappingObjects[j] = sk;
+							}
+						}
+					} 
+					else 
+					{
+						// if it's not a var, then we have to clone the existing skolem object so that when we
+						// use it later we are not referencing an object that has already been destroyed
+						SKFunction sk = tmp.addNewSKFunction();
+						sk.setSkname(((SKFunction) mappingObjects[j]).getSkname());
+						sk.setVarArray(((SKFunction) mappingObjects[j]).getVarArray());
+
+						mappingObjects[j] = sk;
+					}
+				}
+
+				// now replace the atom parameters we retrieved earlier with the modified version
+				scenario.getDoc().setAtomParameters(mappingObjects, a);
+			}
+		}
+
+		// delete the mapping we temporarily created
+		model.getScenario().getMappings().removeMapping(model.getScenario().getMappings().sizeOfMappingArray() - 1);
+
+		// clear the vector of random skolems
+		RandomSkolems.removeAllElements();
+	}
+
+	/**
+	 * Get "positions" associated with a relation - essentially generates an array of numbers from 0 to size.
+	 * 
+	 * @param size
+	 *            The number of attributes for which to get positions.
+	 * 
+	 * @return An array of the positions of all the attributes
+	 * 
+	 * @author mdangelo
+	 */
+	private static int[] getAttrPositions (int size)
+	{
+		// get positions for all of the attributes
+		int[] attrPos = new int[size];
+		for (int i = 0; i < size; i++)
+			attrPos[i] = i;
+	
+		return attrPos;
+	}
+
+	/**
+	 * Get "positions" for specific of a relation
+	 * 
+	 * @param allAttrs
+	 * 			All attributes of the relation
+	 * @param attrs
+	 * 			The attributes for which we want to retrieve the positions
+	 * 
+	 * @return An array of the positions of all the attributes
+	 * 
+	 * @author mdangelo
+	 */
+	private static int[] getAttrPositions (String[] allAttrs, String[] attrs)
+	{
+		Vector<Integer> positions = new Vector<Integer> ();
+		
+		for (int i = 0; i < allAttrs.length; i++)
+			for(String a : attrs)
+				if (allAttrs[i].equals(a))
+					positions.add(i);
+
+		return convertVectorToIntegerArray(positions);
 	}
 
 	/**
@@ -452,6 +587,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 * 
 	 * @param vStr
 	 *            A string vector
+	 *            
 	 * @return An array of strings
 	 * 
 	 * @author mdangelo
@@ -463,6 +599,27 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		int j = 0;
 		for (String str : vStr)
 			ret[j++] = str;
+
+		return ret;
+	}
+	
+	/**
+	 * Converts an Integer vector to an array of integers
+	 * 
+	 * @param vInt
+	 *            An integer vector
+	 *            
+	 * @return An array of integers
+	 * 
+	 * @author mdangelo
+	 */
+	static int[] convertVectorToIntegerArray(Vector<Integer> vInt) 
+	{
+		int[] ret = new int[vInt.size()];
+
+		int j = 0;
+		for (int i : vInt)
+			ret[j++] = i;
 
 		return ret;
 	}

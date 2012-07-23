@@ -91,10 +91,10 @@ public class Constants
     };
     
     public enum SkolemKind {
-        ALL,
-        EXCHANGED,
+    	KEY,
+    	ALL,
         RANDOM,
-        KEY;
+        EXCHANGED;
     };
 
     public enum ScenarioName {

@@ -5,16 +5,16 @@ SchemaPathPrefix=out
 InstancePathPrefix=out
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
+Scenarios.COPY = 1
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
+Scenarios.MERGING = 1
 Scenarios.VALUEMANAGEMENT = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
 Scenarios.ADDATTRIBUTE = 2
-Scenarios.DELATTRIBUTE = 2
+Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 
@@ -28,17 +28,17 @@ Scenarios.GLAV = 0
 ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NestingDepth = 0 
 ConfigOptions.JoinSize = 2 
-ConfigOptions.JoinKind = 1 
+ConfigOptions.JoinKind = 0 
 ConfigOptions.NumOfJoinAttributes = 1 
 ConfigOptions.NumOfParamsInFunctions = 2 
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumofAttributestoDelete = 1
 ConfigOptions.SkolemKind = 1
-ConfigOptions.SourceFDPerc = 60
+ConfigOptions.SourceFDPerc = 0
 ConfigOptions.SourceSkolemPerc = 60
 ConfigOptions.ReuseSourcePerc = 50
 ConfigOptions.ReuseTargetPerc = 0
-ConfigOptions.NoReuseScenPerc = 25
+ConfigOptions.NoReuseScenPerc = 50
 ConfigOptions.PrimaryKeySize = 2
 
 # Deviations for each of the parameters
