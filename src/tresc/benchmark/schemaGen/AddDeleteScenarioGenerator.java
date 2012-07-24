@@ -129,6 +129,9 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		if (sk == SkolemKind.KEY)
 			for (int i = 0; i < numNewAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
+		else if (sk == SkolemKind.EXCHANGED)
+			for (int i = 0; i < numNewAttr; i++)
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfElements - numDelAttr));
 		else {
 			// if configuration specifies that we need to randomly decide how
 			// many arguments the skolem will take, generate a random number

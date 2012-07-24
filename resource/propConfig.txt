@@ -25,21 +25,21 @@ Scenarios.VALUEGEN = 0
 Scenarios.GLAV = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 5
+ConfigOptions.NumOfSubElements = 2
 ConfigOptions.NestingDepth = 0 
 ConfigOptions.JoinSize = 2 
 ConfigOptions.JoinKind = 0 
 ConfigOptions.NumOfJoinAttributes = 1 
 ConfigOptions.NumOfParamsInFunctions = 2 
 ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumofAttributestoDelete = 1
-ConfigOptions.SkolemKind = 1
-ConfigOptions.SourceFDPerc = 0
+ConfigOptions.NumofAttributestoDelete = 2
+ConfigOptions.SkolemKind = 3
+ConfigOptions.SourceFDPerc = 60
 ConfigOptions.SourceSkolemPerc = 60
-ConfigOptions.ReuseSourcePerc = 50
+ConfigOptions.ReuseSourcePerc = 75
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.PrimaryKeySize = 2
+ConfigOptions.PrimaryKeySize = 1
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 0 
@@ -68,7 +68,7 @@ MappingLanguage = SOtgds
 # FileNames.Schemas =
 
 # Optional activation/deactivation of output options
-# OutputOption.HTMLSchemas = false
+OutputOption.HTMLSchemas = true
 OutputOption.Data = false
 # OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = true
