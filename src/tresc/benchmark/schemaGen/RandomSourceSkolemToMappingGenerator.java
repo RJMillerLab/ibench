@@ -25,10 +25,6 @@ import vtools.dataModel.types.RandSrcSkolem;
  * 
  * @author mdangelo
  */
-/**
- * @author mdangelo
- *
- */
 public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator 
 {
 	protected static TrampModelFactory fac;
@@ -234,6 +230,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						break;
 				case ALL:
 					useAllAsArgument(r, rsk, allAttrs);
+					break;
+				default:
 					break;
 			}
 		}
