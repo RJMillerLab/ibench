@@ -74,7 +74,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			generateVictims(r, scenario, RandomSkolems, addedSKs, numSKs);
 			generateSkolemArguments(r, scenario, RandomSkolems, numSKs);
-			addSkolemsToMappings(r, scenario);
 	        
 			System.out.println("---------NEW SKOLEMS---------");
 			
@@ -98,6 +97,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			        System.out.println("");
 				}
 			}
+			
+			addSkolemsToMappings(r, scenario);
 		}
 	}
 	
