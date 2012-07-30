@@ -33,6 +33,9 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// to prevent out of bounds errors, check if we are going to be trying to delete more attributes than we have available
 		// if that's the case, delete only one attribute
 		numDelAttr = (numDelAttr < numOfSrcTblAttr) ? numDelAttr : (numOfSrcTblAttr-1);
+		
+		// ensure that we will be able to generate a key
+		keySize = (keySize <= numOfSrcTblAttr-numDelAttr) ? keySize : numOfSrcTblAttr-numDelAttr;
 	}
 	
 	@Override
@@ -78,7 +81,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 			attrs[i] = randomAttrName(0, i);
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
-
+		
 		String[] keys = new String[keySize];
 		for (int j = 0; j < keySize; j++)
 			keys[j] = srcAttrs[j];

@@ -1,0 +1,9 @@
+-------------
+KNOWN ISSUES
+-------------
+
+Deviation must be disabled currently for scenarios to work (Because the margins for number of elements and key size often cause issues with primary key FD generation. This is because tables are created with only keys or require 3 key slots but only have 2 attribute slots, etc.)
+
+CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the mappings are incorrect.
+
+Source/Target reuse crashes if parameters are not delicately adjusted.

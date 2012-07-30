@@ -257,9 +257,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 				configuration.getScenarioRepetitions(getScenType().ordinal());
 		numOfElements = configuration
 						.getParam(Constants.ParameterName.NumOfSubElements);
-		numOfElementsDeviation =
-				configuration
-						.getDeviation(Constants.ParameterName.NumOfSubElements);
+		numOfElementsDeviation = 0;
+				//configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
 		nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
 		nestingDeviation = configuration
 						.getDeviation(Constants.ParameterName.NestingDepth);
@@ -294,7 +293,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		keySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
         
 		// ensure that the key size is not greater than the number of elements
-		numOfElements = (numOfElements <= keySize) ? keySize + 1 : numOfElements;
+		int biggestKey = (keySize > keyWidth) ? keySize : keyWidth;
+		numOfElements = (numOfElements > biggestKey) ? numOfElements : biggestKey + 1;
 		
         mapLang = configuration.getMapType();
 
