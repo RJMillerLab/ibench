@@ -41,6 +41,9 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
     	
         numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);
+        
+        numOfTables = (numOfTables > 1) ? numOfTables : 2;
+        
         numOfJoinAttributes = Utils.getRandomNumberAroundSomething(_generator, keyWidth,
             keyWidthDeviation);
         jk = JoinKind.values()[joinKind];

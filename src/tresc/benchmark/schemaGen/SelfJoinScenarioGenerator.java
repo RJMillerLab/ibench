@@ -34,9 +34,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
         E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
         JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         
-        if (JN == 0)
-            JN =1;
-        
+        JN = (JN < 1) ? 1 : JN;
         F = E - (2 * K);
     }
 

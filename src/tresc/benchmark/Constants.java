@@ -29,7 +29,7 @@ public class Constants
         NumOfJoinAttributes,
         NumOfParamsInFunctions,
         NumOfNewAttributes,
-        NumofAttributestoDelete,
+        NumOfAttributesToDelete,
         SkolemKind,
         ReuseSourcePerc,	// reuse previously generated schema elements
         ReuseTargetPerc,
@@ -51,7 +51,7 @@ public class Constants
     	defaultParameterValues.put(ParameterName.NumOfJoinAttributes, 1);
     	defaultParameterValues.put(ParameterName.NumOfParamsInFunctions, 2);
     	defaultParameterValues.put(ParameterName.NumOfNewAttributes, 2);
-    	defaultParameterValues.put(ParameterName.NumofAttributestoDelete, 1);
+    	defaultParameterValues.put(ParameterName.NumOfAttributesToDelete, 1);
     	defaultParameterValues.put(ParameterName.SkolemKind, 0);
     	defaultParameterValues.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
@@ -73,7 +73,7 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.NumOfJoinAttributes, 0);
     	defaultParameterDeviation.put(ParameterName.NumOfParamsInFunctions, 0);
     	defaultParameterDeviation.put(ParameterName.NumOfNewAttributes, 0);
-    	defaultParameterDeviation.put(ParameterName.NumofAttributestoDelete, 0);
+    	defaultParameterDeviation.put(ParameterName.NumOfAttributesToDelete, 0);
     	defaultParameterDeviation.put(ParameterName.SkolemKind, 0);
     	defaultParameterDeviation.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterDeviation.put(ParameterName.ReuseTargetPerc, 0);

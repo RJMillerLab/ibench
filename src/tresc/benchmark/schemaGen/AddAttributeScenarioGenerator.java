@@ -26,6 +26,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	private static final int MAX_TRIES = 20;
 	
 	private int numOfSrcTblAttr;
+	private int numAddAttr;
+	private int keySize;
 	private SkolemKind sk;
 
 	public AddAttributeScenarioGenerator() {
@@ -40,14 +42,16 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void initPartialMapping() {
 		super.initPartialMapping();
-		numOfSrcTblAttr =
-				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-						numOfElementsDeviation);
+		numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+		numAddAttr = Utils.getRandomNumberAroundSomething(_generator, numNewAttr, numNewAttrDeviation);
+		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+		
+		numAddAttr = (numAddAttr > 0) ? numAddAttr : 1;
+		numOfSrcTblAttr = (numOfSrcTblAttr > 1) ? numOfSrcTblAttr : 2;
+		keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
+		keySize = (keySize > 0) ? keySize : 1;
 		
 		sk = SkolemKind.values()[typeOfSkolem];
-		
-		System.out.println("sk: " + sk.ordinal());
-		System.out.println("key size: " + keySize);
 	}
 
 	/**
@@ -254,7 +258,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	protected void chooseTargetRels() throws Exception {
 		RelationType cand = null;
 		int tries = 0;
-		int requiredNumAttrs = numNewAttr + 
+		int requiredNumAttrs = numAddAttr + 
 				((sk == SkolemKind.KEY) ? 1 : 0) + 1;
 		int freeAttrs;
 		boolean ok = false;
@@ -267,7 +271,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 				break;
 				
 			relName = cand.getName();
-			freeAttrs = cand.sizeOfAttrArray() - numNewAttr;
+			freeAttrs = cand.sizeOfAttrArray() - numAddAttr;
 			
 			if (cand.isSetPrimaryKey()) {
 				for(String a: cand.getPrimaryKey().getAttrArray()) {
@@ -288,7 +292,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			m.addTargetRel(cand);
 			
 			numOfSrcTblAttr = cand.getAttrArray().length 
-					- numNewAttr;
+					- numAddAttr;
 			
 			// add primary key if it does not have one already
 			if (sk == SkolemKind.KEY && !cand.isSetPrimaryKey())
@@ -327,14 +331,14 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genTargetRels() throws Exception {
 		String trgName = randomRelName(0);
-		String[] attrs = new String[numOfSrcTblAttr + numNewAttr];
+		String[] attrs = new String[numOfSrcTblAttr + numAddAttr];
 		String[] srcAttrs = m.getAttrIds(0, true);
 
 		// copy src attrs
 		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr);
 
 		// create random names for the added attrs
-		for (int i = numOfSrcTblAttr; i < numOfSrcTblAttr + numNewAttr; i++)
+		for (int i = numOfSrcTblAttr; i < numOfSrcTblAttr + numAddAttr; i++)
 			attrs[i] = randomAttrName(0, i);
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
@@ -364,7 +368,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		// target tables gets fresh vars for the new attrs
 		case FOtgds:
 			fac.addExistsAtom(m1, 0,
-					fac.getFreshVars(0, numOfSrcTblAttr + numNewAttr));
+					fac.getFreshVars(0, numOfSrcTblAttr + numAddAttr));
 			break;
 		// target gets all the src variables + skolem terms for the new attrs
 		case SOtgds:
@@ -381,7 +385,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		// if we are using a key in the original relation then we base the
 		// skolem on just that key
 		if (sk == SkolemKind.KEY)
-			for (int i = 0; i < numNewAttr; i++)
+			for (int i = 0; i < numAddAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
 		else {
 			// if configuration specifies that we need to randomly decide how
@@ -399,7 +403,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 			// add all the source attributes as arguments for the skolem
 			// function
-			for (int i = 0; i < numNewAttr; i++)
+			for (int i = 0; i < numAddAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 		}
 	}
@@ -435,7 +439,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		}
 		
 		// retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
-		for(int i = 0 ; i < numNewAttr; i++) {
+		for(int i = 0 ; i < numAddAttr; i++) {
 			int attPos = i + numOfSrcTblAttr;
 			String attName = tAttrs[attPos];
 			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);

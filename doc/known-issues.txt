@@ -2,8 +2,23 @@
 KNOWN ISSUES
 -------------
 
-Deviation must be disabled currently for scenarios to work (Because the margins for number of elements and key size often cause issues with primary key FD generation. This is because tables are created with only keys or require 3 key slots but only have 2 attribute slots, etc.)
+1. Deviation must be disabled currently for scenarios to work (Because the margins for number of 
+elements and key size often cause issues with primary key FD generation. This is because tables 
+are created with only keys or require 3 key slots but only have 2 attribute slots, etc.) 
+[July 30, 2012]
 
-CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the mappings are incorrect.
+	Update: The only deviation that does not work after some tinkering is that of keyWidth 
+		otherwise known as numOfJoinAttr (used in merge, fusion, selfjoin). Investigating
+		what the problem is but as the code is from the original STBenchmark it may not be
+		fruitful. [July 31, 2012]
+	Update: Fixed issue keyWidth deviation had with Object Fusion. Currently deviations are always
+		1, but will do future testing to see if that can be increased without breaking too
+		many things. [July 31, 2012]
 
-Source/Target reuse crashes if parameters are not delicately adjusted.
+2. CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the 
+mappings are incorrect. [July 30, 2012]
+
+3. Source/Target reuse crashes if parameters are not delicately adjusted. [July 30, 2012]
+
+4. Mappings for ValueManagement are incorrect. Need to make it such that it performs functions on 
+variables aka. exists yields f(a,b). [July 31, 2012]

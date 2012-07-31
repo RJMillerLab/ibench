@@ -21,21 +21,32 @@ import vtools.dataModel.expression.Variable;
 public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator 
 {
 	private int numOfSrcTblAttr;
+	private int numAddAttr;
+	private int numDelAttr;
+	private int keySize;
 	private SkolemKind sk;
 	
 	@Override
 	protected void initPartialMapping() {
 		super.initPartialMapping();
 		numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+		numAddAttr = Utils.getRandomNumberAroundSomething(_generator, numNewAttr, numNewAttrDeviation);
+		numDelAttr = Utils.getRandomNumberAroundSomething(_generator, numRemovedAttr, numRemovedAttrDeviation);
+		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
 		
 		sk = SkolemKind.values()[typeOfSkolem];
 		
-		// to prevent out of bounds errors, check if we are going to be trying to delete more attributes than we have available
-		// if that's the case, delete only one attribute
+		numOfSrcTblAttr = (numOfSrcTblAttr > 2) ? numOfSrcTblAttr : 2;
+		
+		// make sure we never delete all attributes, and that we never delete no attributes
+		numDelAttr = (numDelAttr > 0) ? numDelAttr : 1;
 		numDelAttr = (numDelAttr < numOfSrcTblAttr) ? numDelAttr : (numOfSrcTblAttr-1);
+				
+		numAddAttr = (numAddAttr > 0) ? numAddAttr : 1;
 		
 		// ensure that we will be able to generate a key
 		keySize = (keySize <= numOfSrcTblAttr-numDelAttr) ? keySize : numOfSrcTblAttr-numDelAttr;
+		keySize = (keySize > 0) ? keySize : 1;
 	}
 	
 	@Override
@@ -70,14 +81,14 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTargetRels() throws Exception {
 		String trgName = randomRelName(0);
-		String[] attrs = new String[numOfSrcTblAttr + numNewAttr - numDelAttr];
+		String[] attrs = new String[numOfSrcTblAttr + numAddAttr - numDelAttr];
 		String[] srcAttrs = m.getAttrIds(0, true);
 
 		// copy src attrs less the amount we should be deleting
 		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr - numDelAttr);
 
 		// create random names for the added attrs
-		for (int i = (numOfSrcTblAttr - numDelAttr); i < (numOfSrcTblAttr - numDelAttr) + numNewAttr; i++)
+		for (int i = (numOfSrcTblAttr - numDelAttr); i < (numOfSrcTblAttr - numDelAttr) + numAddAttr; i++)
 			attrs[i] = randomAttrName(0, i);
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
@@ -107,7 +118,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// target tables gets fresh vars for the new attrs
 		case FOtgds:
 			String[] srcVars = fac.getFreshVars(0, numOfSrcTblAttr - numDelAttr);
-			String[] newVars = fac.getFreshVars(numOfSrcTblAttr, numNewAttr);
+			String[] newVars = fac.getFreshVars(numOfSrcTblAttr, numAddAttr);
 			
 			String[] result = new String[srcVars.length+newVars.length];
 			System.arraycopy(srcVars, 0, result, 0, srcVars.length);
@@ -130,10 +141,10 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// if we are using a key in the original relation then we base the
 		// skolem on just that key
 		if (sk == SkolemKind.KEY)
-			for (int i = 0; i < numNewAttr; i++)
+			for (int i = 0; i < numAddAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
 		else if (sk == SkolemKind.EXCHANGED)
-			for (int i = 0; i < numNewAttr; i++)
+			for (int i = 0; i < numAddAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfElements - numDelAttr));
 		else {
 			// if configuration specifies that we need to randomly decide how
@@ -149,7 +160,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 
 			// add all the source attributes as arguments for the skolem
 			// function
-			for (int i = 0; i < numNewAttr; i++)
+			for (int i = 0; i < numAddAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 		}
 	}
@@ -185,7 +196,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		}
 		
 		// retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
-		for(int i = 0 ; i < numNewAttr; i++) {
+		for(int i = 0 ; i < numAddAttr; i++) {
 			int attPos = i + numOfSrcTblAttr-numDelAttr;
 			String attName = tAttrs[attPos];
 			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);

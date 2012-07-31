@@ -19,6 +19,7 @@ import vtools.dataModel.expression.Variable;
 public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 {
 	private int numOfSrcTblAttr;
+	private int numDelAttr;
 	
     public DeleteAttributeScenarioGenerator()
     {
@@ -28,12 +29,11 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void initPartialMapping() {
 		super.initPartialMapping();
-		numOfSrcTblAttr =
-				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-						numOfElementsDeviation);
+		numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,numOfElementsDeviation);
+		numDelAttr = Utils.getRandomNumberAroundSomething(_generator, numRemovedAttr, numRemovedAttrDeviation);
 		
-		// to prevent out of bounds errors, check if we are going to be trying to delete more attributes than we have available
-		// if that's the case, delete only one attribute
+		// make sure we never delete all attributes, and that we never delete no attributes
+		numDelAttr = (numDelAttr > 0) ? numDelAttr : 1;
 		numDelAttr = (numDelAttr < numOfSrcTblAttr) ? numDelAttr : (numOfSrcTblAttr-1);
 	}
 	

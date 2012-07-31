@@ -39,6 +39,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);
     	
+        numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
 
         attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 

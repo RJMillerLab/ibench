@@ -41,6 +41,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         randomElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
         randomFragments = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
+        randomFragments = (randomFragments > 1) ? randomFragments : 2;
         fragmentWidth = 10000 / randomFragments;
     }
 

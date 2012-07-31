@@ -18,6 +18,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	private int numOfTgtTables;
 	private int attsPerTargetRel;
 	private int attrRemainder;
+	private int keySize;
 
     public VPIsAScenarioGenerator()
     {
@@ -28,11 +29,14 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
     {
     	super.initPartialMapping();
     	
-        numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-            numOfElementsDeviation);
-
-        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
-            numOfSetElementsDeviation);
+        numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
+        keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+        
+        numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
+        numOfSrcTblAttr = (numOfSrcTblAttr > 1) ? numOfSrcTblAttr : 2;
+		keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
+		keySize = (keySize > 0) ? keySize : 1;
     	
         attsPerTargetRel = (numOfSrcTblAttr-keySize) / numOfTgtTables;
         attrRemainder = (numOfSrcTblAttr-keySize) % numOfTgtTables; 

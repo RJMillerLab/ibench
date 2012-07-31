@@ -16,7 +16,28 @@ import vtools.dataModel.expression.Variable;
 
 public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 
+	private int keySize;
+	private int A;
 	static Logger log = Logger.getLogger(CopyScenarioGenerator.class);
+	
+	@Override
+	protected void initPartialMapping() {
+		super.initPartialMapping();
+		A = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+		
+		System.out.println("-----BEFORE-----");
+		System.out.println("Atomic Elements: " + A);
+		System.out.println("Key Size: " + keySize);
+		
+		A = (A > 1) ? A : 2;
+		keySize = (keySize >= A) ? A - 1 : keySize;
+		keySize = (keySize > 0) ? keySize : 1;
+		
+		System.out.println("-----AFTER-----");
+		System.out.println("Atomic Elements: " + A);
+		System.out.println("Key Size: " + keySize);
+	}
 
 	public CopyScenarioGenerator() {
 	}
@@ -76,8 +97,6 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	
 	@Override
 	protected void genSourceRels() throws Exception {
-		int A = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-				numOfElementsDeviation);
 		String[] attrs = new String[A];
 		String relName = randomRelName(0);
 		String hook = getRelHook(0);

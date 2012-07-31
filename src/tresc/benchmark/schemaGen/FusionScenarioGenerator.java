@@ -55,23 +55,17 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void initPartialMapping() {
 		super.initPartialMapping();
-		N = Utils.getRandomNumberAroundSomething(_generator,
-						numOfSetElements, numOfSetElementsDeviation);
+		N = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
 		N = (N < 2) ? 2 : N;
-		K =
-				Utils.getRandomNumberAroundSomething(_generator, keyWidth,
-						keyWidthDeviation);
+		K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
 		K = (K < 1) ? 1 : K;
-		S =	Utils.getRandomNumberAroundSomething(_generator,
-						numOfSetElements, numOfSetElementsDeviation);
+		S =	Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
 		S = (S < 2) ? 2 : S;
 		// if the nesting depth is 0 then the nr of subsets is 0
 		if (depth == 0)
 			S = 0;
-		E =
-				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-						numOfElementsDeviation);
-		E = (E < (K + S)) ? (K + S) : E;
+		E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+		E = (E <= (K + S)) ? (K + S)+1 : E;
 		F = E - K - S;
 	}
 

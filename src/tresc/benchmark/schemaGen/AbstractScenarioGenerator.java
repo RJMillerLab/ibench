@@ -63,12 +63,16 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected int numOfParams;
 	protected int numOfParamsDeviation;
 	protected int numNewAttr;
+	protected int numNewAttrDeviation;
 	protected int typeOfSkolem;
-	protected int numDelAttr;
+	protected int numRemovedAttr;
+	protected int numRemovedAttrDeviation;
 	protected int srcReusePerc;
 	protected int trgReusePerc;
 	protected int srcFDPerc;
-	protected int keySize;
+	protected int primaryKeySize;
+	protected int primaryKeySizeDeviation;
+	
 	protected MappingLanguageType mapLang;
 	protected int curRep;
 	protected boolean doSchemaElReuse = false;
@@ -253,47 +257,40 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		this.configuration = configuration;
 		
 		// get parameters from configuration
-		repetitions =
-				configuration.getScenarioRepetitions(getScenType().ordinal());
-		numOfElements = configuration
-						.getParam(Constants.ParameterName.NumOfSubElements);
+		repetitions = configuration.getScenarioRepetitions(getScenType().ordinal());
+		numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
 		numOfElementsDeviation = 0;
 				//configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
 		nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
-		nestingDeviation = configuration
-						.getDeviation(Constants.ParameterName.NestingDepth);
-		numOfSetElements =
-				configuration.getParam(Constants.ParameterName.JoinSize);
-		numOfSetElementsDeviation =
-				configuration.getDeviation(Constants.ParameterName.JoinSize);
-		keyWidth =
-				configuration
-						.getParam(Constants.ParameterName.NumOfJoinAttributes);
-		keyWidthDeviation =
-				configuration
-						.getDeviation(Constants.ParameterName.NumOfJoinAttributes);
+		nestingDeviation = configuration.getDeviation(Constants.ParameterName.NestingDepth);
+		
+		numOfSetElements = configuration.getParam(Constants.ParameterName.JoinSize);
+		numOfSetElementsDeviation = configuration.getDeviation(Constants.ParameterName.JoinSize);
+		
+		keyWidth = configuration.getParam(Constants.ParameterName.NumOfJoinAttributes);
+		keyWidthDeviation = configuration.getDeviation(Constants.ParameterName.NumOfJoinAttributes);
+		
 		joinKind = configuration.getParam(Constants.ParameterName.JoinKind);
-		numOfParams =
-				configuration
-						.getParam(Constants.ParameterName.NumOfParamsInFunctions);
-		numOfParamsDeviation =
-				configuration
-						.getDeviation(Constants.ParameterName.NumOfParamsInFunctions);
-		numNewAttr =
-				configuration
-						.getParam(Constants.ParameterName.NumOfNewAttributes);
-		typeOfSkolem =
-				configuration.getParam(Constants.ParameterName.SkolemKind);
-		numDelAttr =
-				configuration
-						.getParam(Constants.ParameterName.NumofAttributestoDelete);
-		srcReusePerc =
-				configuration.getParam(Constants.ParameterName.ReuseSourcePerc);
+		
+		numOfParams = configuration.getParam(Constants.ParameterName.NumOfParamsInFunctions);
+		numOfParamsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfParamsInFunctions);
+		
+		numNewAttr = configuration.getParam(Constants.ParameterName.NumOfNewAttributes);
+		numNewAttrDeviation = configuration.getDeviation(Constants.ParameterName.NumOfNewAttributes);
+		
+		typeOfSkolem = configuration.getParam(Constants.ParameterName.SkolemKind);
+		
+		numRemovedAttr = configuration.getParam(Constants.ParameterName.NumOfAttributesToDelete);
+		numRemovedAttrDeviation = configuration.getDeviation(Constants.ParameterName.NumOfAttributesToDelete);
+		
+		srcReusePerc = configuration.getParam(Constants.ParameterName.ReuseSourcePerc);
 		trgReusePerc = configuration.getParam(Constants.ParameterName.ReuseTargetPerc);
-		keySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
+		
+		primaryKeySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
+		primaryKeySizeDeviation = configuration.getDeviation(Constants.ParameterName.PrimaryKeySize);
         
 		// ensure that the key size is not greater than the number of elements
-		int biggestKey = (keySize > keyWidth) ? keySize : keyWidth;
+		int biggestKey = (primaryKeySize > keyWidth) ? primaryKeySize : keyWidth;
 		numOfElements = (numOfElements > biggestKey) ? numOfElements : biggestKey + 1;
 		
         mapLang = configuration.getMapType();
