@@ -164,12 +164,15 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			case SOtgds:
 				fac.addEmptyExistsAtom(m1, 0);
 				fac.addVarsToExistsAtom(m1, 0, fac.getFreshVars(0, elements));
-				generateSKs(m1);
+				SkolemKind sk1 = sk;
+				if(sk == SkolemKind.VARIABLE)
+					sk1 = SkolemKind.values()[_generator.nextInt(4)];
+				generateSKs(m1, sk1);
 				break;
 		}
 	}
 	
-	private void generateSKs(MappingType m1) {
+	private void generateSKs(MappingType m1, SkolemKind sk1) {
 		int numArgsForSkolem = elements;
 
 		// if we are using a key in the original relation then we base the skolem on just that key

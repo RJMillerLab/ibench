@@ -94,7 +94,8 @@ public class Constants
     	KEY,
     	ALL,
         RANDOM,
-        EXCHANGED;
+        EXCHANGED,
+        VARIABLE;
     };
 
     public enum ScenarioName {

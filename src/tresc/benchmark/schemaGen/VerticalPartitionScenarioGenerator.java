@@ -396,13 +396,16 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
 		        	fac.addEmptyExistsAtom(m1, i);
 		        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
-		        	generateSKs(m1, i, offset, numAtts);
+		        	SkolemKind sk1 = sk;
+					if(sk == SkolemKind.VARIABLE)
+						sk1 = SkolemKind.values()[_generator.nextInt(4)];
+		        	generateSKs(m1, i, offset, numAtts, sk1);
 				}
 				break;
 		}
 	}
 	
-	private void generateSKs(MappingType m1, int rel, int offset, int numAtts) {
+	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, SkolemKind sk) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
 		// generate random number arguments for skolem function

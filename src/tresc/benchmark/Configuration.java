@@ -556,7 +556,7 @@ public class Configuration {
 		return result.toString();
 	}
 
-	public static String getSchemaPathPrefix() {
+	public String getSchemaPathPrefix() {
 		return schemaPathPrefix;
 	}
 
