@@ -157,6 +157,12 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			boolean reuseSrc = _generator.nextInt(100) <= srcReusePerc;
 			boolean reuseTrg = _generator.nextInt(100) <= trgReusePerc;
 			
+			// check wether at least one target or source relation exists when reusing
+			if (reuseSrc && model.getSchema(true).sizeOfRelationArray() == 0)
+				reuseSrc = false;
+			if (reuseTrg && model.getSchema(false).sizeOfRelationArray() == 0)
+				reuseTrg = false;
+			
 			// do not both reuse source and target
 			if (reuseSrc && reuseTrg) {
 				if (_generator.nextBoolean())

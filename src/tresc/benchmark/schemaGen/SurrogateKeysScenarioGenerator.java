@@ -244,28 +244,44 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 
 		// create the Function corresponding to the key
 		// and add it to the select clause of query
- 		SKFunction sk = m.getSkolemFromAtom(m1, false, 0, elements);
- 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
- 			
- 		for(int k = 0; k < sk.getVarArray().length; k++) {			
- 			String sAttName = m.getAttrId(0, k, true);
- 			Projection att = new Projection(new Variable("X"), sAttName);
- 			stSK.addArg(att);
- 		}
+ 		//TODO only works for second order mappings
+		vtools.dataModel.expression.SKFunction stSK1;
+		vtools.dataModel.expression.SKFunction stSK2;
+		switch (mapLang) {
+		case FOtgds:
+			stSK1 = new vtools.dataModel.expression.SKFunction("");
+			stSK2 = new vtools.dataModel.expression.SKFunction("");
+			//TODO
+			
+			break;
+		case SOtgds:
+		default:
+			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, elements);
+	 		stSK1 = new vtools.dataModel.expression.SKFunction(sk.getSkname());
+	 			
+	 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+	 			String sAttName = m.getAttrId(0, k, true);
+	 			Projection att = new Projection(new Variable("X"), sAttName);
+	 			stSK1.addArg(att);
+	 		}
 
- 		// second skolem function
- 		SKFunction sk2 = m.getSkolemFromAtom(m1, false, 0, elements + 1);
- 		vtools.dataModel.expression.SKFunction stSK2 = new vtools.dataModel.expression.SKFunction(sk2.getSkname());
- 			
- 		for(int k = 0; k < sk2.getVarArray().length; k++) {			
- 			String sAttName = m.getAttrId(0, k, true);
- 			Projection att = new Projection(new Variable("X"), sAttName);
- 			stSK2.addArg(att);
- 		}
- 		
- 		select.add(attrNames[elements], stSK);
+	 		// second skolem function
+	 		SKFunction sk2 = m.getSkolemFromAtom(m1, false, 0, elements + 1);
+	 		stSK2 = new vtools.dataModel.expression.SKFunction(sk2.getSkname());
+	 			
+	 		for(int k = 0; k < sk2.getVarArray().length; k++) {			
+	 			String sAttName = m.getAttrId(0, k, true);
+	 			Projection att = new Projection(new Variable("X"), sAttName);
+	 			stSK2.addArg(att);
+	 		}
+
+			break;
+		}
+
+		// add
+ 		select.add(attrNames[elements], stSK1);
  		select.add(attrNames[elements + 1], stSK2);
-
+		
 		// add the subquery to the final transformation query
 		query.setSelect(select);
 		SelectClauseList pselect = pquery.getSelect();

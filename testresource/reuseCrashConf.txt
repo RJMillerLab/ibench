@@ -1,0 +1,82 @@
+# Configuration File for STBenchmark
+
+# output path prefixes
+SchemaPathPrefix=out
+InstancePathPrefix=out
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 1
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 0
+Scenarios.MERGING = 0
+Scenarios.VALUEMANAGEMENT = 0
+Scenarios.FUSION = 0
+Scenarios.SELFJOINS = 0
+Scenarios.VERTPARTITION = 0
+Scenarios.ADDATTRIBUTE = 1
+Scenarios.DELATTRIBUTE = 0
+Scenarios.ADDDELATTRIBUTE = 0
+Scenarios.VERTPARTITIONISA = 0
+
+# These should always be zero
+Scenarios.FLATTENING = 0
+Scenarios.NESTING = 0
+Scenarios.VALUEGEN = 0
+Scenarios.GLAV = 0
+
+# Parameters that define the shape of the schema and basic scenarios
+ConfigOptions.NumOfSubElements = 5
+ConfigOptions.NestingDepth = 0 
+ConfigOptions.JoinSize = 2 
+ConfigOptions.JoinKind = 1 
+ConfigOptions.NumOfJoinAttributes = 1 
+ConfigOptions.NumOfParamsInFunctions = 2 
+ConfigOptions.NumOfNewAttributes = 1
+ConfigOptions.NumofAttributestoDelete = 1
+ConfigOptions.SkolemKind = 1
+ConfigOptions.SourceFDPerc = 60
+ConfigOptions.SourceSkolemPerc = 60
+ConfigOptions.ReuseSourcePerc = 60
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 0
+ConfigOptions.PrimaryKeySize = 2
+
+# Deviations for each of the parameters
+ConfigOptionsDeviation.NumOfSubElements = 0 
+ConfigOptionsDeviation.NestingDepth = 0 
+ConfigOptionsDeviation.JoinSize = 0 
+ConfigOptionsDeviation.JoinKind = 0 
+ConfigOptionsDeviation.NumOfJoinAttributes = 0 
+ConfigOptionsDeviation.NumOfParamsInFunctions = 0 
+ConfigOptionsDeviation.NumOfNewAttributes = 0
+ConfigOptionsDeviation.NumofAttributestoDelete = 0
+ConfigOptionsDeviation.SkolemKind = 2
+
+# Random number generator and max values and DataGenerator
+RandomSeed = 0
+RepElementCount = 5
+MaxStringLength = 5
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+MappingLanguage = SOtgds
+
+# Optional overwriting file names
+# FileNames.SourceSchema = 
+# FileNames.TargetSchema = 
+# FileNames.SourceInstance = 
+# FileNames.SourceDocumentName =
+FileNames.Schemas = test.xml
+
+# Optional activation/deactivation of output options
+# OutputOption.HTMLSchemas = false
+OutputOption.Data = false
+# OutputOption.XMLSchemas = false
+OutputOption.HTMLMapping = true
+OutputOption.TrampXML = true
+
+# Optional activation/deactivation of output parts of the Tramp XML document
+TrampXMLOutput.Correspondences = false
+TrampXMLOutput.Transformations = false
+TrampXMLOutput.Data = false
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true
