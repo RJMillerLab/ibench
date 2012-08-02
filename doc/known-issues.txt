@@ -17,8 +17,17 @@ are created with only keys or require 3 key slots but only have 2 attribute slot
 
 2. CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the 
 mappings are incorrect. [July 30, 2012]
-
-3. Source/Target reuse crashes if parameters are not delicately adjusted. [July 30, 2012]
+	
+	
+	
+* 3. Source/Target reuse crashes if parameters are not delicately adjusted. [July 30, 2012]
+	
+	Update (Boris): The problem with trying to reuse tables from empty schemas is resolved. 
+		Check whether there are still problematic configurations [August 2, 2012]  
 
 4. Mappings for ValueManagement are incorrect. Need to make it such that it performs functions on 
 variables aka. exists yields f(a,b). [July 31, 2012]
+
+	Update (Boris): Known Issue, I should have documented that. I did not finish this because I need to 
+		modify the model to allow for a "normal" functions in the Tramp XML model. Will do this 
+		after the other issues have been resolved. [August 2, 2012]

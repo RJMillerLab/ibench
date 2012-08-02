@@ -1,0 +1,76 @@
+# Configuration File for STBenchmark
+
+# Output Path Prefixes
+SchemaPathPrefix=out
+InstancePathPrefixout
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 1
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 1
+Scenarios.MERGING = 1
+Scenarios.VALUEMANAGEMENT = 0
+Scenarios.FUSION = 0
+Scenarios.SELFJOINS = 0
+Scenarios.VERTPARTITION = 0
+Scenarios.ADDATTRIBUTE = 0
+Scenarios.DELATTRIBUTE = 0
+Scenarios.ADDDELATTRIBUTE = 0
+Scenarios.VERTPARTITIONISA = 1
+
+# These should always be zero
+Scenarios.FLATTENING = 0
+Scenarios.GLAV = 0
+Scenarios.NESTING = 0
+Scenarios.VALUEGEN = 0
+
+# Parameters that define the shape of the schema and basic scenarios
+ConfigOptions.NumOfSubElements = 4
+ConfigOptions.NumOfNewAttributes = 3
+ConfigOptions.NumofAttributestoDelete = 7
+ConfigOptions.JoinSize = 3
+ConfigOptions.NumOfParamsInFunctions = 3
+ConfigOptions.PrimaryKeySize = 3
+ConfigOptions.NumOfJoinAttributes = 1
+ConfigOptions.JoinKind = 1
+ConfigOptions.SkolemKind = 2
+ConfigOptions.SourceSkolemPerc = 48
+ConfigOptions.SourceFDPerc = 52
+ConfigOptions.NestingDepth = 0
+
+# Deviations for each of the parameters
+ConfigOptionsDeviation.NumOfSubElements = 2
+ConfigOptionsDeviation.NumOfNewAttributes = 1
+ConfigOptionsDeviation.NumofAttributestoDelete = 1
+ConfigOptionsDeviation.JoinSize = 0
+ConfigOptionsDeviation.NumOfParamsInFunctions = 1
+ConfigOptionsDeviation.PrimaryKeySize = 1
+ConfigOptionsDeviation.NumOfJoinAttributes = 0
+ConfigOptionsDeviation.JoinKind = 0
+ConfigOptionsDeviation.SkolemKind = 0
+ConfigOptionsDeviation.SourceSkolemPerc = 0
+ConfigOptionsDeviation.SourceFDPerc = 0
+
+# Random number generator and max values, DataGenerator and MappingLang
+RandomSeed = 2138582617
+RepElementCount = 5
+MaxStringLength = 5
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+MappingLanguage = SOtgds
+
+# Optional activation/deactivation of output options
+OutputOption.HTMLSchemas = false
+OutputOption.Data = false
+OutputOption.XMLSchemas = false
+OutputOption.HTMLMapping = true
+OutputOption.TrampXML = true
+OutputOption.ErrorsAndExplanations = false
+
+# Optional activation/deactivation of output parts of the Tramp XML document
+TrampXMLOutput.Correspondences = false
+TrampXMLOutput.Transformations = false
+TrampXMLOutput.Data = false
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true
+

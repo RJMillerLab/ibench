@@ -32,7 +32,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	static Logger log = Logger.getLogger(AbstractScenarioGenerator.class);
 	
-	protected final String _attributes = "abcdefghijklmnopqrstuvwxyz"; // Can
+//	protected final String _attributes = "abcdefghijklmnopqrstuvwxyz"; // Can
 																		// only
 																		// hold
 																		// less
@@ -43,8 +43,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 																		// one
 																		// mapping
 
-	protected HashMap<String, Character> attrMap =
-			new HashMap<String, Character>();
+//	protected HashMap<String, Character> attrMap =
+//			new HashMap<String, Character>();
 	protected PartialMapping m = null;
 	protected Random _generator;
 	protected MappingScenario scen;

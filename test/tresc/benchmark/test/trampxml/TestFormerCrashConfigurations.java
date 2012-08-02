@@ -59,9 +59,18 @@ public class TestFormerCrashConfigurations {
 	
 	@Test
 	public void testReuseCrash () throws Exception {
-		setUpConf("reuseCrashConf.txt");
+		testOne("reuseCrashConf.txt");
+	}
+	
+	@Test
+	public void testMergeChainCrash () throws Exception {
+		testOne("mergeChainJoinConf.txt");
+	}
+	
+	private void testOne (String fileName) throws Exception {
+		setUpConf(fileName);
 		b.runConfig(conf);
-		testLoad("reuse");
+		testLoad(fileName);
 	}
 	
 	private void testLoad(String name) throws Exception {
