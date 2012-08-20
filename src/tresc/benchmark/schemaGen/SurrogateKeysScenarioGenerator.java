@@ -1,5 +1,6 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Collections;
 import java.util.Vector;
 
 import org.vagabond.xmlmodel.MappingType;
@@ -172,7 +173,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		}
 	}
 	
-	private void generateSKs(MappingType m1, SkolemKind sk1) {
+	private void generateSKs(MappingType m1, SkolemKind sk) {
 		int numArgsForSkolem = elements;
 
 		// if we are using a key in the original relation then we base the skolem on just that key
@@ -198,6 +199,10 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 				else
 					i--;
 			}
+			
+			Collections.sort(randomVars);
+			
+			fac.addSKToExistsAtom(m1, 0, convertVectorToStringArray(randomVars));
 		}
 		else 
 		{
@@ -207,6 +212,26 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			// add only amount specified in config file for the IDOnFirst skolem
 			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfParams));
 		}
+	}
+	
+	/**
+	 * Converts a string vector to an array of strings
+	 * 
+	 * @param vStr
+	 *            A string vector
+	 * @return An array of strings
+	 * 
+	 * @author mdangelo
+	 */
+	static String[] convertVectorToStringArray(Vector<String> vStr) 
+	{
+		String[] ret = new String[vStr.size()];
+
+		int j = 0;
+		for (String str : vStr)
+			ret[j++] = str;
+
+		return ret;
 	}
 	
 	@Override
