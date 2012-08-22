@@ -8,7 +8,7 @@ InstancePathPrefixout
 Scenarios.COPY = 0
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
+Scenarios.MERGING = 1
 Scenarios.VALUEMANAGEMENT = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
@@ -17,7 +17,8 @@ Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 1
+Scenarios.VERTPARTITIONHASA = 0
+Scenarios.MERGEADD = 0
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -28,26 +29,26 @@ Scenarios.VALUEGEN = 0
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 3
-ConfigOptions.NumofAttributestoDelete = 7
+ConfigOptions.NumofAttributestoDelete = 0
 ConfigOptions.JoinSize = 3
-ConfigOptions.NumOfParamsInFunctions = 3
-ConfigOptions.PrimaryKeySize = 3
+ConfigOptions.NumOfParamsInFunctions = 2
+ConfigOptions.PrimaryKeySize = 2
 ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 0
-ConfigOptions.SkolemKind = 2
-ConfigOptions.SourceSkolemPerc = 48
-ConfigOptions.SourceFDPerc = 52
+ConfigOptions.JoinKind = 1
+ConfigOptions.SkolemKind = 1
+ConfigOptions.SourceSkolemPerc = 0
+ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 0
-ConfigOptionsDeviation.NumOfNewAttributes = 1
-ConfigOptionsDeviation.NumofAttributestoDelete = 1
+ConfigOptionsDeviation.NumOfNewAttributes = 0
+ConfigOptionsDeviation.NumofAttributestoDelete = 0
 ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 1
-ConfigOptionsDeviation.PrimaryKeySize = 1
+ConfigOptionsDeviation.NumOfParamsInFunctions = 0
+ConfigOptionsDeviation.PrimaryKeySize = 0
 ConfigOptionsDeviation.NumOfJoinAttributes = 0
-ConfigOptionsDeviation.JoinKind = 1
+ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0

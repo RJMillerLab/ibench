@@ -56,6 +56,12 @@ public class STBenchmark {
 	public void parseArgs (String[] args) throws CmdLineException {
 		CmdLineParser parser;
 		
+		if(args.length == 0)
+		{
+			System.out.println("Please specify command line arguments");
+			System.exit(1);
+		}
+		
 		log.debug("Command line args are: <" + LoggerUtil.arrayToString(args) + ">");
 		parser = new CmdLineParser(_configuration);
 		try {

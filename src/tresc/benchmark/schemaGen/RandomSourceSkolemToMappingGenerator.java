@@ -17,6 +17,7 @@ import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.SkolemKind;
+import tresc.benchmark.utils.Utils;
 import vtools.dataModel.types.RandSrcSkolem;
 
 /**
@@ -335,7 +336,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			}
 		}
 	
-		String[] randAtts = convertVectorToStringArray(randomAttrs);
+		String[] randAtts = Utils.convertVectorToStringArray(randomAttrs);
 		int[] attrPos = getAttrPositions(allAttrs, randAtts);
 		java.util.Arrays.sort(attrPos);
 	
@@ -377,7 +378,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			if (skAtts.indexOf(rsk.getAttr()) != -1)
 				skAtts.remove(skAtts.indexOf(rsk.getAttr()));
 		
-		rsk.setArgAttrs(convertVectorToStringArray(skAtts));
+		rsk.setArgAttrs(Utils.convertVectorToStringArray(skAtts));
 		rsk.setArgPositions(getAttrPositions(allAttrs, rsk.getArgAttrs()));
 	}
 
@@ -429,7 +430,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 									for (int p : rsk.getArgPositions())
 										argVars.add(allVars[p]);
 									
-									rsk.setArgVars(convertVectorToStringArray(argVars));
+									rsk.setArgVars(Utils.convertVectorToStringArray(argVars));
 									rsk.setAttrVar(allVars[rsk.getAttrPosition()]);
 								}
 							}
@@ -579,27 +580,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		}
 
 		return nonKeyPos;
-	}
-
-	/**
-	 * Converts a string vector to an array of strings
-	 * 
-	 * @param vStr
-	 *            A string vector
-	 *            
-	 * @return An array of strings
-	 * 
-	 * @author mdangelo
-	 */
-	static String[] convertVectorToStringArray(Vector<String> vStr) 
-	{
-		String[] ret = new String[vStr.size()];
-
-		int j = 0;
-		for (String str : vStr)
-			ret[j++] = str;
-
-		return ret;
 	}
 	
 	/**

@@ -18,6 +18,7 @@ import tresc.benchmark.schemaGen.FlatteningScenarioGenerator;
 import tresc.benchmark.schemaGen.FusionScenarioGenerator;
 import tresc.benchmark.schemaGen.GLAVScenarioGenerator;
 import tresc.benchmark.schemaGen.HorizontalPartitionScenarioGenerator;
+import tresc.benchmark.schemaGen.MergeAddScenarioGenerator;
 import tresc.benchmark.schemaGen.MergingScenarioGenerator;
 import tresc.benchmark.schemaGen.NestingScenarioGenerator;
 import tresc.benchmark.schemaGen.AbstractScenarioGenerator;
@@ -81,6 +82,8 @@ public class Generator {
 				new VPIsAScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.ADDDELATTRIBUTE.ordinal()] =
 				new AddDeleteScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] =
+				new MergeAddScenarioGenerator();
 		
 		// create an FD generator
 		fdGen = new SourceFDGenerator();

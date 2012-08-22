@@ -11,6 +11,7 @@ import org.vagabond.xmlmodel.RelationType;
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.utils.Utils;
 
 /**
  * Randomly generates functional dependencies after all scenarios have been
@@ -115,7 +116,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 						tries++;
 				}
 
-				// String[] LHSAtts = convertVectorToStringArray(LHSAtts);
+				// String[] LHSAtts = Utils.convertVectorToStringArray(LHSAtts);
 				Boolean done;
 
 				// keep trying to find a RHS attribute until we have added one
@@ -141,7 +142,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 				for (FDType fd : functionalDep)
 					if (fd.getTo().getAttrArray(0).equals(RHSAtt)
 							&& Arrays.equals(fd.getFrom().getAttrArray(),
-									convertVectorToStringArray(LHSAtts)))
+									Utils.convertVectorToStringArray(LHSAtts)))
 						duplicate = true;
 
 				// if the FD was a duplicate then we must create a new FD in its place so decrement the counter, 
@@ -149,7 +150,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 				if (duplicate)
 					i--;
 				else
-					scenario.getDocFac().addFD(r.getName(),convertVectorToStringArray(LHSAtts),new String[] { RHSAtt });
+					scenario.getDocFac().addFD(r.getName(),Utils.convertVectorToStringArray(LHSAtts),new String[] { RHSAtt });
 				
 				System.out.println("---------NEW FD---------");
 
@@ -221,25 +222,5 @@ public class SourceFDGenerator implements ScenarioGenerator
 		}
 
 		return nonKeyPos;
-	}
-
-	/**
-	 * Converts a string vector to an array of strings
-	 * 
-	 * @param vStr
-	 *            A string vector
-	 * @return An array of strings
-	 * 
-	 * @author mdangelo
-	 */
-	static String[] convertVectorToStringArray(Vector<String> vStr) 
-	{
-		String[] ret = new String[vStr.size()];
-
-		int j = 0;
-		for (String str : vStr)
-			ret[j++] = str;
-
-		return ret;
 	}
 }

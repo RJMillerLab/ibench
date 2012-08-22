@@ -114,7 +114,8 @@ public class Constants
         ADDATTRIBUTE,
         DELATTRIBUTE,
         ADDDELATTRIBUTE,
-        VERTPARTITIONISA
+        VERTPARTITIONISA,
+        MERGEADD
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -137,6 +138,7 @@ public class Constants
     	nameForScenarios.put(ScenarioName.ADDATTRIBUTE, "_AD");
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
+    	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
     }
     
     public enum OutputOption {

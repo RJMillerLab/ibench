@@ -202,7 +202,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			
 			Collections.sort(randomVars);
 			
-			fac.addSKToExistsAtom(m1, 0, convertVectorToStringArray(randomVars));
+			fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
 		}
 		else 
 		{
@@ -212,26 +212,6 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			// add only amount specified in config file for the IDOnFirst skolem
 			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfParams));
 		}
-	}
-	
-	/**
-	 * Converts a string vector to an array of strings
-	 * 
-	 * @param vStr
-	 *            A string vector
-	 * @return An array of strings
-	 * 
-	 * @author mdangelo
-	 */
-	static String[] convertVectorToStringArray(Vector<String> vStr) 
-	{
-		String[] ret = new String[vStr.size()];
-
-		int j = 0;
-		for (String str : vStr)
-			ret[j++] = str;
-
-		return ret;
 	}
 	
 	@Override

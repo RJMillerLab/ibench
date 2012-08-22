@@ -1,6 +1,7 @@
 package tresc.benchmark.utils;
 
 import java.util.Random;
+import java.util.Vector;
 
 public class Utils
 {
@@ -39,4 +40,24 @@ public class Utils
         
         return (int) val;
     }
+    
+    /**
+	 * Converts a string vector to an array of strings
+	 * 
+	 * @param vStr
+	 *            A string vector
+	 * @return An array of strings
+	 * 
+	 * @author mdangelo
+	 */
+	public static String[] convertVectorToStringArray(Vector<String> vStr) 
+	{
+		String[] ret = new String[vStr.size()];
+
+		int j = 0;
+		for (String str : vStr)
+			ret[j++] = str;
+
+		return ret;
+	}
 }
