@@ -206,11 +206,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	// finds a source constraint with the schemaElement in the LHS
 	// (if there is none, it returns null)
 	private SMarkElement[][] findConstraint(SMarkElement schemaElement) {
-		for (SMarkElement[][] constraint : constraints)
-			for (int i = 0; i < constraint.length; i++)
+		for (SMarkElement[][] constraint : constraints) {
+			for (int i = 0; i < constraint.length; i++) {
+				log.debug(constraint[i][0]);
 				if (constraint[i][0].toString()
 						.equals(schemaElement.toString()))
 					return constraint;
+			}
+		}
 		return null;
 	}
 

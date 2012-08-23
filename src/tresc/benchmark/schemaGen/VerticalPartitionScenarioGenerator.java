@@ -5,6 +5,7 @@ import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
 import tresc.benchmark.Constants.JoinKind;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
@@ -486,15 +487,24 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 
 			for(int i = 0; i < numOfTgtTables; i++) {
 				SelectClauseList seli = queries[i].getSelect();
-				
+				String name;
+				int numVar;
 				int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
 
-		 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
-		 			
-		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
+				if (mapLang.equals(MappingLanguageType.SOtgds)) {
+					SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+			 		name = sk.getSkname();
+			 		numVar = sk.getVarArray().length;
+            	}
+            	else {
+            		name = fac.getNextId("SK");
+            		numVar = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 4);
+            	}
+		 		
+		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(name);
 		 			
 		 		// this works because the key is always the first attribute 
-		 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+		 		for(int k = 0; k < numVar; k++) {			
 		 			String sAttName = m.getAttrId(0, k, true);
 		 			Projection att = new Projection(new Variable("X"), sAttName);
 		 			stSK.addArg(att);
@@ -511,13 +521,23 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         {
             for (int i = 0; i < numOfTgtTables - 1; i++)
             {
+            	String name;
             	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
-
-		 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+            	int numVar;
+            	
+            	if (mapLang.equals(MappingLanguageType.SOtgds)) {
+			 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+			 		name = sk.getSkname();
+			 		numVar = sk.getVarArray().length;
+            	}
+            	else {
+            		name = fac.getNextId("SK");
+            		numVar = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 4);
+            	}
+            	
+		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(name);
 		 			
-		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
-		 			
-		 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+		 		for(int k = 0; k < numVar; k++) {			
 		 			String sAttName = m.getAttrId(0, k, true);
 		 			Projection att = new Projection(new Variable("X"), sAttName);
 		 			stSK.addArg(att);

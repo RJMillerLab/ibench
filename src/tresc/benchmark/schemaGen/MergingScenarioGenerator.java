@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.vagabond.util.CollectionUtils;
+import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
@@ -284,29 +285,113 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
      * Find source rels that have enough attributes and either have no key or
      * have a key on the last numOfJoinAttributes attrs (except for the first
      * one in a STAR join)
+     * @throws Exception 
      */
     @Override
-	protected void chooseSourceRels() {
-		if (jk == JoinKind.STAR)
-			chooseStarSourceRels();
-		else if (jk == JoinKind.CHAIN)
-			chooseChainSourceRels();
+	protected void chooseSourceRels() throws Exception {
+		List<RelationType> rels = new ArrayList<RelationType> ();
+		int numTries = 0;
+		int created = 0;
+		boolean found = false;
+		RelationType rel;
+		String[][] attrs = new String[numOfTables][];
 		
+		// first choose one that has no key or key at the right place
+		while(created < numOfTables) {
+			found = true;
+			rel = getRandomRel(false, getNumJoinAttrs(rels.size()) + 1);
+			if (rel != null) {
+				// if PK, then has to be num of join attributes
+				if (rel.isSetPrimaryKey()) {
+					int[] pkPos = model.getPKPos(rel.getName(), true);
+					if (pkPos.length != numOfJoinAttributes)
+						found = false;
+					for(int i = 0; i < numOfJoinAttributes; i++) {
+						if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
+							found = false;
+					}
+				}
+			}
+			else
+				found = false;
+			
+			// found a fitting relation
+			if (found) {
+				rels.add(rel);
+				m.addSourceRel(rel);
+				if (!rel.isSetPrimaryKey()) {
+					int[] templateKey = new int[getNumJoinAttrs(created)];
+					for(int i = 0; i < templateKey.length; i++)
+						templateKey[i] = rel.sizeOfAttrArray() - numOfJoinAttributes;
+					fac.addPrimaryKey(rel.getName(), templateKey, true);
+				}
+				attrs[created] = new String[rel.sizeOfAttrArray()];
+				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
+					attrs[created][i] = rel.getAttrArray(i).getName();
+				numOfAttributes[created] = rel.sizeOfAttrArray();
+				
+				created++;
+				numTries = 0;
+			}
+			// not found, have exhausted number of tries? then create new one
+			else {
+				numTries++;
+				if (numTries >= MAX_NUM_TRIES)
+				{
+					numTries = 0;
+					attrs[created] = new String[numOfAttributes[created]];
+					int numOfNonJoinAttr = numOfAttributes[created] - getNumJoinAttrs(created);
+					for(int j = 0; j < numOfNonJoinAttr; j++)
+						attrs[created][j] = randomAttrName(created, j);
+				
+					// create join and join ref attributes
+					if (jk == JoinKind.STAR) {
+						// first relation (center of the star) add fk attributes
+						if (created == 0) {
+							int offset = numOfAttributes[0] - ((numOfTables - 1) * numOfJoinAttributes);
+							for(int i = 1; i < numOfTables; i++) {
+								for(int j = 0; j < numOfJoinAttributes; j++)
+									attrs[0][offset + j] = getJoinRef(i, j);
+								offset += numOfJoinAttributes;
+							}
+						}
+						// other relation add join attributes
+						else {
+							int offset = numOfAttributes[created] - (numOfJoinAttributes);
+							for(int j = 0; j < numOfJoinAttributes; j++)
+								attrs[created][offset + j] = getJoinAttr(created, j);
+						}
+					}
+					// same for chain joins
+					if (jk == JoinKind.CHAIN) {
+						// if not last table, create join attributes
+						if (created != numOfTables - 1) {
+							int offset = numOfAttributes[created] - numOfJoinAttributes;
+							for(int j = 0; j < numOfJoinAttributes; j++)
+								attrs[created][offset + j] = getJoinAttr(created, j);
+						}
+
+						// create fk attributes if not first table
+						if (created != 0) {
+							int fac = created == 0 ? 1 : 2;
+							int offset = numOfAttributes[created] - (numOfJoinAttributes * fac);
+							for(int j = 0; j < numOfJoinAttributes; j++)
+								attrs[created][offset + j] = getJoinRef(created, j);
+						}
+					}
+					
+					// create the relation
+					rels.add(fac.addRelation(getRelHook(created), randomRelName(created), attrs[created], true));
+					
+					created++;
+					numTries = 0;
+				}
+			}
+			
+			createConstraints(attrs);
+		}
 	}
 
-    /**
-     * 
-     */
-    private void chooseChainSourceRels() {
-		//TODO
-	}
-
-    /**
-     * 
-     */
-	private void chooseStarSourceRels() {
-		//TODO
-	}
 
 	// The way the algorithm works is by generating the following situation
     // where the left column describes the case of a star join
@@ -338,7 +423,6 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		// create join attr names
 		for(int i = 0; i < numOfJoinAttributes; i++)
 			joinAttrs[i] = randomAttrName(0, i);
-		
 		// create numOfTables in the source to be denormalized
 		for(int i = 0; i < numOfTables; i++) {
 			sourceNames[i] = randomRelName(i);
@@ -349,21 +433,16 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 				attrs[i][j] = randomAttrName(i, j);
 		}
 		
-		if (jk == JoinKind.STAR)
-			createStarJoinAttrs(attrs);
-		if (jk == JoinKind.CHAIN)
-			createChainJoinAttrs(attrs);
+		createJoinAttrs(attrs);
 		
 		// create tables 
 		for(int i = 0; i < numOfTables; i++)
 			fac.addRelation(getRelHook(i), sourceNames[i], attrs[i], true);
 		
-		// create FK and key constraints
-		if (jk == JoinKind.STAR)
-			createStarConstraints(attrs);
-		if (jk == JoinKind.CHAIN)
-			createChainConstraints(attrs);
+		createConstraints(attrs);
 	}
+
+
 
 	private int getNumJoinAttrs(int i) {
 		if (jk == JoinKind.STAR) {
@@ -383,52 +462,78 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		return numOfAttributes[i] - getNumJoinAttrs(i);
 	}
 
-	private void createChainConstraints(String[][] attrs) throws Exception {
-		// create primary keys
-		for(int i = 0; i < numOfTables - 1; i++) {
-			String relName = m.getRelName(i, true);
-			fac.addPrimaryKey(relName, getJoinAttrs(i), true);
+	private void createConstraints(String[][] attrs) throws Exception {
+		createPKs(attrs);
+		if (jk == JoinKind.STAR)
+			createStarConstraints(attrs);
+		if (jk == JoinKind.CHAIN)
+			createChainConstraints(attrs);
+	}
+	
+	private void createPKs(String[][] attrs) throws Exception {
+		for(int i = 0; i < numOfTables; i++) {
+			if ((jk == JoinKind.STAR && i != 0) || (i != numOfTables - 1)) {
+				String relName = m.getRelName(i, true);
+				if (!model.hasPK(relName, true))				
+					fac.addPrimaryKey(relName, getJoinAttrs(i, attrs), true);
+			}
 		}
+	}
+	
+	private void createChainConstraints(String[][] attrs) throws Exception {
 		// join every table with the previous one
 		for(int i = 1; i < numOfTables; i++) {
 			String[] fAttr, tAttr;
-			fAttr = getJoinRefs(i);
-			tAttr = getJoinAttrs(i - 1);
+			fAttr = getJoinRefs(i, attrs);
+			tAttr = getJoinAttrs(i - 1, attrs);
 			addFK(i, fAttr, i - 1, tAttr, true);
 		}
 	}
 
 	private void createStarConstraints(String[][] attrs) throws Exception {
-		// create primary keys
-		for(int i = 1; i < numOfTables; i++) {
-			String relName = m.getRelName(i, true);
-			fac.addPrimaryKey(relName, getJoinAttrs(i), true);
-		}
 		// create fks from every table to the first table
 		for(int i = 1; i < numOfTables; i++) {
 			String[] fAttr, tAttr;
-			tAttr = getJoinAttrs(i);
-			fAttr = getJoinRefs(i);
+			tAttr = getJoinAttrs(i, attrs);
+			fAttr = getJoinRefs(i, attrs);
 			addFK(0, fAttr, i, tAttr, true);
 		}
 	}
 	
-	private String[] getJoinRefs(int i) {
+	private String[] getJoinRefs(int i, String[][] attrs) {
 		String[] result = new String[numOfJoinAttributes];
+		
+		if (jk == JoinKind.CHAIN) {
+			int offset = numOfAttributes[i] - numOfJoinAttributes;
+			for(int j = 0; j < numOfJoinAttributes; j++)
+				result[j] = attrs[i][offset + j];
+		}
+		if (jk == JoinKind.STAR) {
+			int offset = numOfAttributes[0] - getNumJoinAttrs(0) + ((i - 1) * numOfJoinAttributes);
+			for(int j = 0; j < numOfJoinAttributes; j++)
+				result[j] = attrs[0][offset + j];
+		}
+		return result;
+	}
+
+	private String[] getJoinAttrs (int i, String[][] attrs) {
+		String[] result = new String[numOfJoinAttributes];
+		int fac = (i != 0 && jk == JoinKind.CHAIN) ? 2 : 1;
+		int offset = numOfAttributes[i] - (numOfJoinAttributes * fac);
+		
 		for(int j = 0; j < numOfJoinAttributes; j++)
-			result[j] = getJoinRef(i, j);
+			result[j] = attrs[i][offset + j];
 		
 		return result;
 	}
 
-	private String[] getJoinAttrs (int i) {
-		String[] result = new String[numOfJoinAttributes];
-		for(int j = 0; j < numOfJoinAttributes; j++)
-			result[j] = getJoinAttr(i, j);
-		
-		return result;
+	private void createJoinAttrs(String[][] attrs) {
+		if (jk == JoinKind.STAR)
+			createStarJoinAttrs(attrs);
+		if (jk == JoinKind.CHAIN)
+			createChainJoinAttrs(attrs);
 	}
-
+	
 	private void createStarJoinAttrs(String[][] attrs) {
 		// create join attrs in all except the first table (center of star)
 		for(int i = 1; i < numOfTables; i++) {
@@ -524,7 +629,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			int numPerSrcRel = numNormalAttr / numOfTables;
 			for(int i = 0; i < numOfTables; i++)
 				numOfAttributes[i] = numPerSrcRel; 
-			numOfAttributes[numOfTables - 1] = numNormalAttr % numOfTables;
+			numOfAttributes[numOfTables - 1] += numNormalAttr % numOfTables;
 		}
 	}
 	
@@ -589,6 +694,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		for(int i = 1; i < numOfTables; i++) {
 			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
+			offset += numFreshVars;
 			String[] fkVars = null;
 			
 			// get vars for the referenced attributes from the first table 
