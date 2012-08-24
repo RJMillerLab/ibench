@@ -35,3 +35,6 @@ variables aka. exists yields f(a,b). [July 31, 2012]
 5. Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
 
 	Update: Issue fixed by Boris. [August 24, 2012]
+
+6. Idea: Would be nice to have Foreign Key functions and representation in the TrampXML model like there is 
+for primary keys. [August 24, 2012]
