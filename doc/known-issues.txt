@@ -37,4 +37,6 @@ variables aka. exists yields f(a,b). [July 31, 2012]
 	Update: Issue fixed by Boris. [August 24, 2012]
 
 6. Idea: Would be nice to have Foreign Key functions and representation in the TrampXML model like there is 
-for primary keys. [August 24, 2012]
+for primary keys. This would be useful for Random Source Skolem generation since it would probably be best 
+that Foreign Keys not be the victims of skolemization - and now there is no clean way of ensuring that
+this is not the case. [August 24, 2012]
