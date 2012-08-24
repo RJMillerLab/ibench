@@ -8,7 +8,7 @@ InstancePathPrefixout
 Scenarios.COPY = 0
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 1
+Scenarios.MERGING = 0
 Scenarios.VALUEMANAGEMENT = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
@@ -18,7 +18,7 @@ Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
-Scenarios.MERGEADD = 0
+Scenarios.MERGEADD = 1
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -62,10 +62,10 @@ DataGenerator = TrampCSV
 MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
-OutputOption.HTMLSchemas = false
+OutputOption.HTMLSchemas = true
 OutputOption.Data = false
 OutputOption.XMLSchemas = false
-OutputOption.HTMLMapping = false
+OutputOption.HTMLMapping = true
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
 

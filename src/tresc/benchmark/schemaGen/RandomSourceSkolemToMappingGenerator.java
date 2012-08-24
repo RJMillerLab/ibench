@@ -422,6 +422,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 						{
 							for (RelAtomType b : m.getForeach().getAtomArray()) 
 							{
+								// translate the attribute positions into variables relevant for this mapping
 								if(b.getTableref().equals(r.getName()))
 								{
 									String[] allVars = b.getVarArray();
@@ -433,17 +434,19 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 									rsk.setArgVars(Utils.convertVectorToStringArray(argVars));
 									rsk.setAttrVar(allVars[rsk.getAttrPosition()]);
 								}
-							}
-							
-							if (mappingObjects[j].equals(rsk.getAttrVar())) 
-							{
-								// create the skolem function object
-								SKFunction sk = tmp.addNewSKFunction();
-								sk.setSkname(rsk.getSkId());
-								sk.setVarArray(rsk.getArgVars());
+								
+								// mdangelo BUG FIX August 24, 2012
+								// check if the mapping object we are looking at is supposed to be replaced and perform the replacement
+								if (mappingObjects[j].equals(rsk.getAttrVar())) 
+								{
+									// create the skolem function object
+									SKFunction sk = tmp.addNewSKFunction();
+									sk.setSkname(rsk.getSkId());
+									sk.setVarArray(rsk.getArgVars());
 
-								// switch out the var for the new SKFunction
-								mappingObjects[j] = sk;
+									// switch out the var for the new SKFunction
+									mappingObjects[j] = sk;
+								}
 							}
 						}
 					} 
