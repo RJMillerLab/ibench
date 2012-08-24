@@ -31,3 +31,7 @@ variables aka. exists yields f(a,b). [July 31, 2012]
 	Update (Boris): Known Issue, I should have documented that. I did not finish this because I need to 
 		modify the model to allow for a "normal" functions in the Tramp XML model. Will do this 
 		after the other issues have been resolved. [August 2, 2012]
+
+5. Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
+
+	Update: Issue fixed by Boris. [August 24, 2012]
