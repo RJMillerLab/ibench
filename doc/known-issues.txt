@@ -2,41 +2,81 @@
 KNOWN ISSUES
 -------------
 
-1. Deviation must be disabled currently for scenarios to work (Because the margins for number of 
-elements and key size often cause issues with primary key FD generation. This is because tables 
-are created with only keys or require 3 key slots but only have 2 attribute slots, etc.) 
-[July 30, 2012]
+1. Deviation Parameter [mdangelo - July 30, 2012]
+   Deviation must be disabled currently for scenarios to work (Because the margins for number of 
+   elements and key size often cause issues with primary key FD generation. This is because tables 
+   are created with only keys or require 3 key slots but only have 2 attribute slots, etc.) 
 
-	Update: The only deviation that does not work after some tinkering is that of keyWidth 
-		otherwise known as numOfJoinAttr (used in merge, fusion, selfjoin). Investigating
-		what the problem is but as the code is from the original STBenchmark it may not be
-		fruitful. [July 31, 2012]
-	Update: Fixed issue keyWidth deviation had with Object Fusion. Currently deviations are always
+	 Update [mdangelo - July 31, 2012]: The only deviation that does not work after some tinkering is that of keyWidth 
+	 otherwise known as numOfJoinAttr (used in merge, fusion, selfjoin). Investigating
+	 what the problem is but as the code is from the original STBenchmark it may not be
+	 fruitful. [July 31, 2012]
+	
+   Update [mdangelo - July 31, 2012]: Fixed issue keyWidth deviation had with Object Fusion. Currently deviations are always
 		1, but will do future testing to see if that can be increased without breaking too
-		many things. [July 31, 2012]
+		many things. 
 
 2. CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the 
 mappings are incorrect. [July 30, 2012]
 	
+	 Update: ?
 	
+3. Source/Target reuse crashes if parameters are not delicately adjusted. [mdangelo - July 30, 2012]
 	
-* 3. Source/Target reuse crashes if parameters are not delicately adjusted. [July 30, 2012]
+	 Update [Boris - August 2, 2012]: The problem with trying to reuse tables from empty schemas is resolved. 
+	 Check whether there are still problematic configurations. 
+
+4. VALUE MGMT Scenario [mdangelo - July 31, 2012]
+   Mappings for ValueManagement are incorrect. Need to make it such that it performs functions on 
+   variables aka. exists yields f(a,b). 
 	
-	Update (Boris): The problem with trying to reuse tables from empty schemas is resolved. 
-		Check whether there are still problematic configurations [August 2, 2012]  
+   Update [Boris - August 2, 2012]: Known Issue, I should have documented that. I did not finish this because I need to 
+	 modify the model to allow for a "normal" functions in the Tramp XML model. Will do this 
+	 after the other issues have been resolved. 
 
-4. Mappings for ValueManagement are incorrect. Need to make it such that it performs functions on 
-variables aka. exists yields f(a,b). [July 31, 2012]
+5. MERGE Scenario [dangelo - August 23, 2012]
+   Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
 
-	Update (Boris): Known Issue, I should have documented that. I did not finish this because I need to 
-		modify the model to allow for a "normal" functions in the Tramp XML model. Will do this 
-		after the other issues have been resolved. [August 2, 2012]
+	 Update [Boris - August 24, 2012]: Issue fixed by Boris. 
 
-5. Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
+6. Export List of Foreign Key Attributes in TrampXML Model [mdangelo - August 24, 2012]
+   Idea: Would be nice to have Foreign Key functions and representation in the TrampXML model like there is 
+   for primary keys. This would be useful for Random Source Skolem generation since it would probably be best 
+   that Foreign Keys not be the victims of skolemization - and now there is no clean way of ensuring that
+   this is not the case. 
 
-	Update: Issue fixed by Boris. [August 24, 2012]
+   Update:
 
-6. Idea: Would be nice to have Foreign Key functions and representation in the TrampXML model like there is 
-for primary keys. This would be useful for Random Source Skolem generation since it would probably be best 
-that Foreign Keys not be the victims of skolemization - and now there is no clean way of ensuring that
-this is not the case. [August 24, 2012]
+7. VP Original Scenario [PRG - August 24, 2012]
+   This issue is about StBenchmark's VP original scenario. The output mapping has two different Skolem ids (albeit with same arguments).
+   The output mapping should use the same Skolem id as shown below:
+   E.g. Test(nut,art,slope,measure) --> Touch(nut,art,sk0(nut,art,slope,measure) and Cheese(slope,measure,sk0(nut,art,slope,measure))
+
+   Update:
+
+8. VP Original Scenario [PRG - August 24, 2012]   
+   8.1 - The VP Original Scenario does not set any primary keys in the target relations. Our understanding is that the end of a foreign key arrow 
+   has to be a key.
+   8.2 - There is only one foreign key being generated here (only one direction, it should be both directions as shown in the
+   StBenchmark's VLDB 2008 paper)
+
+   Update:
+
+9. Deploy VP-HAS-A and VP-N-TO-M [PRG - August 24, 2012]
+   Implement VP-HAS-A (basically original VP except without bidirectional foreign key arrow, that is, the created Skolem function appears in both
+   target relations but is a key only in one of them) and VP-N-TO-M (as shown in StBenchmark 2.0's slides).
+
+   Update:
+
+10. MERGE-ADD Scenario [PRG - August 24, 2012]
+    Check that the changes recently implemented by Boris w.r.t MERGE's generated mappings are also done here.
+
+    Update:
+
+11. OBJECT FUSION Scenario [PRG - August 24, 2012]
+    The generated mappings in this scenario seem to be wrong; there are universal variables in the RHS (EXISTS Clause) that never appear in the LHS 
+    (FOR EACH Clause). Also this scenario is creating more than one mapping, and we suspect it should only generate one mapping.
+
+    Update:
+
+
