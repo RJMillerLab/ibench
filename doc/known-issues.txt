@@ -83,20 +83,26 @@ mappings are incorrect. [July 30, 2012]
 
     Update:
 
-12. SCENARIO REVISIONS [mdangelo - 27.08.2012]
-	Noticed that Boris made several changes to MERGE and VERTICAL PARTITION and just thought it was worth knowing that those changes have not been disseminated into the new VP scenarios (ISA, HASA, N-TO-M) or the new MERGE scenario (MERGE ADD). Not sure if the changes made were incredibly important, so I thought I'd bring it up. Also note that MERGE ADD does not generate SO queries (aka. with skolem functions).
 
-13. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
+12. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
     It would be nice to append a suffix to all those target attributes that when created are known to be used a Skolemized Attributes. 
 
     Update:
 
-14. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
+13. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
     There are many debug output messages to the console that are not properly idenfified by the issuing class. Do not remove them, just define
     static Logger log = Logger.getLogger(<package.class name>); at the beginning of the class and then use
     log.debug("<debug message>") instead of System.out.print("<debug message>"). 
 
     Update:
+
+14. SCENARIO REVISIONS [mdangelo - 27.08.2012]
+	  Noticed that Boris made several changes to MERGE and VERTICAL PARTITION and just thought it was worth knowing that those changes have not been disseminated into the new VP 
+    scenarios (ISA, HASA, N-TO-M) or the new MERGE scenario (MERGE ADD). Not sure if the changes made were incredibly important, so I thought I'd bring it up. Also note that 
+    MERGE ADD does not generate SO queries (aka. with skolem functions).
+
+15. ADD Newly Deployed Scenarios to the Automatic Config Generation in Linearize [PRG - August 27, 2012]
+
 
 -------------
 KNOWN CAVEATS
