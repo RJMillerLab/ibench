@@ -70,6 +70,7 @@ mappings are incorrect. [July 30, 2012]
 
 10. MERGE-ADD Scenario [PRG - August 24, 2012]
     Check that the changes recently implemented by Boris w.r.t MERGE's generated mappings are also done here.
+    Also, MERGE-ADD does not appear in propConfig.txt? Has this scenario been tested? 
 
     Update:
 
