@@ -169,45 +169,28 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		        	
 		        	if (i < 2)
 		        		fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
-		        	
-		        	SkolemKind sk1 = sk;
-					if(sk == SkolemKind.VARIABLE)
-						sk1 = SkolemKind.values()[_generator.nextInt(4)];
-		        	generateSKs(m1, i, offset, numAtts, sk1);
+		        
+		        	generateSKs(m1, i, offset, numAtts);
 				}
 				break;
 		}
 	}
 	
-	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, SkolemKind sk) 
-	{
-		int numArgsForSkolem = numOfSrcTblAttr;
-
-		// generate random number arguments for skolem function
-		if (sk == SkolemKind.RANDOM)
-			numArgsForSkolem = _generator.nextInt(numOfSrcTblAttr);
-
-		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
-		int start = 0;
-		if(sk == SkolemKind.EXCHANGED)
-		{
-			start = offset;
-			numArgsForSkolem = numAtts;
-		}
-		
+	private void generateSKs(MappingType m1, int rel, int offset, int numAtts) 
+	{	
 		switch (rel)
 		{
 			case 0: 
-				sk1Args = fac.getFreshVars(start, numArgsForSkolem);
+				sk1Args = fac.getFreshVars(offset, numAtts);
 				skId1 = fac.addSKToExistsAtom(m1, rel, sk1Args);
 				break;
 			case 1:
-				sk2Args = fac.getFreshVars(start, numArgsForSkolem);
+				sk2Args = fac.getFreshVars(offset, numAtts);
 				skId2 = fac.addSKToExistsAtom(m1, rel, sk2Args);
 				break;
 			case 2:
 				fac.addSKToExistsAtom(m1, rel, sk1Args, skId1);
-				fac.addSKToExistsAtom(m1, rel, sk1Args, skId2);
+				fac.addSKToExistsAtom(m1, rel, sk2Args, skId2);
 				break;
 		}
 	}
