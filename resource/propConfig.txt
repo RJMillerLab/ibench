@@ -34,7 +34,7 @@ ConfigOptions.JoinSize = 3
 ConfigOptions.NumOfParamsInFunctions = 2
 ConfigOptions.PrimaryKeySize = 2
 ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 1
+ConfigOptions.JoinKind = 0
 ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
@@ -71,7 +71,7 @@ OutputOption.ErrorsAndExplanations = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = false
-TrampXMLOutput.Transformations = false
+TrampXMLOutput.Transformations = true
 TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = true

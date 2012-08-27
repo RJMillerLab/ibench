@@ -27,6 +27,7 @@ import tresc.benchmark.schemaGen.ScenarioGenerator;
 import tresc.benchmark.schemaGen.SelfJoinScenarioGenerator;
 import tresc.benchmark.schemaGen.SourceFDGenerator;
 import tresc.benchmark.schemaGen.SurrogateKeysScenarioGenerator;
+import tresc.benchmark.schemaGen.VPHasAScenarioGenerator;
 import tresc.benchmark.schemaGen.VPIsAScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueGenerationScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueManagementScenarioGenerator;
@@ -80,6 +81,8 @@ public class Generator {
 				new DeleteAttributeScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISA.ordinal()] =
 				new VPIsAScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONHASA.ordinal()] =
+				new VPHasAScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.ADDDELATTRIBUTE.ordinal()] =
 				new AddDeleteScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] =

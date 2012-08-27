@@ -395,10 +395,20 @@ public class TrampModelFactory {
 		m.getExists().getAtomArray(atom).addNewVar().setStringValue(var);
 	}
 	
-	public void addSKToExistsAtom (MappingType m, int atom, String[] params) {
+	public String addSKToExistsAtom (MappingType m, int atom, String[] params) {
 		RelAtomType a = m.getExists().getAtomArray(atom);
 		SKFunction f = a.addNewSKFunction();
 		f.setSkname(getNextId("SK"));
+		for(String p: params)
+			f.addNewVar().setStringValue(p);
+		
+		return f.getSkname();
+	}
+	
+	public void addSKToExistsAtom (MappingType m, int atom, String[] params, String skId) {
+		RelAtomType a = m.getExists().getAtomArray(atom);
+		SKFunction f = a.addNewSKFunction();
+		f.setSkname(skId);
 		for(String p: params)
 			f.addNewVar().setStringValue(p);
 	}

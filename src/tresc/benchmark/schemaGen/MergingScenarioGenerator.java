@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.vagabond.util.CollectionUtils;
-import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 

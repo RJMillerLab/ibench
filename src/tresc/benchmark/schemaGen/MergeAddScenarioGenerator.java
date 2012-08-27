@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ScenarioName;
@@ -388,6 +389,14 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 	private int getNumNormalAttrs(int i) {
 		return numOfAttributes[i] - getNumJoinAttrs(i);
 	}
+	
+	private int getTotalNumNormalAttrs() {
+		int totalNormalAttributes = 0;
+    	for (int k = 0; k < numOfTables; k++)
+    		totalNormalAttributes += getNumNormalAttrs(k);
+    	
+    	return totalNormalAttributes;
+	}
 
 	private void createChainConstraints(String[][] attrs) throws Exception {
 		// create primary keys
@@ -613,6 +622,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 		for(int i = 1; i < numOfTables; i++) {
 			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
+			offset += numFreshVars;
 			String[] fkVars = null;
 			
 			// get vars for the referenced attributes from the first table 
@@ -704,16 +714,16 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 	
 	private void generateSKs(MappingType m1, SkolemKind sk, int totalVars, String[][] vars, String[] targetVars) 
 	{	
-		// in KEY mode we use the join attributes as the skolem arguments
-		if (sk == SkolemKind.KEY)
+		for (int i = 0; i < numNewAttr; i++)
 		{
-			System.out.println("--- SKOLEM MODE = KEY ---");
-			
-			String[] argVars = null;
-			int offset = totalVars;
-		
-			for (int i = 0; i < numNewAttr; i++)
+			// in KEY mode we use the join attributes as the skolem arguments
+			if (sk == SkolemKind.KEY)
 			{
+				System.out.println("--- SKOLEM MODE = KEY ---");
+
+				String[] argVars = null;
+				int offset = totalVars;
+
 				// star join, add join attribute vars from first table
 				if (jk == JoinKind.STAR) {
 					int start = getNumNormalAttrs(0);
@@ -723,7 +733,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 						start += numOfJoinAttributes;
 					}
 				}
-				
+
 				// chain join, take join attribute vars from each table
 				if (jk == JoinKind.CHAIN) {
 					for(int j = 0; j < numOfTables - 1; j++) {
@@ -732,54 +742,51 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 						offset += numOfJoinAttributes;
 					}
 				}
-				
-				System.out.println("arguments: ");
-				System.out.println(argVars.toString());
-				
+
 				fac.addSKToExistsAtom(m1, 0, argVars);
 			}
-		}
-		
-		else if (sk == SkolemKind.RANDOM)
-		{
-			System.out.println("--- SKOLEM MODE = RANDOM ---");
-			
-			int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
-			
-			// ensure that we are still within bounds
-			numArgsForSkolem = (numArgsForSkolem >= totalVars) ? totalVars : numArgsForSkolem;
-			
-			// generate the random vars to be arguments for the skolem
-			Vector<String> randomVars = new Vector<String> ();
-			for (int i=0; i < numArgsForSkolem; i++)
+
+			else if (sk == SkolemKind.RANDOM)
 			{
-				int pos = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
-				pos = (pos >= totalVars) ? totalVars-1 : pos;
-				
-				// if we haven't already added this variable as an argument, add it
-				if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+				System.out.println("--- SKOLEM MODE = RANDOM ---");
+
+				int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
+
+				// ensure that we are still within bounds
+				numArgsForSkolem = (numArgsForSkolem >= totalVars) ? totalVars : numArgsForSkolem;
+
+				// generate the random vars to be arguments for the skolem
+				Vector<String> randomVars = new Vector<String> ();
+				for (int k=0; k < numArgsForSkolem; k++)
+				{
+					int pos = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
+					pos = (pos >= totalVars) ? totalVars-1 : pos;
+
+					// if we haven't already added this variable as an argument, add it
+					if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
 						randomVars.add(fac.getFreshVars(pos, 1)[0]);
-				else
-					i--;
+					else
+						k--;
+				}
+
+				Collections.sort(randomVars);
+
+				System.out.println("arguments: ");
+				System.out.println(randomVars.toString());
+
+				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
 			}
-			
-			Collections.sort(randomVars);
-			
-			System.out.println("arguments: ");
-			System.out.println(randomVars.toString());
-			
-			fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
-		}
-		
-		else if (sk == SkolemKind.ALL)
-		{
-			System.out.println("--- SKOLEM MODE = RANDOM ---");
-			
-			List<String> tgtVars = Arrays.asList(targetVars);
-			System.out.println("arguments: ");
-			System.out.println(tgtVars.toString());
-			
-			fac.addSKToExistsAtom(m1, 0,targetVars);
+
+			else if (sk == SkolemKind.ALL)
+			{
+				System.out.println("--- SKOLEM MODE = RANDOM ---");
+
+				List<String> tgtVars = Arrays.asList(targetVars);
+				System.out.println("arguments: ");
+				System.out.println(tgtVars.toString());
+
+				fac.addSKToExistsAtom(m1, 0,targetVars);
+			}
 		}
 	}
 	
@@ -796,7 +803,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 	}
 	
-	private SPJQuery genQueries() {
+	private SPJQuery genQueries() throws Exception {
 		SPJQuery query = new SPJQuery();
     	SelectClauseList sel = query.getSelect();
     	FromClauseList from = query.getFrom();
@@ -894,6 +901,26 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
                 andCond.add(new EQ(att1,att2));
             }
        }
+        
+        // retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
+        for(int i = 1 ; i <= numNewAttr; i++) {
+        	int attPos = i + getTotalNumNormalAttrs() + numOfJoinAttributes;
+        	String attName = m.getAttrIds(0, false)[attPos];
+        	MappingType m1 = m.getMaps().get(0);
+        	SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+
+        	vtools.dataModel.expression.SKFunction stSK = 
+        			new vtools.dataModel.expression.SKFunction(sk.getSkname());
+
+        	// this works because the keys are always the first attributes 
+        	for(int j = 0; j < sk.getVarArray().length; j++) {			
+        		String sAttName = m.getAttrId(0, j, false);
+        		Projection att = new Projection(new Variable("X"), sAttName);
+        		stSK.addArg(att);
+        	}
+
+        	sel.add(attName, stSK);
+        }
 
         query.setSelect(sel);
         query.setFrom(from);

@@ -36,12 +36,11 @@ mappings are incorrect. [July 30, 2012]
 
    Update [PRG - August 27, 2012]: Shoudn't VALUEMANAGEMENT then be listed as a "Disabled Scenario"?
 
-5. MERGE Scenario [dangelo - August 23, 2012]
+5. MERGE Scenario [mdangelo - August 23, 2012]
    Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
-
 	 Update [Boris - August 24, 2012]: Issue fixed by Boris. 
 
-6. Export List of Foreign Key Attributes in TrampXML Model [mdangelo + PRG - August 24, 2012
+6. Export List of Foreign Key Attributes in TrampXML Model [PRG - August 24, 2012
    Idea: Would be nice to have Foreign Key functions and representation in the TrampXML model like there is 
    for primary keys. This would be useful for Random Source Skolem generation since it would probably be best 
    that Foreign Keys not be the victims of skolemization - and now there is no clean way of ensuring that
@@ -55,7 +54,7 @@ mappings are incorrect. [July 30, 2012]
    The output mapping should use the same Skolem id as shown below:
    E.g. Test(nut,art,slope,measure) --> Touch(nut,art,sk0(nut,art,slope,measure) and Cheese(slope,measure,sk0(nut,art,slope,measure))
 
-   Update:
+   Update [mdangelo - 27.08.2012]: Added code to ensure that the same skolem Id is used for each skolem. Modified addSKToExistsAtom so that it would return the ID that it generated, also created a new addSKToExistsAtom variant which takes a skolem ID as a parameter and assigns that to the skolem which it creates.
 
 8. VP Original Scenario [PRG - August 24, 2012]   
    8.1 - The VP Original Scenario does not set any primary keys in the target relations. Our understanding is that the end of a foreign key arrow 
@@ -63,19 +62,19 @@ mappings are incorrect. [July 30, 2012]
    8.2 - There is only one foreign key being generated here (only one direction, it should be both directions as shown in the
    StBenchmark's VLDB 2008 paper)
 
-   Update:
+   Update [mdangelo - 27.08.2012]: Included code to add bidirectional foreign keys, also added primary keys in the target relations. Please check output for CHAIN join as I am not certain whether it is correct. Particularly, I was not sure if the key for the relations in between (aka not first and not last) should be both joinAttName and joinAttNameRef or just one of the aforementioned. Current implementation uses both as primary key.
 
 9. Deploy VP-HAS-A and VP-N-TO-M [PRG - August 24, 2012]
    Implement VP-HAS-A (basically original VP except without bidirectional foreign key arrow, that is, the created Skolem function appears in both
    target relations but is a key only in one of them) and VP-N-TO-M (as shown in StBenchmark 2.0's slides).
 
-   Update:
+   Update [mdangelo - 27.08.2012]: Implemented VPHasA with single direction foreign keys, primary keys being set in the target (but only on JoinAttr and not on Ref so as to reflect the single direction foreign key), and with issue regarding multiple skolem ids fixed. 
 
 10. MERGE-ADD Scenario [PRG - August 24, 2012]
     Check that the changes recently implemented by Boris w.r.t MERGE's generated mappings are also done here.
     Also, MERGE-ADD does not appear in propConfig.txt? Has this scenario been tested? 
 
-    Update:
+    Update [mdangelo - 27.08.2012]: You add the scenario manually, it has been tested. Just add a line with MERGEADD as the scenario name and you can run it. Added the line Boris used to fix MERGE to MERGEADD to fix the mappings. 
 
 11. OBJECT FUSION Scenario [PRG - August 24, 2012]
     The generated mappings in this scenario seem to be wrong; there are universal variables in the RHS (EXISTS Clause) that never appear in the LHS 
@@ -84,12 +83,15 @@ mappings are incorrect. [July 30, 2012]
 
     Update:
 
-12. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
+12. SCENARIO REVISIONS [mdangelo - 27.08.2012]
+	Noticed that Boris made several changes to MERGE and VERTICAL PARTITION and just thought it was worth knowing that those changes have not been disseminated into the new VP scenarios (ISA, HASA, N-TO-M) or the new MERGE scenario (MERGE ADD). Not sure if the changes made were incredibly important, so I thought I'd bring it up. Also note that MERGE ADD does not generate SO queries (aka. with skolem functions).
+
+13. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
     It would be nice to append a suffix to all those target attributes that when created are known to be used a Skolemized Attributes. 
 
     Update:
 
-13. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
+14. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
     There are many debug output messages to the console that are not properly idenfified by the issuing class. Do not remove them, just define
     static Logger log = Logger.getLogger(<package.class name>); at the beginning of the class and then use
     log.debug("<debug message>") instead of System.out.print("<debug message>"). 

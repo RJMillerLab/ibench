@@ -24,6 +24,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	private int attsPerTargetRel;
 	private int attrRemainder;
 	private SkolemKind sk = SkolemKind.ALL;
+	private String skId;
     
     public VerticalPartitionScenarioGenerator()
     {
@@ -299,7 +300,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	}
 
 	@Override
-	protected void genTargetRels() {
+	protected void genTargetRels() throws Exception {
         String[] attrs;
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
@@ -329,7 +330,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             if (jk == JoinKind.STAR) {
             	if (i == 0)//TODO check
             		attrs[attrs.length - 1] = joinAttName;
-            	else 
+            	else
             		attrs[attrs.length - 1] = joinAttNameRef;
             // for chain join each one has a join and join ref to the previous
             // thus, the first does not have a ref and the last one does not have a join attr
@@ -345,6 +346,25 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             }
             
             fac.addRelation(hook, trgName, attrs, false);
+            
+            if (jk == JoinKind.STAR) 
+            {
+            	if (i == 0)//TODO check
+            		fac.addPrimaryKey(trgName, joinAttName, false);
+            	else 
+            		fac.addPrimaryKey(trgName, joinAttNameRef, false);
+            // for chain join each one has a join and join ref to the previous
+            // thus, the first does not have a ref and the last one does not have a join attr
+            } 
+            else 
+            { // chain
+            	if (i == 0)
+            		fac.addPrimaryKey(trgName, joinAttName, false);
+            	else if (i == numOfTgtTables - 1)
+            		fac.addPrimaryKey(trgName, joinAttNameRef, false);
+            	else 
+            		fac.addPrimaryKey(trgName, new String[] {joinAttName, joinAttNameRef}, false);
+            }
         }
         
         addFKs();
@@ -356,6 +376,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				int toA = m.getNumRelAttr(0, false) - 1;
 				int fromA = m.getNumRelAttr(i, false) - 1;
 				addFK(i, fromA, 0, toA, false);
+				addFK(0, toA, i, fromA, false);
 			}
 		} else { // chain
 			int toA = m.getNumRelAttr(1, false) - 1;
@@ -365,6 +386,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				toA = m.getNumRelAttr(i + 1, false) - 1;
 				fromA = m.getNumRelAttr(i, false) - 2;
 				addFK(i, fromA, i+1, toA, false);
+				addFK(i+1, toA, i, fromA, false);
 			}
 		}
 	}
@@ -424,8 +446,10 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			numArgsForSkolem = numAtts;
 		}
 		
-		// add all the source attributes as arguments for the skolem function
-		fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem));
+		if (rel == 0)
+			skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem));
+		else
+			fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem), skId);
 	}
 	
 	@Override
