@@ -116,6 +116,7 @@ public class Constants
         ADDDELATTRIBUTE,
         VERTPARTITIONISA,
         VERTPARTITIONHASA,
+        VERTPARTITIONNTOM,
         MERGEADD
     };
     
@@ -137,6 +138,7 @@ public class Constants
     	nameForScenarios.put(ScenarioName.GLAV, "_GL");
     	nameForScenarios.put(ScenarioName.VERTPARTITIONISA, "_VI");
     	nameForScenarios.put(ScenarioName.VERTPARTITIONHASA, "_VH");
+    	nameForScenarios.put(ScenarioName.VERTPARTITIONNTOM, "_VNM");
     	nameForScenarios.put(ScenarioName.ADDATTRIBUTE, "_AD");
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");

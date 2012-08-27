@@ -382,6 +382,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			int toA = m.getNumRelAttr(1, false) - 1;
 			int fromA = m.getNumRelAttr(0, false) - 1;
 			addFK(0, fromA, 1, toA, false);
+			addFK(1, toA, 0, fromA, false);
 			for(int i = 1; i < numOfTgtTables - 1; i++) {
 				toA = m.getNumRelAttr(i + 1, false) - 1;
 				fromA = m.getNumRelAttr(i, false) - 2;

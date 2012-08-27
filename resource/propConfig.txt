@@ -12,13 +12,14 @@ Scenarios.MERGING = 0
 Scenarios.VALUEMANAGEMENT = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
+Scenarios.VERTPARTITION = 1
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
-Scenarios.MERGEADD = 1
+Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.MERGEADD = 0
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -27,14 +28,14 @@ Scenarios.NESTING = 0
 Scenarios.VALUEGEN = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 5
+ConfigOptions.NumOfSubElements = 3
 ConfigOptions.NumOfNewAttributes = 3
 ConfigOptions.NumofAttributestoDelete = 0
 ConfigOptions.JoinSize = 3
 ConfigOptions.NumOfParamsInFunctions = 2
 ConfigOptions.PrimaryKeySize = 2
 ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 0
+ConfigOptions.JoinKind = 1
 ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
@@ -71,7 +72,7 @@ OutputOption.ErrorsAndExplanations = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = false
-TrampXMLOutput.Transformations = true
+TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = true
