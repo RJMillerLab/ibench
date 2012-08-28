@@ -1,5 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import net.sf.saxon.functions.Concat;
+
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
@@ -395,10 +398,12 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	@Override
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
+		String[] keyVars;
 		
 		// source table gets fresh variables
 		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
-
+		keyVars = fac.getFreshVars(numOfSrcTblAttr, 1);
+		
 		switch (mapLang) 
 		{
 			case FOtgds:
@@ -407,7 +412,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
 		    				attsPerTargetRel + attrRemainder;
 		        	
-		        	fac.addExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
+		        	fac.addExistsAtom(m1, i, CollectionUtils.concat(fac.getFreshVars(offset, numAtts), keyVars));
 				}
 				break;
 				
@@ -537,8 +542,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				
 		 		if(i == 0)
 		 			seli.add(joinAttName, stSK);
-		 		
-	            seli.add(joinAttNameRef, stSK);
+		 		else
+		 			seli.add(joinAttNameRef, stSK);
 			}
 		}
 		
