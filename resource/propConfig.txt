@@ -1,15 +1,14 @@
 # Configuration File for STBenchmark
 
 # Output Path Prefixes
-SchemaPathPrefix=out
-InstancePathPrefixout
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 0
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
-Scenarios.VALUEMANAGEMENT = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
@@ -18,44 +17,47 @@ Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 1
-Scenarios.MERGEADD = 0
+Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.MERGEADD = 6
 
 # These should always be zero
 Scenarios.FLATTENING = 0
 Scenarios.GLAV = 0
 Scenarios.NESTING = 0
 Scenarios.VALUEGEN = 0
+Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3
-ConfigOptions.NumOfNewAttributes = 3
-ConfigOptions.NumofAttributestoDelete = 0
-ConfigOptions.JoinSize = 3
+ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfNewAttributes = 9
+ConfigOptions.NumofAttributestoDelete = 7
+ConfigOptions.JoinSize = 6
 ConfigOptions.NumOfParamsInFunctions = 2
-ConfigOptions.PrimaryKeySize = 2
-ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 1
-ConfigOptions.SkolemKind = 1
-ConfigOptions.SourceSkolemPerc = 0
-ConfigOptions.SourceFDPerc = 0
+ConfigOptions.PrimaryKeySize = 3
+ConfigOptions.NumOfJoinAttributes = 3
+ConfigOptions.JoinKind = 2
+ConfigOptions.SkolemKind = 2
+ConfigOptions.SourceSkolemPerc = 38
+ConfigOptions.SourceFDPerc = 17
 ConfigOptions.NestingDepth = 0
+ParameterName.ReuseSourcePerc = 11
+ParameterName.NoReuseScenPerc = 89
 
 # Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 0
-ConfigOptionsDeviation.NumOfNewAttributes = 0
-ConfigOptionsDeviation.NumofAttributestoDelete = 0
-ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 0
-ConfigOptionsDeviation.PrimaryKeySize = 0
-ConfigOptionsDeviation.NumOfJoinAttributes = 0
+ConfigOptionsDeviation.NumOfSubElements = 3
+ConfigOptionsDeviation.NumOfNewAttributes = 1
+ConfigOptionsDeviation.NumofAttributestoDelete = 1
+ConfigOptionsDeviation.JoinSize = 1
+ConfigOptionsDeviation.NumOfParamsInFunctions = 2
+ConfigOptionsDeviation.PrimaryKeySize = 1
+ConfigOptionsDeviation.NumOfJoinAttributes = 1
 ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 2138582617
+RandomSeed = -1241084990
 RepElementCount = 5
 MaxStringLength = 5
 MaxNumValue = 1000
@@ -63,10 +65,10 @@ DataGenerator = TrampCSV
 MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
-OutputOption.HTMLSchemas = true
+OutputOption.HTMLSchemas = false
 OutputOption.Data = false
 OutputOption.XMLSchemas = false
-OutputOption.HTMLMapping = true
+OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
 

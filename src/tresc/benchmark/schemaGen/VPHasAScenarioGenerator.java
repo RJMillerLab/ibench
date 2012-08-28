@@ -40,6 +40,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);
     	
+        numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
 
         attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
@@ -77,7 +78,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		
 		String joinAttName = randomAttrName(0, 0) + "JoinAttr";
         String joinAttNameRef = joinAttName + "Ref";
-		
+        
         for (int i = 0; i < numOfTgtTables; i++)
         {
         	int offset = i * attsPerTargetRel;

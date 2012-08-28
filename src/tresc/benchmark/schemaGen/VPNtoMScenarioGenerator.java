@@ -7,7 +7,6 @@ import org.vagabond.xmlmodel.SKFunction;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
@@ -23,7 +22,6 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 	private int numOfTgtTables = 2;
 	private int attsPerTargetRel;
 	private int attrRemainder;
-	private SkolemKind sk = SkolemKind.ALL;
 	private String skId1, skId2;
 	private String[] sk1Args, sk2Args;
     
