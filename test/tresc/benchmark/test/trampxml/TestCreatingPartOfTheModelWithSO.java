@@ -23,7 +23,7 @@ import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
 
 
-public class TestCreatingPartOfTheModel {
+public class TestCreatingPartOfTheModelWithSO {
 
 static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	

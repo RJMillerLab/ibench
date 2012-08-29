@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.vagabond.util.CollectionUtils;
+import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.ConstantAtomicValue;
@@ -754,6 +757,8 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		}
 	}
 
+	
+	
 	@Override
 	protected void genTargetRels() throws Exception {
 		String[] attrs = new String[K + (F * N)];
@@ -772,46 +777,243 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		fac.addRelation(hook, relName, attrs, false);
 		fac.addPrimaryKey(relName, keyAttrs[0], false);
 	}
-
+//
+//	@Override
+//	protected void genMappings() throws Exception {
+//		String[] keyVars = fac.getFreshVars(0, K);
+//		String[] attrVars = fac.getFreshVars(K, F);
+//		String[] exists = fac.getFreshVars(E, (N - 1) * F);
+//		String[] freeTVars = fac.getFreshVars(N * F + K, targetExistsNum);
+//		String tRelName= m.getRelName(0, false);
+//		
+//		/*
+//		 * FO-tgds:
+//		 * The vars are fixed, just need to put them at the correct positions:
+//		 * Source: R( A_1, A_2, A_3, K_1, K_2) S(B_1, B_2, B_3, K_1, K_2)
+//		 * Target: T(K_1, K_2, A_1, A_2, A_3, B_1, B_2, B_3) 
+//		 * -> M1: R(c,d,e,a,b) -> T(a,b,c,d,e,f,g,h)
+//		 * 	  M1: S(c,d,e,a,b) -> T(a,b,f,g,h,c,d,e)
+//		 */
+//		if (mapLang.equals(MappingLanguageType.FOtgds)) {
+//			for (int i = 0; i < N; i++) {
+//				String[] vars, tVars;
+//	
+//				MappingType m1 = fac.addMapping(m.getCorrs(i, true));
+//	
+//				// create foreach
+//				vars = CollectionUtils.insertAtPositions(attrVars, keyVars,
+//								keyAttrPos[i]);
+//				fac.addForeachAtom(m1.getId(), m.getRelName(i, true), vars);
+//	
+//				// create exists
+//				tVars = CollectionUtils.insertAtPositions(exists, attrVars,
+//								CollectionUtils.createSequence(F * i, F));
+//				tVars = CollectionUtils.concatArrays(keyVars, tVars, freeTVars);
+//				fac.addExistsAtom(m1.getId(), tRelName, tVars);
+//			}
+//		}
+//		/*
+//		 * SO-tgds:
+//		 * Use skolem function for each attribute. Input is the key
+//		 */
+//		else {
+//			String[] skIds = new String[N * F];
+//			for(int i = 0; i < skIds.length; i++)
+//				skIds[i] = fac.getNextId("SK");
+//			
+//			for (int i = 0; i < N; i++) {
+//				String[] vars, tVars;
+//				MappingType m1 = fac.addMapping(m.getCorrs(i, true));
+//				
+//				// create foreach
+//				vars = CollectionUtils.insertAtPositions(attrVars, keyVars,
+//								keyAttrPos[i]);
+//				fac.addForeachAtom(m1.getId(), m.getRelName(i, true), vars);
+//	
+//				// create exists
+//				fac.addEmptyExistsAtom(m1, 0);
+//				// add key Vars
+//				fac.addVarsToExistsAtom(m1, 0, keyVars);
+//				// create additional SKs or Vars
+//				for(int j = 0; j < N * F; j++) {
+//					// adding the attributes from the source relation
+//					if (j >= i * F && j < (i + 1) * F)
+//						fac.addVarToExistsAtom(m1, 0, attrVars[j % F]);
+//					// adding a skolem term for an existential
+//					else
+//						fac.addSKToExistsAtom(m1, 0, keyVars, skIds[j]);
+//				}
+//				for (int j = 0; j < targetExistsNum; i++)
+//					fac.addVarToExistsAtom(m1, 0, freeTVars[i]);
+//			}
+//		}
+//	}
+//	
+	
+	/**
+	 *  Create all mappings 2^N - 1 to model the different combinations of tuples with a certain
+	 *  key being (not) present in the source relations.
+	 * @throws Exception 
+	 */ 
 	@Override
 	protected void genMappings() throws Exception {
+		boolean[] activeRels = new boolean[N]; // which relations are in a specific mapping
+		Arrays.fill(activeRels, false);
+		activeRels[activeRels.length - 1] = true;
+		boolean[] allFalse = new boolean[N];
+		Arrays.fill(allFalse, false);
+		
+		while(!Arrays.equals(activeRels,allFalse)) {
+			if (mapLang.equals(MappingLanguageType.FOtgds))
+				genOneMappingFO(activeRels);	
+			else
+				genOneMappingSO(activeRels);
+			
+			increase(activeRels);
+		}
+	}
+
+
+	/**
+	 * Create one mapping for a given list of source relations (boolean array)
+	 * @param sourceRels
+	 * @throws Exception
+	 */
+	private void genOneMappingFO (boolean[] sourceRels) throws Exception {
 		String[] keyVars = fac.getFreshVars(0, K);
-		String[] attrVars = fac.getFreshVars(K, F);
-		String[] exists = fac.getFreshVars(E, (N - 1) * F);
-		String[] freeTVars = fac.getFreshVars(N * F + E, targetExistsNum);
+		String[] freeVars = fac.getFreshVars(K, N * F);
+		String[] freeTVars = fac.getFreshVars(N * F + K, targetExistsNum);
+		String[] vars;
 		String tRelName= m.getRelName(0, false);
 		
-		/*
-		 * the vars are fixed, just need to put them at the correct positions:
-		 * Source: R( A_1, K_1, A_2, A_3, K_2) S(B_1, K_1, K_2, B_2, B_3)
-		 * Target: T(A_1, A_2, A_3, B_1, B_2, B_3, K_1, K_2) 
-		 * -> M1: R(c,a,d,e,b) -> T(a,b|c,d,e|f,g,h)
-		 */
-		for (int i = 0; i < N; i++) {
-			String[] vars, tVars;
-
-			MappingType m1 = fac.addMapping(m.getCorrs(i, true));
-
-			// create foreach
-			vars = CollectionUtils.insertAtPositions(attrVars, keyVars,
-							keyAttrPos[i]);
-			fac.addForeachAtom(m1.getId(), m.getRelName(i, true), vars);
-
-			// create exists
-			tVars = CollectionUtils.insertAtPositions(exists, attrVars,
-							CollectionUtils.createSequence(F * i, F));
-			tVars = CollectionUtils.concatArrays(keyVars, tVars, freeTVars);
-			fac.addExistsAtom(m1.getId(), tRelName, tVars);
+		// create mapping
+		List<CorrespondenceType> cs = new ArrayList<CorrespondenceType> ();
+		for(int i = 0; i < sourceRels.length; i++)
+			if (sourceRels[i])
+				cs.addAll(m.getCorrs(i, true));
+		
+		MappingType m1 = fac.addMapping(cs);
+		
+		// create mapping
+		for(int i = 0; i < sourceRels.length; i++) {
+			// create foreach atom for ith relation
+			if (sourceRels[i]) {
+				vars = CollectionUtils.insertAtPositions(
+						Arrays.copyOfRange(freeVars, i * F, (i + 1) * F), 
+						keyVars,
+						keyAttrPos[i]);
+				fac.addForeachAtom(m1.getId(), m.getRelName(i, true), vars);	
+			}
 		}
+		
+		// create exists
+		fac.addExistsAtom(m1.getId(), tRelName, 
+				CollectionUtils.concatArrays(keyVars, freeVars, freeTVars));
+	}
+	
+	/**
+	 * Create one mapping for a given list of source relations (boolean array)
+	 * @param sourceRels
+	 * @throws Exception
+	 */
+	private void genOneMappingSO (boolean[] sourceRels) throws Exception {
+		String[] keyVars = fac.getFreshVars(0, K);
+		String[] freeVars = fac.getFreshVars(K, N * F);
+		String[] freeTVars = fac.getFreshVars(N * F + K, targetExistsNum);
+		String[] vars;
+		
+		// create mapping
+		List<CorrespondenceType> cs = new ArrayList<CorrespondenceType> ();
+		for(int i = 0; i < sourceRels.length; i++)
+			if (sourceRels[i])
+				cs.addAll(m.getCorrs(i, true));
+		
+		MappingType m1 = fac.addMapping(cs);
+		
+		// create mapping
+		for(int i = 0; i < sourceRels.length; i++) {
+			// create foreach atom for ith relation
+			if (sourceRels[i]) {
+				vars = CollectionUtils.insertAtPositions(
+						Arrays.copyOfRange(freeVars, i * F, (i + 1) * F), 
+						keyVars,
+						keyAttrPos[i]);
+				fac.addForeachAtom(m1.getId(), m.getRelName(i, true), vars);	
+			}
+		}
+		
+		// create exists
+		String[] skIds = new String[N * F];
+		for(int i = 0; i < skIds.length; i++)
+			skIds[i] = fac.getNextId("SK");
+		fac.addEmptyExistsAtom(m1, 0);
+		
+		// add key Vars
+		fac.addVarsToExistsAtom(m1, 0, keyVars);
+		
+		// create additional SKs or Vars
+		for(int i = 0; i < N; i++) {
+			for(int j = 0; j < F; j++) {
+				int offset = i * F + j;
+				if (sourceRels[i])
+					fac.addVarToExistsAtom(m1, 0, freeVars[offset]);
+				else
+					fac.addSKToExistsAtom(m1, 0, keyVars, skIds[offset]);
+			}
+		}
+		
+		// create new
+		for(int i = 0; i < freeTVars.length; i++)
+			fac.addVarToExistsAtom(m1, 0, freeTVars[i]);
+	}
+	
+	private boolean[] increase (boolean[] in) {
+		for(int i = in.length - 1; i >= 0; i--) {
+			if (!in[i]) {
+				in[i] = true;
+				return in;
+			}
+			else
+				in[i] = false;
+		}
+		return in;
 	}
 
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
+		boolean[] activeRels = new boolean[N];
+		Arrays.fill(activeRels, false);
+		activeRels[activeRels.length - 1] = true;
+		boolean[] allFalse = new boolean[N];
+		Arrays.fill(allFalse, false);
+		String[] mappingLists = new String[N];
+		List<String>[] mapIds = new List[N];
+		int mapPos = 0;
 		Query q;
+		
+		for(int i = 0; i < N; i++)
+			mapIds[i] = new ArrayList<String> ();
 
+		while(!Arrays.equals(activeRels,allFalse)) {
+			String mapId = m.getMapIds()[mapPos++];
+			
+			for(int i = 0; i < activeRels.length; i++) {
+				if (activeRels[i])
+					mapIds[i].add(mapId);
+			}
+			
+			increase(activeRels);
+		}
+		
+		for(int i = 0; i < N; i++) {
+			mappingLists[i] = mapIds[i].get(0);
+			for(int j = 1; j < mapIds[i].size(); j++)
+				mappingLists[i] += "," + mapIds[i].get(j);
+		}
+		
 		q = genQuery();
-		q.storeCode(q.toTrampString(m.getMapIds()));
+		q.storeCode(q.toTrampString(mappingLists));
 		q = addQueryOrUnion(creates, q);
 
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);

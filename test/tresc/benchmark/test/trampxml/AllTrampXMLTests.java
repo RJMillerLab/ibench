@@ -8,7 +8,7 @@ import org.junit.runners.Suite;
 	TestLoadingCreatedModel.class,
 	TestLoadToDB.class,
 	TestLoadToDBWithData.class,
-	TestCreatingPartOfTheModel.class,
+	TestCreatingPartOfTheModelWithSO.class,
 	TestCreationReusingSchemas.class,
 	TestLoadingToDBWithDataReusingSchema.class,
 	TestFormerCrashConfigurations.class

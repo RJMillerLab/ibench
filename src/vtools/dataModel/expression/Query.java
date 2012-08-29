@@ -32,6 +32,7 @@ public abstract class Query extends Expression implements Visitable, Cloneable, 
         return StringPrinter.StringPrinter;
     }
     
+    
 	@Override
 	public String toTrampString(String... mappings) throws Exception {
 		String result = toTrampString();

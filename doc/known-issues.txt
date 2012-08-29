@@ -35,6 +35,8 @@ mappings are incorrect. [July 30, 2012]
 	 after the other issues have been resolved. 
 
    Update [PRG - August 27, 2012]: Shoudn't VALUEMANAGEMENT then be listed as a "Disabled Scenario"?
+   
+   Update [Boris - August 28, 2012]: Added a "normal" function to the XML model. Will modfiy the scenario.
 
 5. MERGE Scenario [mdangelo - August 23, 2012]
    Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
@@ -81,7 +83,12 @@ mappings are incorrect. [July 30, 2012]
     (FOR EACH Clause). This scenario is creating at least two mappings (this is likely be done to represent UNION mappings as done in the original
     STBenchmark). 
 
-    Update:
+    Update: [Boris - 28.08.2012]: There is no code that checks what mapping language to use (SO/FO). 
+  	  	Thus, the code always gnerates FO mappings.
+  	  	
+  	Fixed: [Boris - 28.08.2012]: I added a thrid mapping corresponding to the actual merge. 
+  		It now produces Skolem functions on the key. I have one SK per target attribute.
+  		@Patricia: let me know if you like this to be changed.   
 
 
 12. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
