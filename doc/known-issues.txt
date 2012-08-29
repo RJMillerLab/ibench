@@ -19,7 +19,7 @@ KNOWN ISSUES
 2. CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the 
 mappings are incorrect. [July 30, 2012]
 	
-	 Update: ?
+	 Update [Boris - August 28, 2012]: What is exactly wrong?
 	
 3. Source/Target reuse crashes if parameters are not delicately adjusted. [mdangelo - July 30, 2012]
 	
@@ -78,19 +78,6 @@ mappings are incorrect. [July 30, 2012]
 
     Update [mdangelo - 27.08.2012]: You add the scenario manually, it has been tested. Just add a line with MERGEADD as the scenario name and you can run it. Added the line Boris used to fix MERGE to MERGEADD to fix the mappings. 
 
-11. OBJECT FUSION Scenario [PRG - August 24, 2012]
-    The generated mappings in this scenario seem to be wrong; there are universal variables in the RHS (EXISTS Clause) that never appear in the LHS 
-    (FOR EACH Clause). This scenario is creating at least two mappings (this is likely be done to represent UNION mappings as done in the original
-    STBenchmark). 
-
-    Update: [Boris - 28.08.2012]: There is no code that checks what mapping language to use (SO/FO). 
-  	  	Thus, the code always gnerates FO mappings.
-  	  	
-  	Fixed: [Boris - 28.08.2012]: I added a thrid mapping corresponding to the actual merge. 
-  		It now produces Skolem functions on the key. I have one SK per target attribute.
-  		@Patricia: let me know if you like this to be changed.   
-
-
 12. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
     It would be nice to append a suffix to all those target attributes that when created are known to be used a Skolemized Attributes. 
 
@@ -110,6 +97,26 @@ mappings are incorrect. [July 30, 2012]
 
 15. ADD Newly Deployed Scenarios to the Automatic Config Generation in Linearize [PRG - August 27, 2012]
 
+-------------
+FIXED ISSUES (to check)
+-------------
+
+11. OBJECT FUSION Scenario [PRG - August 24, 2012]
+    The generated mappings in this scenario seem to be wrong; there are universal variables in the RHS (EXISTS Clause) that never appear in the LHS 
+    (FOR EACH Clause). This scenario is creating at least two mappings (this is likely be done to represent UNION mappings as done in the original
+    STBenchmark). 
+
+    Update: [Boris - 28.08.2012]: There is no code that checks what mapping language to use (SO/FO). 
+  	  	Thus, the code always gnerates FO mappings.
+  	  	
+  	Fixed: [Boris - 28.08.2012]: I added a thrid mapping corresponding to the actual merge. 
+  		It now produces Skolem functions on the key. I have one SK per target attribute.
+  		@Patricia: let me know if you like this to be changed.   
+
+
+-------------
+FIXED ISSUES (confirmed)
+-------------
 
 -------------
 KNOWN CAVEATS
