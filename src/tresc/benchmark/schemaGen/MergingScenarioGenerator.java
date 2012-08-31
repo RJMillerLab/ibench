@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
@@ -22,7 +23,12 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+// PRG FIXED Chain Join Problems - August 30, 2012
+
 public class MergingScenarioGenerator extends AbstractScenarioGenerator {
+	
+	// PRG ADD August 30, 2012
+	static Logger log = Logger.getLogger(MergingScenarioGenerator.class);
 	
 	public static final int MAX_NUM_TRIES = 10;
 	
@@ -703,8 +709,16 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			}
 			// get vars for the referenced attributes from the previous table
 			if (jk == JoinKind.CHAIN) {
-				fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
-						numFreshVars + numOfJoinAttributes);
+				log.debug("i is " + i  + " , " + numFreshVars + " , " + numOfJoinAttributes);
+				// PRG FIXED CHAIN JOIN PROBLEMS - August 30, 2012
+				// Replaced the following 2 lines to avoid ArrayIndexOutOfBoundsException
+				//fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
+				//		numFreshVars + numOfJoinAttributes);
+				int fromIndex = vars[i-1].length - numOfJoinAttributes;
+				int toIndex = (numOfJoinAttributes == 1 ? fromIndex + 1 : fromIndex + numOfJoinAttributes);
+				log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);
+				fkVars = Arrays.copyOfRange(vars[i - 1], fromIndex, toIndex);
+				log.debug("FK Chain Join Vars are " + fkVars.toString());
 			}
 			vars[i] = CollectionUtils.concat(freeVars, fkVars);
 			

@@ -28,6 +28,9 @@ import vtools.dataModel.schema.Schema;
 /*
  * Each generator of a scenario case subclasses this class.
  */
+
+// PRG RESTORED Reading Deviation Parameter (numOfElementsDeviation) from config file - August 28, 2012
+
 public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	static Logger log = Logger.getLogger(AbstractScenarioGenerator.class);
@@ -265,8 +268,9 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		// get parameters from configuration
 		repetitions = configuration.getScenarioRepetitions(getScenType().ordinal());
 		numOfElements = configuration.getParam(Constants.ParameterName.NumOfSubElements);
-		numOfElementsDeviation = 0;
-				//configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
+		// PRG Restored reading deviation parameter from config file - August 28, 2012
+		// numOfElementsDeviation = 0;
+		numOfElementsDeviation = configuration.getDeviation(Constants.ParameterName.NumOfSubElements);
 		nesting = configuration.getParam(Constants.ParameterName.NestingDepth);
 		nestingDeviation = configuration.getDeviation(Constants.ParameterName.NestingDepth);
 		
