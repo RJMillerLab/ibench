@@ -600,6 +600,56 @@ public class Configuration {
 	public int getTotalNumScen() {
 		return CollectionUtils.sum(_repetitions);
 	}
+
+	public void sanityCheck() {
+		/* check that variations are valid: 
+		 * 		1) parameter value < 0
+		 * 				set param = 0
+		 * 		2) parameter value - deviation >= 0
+		 * 				set deviation= parameter value  
+		 */
+		for(ParameterName p: Constants.ParameterName.values()) {
+			int pValue = _configurations[p.ordinal()][0];
+			int pDev = _configurations[p.ordinal()][1];
+			
+			if (pValue < 0)
+				pValue = 0;
+			if (pValue - pDev < 0)
+				pDev = pValue;
+			_configurations[p.ordinal()][0] = pValue;
+			_configurations[p.ordinal()][1] = pDev;
+		}
+
+		/* check that number of elements including variation is large enough. If number of elements is
+		 * not sufficiently large we increase the number of elements 
+		 * 2 x primary key size
+		 * 2 x NumOfJoinAttributes
+		 * 3 x NumOfParamsInFunctions
+		 * 2 x NumOfNewAttributes
+		 * 3 x NumOfAttributesToDelete
+		 * 2 x PrimaryKeySize
+		 */
+		int minNumElem = _configurations[ParameterName.NumOfSubElements.ordinal()][0];
+		
+		minNumElem = CollectionUtils.max(minNumElem,
+				2 * paramMax(ParameterName.PrimaryKeySize),
+				2 * paramMax(ParameterName.NumOfJoinAttributes),
+				2 * paramMax(ParameterName.NumOfNewAttributes),
+				3 * paramMax(ParameterName.NumOfParamsInFunctions),
+				3 * paramMax(ParameterName.NumOfAttributesToDelete));
+		// add deviation of NumOfSubElements
+		minNumElem += getDeviation(ParameterName.NumOfSubElements);
+		setParam(ParameterName.NumOfSubElements, minNumElem);
+		
+		
+	}
 	
+	public int paramMin(ParameterName p) {
+		return _configurations[p.ordinal()][0] - _configurations[p.ordinal()][1]; 
+	}
+	
+	public int paramMax(ParameterName p) {
+		return _configurations[p.ordinal()][0] + _configurations[p.ordinal()][1]; 
+	}
 
 }

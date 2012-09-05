@@ -11,6 +11,7 @@ import org.vagabond.xmlmodel.ConnectionInfoType;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.ForeignKeyType;
+import org.vagabond.xmlmodel.FunctionType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.MappingType.Uses;
 import org.vagabond.xmlmodel.RelAtomType;
@@ -393,6 +394,14 @@ public class TrampModelFactory {
 	
 	public void addVarToExistsAtom (MappingType m, int atom, String var) {
 		m.getExists().getAtomArray(atom).addNewVar().setStringValue(var);
+	}
+	
+	public void addFuncToExistsAtom (MappingType m, int atom, String fName,  String[] params) {
+		RelAtomType a = m.getExists().getAtomArray(atom);
+		FunctionType f =  a.addNewFunction();
+		f.setFname(fName);
+		for(String p : params)
+			f.addVar(p);
 	}
 	
 	public String addSKToExistsAtom (MappingType m, int atom, String[] params) {

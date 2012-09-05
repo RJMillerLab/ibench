@@ -299,9 +299,6 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		primaryKeySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
 		primaryKeySizeDeviation = configuration.getDeviation(Constants.ParameterName.PrimaryKeySize);
         
-		// ensure that the key size is not greater than the number of elements
-		int biggestKey = (primaryKeySize > keyWidth) ? primaryKeySize : keyWidth;
-		numOfElements = (numOfElements > biggestKey) ? numOfElements : biggestKey + 1;
 		
         mapLang = configuration.getMapType();
 
@@ -310,6 +307,12 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		pquery = scen.getTransformation();
 
 		curRep = 0;
+		
+		scenarioSanityCheck();
+	}
+
+	protected void scenarioSanityCheck() {
+		
 	}
 
 	protected void initPartialMapping() {

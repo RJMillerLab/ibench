@@ -24,7 +24,8 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 	private int Y;
 	private int[] splits;
 	private int[] merges;
-
+	private int stLen;
+	
     public ValueManagementScenarioGenerator()
     {
         ;
@@ -50,6 +51,8 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
         Y = numOfElements - X;
         // make sure we have at least one case
         Y = (Y == 0) ? 1 : Y;
+        
+        stLen = configuration.getMaxStringLength();
     }
     
     // Assume that we have E elements in each table (which means that we also want E
@@ -196,12 +199,35 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
+		int offset, offsetS = 0;
 		
 		int numAttr = m.getNumRelAttr(0, true);
 		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numAttr));
 		
-		int numTAttr = m.getNumRelAttr(0, false);
-		fac.addExistsAtom(m1, 0, fac.getFreshVars(numAttr, numTAttr));
+		/* create exists atom */
+		fac.addEmptyExistsAtom(m1, 0);
+		
+		/* add expressions for splits */
+		offset = 0;
+		for(int i = 0; i < X; i++) {
+			int subStrLen = (stLen < splits[offsetS]) ? 1 : stLen / splits[offsetS];
+        	int stOffset = 0;
+        	
+			for(int j = 0; j < splits[i]; j++, offset++) {
+				fac.addFuncToExistsAtom(m1, 0, "extract", 
+						CollectionUtils.concat(fac.getFreshVars(offset, 1), 
+								stOffset +"", subStrLen +""));
+				 stOffset += subStrLen;
+	             if (stOffset + subStrLen > stLen)
+	             	stOffset = 0;
+			}
+		}
+		
+		/* add expressions for merge */
+		for(int i = 0; i < Y; i++) {
+			fac.addFuncToExistsAtom(m1, 0, "concat", fac.getFreshVars(offset, merges[i]));
+			offset += merges[i];
+		}
 	}
 	
 	@Override
@@ -281,7 +307,7 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 
 	@Override
 	protected void genCorrespondences() {
-		//TODO would require change to correspondence model
+		//TODO
 	}
 
 	@Override

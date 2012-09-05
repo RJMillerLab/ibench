@@ -252,6 +252,7 @@ public class STBenchmark {
 	
 	public void runConfig (Configuration conf) throws Exception {
 		this._configuration = conf;
+		_configuration.sanityCheck();
 		runConfig();
 	}
 	
