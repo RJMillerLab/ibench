@@ -24,6 +24,7 @@ import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
 // PRG FIXED Chain Join Problems - August 30, 2012
+// PRG PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
 
 public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
@@ -714,7 +715,9 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 				// Replaced the following 2 lines to avoid ArrayIndexOutOfBoundsException
 				//fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
 				//		numFreshVars + numOfJoinAttributes);
-				int fromIndex = vars[i-1].length - numOfJoinAttributes;
+				// PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012
+				// int fromIndex = vars[i-1].length - numOfJoinAttributes; 
+				int fromIndex = vars[i-1].length - getNumJoinAttrs(i-1); 
 				int toIndex = (numOfJoinAttributes == 1 ? fromIndex + 1 : fromIndex + numOfJoinAttributes);
 				log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);
 				fkVars = Arrays.copyOfRange(vars[i - 1], fromIndex, toIndex);

@@ -1,5 +1,5 @@
 -------------
-KNOWN ISSUES
+KNOWN ISSUES   (Last Used Item # was 17)
 -------------
 
 2. CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the 
@@ -52,14 +52,14 @@ mappings are incorrect. [July 30, 2012]
 12. NICE TO HAVE "_Skolem" Suffix for Target Attributes [PRG - August 27, 2012]
     It would be nice to append a suffix to all those target attributes that when created are known to be used a Skolemized Attributes. 
 
-    Update:
+    Update: Not urgent at all
 
 14. SCENARIO REVISIONS [mdangelo - 27.08.2012]
 	  Noticed that Boris made several changes to MERGE and VERTICAL PARTITION and just thought it was worth knowing that those changes have not been disseminated into the new VP 
     scenarios (ISA, HASA, N-TO-M) or the new MERGE scenario (MERGE ADD). Not sure if the changes made were incredibly important, so I thought I'd bring it up. Also note that 
     MERGE ADD does not generate SO queries (aka. with skolem functions).
 
-15. ADD Newly Deployed Scenarios to the Automatic Config Generation in Linearize [PRG - August 27, 2012]
+    Update: ?
 
 -------------
 FIXED ISSUES (to check)
@@ -79,7 +79,7 @@ FIXED ISSUES (to check)
 		1, but will do future testing to see if that can be increased without breaking too
 		many things. 
 		
-	Update [Boris - September 5,2012]: Added parameter range testing to Configuration.
+	 Update [Boris - September 5,2012]: Added parameter range testing to Configuration.
 		Every parameter + its deviation is checked so that parameters are at least 0 after
 		applying the deviation. Number of sub elements is set high enough depending on the
 		values of number of primary key attributes and the like. @PRG is that ok with you?
@@ -102,7 +102,30 @@ FIXED ISSUES (to check)
 
 5. MERGE Scenario [mdangelo - August 23, 2012]
    Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
-	 Update [Boris - August 24, 2012]: Issue fixed by Boris.
+	 
+   Update [Boris - August 24, 2012]: Issue fixed by Boris.
+
+16. MERGE and MERGE-ADD Chain Join Problems [PRG - August 30, 2012] and [PRG - Sep 4, 2012]
+    StBench 2.0 was crashing when requested to generate MERGE and MERGE-ADD scenarios with CHAIN Joins (ArrayOutofBoundsException). Also, we noticed that the generated source
+    expression was wrong (the chain join among fragments was faulty). 
+    
+    Update [PRG - August 30, 2012] Fixed fromIndex and toIndex in genMappings() for CHAIN Join
+
+    Update [PRG - Sep 4, 2012] We compared the output to the original StBenchmark and noticed that there were differences in the source expressions. Here is an example:
+    E.g. 3 source relations as follows, Join Kind=CHAIN, and Num of Join Elems = 1 
+    nut(art,slope,measure,test-comp0-join-attr0), 
+    touch(cheese,society,test-comp1-join-attr0, test-comp1-join-ref-0), and 
+    compare(branch,demand,great,test-comp2-join-ref-0)
+    The old generated source expression in our code was: nut(a,b,c,d) and touch(e,f,g,d) and compare(h,i,j,d)
+    THE FIX now produces the following:  nut(a,b,c,d) and touch(e,f,g,d) and compare(h,i,j,g), same as the original StBenchmark.
+
+    @Boris, let me know if you disagree with the above change.   
+
+
+
+-------------
+FIXED ISSUES (confirmed)
+-------------
 
 11. OBJECT FUSION Scenario [PRG - August 24, 2012]
     The generated mappings in this scenario seem to be wrong; there are universal variables in the RHS (EXISTS Clause) that never appear in the LHS 
@@ -114,11 +137,7 @@ FIXED ISSUES (to check)
   	  	
   	Fixed: [Boris - 28.08.2012]: I added a thrid mapping corresponding to the actual merge. 
   		It now produces Skolem functions on the key. I have one SK per target attribute.
-  		@Patricia: let me know if you like this to be changed.   
-
--------------
-FIXED ISSUES (confirmed)
--------------
+  		   
 
 13. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
     There are many debug output messages to the console that are not properly idenfified by the issuing class. Do not remove them, just define
@@ -126,6 +145,17 @@ FIXED ISSUES (confirmed)
     log.debug("<debug message>") instead of System.out.print("<debug message>"). 
 
     Update [Boris - 05.09.2012]: Changed everything to use log.debug.
+
+15. ADD Newly Deployed Scenarios to the Automatic Config Generation in Linearize [PRG - August 27, 2012]
+  
+    Update [PRG - Sep 5, 2012] Done.
+
+17. MERGE-ADD Skolem Generation and STAR/CHAIN Join [PRG - Sep 5, 2012]
+    The was a crash whem attempting to generate Skolem functions with KEY mode. The problem was that ArrayCopy was always invoked with Null Destiny Array. This has been fixed.
+
+    Update [PRG - Sep 5, 2012] We compute now the size of argVars and use this to initialize it. The problem has now being fixed.
+
+
 
 -------------
 KNOWN CAVEATS

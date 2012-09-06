@@ -27,7 +27,9 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
-//PRG FIXED Chain Join Problems - August 30, 2012
+// PRG FIXED Chain Join Problems - August 30, 2012
+// PRG PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
+// PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
 
 public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 	
@@ -388,6 +390,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 		
 		// each table get fresh vars for its free and join attributes
 		// the fk vars are takes from the join attributes they reference
+		log.debug("Relation 0 is of size " + numOfAttributes[0]);
 		for(int i = 1; i < numOfTables; i++) {
 			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
@@ -401,19 +404,22 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 			}
 			// get vars for the referenced attributes from the previous table
 			if (jk == JoinKind.CHAIN) {
-				log.debug("i is " + i  + " , " + numFreshVars + " , " + numOfJoinAttributes);
+				log.debug("Relation i is " + i  + " of size " + numOfAttributes[i] + ", " + numFreshVars + " , " + numOfJoinAttributes);
 				// PRG FIXED CHAIN JOIN PROBLEMS - August 30, 2012
 				// fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
 				//		numFreshVars + numOfJoinAttributes);
-				int fromIndex = vars[i-1].length - numOfJoinAttributes;
+				// PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012
+				// int fromIndex = vars[i-1].length - numOfJoinAttributes;
+				int fromIndex = vars[i-1].length - getNumJoinAttrs(i-1); 
 				int toIndex = (numOfJoinAttributes == 1 ? fromIndex + 1 : fromIndex + numOfJoinAttributes);
 				log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);
 				fkVars = Arrays.copyOfRange(vars[i - 1], fromIndex, toIndex);
-				log.debug("FK Chain Join Vars are " + fkVars.toString());
 			}
 			vars[i] = CollectionUtils.concat(freeVars, fkVars);
 			
 			fac.addForeachAtom(m1, i, vars[i]);
+			
+			log.debug("For Each Clause is: " + m1.getForeach().toString());
 		}
 		
 		// generate an array of vars for the target
@@ -470,6 +476,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 	
 	private void generateSKs(MappingType m1, SkolemKind sk, int totalVars, String[][] vars, String[] targetVars) 
 	{	
+		log.debug("Method generateSKs with totalVars " + totalVars);
 		for (int i = 0; i < numNewAttr; i++)
 		{
 			// in KEY mode we use the join attributes as the skolem arguments
@@ -477,8 +484,14 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 			{
 				log.debug("--- SKOLEM MODE = KEY ---");
 
-				String[] argVars = null;
-				int offset = totalVars;
+				// PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
+				// Initially we thought about allocating a max number of elements, as determined by the length of targetVars
+				// But then we decided to compute the exact number as follows: numOfJoinAttributes*(numOfTables - 1)
+				// This formula seems to work for both STAR and CHAIN Joins
+				// String[] argVars = null;
+				// int offset = totalVars;
+				String[] argVars = new String[numOfJoinAttributes*(numOfTables - 1)];
+				int offset = 0;
 
 				// star join, add join attribute vars from first table
 				if (jk == JoinKind.STAR) {
@@ -494,11 +507,13 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 				if (jk == JoinKind.CHAIN) {
 					for(int j = 0; j < numOfTables - 1; j++) {
 						int start = getNumNormalAttrs(j);
+						log.debug("Relation j is " + j  + " of size " + numOfAttributes[j] + ", Num Join Attrs: " + numOfJoinAttributes);
+						log.debug("Copying Chain Join Variables from  " + start  + " to " + numOfJoinAttributes);
 						System.arraycopy(vars[j], start, argVars, offset, numOfJoinAttributes);
 						offset += numOfJoinAttributes;
 					}
 				}
-
+				
 				fac.addSKToExistsAtom(m1, 0, argVars);
 			}
 
