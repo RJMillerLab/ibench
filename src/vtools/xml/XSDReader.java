@@ -228,15 +228,15 @@ public class XSDReader
 			
 		case Node.ELEMENT_NODE:
 			String name = node.getNodeName();
-			System.out.print(indent+ "<"+name);
+			log.debug(indent+ "<"+name);
 			
 			NamedNodeMap attributes = node.getAttributes();
 			if (attributes != null){
 				int nrAttr= attributes.getLength();
-				//System.out.print(" nr attr = "+nrAttr);
+				//log.debug(" nr attr = "+nrAttr);
 				for(int i=0; i<nrAttr; i++ ){
 					Node current = attributes.item(i);
-					System.out.print(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");
+					log.debug(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");
 				}	
 			}
 			log.debug(">");
@@ -244,7 +244,7 @@ public class XSDReader
 			NodeList children = node.getChildNodes();
 			if (children != null){
 				int nrChild= children.getLength();
-				//System.out.print(" nr children = "+nrChild);
+				//log.debug(" nr children = "+nrChild);
 				for(int i=0; i<nrChild; i++)
 					printDOC(children.item(i),indent+" ");
 			}
@@ -253,7 +253,7 @@ public class XSDReader
 			break;
 			
 		case Node.TEXT_NODE:
-			System.out.print(node.getNodeValue());
+			log.debug(node.getNodeValue());
 			break;
 		}
 	}

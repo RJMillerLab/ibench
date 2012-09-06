@@ -542,8 +542,8 @@ public class GLAVScenarioTrgGenerator
         // for (int line = D - 1; line >= 0; line--)
         // {
         // if (rootSets[line][col] != null)
-        // System.out.print("\t" + rootSets[line][col].size());
-        // else System.out.print("X");
+        // log.debug("\t" + rootSets[line][col].size());
+        // else log.debug("X");
         // log.debug("");
         // }
         // }

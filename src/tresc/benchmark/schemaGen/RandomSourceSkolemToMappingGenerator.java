@@ -65,9 +65,9 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			log.debug("---------GENERATING SKOLEMS---------");
 			log.debug("Relation: " + r.getName());
 			
-	        System.out.print("Attributes: ");
+	        log.debug("Attributes: ");
 	        for (AttrDefType ra : r.getAttrArray())
-	        	System.out.print(ra.getName() + " ");
+	        	log.debug(ra.getName() + " ");
 	        
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceSkolemPerc)) / (double) 100;
 			int numAtts = r.getAttrArray().length;
@@ -94,9 +94,9 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			        Vector<String> argVect = new Vector<String>(argList);
 			        log.debug("Arguments: " + argVect.toString());
 			        
-			        System.out.print("Positions: ");
+			        log.debug("Positions: ");
 			        for (int pos : rsk.getArgPositions())
-						System.out.print(pos + " ");
+						log.debug(pos + " ");
 			        log.debug("");
 				}
 			}
