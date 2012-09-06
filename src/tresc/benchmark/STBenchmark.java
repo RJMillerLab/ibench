@@ -114,7 +114,7 @@ public class STBenchmark {
 
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
-		// log.debug("Printing results !");
+		log.debug("Printing results !");
 		File instDir = new File (Configuration.instancePathPrefix);
 		if (!instDir.exists())
 			instDir.mkdirs();
@@ -122,13 +122,16 @@ public class STBenchmark {
 		if (!schemDir.exists())
 			schemDir.mkdirs();
 		
+		log.debug("instance path: " + instDir.toString());
+		log.debug("schema path: " + schemDir.toString());
+		
 		XSDWriter schemaPrinter = new XSDWriter();
 		XMLWriter schemaWriter = new XMLWriter();
 
 		// print scenario on the screen
 		StringBuffer buf = new StringBuffer();
-		// scenario.prettyPrint(buf, 0);
-		// log.debug(buf);
+		scenario.prettyPrint(buf, 0);
+		log.debug(buf);
 
 		// print scenario on file
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
@@ -164,7 +167,7 @@ public class STBenchmark {
 //					instDir.getAbsolutePath(), _configuration);
 
 			try {
-				File trampFile = new File(Configuration.schemaPathPrefix, S1);
+				File trampFile = new File(schemDir, S1);
 //				if (trampFile.exists()) {
 //					trampFile.delete();
 //					trampFile.createNewFile();

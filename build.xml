@@ -106,6 +106,7 @@
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
 		</jar>
+		<copy todir="${builddir}" file="${binmacdir}/stbenchmark.jar" />
 		<jar destfile="${binwindir}/stbenchmark.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${mainClass}" />
