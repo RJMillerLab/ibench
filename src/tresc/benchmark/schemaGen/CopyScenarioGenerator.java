@@ -26,17 +26,17 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		A = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
 		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
 		
-		System.out.println("-----BEFORE-----");
-		System.out.println("Atomic Elements: " + A);
-		System.out.println("Key Size: " + keySize);
+		log.debug("-----BEFORE-----");
+		log.debug("Atomic Elements: " + A);
+		log.debug("Key Size: " + keySize);
 		
 		A = (A > 1) ? A : 2;
 		keySize = (keySize >= A) ? A - 1 : keySize;
 		keySize = (keySize > 0) ? keySize : 1;
 		
-		System.out.println("-----AFTER-----");
-		System.out.println("Atomic Elements: " + A);
-		System.out.println("Key Size: " + keySize);
+		log.debug("-----AFTER-----");
+		log.debug("Atomic Elements: " + A);
+		log.debug("Key Size: " + keySize);
 	}
 
 	public CopyScenarioGenerator() {

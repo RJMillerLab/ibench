@@ -15,6 +15,13 @@ KNOWN ISSUES
    Update [mdangelo - July 31, 2012]: Fixed issue keyWidth deviation had with Object Fusion. Currently deviations are always
 		1, but will do future testing to see if that can be increased without breaking too
 		many things. 
+		
+	Update [Boris - September 5,2012]: Added parameter range testing to Configuration.
+		Every parameter + its deviation is checked so that parameters are at least 0 after
+		applying the deviation. Number of sub elements is set high enough depending on the
+		values of number of primary key attributes and the like. @PRG is that ok with you?
+		Added a function "scenarioSanityCheck" to abstract AbstractScenarioGenerator. Subclasses
+		should implement this function to apply scenario specific checks.
 
 2. CHAIN join mode does not work for merge or vertical partition (or VPIsA presumably) as the 
 mappings are incorrect. [July 30, 2012]
@@ -24,23 +31,7 @@ mappings are incorrect. [July 30, 2012]
 3. Source/Target reuse crashes if parameters are not delicately adjusted. [mdangelo - July 30, 2012]
 	
 	 Update [Boris - August 2, 2012]: The problem with trying to reuse tables from empty schemas is resolved. 
-	 Check whether there are still problematic configurations. 
-
-4. VALUE MGMT Scenario [mdangelo - July 31, 2012]
-   Mappings for ValueManagement are incorrect. Need to make it such that it performs functions on 
-   variables aka. exists yields f(a,b). 
-	
-   Update [Boris - August 2, 2012]: Known Issue, I should have documented that. I did not finish this because I need to 
-	 modify the model to allow for a "normal" functions in the Tramp XML model. Will do this 
-	 after the other issues have been resolved. 
-
-   Update [PRG - August 27, 2012]: Shoudn't VALUEMANAGEMENT then be listed as a "Disabled Scenario"?
-   
-   Update [Boris - August 28, 2012]: Added a "normal" function to the XML model. Will modfiy the scenario.
-
-5. MERGE Scenario [mdangelo - August 23, 2012]
-   Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
-	 Update [Boris - August 24, 2012]: Issue fixed by Boris. 
+	 Check whether there are still problematic configurations.  
 
 6. Export List of Foreign Key Attributes in TrampXML Model [PRG - August 24, 2012
    Idea: Would be nice to have Foreign Key functions and representation in the TrampXML model like there is 
@@ -83,13 +74,6 @@ mappings are incorrect. [July 30, 2012]
 
     Update:
 
-13. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
-    There are many debug output messages to the console that are not properly idenfified by the issuing class. Do not remove them, just define
-    static Logger log = Logger.getLogger(<package.class name>); at the beginning of the class and then use
-    log.debug("<debug message>") instead of System.out.print("<debug message>"). 
-
-    Update:
-
 14. SCENARIO REVISIONS [mdangelo - 27.08.2012]
 	  Noticed that Boris made several changes to MERGE and VERTICAL PARTITION and just thought it was worth knowing that those changes have not been disseminated into the new VP 
     scenarios (ISA, HASA, N-TO-M) or the new MERGE scenario (MERGE ADD). Not sure if the changes made were incredibly important, so I thought I'd bring it up. Also note that 
@@ -100,6 +84,24 @@ mappings are incorrect. [July 30, 2012]
 -------------
 FIXED ISSUES (to check)
 -------------
+
+4. VALUE MGMT Scenario [mdangelo - July 31, 2012]
+   Mappings for ValueManagement are incorrect. Need to make it such that it performs functions on 
+   variables aka. exists yields f(a,b). 
+	
+   Update [Boris - August 2, 2012]: Known Issue, I should have documented that. I did not finish this because I need to 
+	 modify the model to allow for a "normal" functions in the Tramp XML model. Will do this 
+	 after the other issues have been resolved. 
+
+   Update [PRG - August 27, 2012]: Shoudn't VALUEMANAGEMENT then be listed as a "Disabled Scenario"?
+   
+   Update [Boris - August 28, 2012]: Added a "normal" function to the XML model. Will modfiy the scenario.
+
+   Update [Boris - September 5, 2012]: Value management now works
+
+5. MERGE Scenario [mdangelo - August 23, 2012]
+   Mappings for merge are incorrect because they repeat variables. [August 23, 2012]
+	 Update [Boris - August 24, 2012]: Issue fixed by Boris.
 
 11. OBJECT FUSION Scenario [PRG - August 24, 2012]
     The generated mappings in this scenario seem to be wrong; there are universal variables in the RHS (EXISTS Clause) that never appear in the LHS 
@@ -113,10 +115,16 @@ FIXED ISSUES (to check)
   		It now produces Skolem functions on the key. I have one SK per target attribute.
   		@Patricia: let me know if you like this to be changed.   
 
-
 -------------
 FIXED ISSUES (confirmed)
 -------------
+
+13. All classes in STBenchmark should consistently make use of the logger facility [PRG - August 27, 2012]
+    There are many debug output messages to the console that are not properly idenfified by the issuing class. Do not remove them, just define
+    static Logger log = Logger.getLogger(<package.class name>); at the beginning of the class and then use
+    log.debug("<debug message>") instead of System.out.print("<debug message>"). 
+
+    Update [Boris - 05.09.2012]: Changed everything to use log.debug.
 
 -------------
 KNOWN CAVEATS

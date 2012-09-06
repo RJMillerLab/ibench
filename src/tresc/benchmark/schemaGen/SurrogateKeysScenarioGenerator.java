@@ -125,7 +125,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 
 
 	@Override
-	protected void genSourceRels() {
+	protected void genSourceRels() throws Exception {
 		String relName = randomRelName(0);
 		String[] attrs = new String[elements];
 		
@@ -134,6 +134,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		}
 		
 		fac.addRelation(getRelHook(0), relName, attrs, true);
+		fac.addPrimaryKey(relName, 0, true);
 	}
 
 	@Override
@@ -227,6 +228,8 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		String sourceName = m.getRelName(0, true);
 		String targetName = m.getRelName(0, false);
 		String[] attrNames = m.getAttrIds(0, false);
+		String sAttName;
+		Projection att;
 		
 		MappingType m1 = m.getMaps().get(0);
 		
@@ -243,21 +246,29 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			// create the atomic element in the source and the target
 			// add the subelements as attributes to the Select clause of the
 			// query
-			Projection att = new Projection(new Variable("X"), attrNames[i]);
+			att = new Projection(new Variable("X"), attrNames[i]);
 			select.add(attrNames[i], att);
 		}
 
 		// create the Function corresponding to the key
 		// and add it to the select clause of query
- 		//TODO only works for second order mappings
 		vtools.dataModel.expression.SKFunction stSK1;
 		vtools.dataModel.expression.SKFunction stSK2;
 		switch (mapLang) {
 		case FOtgds:
-			stSK1 = new vtools.dataModel.expression.SKFunction("");
-			stSK2 = new vtools.dataModel.expression.SKFunction("");
-			//TODO
+			stSK1 = new vtools.dataModel.expression.SKFunction(
+					fac.getNextId("SK"));
+			sAttName = m.getAttrId(0, 0, true);
+ 			att= new Projection(new Variable("X"), sAttName);
+ 			stSK1.addArg(att);
 			
+			stSK2 = new vtools.dataModel.expression.SKFunction(
+					fac.getNextId("SK"));
+			for(int k = 0; k < numOfParams; k++) {			
+	 			sAttName = m.getAttrId(0, k, true);
+	 			att = new Projection(new Variable("X"), sAttName);
+	 			stSK2.addArg(att);
+	 		}
 			break;
 		case SOtgds:
 		default:
@@ -265,8 +276,8 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	 		stSK1 = new vtools.dataModel.expression.SKFunction(sk.getSkname());
 	 			
 	 		for(int k = 0; k < sk.getVarArray().length; k++) {			
-	 			String sAttName = m.getAttrId(0, k, true);
-	 			Projection att = new Projection(new Variable("X"), sAttName);
+	 			sAttName = m.getAttrId(0, k, true);
+	 			att = new Projection(new Variable("X"), sAttName);
 	 			stSK1.addArg(att);
 	 		}
 
@@ -275,8 +286,8 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	 		stSK2 = new vtools.dataModel.expression.SKFunction(sk2.getSkname());
 	 			
 	 		for(int k = 0; k < sk2.getVarArray().length; k++) {			
-	 			String sAttName = m.getAttrId(0, k, true);
-	 			Projection att = new Projection(new Variable("X"), sAttName);
+	 			sAttName = m.getAttrId(0, k, true);
+	 			att = new Projection(new Variable("X"), sAttName);
 	 			stSK2.addArg(att);
 	 		}
 

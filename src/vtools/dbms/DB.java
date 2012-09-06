@@ -6,12 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 /* 
  * The role of this class is to provide a database connection to the database. The class is not 
  * actually needed that is why all the methods are static
  */
 public class DB
 {
+	static Logger log = Logger.getLogger(DB.class);
+	
     public static final int SQL_SERVER = 1;
 
     public static final int MYSQL = 2;
@@ -49,19 +53,19 @@ public class DB
             // if (dbConnection != null)
             // {
             // ;
-            // System.out.println();
-            // System.out.println("Successfully connected");
-            // System.out.println();
+            // log.debug();
+            // log.debug("Successfully connected");
+            // log.debug();
             // Meta data
             // DatabaseMetaData meta = _connection.getMetaData();
-            // System.out.println("\nDriver Information");
-            // System.out.println("Driver Name: " + meta.getDriverName());
-            // System.out.println("Driver Version: " +
+            // log.debug("\nDriver Information");
+            // log.debug("Driver Name: " + meta.getDriverName());
+            // log.debug("Driver Version: " +
             // meta.getDriverVersion());
-            // System.out.println("\nDatabase Information ");
-            // System.out.println("Database Name: " +
+            // log.debug("\nDatabase Information ");
+            // log.debug("Database Name: " +
             // meta.getDatabaseProductName());
-            // System.out.println("Database Version: " +
+            // log.debug("Database Version: " +
             // meta.getDatabaseProductVersion());
             // }
         }
@@ -96,7 +100,7 @@ public class DB
         {
             if (unconditionally)
                 return;
-            System.out.println("Statement: \n" + q);
+            log.debug("Statement: \n" + q);
             e.printStackTrace();
             throw new RuntimeException("Query " + q);
         }
@@ -148,7 +152,7 @@ public class DB
     // {
     // if (unconditionally)
     // return;
-    // System.out.println("Statement: \n" + q);
+    // log.debug("Statement: \n" + q);
     // e.printStackTrace();
     // throw new RuntimeException();
     // }

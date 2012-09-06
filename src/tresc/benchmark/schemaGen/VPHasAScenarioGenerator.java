@@ -31,7 +31,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 
     
     protected void initPartialMapping() {
-    	System.out.println("---INIT---");
+    	log.debug("---INIT---");
     	super.initPartialMapping();
     	
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
@@ -58,7 +58,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 
 	@Override
 	protected void genSourceRels() {
-		System.out.println("---GENERATING SOURCE---");
+		log.debug("---GENERATING SOURCE---");
 		String sourceRelName = randomRelName(0);
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
@@ -72,7 +72,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 
 	@Override
 	protected void genTargetRels() throws Exception {
-		System.out.println("---GENERATING TARGET---");
+		log.debug("---GENERATING TARGET---");
         String[] attrs;
 		String[] srcAttrs = m.getAttrIds(0, true);
 		

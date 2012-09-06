@@ -52,7 +52,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            System.out.println(" fragment "+i+ " " + fragments[i]);
+            log.debug(" fragment "+i+ " " + fragments[i]);
         }*/
         
         shuffle(fragments, generator);
@@ -60,7 +60,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            System.out.println(" after Shuffle fragment "+i+ " " + fragments[i]);
+            log.debug(" after Shuffle fragment "+i+ " " + fragments[i]);
         }*/
         
         distribute(constantElements, fragments, generator);
@@ -68,7 +68,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            System.out.println(" after Distribute Constants fragment "+i+ " " + fragments[i]);
+            log.debug(" after Distribute Constants fragment "+i+ " " + fragments[i]);
         }*/
         
         distribute(combElements, fragments, generator);
@@ -77,7 +77,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            System.out.println(" after Distribute fragment "+i+ " " + fragments[i]);
+            log.debug(" after Distribute fragment "+i+ " " + fragments[i]);
         }*/
 
         // and now nest each fragment
@@ -346,7 +346,7 @@ public class GLAVScenarioTrgGenerator
             el.setHook(coding);
             
             //DEBUG
-            //System.out.println(" constant el "+el);
+            //log.debug(" constant el "+el);
             
             // create a constant value
             String value = Modules.nameFactory.getARandomName();
@@ -373,7 +373,7 @@ public class GLAVScenarioTrgGenerator
 
         int A = elements.size();
 
-        // System.out.println("A=" + A + " D=" + D);
+        // log.debug("A=" + A + " D=" + D);
 
         int[][] counters = new int[D][D];
 
@@ -544,13 +544,13 @@ public class GLAVScenarioTrgGenerator
         // if (rootSets[line][col] != null)
         // System.out.print("\t" + rootSets[line][col].size());
         // else System.out.print("X");
-        // System.out.println("");
+        // log.debug("");
         // }
         // }
 
         // StringBuffer buf = new StringBuffer();
         // rootSets[0][0].prettyPrint(buf, 0);
-        // System.out.println(buf.toString());
+        // log.debug(buf.toString());
 
         // System.exit(0);
         // return null;

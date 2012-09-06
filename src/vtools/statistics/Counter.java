@@ -1,7 +1,10 @@
 package  vtools.statistics;
 
+import org.apache.log4j.Logger;
+
 public class Counter
 {
+	static Logger log = Logger.getLogger(Counter.class);
 
 public static long _programTime = System.currentTimeMillis();
 
@@ -20,13 +23,13 @@ public static long dumpCheckPoint(long prevCheck, String msg)
     long mills = System.currentTimeMillis();
     if (prevCheck == -1)
         prevCheck = _programTime;
-    //System.out.println((mills - prevCheck) + "ms " + msg);
+    //log.debug((mills - prevCheck) + "ms " + msg);
     long ms = (mills - prevCheck);
     long sec = ms / 1000;
     ms = ms % 1000;
     long min = sec / 60;
     sec = sec % 60;
-    System.out.println(min + "min " + sec + "sec and " + ms + "ms " + msg);
+    log.debug(min + "min " + sec + "sec and " + ms + "ms " + msg);
     return mills;
 }
 

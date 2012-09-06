@@ -153,12 +153,12 @@ public class GLAVScenarioSrcGenerator
             int rt = generator.nextInt(toAtomicSubElem.size());
             SMarkElement toAtomicElement = toAtomicSubElem.remove(rt);
 
-            // System.out.println(fromAtomicElement + " "
+            // log.debug(fromAtomicElement + " "
             // +
             // eqClassMgr.getEqClassHook(eqClassMgr.getEqClass(fromAtomicElement))
             // + "\n" + fromSetElement
             // + "\n");
-            // System.out.println(toAtomicElement + " "
+            // log.debug(toAtomicElement + " "
             // +
             // eqClassMgr.getEqClassHook(eqClassMgr.getEqClass(toAtomicElement))
             // + "\n" + toSetElement + "\n");

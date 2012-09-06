@@ -127,7 +127,7 @@ public class GLAVScenarioGenerator extends AbstractScenarioGenerator
         }
 
         //DEBUG
-        //System.out.println(" schema \n"+ scenario);
+        //log.debug(" schema \n"+ scenario);
         
         Vector<SPJQuery> mapRes = mapGenerator.generateMapping(rootSetsT, basisQuery, eqClassMgr);
         // each sub query from the vector has to be added in the select 

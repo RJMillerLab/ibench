@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
 import org.vagabond.xmlmodel.AttrDefType;
@@ -28,6 +29,8 @@ import vtools.dataModel.types.RandSrcSkolem;
  */
 public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator 
 {
+	static Logger log = Logger.getLogger(RandomSourceSkolemToMappingGenerator.class);
+	
 	protected static TrampModelFactory fac;
 	protected static TrampXMLModel model;
 	private static SkolemKind sk;
@@ -59,13 +62,12 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
-			System.out.println("---------GENERATING SKOLEMS---------");
-			System.out.println("Relation: " + r.getName());
+			log.debug("---------GENERATING SKOLEMS---------");
+			log.debug("Relation: " + r.getName());
 			
 	        System.out.print("Attributes: ");
 	        for (AttrDefType ra : r.getAttrArray())
 	        	System.out.print(ra.getName() + " ");
-	        System.out.println();
 	        
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceSkolemPerc)) / (double) 100;
 			int numAtts = r.getAttrArray().length;
@@ -76,26 +78,26 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			generateVictims(r, scenario, RandomSkolems, addedSKs, numSKs);
 			generateSkolemArguments(r, scenario, RandomSkolems, numSKs);
 	        
-			System.out.println("---------NEW SKOLEMS---------");
+			log.debug("---------NEW SKOLEMS---------");
 			
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
-				System.out.println("Victim: " + rsk.getAttr());
-				System.out.println("Victim Position: " + rsk.getAttrPosition());
-				System.out.println("Victim Variable: " + rsk.getAttrVar());
-				System.out.println("Identifier: " + rsk.getSkId());
+				log.debug("Victim: " + rsk.getAttr());
+				log.debug("Victim Position: " + rsk.getAttrPosition());
+				log.debug("Victim Variable: " + rsk.getAttrVar());
+				log.debug("Identifier: " + rsk.getSkId());
 				
 				if(rsk.getArgAttrs().length != 0)
 				{
 					// convert to vector to facilitate printing
 			        List<String> argList = Arrays.asList(rsk.getArgAttrs());
 			        Vector<String> argVect = new Vector<String>(argList);
-			        System.out.println("Arguments: " + argVect.toString());
+			        log.debug("Arguments: " + argVect.toString());
 			        
 			        System.out.print("Positions: ");
 			        for (int pos : rsk.getArgPositions())
 						System.out.print(pos + " ");
-			        System.out.println("");
+			        log.debug("");
 				}
 			}
 			
@@ -257,7 +259,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useKeyAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		System.out.println("mode: KEY");
+		log.debug("mode: KEY");
 	
 		// make sure there is a key for the relation, if there is not then we will switch to using all attributes for the skolem
 		if (r.isSetPrimaryKey()) 
@@ -307,7 +309,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useRandomAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		System.out.println("mode: RANDOM");
+		log.debug("mode: RANDOM");
 	
 		int numArgsForSkolem = _generator.nextInt(allAttrs.length);
 	
@@ -366,7 +368,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useAllAsArgument(RelationType r, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		System.out.println("mode: ALL");
+		log.debug("mode: ALL");
 	
 		Vector<String> skAtts = new Vector<String>();
 		

@@ -1,5 +1,6 @@
 package vtools.xml;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Document;
@@ -16,6 +17,8 @@ import vtools.utils.structures.SetAssociativeArray;
 
 public class XSDReader
 {
+	static Logger log = Logger.getLogger(XSDReader.class);
+	
 	SetAssociativeArray types; 
 	int dummyNr;
 	
@@ -29,7 +32,7 @@ public class XSDReader
 		removeWhiteSpaceNodes(root);
 		
 		Schema schemaNR = visitRoot(root,"SchemaExperiments");
-		System.out.println(schemaNR);
+		log.debug(schemaNR);
 	}
 	
 	private Schema visitRoot(Node root, String nameSchema){
@@ -85,7 +88,7 @@ public class XSDReader
 			}
 				 
 			if (complexNode == null){
-					 System.out.println("Syntax Error");
+					 log.debug("Syntax Error");
 			}
 			else{
 				if (! maxOccurs.equalsIgnoreCase("unbounded")){
@@ -215,7 +218,7 @@ public class XSDReader
 		private void printDOC(Node node, String indent){
 		switch (node.getNodeType()){
 		  case Node.DOCUMENT_NODE :
-			System.out.println("<xml version = \"1.0\">\n");
+			log.debug("<xml version = \"1.0\">\n");
 			NodeList nodes = node.getChildNodes();
 			int nrNodes= nodes.getLength();
 			if (nodes != null){
@@ -236,7 +239,7 @@ public class XSDReader
 					System.out.print(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");
 				}	
 			}
-			System.out.println(">");
+			log.debug(">");
 			
 			NodeList children = node.getChildNodes();
 			if (children != null){
@@ -246,7 +249,7 @@ public class XSDReader
 					printDOC(children.item(i),indent+" ");
 			}
 			
-			System.out.println("</"+name+">");
+			log.debug("</"+name+">");
 			break;
 			
 		case Node.TEXT_NODE:
@@ -290,7 +293,7 @@ public class XSDReader
 		
 		if (childCTNode.getNodeName().equalsIgnoreCase("xs:choice")){
 			//TODO
-			System.out.println("an element group type Choice");
+			log.debug("an element group type Choice");
 		}
 		
 		if ((childCTNode.getNodeName().equalsIgnoreCase("xs:sequence")) || 
@@ -342,8 +345,8 @@ public class XSDReader
 					 el.setParent(nestedRel);
 				}
 			}	
-			System.out.println("The Nested Relationl ");
-			System.out.println(nestedRel);
+			log.debug("The Nested Relationl ");
+			log.debug(nestedRel);
 			
 	}
 	
@@ -355,14 +358,14 @@ public class XSDReader
 		String name = null;
 		
 		if (node.getNodeName() != "xs:element"){
-			System.out.println("Not an xs:element");
+			log.debug("Not an xs:element");
 			return null;
 		}
 		
 		//
-		System.out.println(" the name attr has value -"+getAttr("name", node));
-		System.out.println(" the type attr has value -"+getAttr("type", node));
-		System.out.println(" the maxOcc attr has value -"+getAttr("maxOccurs", node));
+		log.debug(" the name attr has value -"+getAttr("name", node));
+		log.debug(" the type attr has value -"+getAttr("type", node));
+		log.debug(" the maxOcc attr has value -"+getAttr("maxOccurs", node));
 		
 		//read the attributes of the node
 		NamedNodeMap attributes = node.getAttributes();
@@ -415,12 +418,12 @@ public class XSDReader
 			}
 				 
 			if (complexNode == null){
-					 System.out.println("Syntax Error");
+					 log.debug("Syntax Error");
 			}
 			else{//read children nodes until you find a sequence/all node
 				childComplexNode = complexNode.getChildNodes().item(0);
 				if (childComplexNode.getNodeName().equalsIgnoreCase("xs:choice")){
-					System.out.println("an element group type Choice");
+					log.debug("an element group type Choice");
 				}
 				if ((childComplexNode.getNodeName().equalsIgnoreCase("xs:sequence")) || 
 				    (childComplexNode.getNodeName().equalsIgnoreCase("xs:all"))){
@@ -451,7 +454,7 @@ public class XSDReader
 			}				 
 		}//end-if-typeAtomic
 			 
-		//System.out.println(elemNR);
+		//log.debug(elemNR);
 		return elemNR;
 	}
 	

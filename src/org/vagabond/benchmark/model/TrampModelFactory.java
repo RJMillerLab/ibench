@@ -54,6 +54,11 @@ public class TrampModelFactory {
 	private MappingScenario stScen;
 	private Configuration conf;
 	private PartialMapping p;
+
+	public enum FuncParamType {
+		Var,
+		Const
+	}
 	
 	public TrampModelFactory(MappingScenario stScen) {
 		this.setStScen(stScen);
@@ -402,6 +407,26 @@ public class TrampModelFactory {
 		f.setFname(fName);
 		for(String p : params)
 			f.addVar(p);
+	}
+	
+	public void addFuncToExistsAtom (MappingType m, int atom, String fName, 
+			String[] params, FuncParamType[] types) {
+		RelAtomType a = m.getExists().getAtomArray(atom);
+		FunctionType f =  a.addNewFunction();
+		f.setFname(fName);
+		for(int i = 0; i < params.length; i++) {
+			String p = params[i];
+			FuncParamType type = types[i];
+			
+			switch(type) {
+			case Var:
+				f.addVar(p);
+				break;
+			case Const:
+				f.addConstant(p);
+				break;
+			}
+		}
 	}
 	
 	public String addSKToExistsAtom (MappingType m, int atom, String[] params) {

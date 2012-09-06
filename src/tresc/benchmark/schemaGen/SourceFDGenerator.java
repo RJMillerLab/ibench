@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.RelationType;
 
@@ -21,6 +22,8 @@ import tresc.benchmark.utils.Utils;
  */
 public class SourceFDGenerator implements ScenarioGenerator 
 {
+	static Logger log = Logger.getLogger(SourceFDGenerator.class);
+	
 	@Override
 	public void generateScenario(MappingScenario scenario,Configuration configuration) throws Exception 
 	{
@@ -42,11 +45,11 @@ public class SourceFDGenerator implements ScenarioGenerator
 		        List<String> nonkeyList = Arrays.asList(nonKeyAttrs);
 		        Vector<String> nonkeyVect = new Vector<String>(nonkeyList);
 				
-		        System.out.println("---------GENERATING PRIMARY KEY FD---------");
+		        log.debug("---------GENERATING PRIMARY KEY FD---------");
 		        
-				System.out.println("relName: " + r.getName());
-				System.out.println("LHS: " + pkVect.toString());
-				System.out.println("RHS: " + nonkeyVect.toString());
+				log.debug("relName: " + r.getName());
+				log.debug("LHS: " + pkVect.toString());
+				log.debug("RHS: " + nonkeyVect.toString());
 			}
 		}
 
@@ -152,11 +155,11 @@ public class SourceFDGenerator implements ScenarioGenerator
 				else
 					scenario.getDocFac().addFD(r.getName(),Utils.convertVectorToStringArray(LHSAtts),new String[] { RHSAtt });
 				
-				System.out.println("---------NEW FD---------");
+				log.debug("---------NEW FD---------");
 
-				System.out.println("relName: " + r.getName());
-				System.out.println("LHS: " + LHSAtts.toString());
-				System.out.println("RHS: " + RHSAtt);
+				log.debug("relName: " + r.getName());
+				log.debug("LHS: " + LHSAtts.toString());
+				log.debug("RHS: " + RHSAtt);
 			}
 		}
 	}

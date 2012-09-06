@@ -608,18 +608,17 @@ public class Configuration {
 		 * 		2) parameter value - deviation >= 0
 		 * 				set deviation= parameter value  
 		 */
-		for(ParameterName p: Constants.ParameterName.values()) {
-			int pValue = _configurations[p.ordinal()][0];
-			int pDev = _configurations[p.ordinal()][1];
-			
-			if (pValue < 0)
-				pValue = 0;
-			if (pValue - pDev < 0)
-				pDev = pValue;
-			_configurations[p.ordinal()][0] = pValue;
-			_configurations[p.ordinal()][1] = pDev;
-		}
-
+		for(ParameterName p: Constants.ParameterName.values())
+			checkParameterRange(p, 0, 1.0);
+		
+		/* check specific parameter derivations */
+		checkParameterRange(ParameterName.PrimaryKeySize, 1, 0.5);
+		checkParameterRange(ParameterName.JoinSize, 1, 0.5);
+		checkParameterRange(ParameterName.NumOfAttributesToDelete, 1, 0.5);
+		checkParameterRange(ParameterName.NumOfJoinAttributes, 1, 0.5);
+		checkParameterRange(ParameterName.NumOfNewAttributes, 1, 0.5);
+		checkParameterRange(ParameterName.NumOfParamsInFunctions, 1, 0.5);
+		
 		/* check that number of elements including variation is large enough. If number of elements is
 		 * not sufficiently large we increase the number of elements 
 		 * 2 x primary key size
@@ -642,6 +641,24 @@ public class Configuration {
 		setParam(ParameterName.NumOfSubElements, minNumElem);
 		
 		
+	}
+
+	private void checkParameterRange(ParameterName p, int min) {
+		checkParameterRange(p, min, 1.0);
+	}
+	
+	private void checkParameterRange(ParameterName p, int min, double dev) {
+		int pValue = _configurations[p.ordinal()][0];
+		int pDev = _configurations[p.ordinal()][1];
+		
+		if (pValue < min)
+			pValue = min;
+		if (pDev > pValue * dev)
+			pDev = (int) (pValue * dev);
+		if (pValue - pDev < min)
+			pDev = (pValue - min);
+		_configurations[p.ordinal()][0] = pValue;
+		_configurations[p.ordinal()][1] = pDev;
 	}
 	
 	public int paramMin(ParameterName p) {

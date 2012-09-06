@@ -3,6 +3,7 @@ package tresc.benchmark.schemaGen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vagabond.benchmark.model.TrampModelFactory.FuncParamType;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 
@@ -216,7 +217,10 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 			for(int j = 0; j < splits[i]; j++, offset++) {
 				fac.addFuncToExistsAtom(m1, 0, "extract", 
 						CollectionUtils.concat(fac.getFreshVars(offset, 1), 
-								stOffset +"", subStrLen +""));
+								stOffset +"", subStrLen +""),
+								new FuncParamType[] {FuncParamType.Var, 
+										FuncParamType.Const, 
+										FuncParamType.Const});
 				 stOffset += subStrLen;
 	             if (stOffset + subStrLen > stLen)
 	             	stOffset = 0;

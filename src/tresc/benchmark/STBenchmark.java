@@ -58,7 +58,7 @@ public class STBenchmark {
 		
 		if(args.length == 0)
 		{
-			System.out.println("Please specify command line arguments");
+			log.debug("Please specify command line arguments");
 			System.exit(1);
 		}
 		
@@ -114,7 +114,7 @@ public class STBenchmark {
 
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
-		// System.out.println("Printing results !");
+		// log.debug("Printing results !");
 		File instDir = new File (Configuration.instancePathPrefix);
 		if (!instDir.exists())
 			instDir.mkdirs();
@@ -128,7 +128,7 @@ public class STBenchmark {
 		// print scenario on the screen
 		StringBuffer buf = new StringBuffer();
 		// scenario.prettyPrint(buf, 0);
-		// System.out.println(buf);
+		// log.debug(buf);
 
 		// print scenario on file
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {

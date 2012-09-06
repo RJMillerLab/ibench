@@ -475,7 +475,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 			// in KEY mode we use the join attributes as the skolem arguments
 			if (sk == SkolemKind.KEY)
 			{
-				System.out.println("--- SKOLEM MODE = KEY ---");
+				log.debug("--- SKOLEM MODE = KEY ---");
 
 				String[] argVars = null;
 				int offset = totalVars;
@@ -504,11 +504,11 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 
 			else if (sk == SkolemKind.RANDOM)
 			{
-				System.out.println("--- SKOLEM MODE = RANDOM ---");
+				log.debug("--- SKOLEM MODE = RANDOM ---");
 
 				int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
 				
-				System.out.println("number of arguments: " + numArgsForSkolem);
+				log.debug("number of arguments: " + numArgsForSkolem);
 
 				// ensure that we are still within bounds
 				numArgsForSkolem = (numArgsForSkolem >= totalVars) ? totalVars : numArgsForSkolem;
@@ -539,18 +539,18 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 
 				Collections.sort(randomVars);
 
-				System.out.println("arguments: " + randomVars.toString());
+				log.debug("arguments: " + randomVars.toString());
 
 				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
 			}
 
 			else if (sk == SkolemKind.ALL)
 			{
-				System.out.println("--- SKOLEM MODE = RANDOM ---");
+				log.debug("--- SKOLEM MODE = RANDOM ---");
 
 				List<String> tgtVars = Arrays.asList(targetVars);
-				System.out.println("arguments: ");
-				System.out.println(tgtVars.toString());
+				log.debug("arguments: ");
+				log.debug(tgtVars.toString());
 
 				fac.addSKToExistsAtom(m1, 0,targetVars);
 			}

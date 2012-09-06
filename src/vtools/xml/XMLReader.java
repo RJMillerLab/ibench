@@ -2,6 +2,7 @@ package vtools.xml;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -11,6 +12,8 @@ import org.xml.sax.SAXException;
 
 public class XMLReader
 {
+	static Logger log = Logger.getLogger(XMLReader.class);
+	
 	public XMLReader() {}
 	
 	public Node load(String xmlfile) {
@@ -35,7 +38,7 @@ public class XMLReader
 		switch (node.getNodeType()){
 		
 		  case Node.DOCUMENT_NODE :
-			System.out.println("<xml version = \"1.0\">\n");
+			log.debug("<xml version = \"1.0\">\n");
 			NodeList nodes = node.getChildNodes();
 			int nrNodes= nodes.getLength();
 			if (nodes != null){

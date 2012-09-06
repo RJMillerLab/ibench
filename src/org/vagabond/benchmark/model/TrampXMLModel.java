@@ -87,7 +87,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		for(MappingType m: doc.getMappingScenario().getMappings().getMappingArray())
 		{
 			if(m.getForeach() == null)
-				System.out.println("ERROR: Scenario has no Foreach clause!");
+				log.debug("ERROR: Scenario has no Foreach clause!");
 			
 			for (RelAtomType a: m.getForeach().getAtomArray())
 				if(a.getTableref().equals(rel))
