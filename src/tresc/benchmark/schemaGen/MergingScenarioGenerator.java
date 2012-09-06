@@ -37,6 +37,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	private int numOfJoinAttributes;
 	private JoinKind jk;
 	private int[] numOfAttributes;
+	private int[] numOfUseAttrs;
 	private String[] joinAttrs;
     
     public MergingScenarioGenerator()
@@ -62,6 +63,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
             else jk = JoinKind.CHAIN;
         }
         numOfAttributes = new int[numOfTables];
+        numOfUseAttrs = new int[numOfTables];
         for (int k = 0, kmax = numOfAttributes.length; k < kmax; k++)
         {
             int tmpInt = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
@@ -69,6 +71,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
             // make sure that we have enough attribute for the join + at least on free one
             tmpInt = (tmpInt <= getNumJoinAttrs(k)) ? getNumJoinAttrs(k) + 1 : tmpInt; 
             numOfAttributes[k] = tmpInt;
+            numOfUseAttrs[k] = tmpInt - getNumJoinAttrs(k);
         }
     }
 	
@@ -305,7 +308,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		// first choose one that has no key or key at the right place
 		while(created < numOfTables) {
 			found = true;
-			rel = getRandomRel(false, getNumJoinAttrs(rels.size()) + 1);
+			rel = getRandomRel(true, getNumJoinAttrs(rels.size()) + 1);
 			if (rel != null) {
 				// if PK, then has to be num of join attributes
 				if (rel.isSetPrimaryKey()) {
@@ -393,9 +396,9 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 					numTries = 0;
 				}
 			}
-			
-			createConstraints(attrs);
 		}
+		
+		createConstraints(attrs);
 	}
 
 
@@ -631,11 +634,15 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			if (!r.isSetPrimaryKey())
 				fac.addPrimaryKey(r.getName(), joinAttPos, false);
 			
-			// adapt number of attribute per source rel
+			// adapt number of normal attributes used (copied to target) per source rel
 			int numPerSrcRel = numNormalAttr / numOfTables;
-			for(int i = 0; i < numOfTables; i++)
-				numOfAttributes[i] = numPerSrcRel; 
-			numOfAttributes[numOfTables - 1] += numNormalAttr % numOfTables;
+			int usedAttrs = 0;
+			for(int i = 0; i < numOfTables; i++) {
+				numOfUseAttrs[i] = (numPerSrcRel > getNumNormalAttrs(i)) 
+						? getNumNormalAttrs(i) : numPerSrcRel;
+				usedAttrs = numOfUseAttrs[i];
+			}
+			numOfUseAttrs[numOfTables - 1] += numNormalAttr - usedAttrs;
 		}
 	}
 	
@@ -698,7 +705,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		// each table get fresh vars for its free and join attributes
 		// the fk vars are takes from the join attributes they reference
 		for(int i = 1; i < numOfTables; i++) {
-			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
+			int numFreshVars = numOfUseAttrs[i];
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
 			offset += numFreshVars;
 			String[] fkVars = null;

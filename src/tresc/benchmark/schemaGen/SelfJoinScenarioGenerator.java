@@ -1,7 +1,9 @@
 package tresc.benchmark.schemaGen;
 
+import org.apache.log4j.Logger;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.utils.Utils;
@@ -15,12 +17,19 @@ import vtools.dataModel.expression.Variable;
 
 public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
+	static Logger log = Logger.getLogger(SelfJoinScenarioGenerator.class);
+	
+	public static final int MAX_NUM_TRIES = 10;
+	
 	private int JN;
 	private int K;
 	private int E;
 	private int F;
 	private String[] keys;
 	private String[] fks;
+    private int[] keyPos;
+    private int[] fkPos;
+    private int[] normalPos;
     
     public SelfJoinScenarioGenerator()
     {
@@ -252,25 +261,77 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
         return srcEl;
     }*/
 
+    @Override
+    protected void chooseSourceRels() throws Exception {
+    	int numTries = 0;
+    	RelationType rel = null;
+    	String srcName;
+    	
+    	// fetch random rel with enough attrs
+    	while(numTries < MAX_NUM_TRIES && rel == null) {
+    		rel = getRandomRel(true, K + K + 1);
+    	}
+    	
+    	//TODO try to reduce number of keys and foreign keys?
+    	
+    	keys = new String[K];
+    	keyPos = new int[K];
+    	fks = new String[K];
+    	fkPos = new int[K];
+    	
+    	if (rel == null)
+    		genSourceRels();
+    	else {
+    		F = rel.sizeOfAttrArray() - 2 * K;
+    		normalPos = new int[F];
+    		m.addSourceRel(rel);
+    		srcName = rel.getName();
+    		
+    		// already has PK, get positions of PK attrs
+    		if (rel.isSetPrimaryKey()) {
+    			
+    		}
+    		else {
+    			keyPos = CollectionUtils.createSequence(0, K);
+    			fkPos = CollectionUtils.createSequence(K, K);
+    			for(int i = 0; i < K; i++) {
+    				keys[i] = rel.getAttrArray(i).getName();
+    				fks[i] = rel.getAttrArray(K + i).getName();
+    			}
+    			normalPos = CollectionUtils.createSequence(2 * K, F);
+    			
+    			fac.addPrimaryKey(srcName, CollectionUtils.createSequence(0, K), true);
+				fac.addForeignKey(srcName, fks, srcName, keys, true);
+    		}
+    	}
+    }
+    
 	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[E];
 		keys = new String[K];
 		fks = new String[K];
+		keyPos = new int[K];
+		fkPos = new int[K];
+		normalPos = new int[F];
+		
 		String hook = getRelHook(0);
 		
 		// create key and foreign key attrs
 		for(int i = 0; i < K; i++) {
 			String randAtt = randomAttrName(0, i);
 			keys[i] = randAtt + "ke";
+			keyPos[i] = i;
 			fks[i] = randAtt + "fk";
+			fkPos[i] = i + K;
 			attrs[i] = keys[i];
 			attrs[i + K] = fks[i];
 		}
 		// create free attrs
 		for(int i = 2 * K; i < E; i++)
 			attrs[i] = randomAttrName(0, i);
+		normalPos = CollectionUtils.createSequence(2 * K, F);
 		
 		fac.addRelation(hook, srcName, attrs, true);
 		fac.addPrimaryKey(srcName, keys, true);
