@@ -52,7 +52,7 @@
 
 	<target name="Compile" depends="Clean">
 		<javac srcdir="${sourcedir}" destdir="${binarydir}" 
-			classpathref="libraries" debug="on">
+			classpathref="libraries" debug="on" includeantruntime="false">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
