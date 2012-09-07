@@ -23,13 +23,13 @@ import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
 
 
-public class TestCreatingPartOfTheModelWithSO extends AbstractAllScenarioTester {
+public class TestCreatingPartOfTheModelWithSOWithSourceSkolems extends AbstractAllScenarioTester {
 
 	static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 
 	@Before
 	public void setUpConf () throws FileNotFoundException, IOException {
-		PropertyWrapper prop = new PropertyWrapper("testresource/partconf.txt");
+		PropertyWrapper prop = new PropertyWrapper("testresource/partconfsk.txt");
 		conf = new Configuration();
 		conf.readFromProperties(prop);
 		conf.setInstancePathPrefix(OUT_DIR);

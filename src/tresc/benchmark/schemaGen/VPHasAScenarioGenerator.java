@@ -1,10 +1,12 @@
 package tresc.benchmark.schemaGen;
 
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
 import tresc.benchmark.Constants.JoinKind;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
@@ -159,6 +161,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
+		String[] keyVars = fac.getFreshVars(numOfSrcTblAttr, 1);
 		
 		// source table gets fresh variables
 		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
@@ -167,11 +170,13 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		{
 			case FOtgds:
 				for(int i = 0; i < numOfTgtTables; i++) {
-					int offset = i * attsPerTargetRel;
+					int offset = i * attsPerTargetRel + ((i > 0) ? 1 : 0);
 		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
 		    				attsPerTargetRel + attrRemainder;
 		        	
-		        	fac.addExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
+		        	fac.addExistsAtom(m1, i, 
+		        			CollectionUtils.concat(
+		        					fac.getFreshVars(offset, numAtts), keyVars));
 				}
 				break;
 				
@@ -190,6 +195,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		}
 	}
 	
+	//TODO does not seem to make a lot of sense, using the same skolem function, but with different number of arguments is wrong
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
@@ -270,18 +276,51 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		
 		// add skolem function for join
 		if (jk == JoinKind.STAR) {
-
+			String skName = "";
+			
 			for(int i = 0; i < numOfTgtTables; i++) {
 				SelectClauseList seli = queries[i].getSelect();
-				
 				int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
 
-		 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+				int numArgs;
+				
+				if (mapLang.equals(MappingLanguageType.SOtgds)) {
+					SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+					skName = sk.getSkname();
+					numArgs = sk.sizeOfVarArray();
+				}
+				else {
+					int offset = i * attsPerTargetRel;
+		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
+		    				attsPerTargetRel + attrRemainder;
+		        	
+		        	numArgs = numOfSrcTblAttr;
+
+		    		// generate random number arguments for skolem function
+		    		if (sk == SkolemKind.RANDOM)
+		    			numArgs = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+
+		    		// ensure that we are still within the bounds of the number of source attributes
+		    		numArgs = (numArgs > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgs;
+
+		    		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
+		    		int start = 0;
+		    		if(sk == SkolemKind.EXCHANGED)
+		    		{
+		    			start = offset;
+		    			numArgs = numAtts;
+		    		}
+		        	
+					if (i == 0)
+						skName = fac.getNextId("SK");
+					numArgs = 1;//TODO
+				}
 		 			
-		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
+				vtools.dataModel.expression.SKFunction stSK = 
+						new vtools.dataModel.expression.SKFunction(skName);
 		 			
 		 		// this works because the key is always the first attribute 
-		 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+		 		for(int k = 0; k < numArgs; k++) {	//TODO differs from what SKs do		
 		 			String sAttName = m.getAttrId(0, k, true);
 		 			Projection att = new Projection(new Variable("X"), sAttName);
 		 			stSK.addArg(att);
@@ -296,15 +335,26 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		
         if (jk == JoinKind.CHAIN)
         {
+        	String skName = "";
             for (int i = 0; i < numOfTgtTables - 1; i++)
             {
+            	int numArgs;
             	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
 
-		 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+				if (mapLang.equals(MappingLanguageType.SOtgds)) {
+					SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+					skName = sk.getSkname();
+					numArgs = sk.sizeOfVarArray();
+				}
+				else {
+					if (i == 0)
+						skName = fac.getNextId("SK");
+					numArgs = 1;//TODO
+				}		 			
+		 		vtools.dataModel.expression.SKFunction stSK = 
+		 				new vtools.dataModel.expression.SKFunction(skName);
 		 			
-		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(sk.getSkname());
-		 			
-		 		for(int k = 0; k < sk.getVarArray().length; k++) {			
+		 		for(int k = 0; k < numArgs; k++) {			
 		 			String sAttName = m.getAttrId(0, k, true);
 		 			Projection att = new Projection(new Variable("X"), sAttName);
 		 			stSK.addArg(att);

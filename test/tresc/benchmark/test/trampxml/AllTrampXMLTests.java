@@ -3,6 +3,8 @@ package tresc.benchmark.test.trampxml;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import tresc.benchmark.Constants.ScenarioName;
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	TestLoadingCreatedModel.class,
@@ -15,4 +17,24 @@ import org.junit.runners.Suite;
 })
 public class AllTrampXMLTests {
 
+	public static ScenarioName[] workingScen = new ScenarioName[] {
+			ScenarioName.ADDATTRIBUTE,
+			ScenarioName.ADDDELATTRIBUTE,
+			ScenarioName.COPY,
+			ScenarioName.DELATTRIBUTE,
+			ScenarioName.FUSION,
+			ScenarioName.HORIZPARTITION,
+			ScenarioName.MERGEADD,
+			ScenarioName.MERGING,
+			ScenarioName.SELFJOINS,
+			ScenarioName.SURROGATEKEY,
+			ScenarioName.VALUEGEN,
+			ScenarioName.VALUEMANAGEMENT,
+			ScenarioName.VERTPARTITION,
+			ScenarioName.VERTPARTITIONHASA,
+			ScenarioName.VERTPARTITIONISA,
+			ScenarioName.VERTPARTITIONNTOM
+	};
+	
 }
+

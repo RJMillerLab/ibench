@@ -26,45 +26,10 @@ import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
 
-public class TestLoadToDBWithData {
+public class TestLoadToDBWithData extends AbstractAllScenarioTester {
 
 	static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
-	
-	private STBenchmark b = new STBenchmark();
-	private Configuration conf;
-	private static final String OUT_DIR = "./testout";
-	
-//	private static final ScenarioName[] scens = ScenarioName.values();
-	private static final ScenarioName[] scens = new ScenarioName[] {
-			ScenarioName.COPY,
-			ScenarioName.FUSION,
-			ScenarioName.HORIZPARTITION,
-			ScenarioName.MERGING,
-			ScenarioName.SELFJOINS,
-			ScenarioName.SURROGATEKEY,
-			ScenarioName.VALUEGEN,
-			ScenarioName.VALUEMANAGEMENT,
-			ScenarioName.VERTPARTITION
-			};
-	
-	@BeforeClass
-	public static void setUp () {
-		PropertyConfigurator.configure("testresource/log4jproperties.txt");
-		File outDir = new File(OUT_DIR);
-		if (!outDir.exists())
-			outDir.mkdir();
-	}
-	
-	@AfterClass
-	public static void tearDown () {
-		File outDir = new File(OUT_DIR);
-//		if (outDir.exists()) {
-//			for(File child: outDir.listFiles()) {
-//				child.delete();
-//			}
-//			outDir.delete();
-//		}
-	}
+
 	
 	@Before
 	public void setUpConf () throws FileNotFoundException, IOException {
@@ -73,79 +38,6 @@ public class TestLoadToDBWithData {
 		conf.readFromProperties(prop);
 		conf.setInstancePathPrefix(OUT_DIR);
 		conf.setSchemaPathPrefix(OUT_DIR);
-	}
-
-	
-	@Test
-	public void testDBWithDataCopy () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.COPY);
-	}
-
-	@Test
-	public void testDBWithDataFusion () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.FUSION);
-	}
-	
-	@Test
-	public void testDBWithDataHP () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.HORIZPARTITION);
-	}
-	
-	@Test
-	public void testDBWithDataMerging () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.MERGING);
-	}
-	
-	@Test
-	public void testDBWithDataSJ () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.SELFJOINS);
-	}
-	
-	@Test
-	public void testDBWithDataSKey () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.SURROGATEKEY);
-	}
-	
-
-	@Test
-	public void testDBWithDataValgen () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.VALUEGEN);
-	}
-	
-	@Test
-	public void testDBWithDataAtomValueMan () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.VALUEMANAGEMENT);
-	}
-	
-	@Test
-	public void testDBWithDataVerticalPart () throws Exception {
-		testSingleScenarioLoadToDBWithData(ScenarioName.VERTPARTITION);
-	}
-	
-	
-	@Test
-	public void testDBWithDataChainMerging () throws Exception {
-		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
-		testSingleScenarioLoadToDBWithData(ScenarioName.MERGING);
-	}
-	
-	@Test
-	public void testDBWithDataChainVerticalPart () throws Exception {
-		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
-		testSingleScenarioLoadToDBWithData(ScenarioName.VERTPARTITION);
-	}
-	
-	@Test
-	public void testLoadEachBasicScenariosWithData () throws Exception {
-		for(ScenarioName n: scens)
-			testSingleScenarioLoadToDBWithData(n);
-	}
-	
-	@Test
-	public void testLoadEachBasicScenariosWithDataChainJoin () throws Exception {
-		conf.setParam(ParameterName.JoinKind, JoinKind.CHAIN.ordinal());
-		for(ScenarioName n: scens)
-			testSingleScenarioLoadToDBWithData(n);
 	}
 
 	@Test
@@ -172,7 +64,8 @@ public class TestLoadToDBWithData {
 		dbCon.close();
 	}
 	
-	private void testSingleScenarioLoadToDBWithData(ScenarioName n)
+	@Override
+	public void testSingleBasicScenario(ScenarioName n)
 			throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);

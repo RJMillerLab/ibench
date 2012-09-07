@@ -3,6 +3,7 @@ package tresc.benchmark.schemaGen;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.SKFunction;
 
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
@@ -202,13 +203,39 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		for(int i = 0 ; i < numAddAttr; i++) {
 			int attPos = i + numOfSrcTblAttr-numDelAttr;
 			String attName = tAttrs[attPos];
-			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+			String skName;
+			int numArgs;
+			
+			if(mapLang.equals(MappingLanguageType.SOtgds)) {
+				SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+				skName = sk.getSkname();
+				numArgs = sk.sizeOfVarArray();
+			}
+			else {
+				skName = fac.getNextId("SK");
+				if (sk == SkolemKind.KEY)
+					numArgs = keySize;
+				else if (sk == SkolemKind.EXCHANGED)
+					numArgs = numOfElements - numDelAttr;
+				else { // (sk == SkolemKind.RANDOM)
+					// if configuration specifies that we need to randomly decide how
+					// many arguments the skolem will take, generate a random number
+					
+					numArgs = Utils.getRandomNumberAroundSomething(_generator,
+										numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+
+					// ensure that we are still within the bounds of the number of
+					// source attributes
+					if (numArgs > numOfSrcTblAttr)
+						numArgs = numOfSrcTblAttr;
+				}
+			}
 			
 			vtools.dataModel.expression.SKFunction stSK = 
-					new vtools.dataModel.expression.SKFunction(sk.getSkname());
+					new vtools.dataModel.expression.SKFunction(skName);
 			
 			// this works because the key is always the first attribute 
-			for(int j = 0; j < sk.getVarArray().length; j++) {			
+			for(int j = 0; j < numArgs; j++) {			
 				String sAttName = m.getAttrId(0, j, true);
 				Projection att = new Projection(new Variable("X"), sAttName);
 				stSK.addArg(att);

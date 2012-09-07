@@ -13,6 +13,7 @@ import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
 import tresc.benchmark.Constants.JoinKind;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.Modules;
@@ -346,9 +347,9 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 		}
 		
 		// calculate the total number of attributes (so we know the position of the new attributes)
-		int numTotalAttrs = numOfJoinAttributes;
-		for(int j = 0; j < numOfTables; j++)
-			numTotalAttrs += getNumNormalAttrs(j);
+		int numTotalAttrs = numNormalAttrs + numOfJoinAttributes;
+//		for(int j = 0; j < numOfTables; j++)
+//			numTotalAttrs += getNumNormalAttrs(j);
 		
 		// create random names for the added attrs
 		for (int i = numTotalAttrs; i < numTotalAttrs + numNewAttr; i++)
@@ -373,15 +374,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 		
 		// depending on whether they are first or second order tgds we need to allocate less space for the vars
 		// (since in the actual mapping, SOtgds will use an SKFunction atom instead of a Var atom)
-		switch (mapLang)
-		{
-			case FOtgds:
-				targetVars = new String[m.getNumRelAttr(0, false)];
-			case SOtgds:
-				targetVars = new String[m.getNumRelAttr(0, false) - numNewAttr];
-			default:
-				targetVars = new String[m.getNumRelAttr(0, false) - numNewAttr];
-		}
+		targetVars = new String[m.getNumRelAttr(0, false) - numNewAttr];
 		
 		// add foreach atoms for the the source fragments
 		offset = m.getNumRelAttr(0, true);
@@ -459,8 +452,8 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 			// target tables gets fresh vars for the new attrs
 			case FOtgds:
 				// add the new variables to the targetVar array
-				System.arraycopy(fac.getFreshVars(offset, numNewAttr), 0, targetVars, offset, numOfJoinAttributes);
-				fac.addExistsAtom(m1, 0, targetVars);
+//				System.arraycopy(fac.getFreshVars(offset, numNewAttr), 0, targetVars, offset, numOfJoinAttributes);
+				fac.addExistsAtom(m1, 0, CollectionUtils.concat(targetVars, fac.getFreshVars(offset, numNewAttr)));
 				break;
 			// target gets all the src variables + skolem terms for the new attrs
 			case SOtgds:
@@ -685,17 +678,28 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
        }
         
         // retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
-        for(int i = 1 ; i <= numNewAttr; i++) {
+        for(int i = 0 ; i < numNewAttr; i++) {
         	int attPos = i + getTotalNumNormalAttrs() + numOfJoinAttributes;
         	String attName = m.getAttrIds(0, false)[attPos];
         	MappingType m1 = m.getMaps().get(0);
-        	SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+        	int numArgs = 0;
+        	String skName;
+        	
+        	if (mapLang.equals(MappingLanguageType.SOtgds)) {
+        		SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+        		skName = sk.getSkname();
+        		numArgs = sk.sizeOfVarArray();
+        	}
+        	else {
+        		numArgs = 1;
+        		skName = fac.getNextId("SK");
+        	}
 
         	vtools.dataModel.expression.SKFunction stSK = 
-        			new vtools.dataModel.expression.SKFunction(sk.getSkname());
+        			new vtools.dataModel.expression.SKFunction(skName);
 
         	// this works because the keys are always the first attributes 
-        	for(int j = 0; j < sk.getVarArray().length; j++) {			
+        	for(int j = 0; j < numArgs; j++) {			
         		String sAttName = m.getAttrId(0, j, false);
         		Projection att = new Projection(new Variable("X"), sAttName);
         		stSK.addArg(att);

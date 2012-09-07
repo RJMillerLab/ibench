@@ -25,34 +25,9 @@ import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.STBenchmark;
 
-public class TestLoadingCreatedModel {
+public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
 
 	static Logger log = Logger.getLogger(TestLoadingCreatedModel.class);
-	
-	private STBenchmark b = new STBenchmark();
-	private Configuration conf;
-	private static final String OUT_DIR = "./testout";
-	
-	private static final ScenarioName[] scens = ScenarioName.values();
-	
-	@BeforeClass
-	public static void setUp () {
-		PropertyConfigurator.configure("testresource/log4jproperties.txt");
-		File outDir = new File(OUT_DIR);
-		if (!outDir.exists())
-			outDir.mkdir();
-	}
-	
-	@AfterClass
-	public static void tearDown () {
-		File outDir = new File(OUT_DIR);
-//		if (outDir.exists()) {
-//			for(File child: outDir.listFiles()) {
-//				child.delete();
-//			}
-//			outDir.delete();
-//		}
-	}
 	
 	@Before
 	public void setUpConf () throws FileNotFoundException, IOException {
@@ -64,60 +39,8 @@ public class TestLoadingCreatedModel {
 	}
 	
 	
-	
-	@Test
-	public void testCopy () throws Exception {
-		testSingleBasicScenarios(ScenarioName.COPY);
-	}
-	
-	@Test
-	public void testFusion () throws Exception {
-		testSingleBasicScenarios(ScenarioName.FUSION);
-	}
-	
-	@Test
-	public void testHP () throws Exception {
-		testSingleBasicScenarios(ScenarioName.HORIZPARTITION);
-	}
-	
-	@Test
-	public void testMerging () throws Exception {
-		testSingleBasicScenarios(ScenarioName.MERGING);
-	}
-	
-	@Test
-	public void testSJ () throws Exception {
-		testSingleBasicScenarios(ScenarioName.SELFJOINS);
-	}
-	
-	@Test
-	public void testSKey () throws Exception {
-		testSingleBasicScenarios(ScenarioName.SURROGATEKEY);
-	}
-	
-
-	@Test
-	public void testValgen () throws Exception {
-		testSingleBasicScenarios(ScenarioName.VALUEGEN);
-	}
-	
-	@Test
-	public void testAtomValueMan () throws Exception {
-		testSingleBasicScenarios(ScenarioName.VALUEMANAGEMENT);
-	}
-	
-	@Test
-	public void testVerticalPart () throws Exception {
-		testSingleBasicScenarios(ScenarioName.VERTPARTITION);
-	}
-	
-	@Test
-	public void testAllBasicScenarios () throws Exception {
-		for(ScenarioName n: Constants.ScenarioName.values())
-			testSingleBasicScenarios(n);
-	}
-	
-	private void testSingleBasicScenarios (ScenarioName n) throws Exception {
+	@Override
+	public void testSingleBasicScenario (ScenarioName n) throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);
 		b.runConfig(conf);
@@ -142,7 +65,7 @@ public class TestLoadingCreatedModel {
 		}
 		catch (Exception e) {
 			log.error(n + "\n\n" + loadToString());
-			LoggerUtil.logException(e, log);
+			LoggerUtil.logException(e, log, n.toString());
 			throw e;	
 		}
 	}
@@ -157,4 +80,6 @@ public class TestLoadingCreatedModel {
 		
 		return result.toString();
 	}
+
+
 }

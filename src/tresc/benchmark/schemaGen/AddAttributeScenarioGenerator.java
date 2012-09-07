@@ -6,6 +6,7 @@ import org.vagabond.xmlmodel.SKFunction;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
@@ -446,13 +447,39 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		for(int i = 0 ; i < numAddAttr; i++) {
 			int attPos = i + numOfSrcTblAttr;
 			String attName = tAttrs[attPos];
-			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+			int numArgs = 0;
+			String skName;
+			
+			if (mapLang.equals(MappingLanguageType.SOtgds)) {
+				SKFunction sk = m.getSkolemFromAtom(m1, false, 0, attPos);
+				numArgs = sk.sizeOfVarArray();
+				skName = sk.getSkname();
+			}	
+			else {
+				if (sk == SkolemKind.KEY)
+					numArgs = keySize;
+				else {
+					// if configuration specifies that we need to randomly decide how
+					// many arguments the skolem will take, generate a random number
+					// generates the same random skolemization for each new attribute that we've added
+					// if we want to force different skolemizations then move the random number generation into the loop
+					if (sk == SkolemKind.RANDOM)
+						numArgs = Utils.getRandomNumberAroundSomething(_generator,
+										numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+
+					// ensure that we are still within the bounds of the number of
+					// source attributes
+					if (numArgs > numOfSrcTblAttr)
+						numArgs = numOfSrcTblAttr;
+				}
+				skName = fac.getNextId("SK");
+			}
 			
 			vtools.dataModel.expression.SKFunction stSK = 
-					new vtools.dataModel.expression.SKFunction(sk.getSkname());
+					new vtools.dataModel.expression.SKFunction(skName);
 			
 			// this works because the keys are always the first attributes 
-			for(int j = 0; j < sk.getVarArray().length; j++) {			
+			for(int j = 0; j < numArgs; j++) {			
 				String sAttName = m.getAttrId(0, j, true);
 				Projection att = new Projection(new Variable("X"), sAttName);
 				stSK.addArg(att);
