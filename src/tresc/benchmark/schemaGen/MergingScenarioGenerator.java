@@ -705,7 +705,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		// each table get fresh vars for its free and join attributes
 		// the fk vars are takes from the join attributes they reference
 		for(int i = 1; i < numOfTables; i++) {
-			int numFreshVars = numOfAttributes[i];
+			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
 			offset += numFreshVars;
 			String[] fkVars = null;
