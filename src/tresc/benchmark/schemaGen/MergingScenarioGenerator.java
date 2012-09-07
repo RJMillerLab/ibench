@@ -704,9 +704,8 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		
 		// each table get fresh vars for its free and join attributes
 		// the fk vars are takes from the join attributes they reference
-		for(int i = 1; i < numOfTables; i++) {	
-			//int numFreshVars = numOfUseAttrs[i]; // PRG Restored line below from version 431 - Sep 7, 2012
-			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
+		for(int i = 1; i < numOfTables; i++) {
+			int numFreshVars = numOfAttributes[i];
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
 			offset += numFreshVars;
 			String[] fkVars = null;
@@ -729,34 +728,21 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 				int toIndex = (numOfJoinAttributes == 1 ? fromIndex + 1 : fromIndex + numOfJoinAttributes);
 				log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);
 				fkVars = Arrays.copyOfRange(vars[i - 1], fromIndex, toIndex);
-				log.debug("FK Chain Join Vars are " + fkVars.toString());
+				log.debug("FK Chain Join Vars are " + Arrays.toString(fkVars));
 			}
 			vars[i] = CollectionUtils.concat(freeVars, fkVars);
 			
 			fac.addForeachAtom(m1, i, vars[i]);
-			log.debug("Incremental FOR EACH Atom: " + m1.getForeach().toString());
 		}
 		
 		// generate an array of vars for the target
-		// first we add vars for the free attributes of all table
+		// first we add vars for the free attributes of all tables
 		// then we add the join attribute vars
 		offset = 0;
 		for(int i = 0; i < numOfTables; i++) {
 			int numVars = vars[i].length;
 			
-//			if (jk == JoinKind.STAR) {
-//				if (i == 0)
-//					numVars -= (numOfTables - 1) * numOfJoinAttributes;
-//				else
-//					numVars -= numOfJoinAttributes;
-//			}
-//			if (jk == JoinKind.CHAIN) {
-//				if (i > 0 && i != numOfTables - 1)
-//					numVars -= numOfJoinAttributes * 2;
-//				if (i == numOfTables)
-//					numVars -= numOfJoinAttributes;
-//			}
-			numVars = getNumNormalAttrs(i);
+			numVars = numOfUseAttrs[i];
 			
 			System.arraycopy(vars[i], 0, targetVars, offset, numVars);
 			offset += numVars;

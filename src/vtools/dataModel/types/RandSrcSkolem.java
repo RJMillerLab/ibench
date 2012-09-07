@@ -1,5 +1,7 @@
 package vtools.dataModel.types;
 
+import java.util.Arrays;
+
 public class RandSrcSkolem 
 {
 	private int _attrPosition;
@@ -81,5 +83,20 @@ public class RandSrcSkolem
 	public void setSkId(String skId) 
 	{
 		_skId = skId;
+	}
+	
+	@Override
+	public String toString () {
+		StringBuilder b = new StringBuilder();
+		
+		b.append("AttrPosition: " + _attrPosition + "\n");
+		b.append("Arg Positions: " + Arrays.toString(_argPositions) + "\n");
+		b.append("Attr: " + _attr + "\n");
+		b.append("Attr Var: " + _attrVar + "\n");
+		b.append("Arg Attrs: " + Arrays.toString(_argAttrs) + "\n");
+		b.append("Arg Vars: " + Arrays.toString(_argVars) + "\n");
+		b.append("SKId: " + _skId + "\n");
+		
+		return b.toString();
 	}
 }

@@ -67,6 +67,11 @@ public class TestFormerCrashConfigurations {
 		testOne("mergeChainJoinConf.txt");
 	}
 	
+	@Test
+	public void testRandomSkolemCrash() throws Exception {
+		testOne("randomSkolemCrash0.txt");
+	}
+	
 	private void testOne (String fileName) throws Exception {
 		setUpConf(fileName);
 		b.runConfig(conf);

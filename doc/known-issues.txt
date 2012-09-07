@@ -11,8 +11,11 @@ URGENT ISSUES
 
 18. SANITY CHECK SCENARIO KEY AND FK AND MAPPINGS [Boris - 05.09.2012]
 
+19. Random Source Skolem Generation [Boris - 06.09.2012]
+    	   Crashes because some atoms in mappings don't have the right number of attributes
+
 -------------
-KNOWN ISSUES   (Last Used Item # was 17)
+KNOWN ISSUES   (Last Used Item # was 19)
 -------------
 	
 3. Source/Target reuse crashes if parameters are not delicately adjusted. [mdangelo - July 30, 2012]

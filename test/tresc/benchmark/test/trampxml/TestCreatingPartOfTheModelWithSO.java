@@ -30,21 +30,25 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	private STBenchmark b = new STBenchmark();
 	private Configuration conf;
 	private static final String OUT_DIR = "./testout";
-	private boolean useDB = false;
 	
 //	private static final ScenarioName[] scens = ScenarioName.values();
 	private static final ScenarioName[] scens = new ScenarioName[] {
+			ScenarioName.ADDATTRIBUTE,
+			ScenarioName.ADDDELATTRIBUTE,
 			ScenarioName.COPY,
+			ScenarioName.DELATTRIBUTE,
 			ScenarioName.FUSION,
 			ScenarioName.HORIZPARTITION,
+			ScenarioName.MERGEADD,
 			ScenarioName.MERGING,
 			ScenarioName.SELFJOINS,
 			ScenarioName.SURROGATEKEY,
+			ScenarioName.VALUEGEN,
 			ScenarioName.VALUEMANAGEMENT,
 			ScenarioName.VERTPARTITION,
-			ScenarioName.ADDATTRIBUTE,
-			ScenarioName.DELATTRIBUTE,
-			ScenarioName.VERTPARTITIONISA
+			ScenarioName.VERTPARTITIONHASA,
+			ScenarioName.VERTPARTITIONISA,
+			ScenarioName.VERTPARTITIONNTOM
 			};
 	
 	@BeforeClass
@@ -96,6 +100,11 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	}
 	
 	@Test
+	public void testMergeAdd () throws Exception {
+		testSingleBasicScenario(ScenarioName.MERGEADD);
+	}
+	
+	@Test
 	public void testSJ () throws Exception {
 		testSingleBasicScenario(ScenarioName.SELFJOINS);
 	}
@@ -127,6 +136,16 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 	}
 	
 	@Test
+	public void testVerticalPartHasA () throws Exception {
+		testSingleBasicScenario(ScenarioName.VERTPARTITIONHASA);
+	}
+	
+	@Test
+	public void testVerticalPartNtoM () throws Exception {
+		testSingleBasicScenario(ScenarioName.VERTPARTITIONNTOM);
+	}
+	
+	@Test
 	public void testAddAttr () throws Exception {
 		conf.setParam(ParameterName.NumOfNewAttributes, 3);
 		conf.setParam(ParameterName.SkolemKind, 0);
@@ -135,6 +154,17 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 		testSingleBasicScenario(ScenarioName.ADDATTRIBUTE);
 		conf.setParam(ParameterName.SkolemKind, 2);
 		testSingleBasicScenario(ScenarioName.ADDATTRIBUTE);
+	}
+	
+	
+	public void testAddDelAttr () throws Exception {
+		conf.setParam(ParameterName.NumOfNewAttributes, 3);
+		conf.setParam(ParameterName.SkolemKind, 0);
+		testSingleBasicScenario(ScenarioName.ADDDELATTRIBUTE);
+		conf.setParam(ParameterName.SkolemKind, 1);
+		testSingleBasicScenario(ScenarioName.ADDDELATTRIBUTE);
+		conf.setParam(ParameterName.SkolemKind, 2);
+		testSingleBasicScenario(ScenarioName.ADDDELATTRIBUTE);
 	}
 	
 	@Test
@@ -153,8 +183,7 @@ static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 		log.info(n);
 		conf.setScenarioRepetitions(n, 10);
 		b.runConfig(conf);
-		if(useDB)
-			testLoad(n, false, false);
+		testLoad(n, false, false);
 		conf.setScenarioRepetitions(n, 0);
 	}
 
