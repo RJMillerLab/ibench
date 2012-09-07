@@ -12,7 +12,10 @@ URGENT ISSUES
 18. SANITY CHECK SCENARIO KEY AND FK AND MAPPINGS [Boris - 05.09.2012]
 
 19. Random Source Skolem Generation [Boris - 06.09.2012]
-    	   Crashes because some atoms in mappings don't have the right number of attributes
+    	   Crashes because some atoms in mappings don't have the right number of attributes (= the number of attributes of the relation the atom refers too).
+	   Caused by Merge Scenario generator.
+
+     Update [Boris - Sept 7, 2012]: Sorry Patricia, have overwritten your changes with similar fix.
 
 -------------
 KNOWN ISSUES   (Last Used Item # was 19)
