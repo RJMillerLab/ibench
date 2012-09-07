@@ -704,8 +704,9 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		
 		// each table get fresh vars for its free and join attributes
 		// the fk vars are takes from the join attributes they reference
-		for(int i = 1; i < numOfTables; i++) {
-			int numFreshVars = numOfUseAttrs[i];
+		for(int i = 1; i < numOfTables; i++) {	
+			//int numFreshVars = numOfUseAttrs[i]; // PRG Restored line below from version 431 - Sep 7, 2012
+			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
 			offset += numFreshVars;
 			String[] fkVars = null;
@@ -733,6 +734,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			vars[i] = CollectionUtils.concat(freeVars, fkVars);
 			
 			fac.addForeachAtom(m1, i, vars[i]);
+			log.debug("Incremental FOR EACH Atom: " + m1.getForeach().toString());
 		}
 		
 		// generate an array of vars for the target
