@@ -2,8 +2,10 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
@@ -85,7 +87,27 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	protected TrampModelFactory fac;
 	protected TrampXMLModel model;
-
+	protected static String[] stamps;
+	
+	static {
+		stamps = new String[ScenarioName.values().length];
+		Set<String> s = new HashSet<String> ();
+		
+		for(int i = 0; i < ScenarioName.values().length; i++) {
+			ScenarioName n = ScenarioName.values()[i];
+			String stamp = n.toString().substring(0, 1).toUpperCase();
+			int pos = 1;
+			
+			while (s.contains(stamp)) {
+				stamp = n.toString().substring(0, pos++).toUpperCase();
+			}
+			
+			s.add(stamp);
+			stamps[i] = stamp;
+		}
+	}
+	
+	
 	/**
 	 * Creates one instance of this basic scenario or returns if
 	 * there have already been created "repetitions" number of instances.
@@ -363,7 +385,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	}
 
 	public String getStamp() {
-		return Constants.nameForScenarios.get(getScenType()).substring(1);
+		return stamps[getScenType().ordinal()];
 	}
 	
 	protected RelationType createFreeRandomRel (int relId, int numAttr) {
@@ -383,7 +405,12 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		String name =
 				randomName + "_" + getStamp() + curRep + "NL"
 						+ 0 + "CE" + relNum;
-		return name.toLowerCase();
+		name = name.toLowerCase();
+		
+		while(model.hasRelName(name))
+			name += "m";
+		
+		return name;
 	}
 	
 	protected String randomAttrName(int relNum, int attrNum) {

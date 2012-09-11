@@ -429,7 +429,9 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String targetRelName = m.getTargetRels().get(i).getName();
-			int numAttr = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) : (attsPerTargetRel + attrRemainder + keySize);
+			int numAttr = ((i < numOfTgtTables - 1) ? 
+						(attsPerTargetRel + keySize) : 
+						(attsPerTargetRel + attrRemainder + keySize));
 			
 			// gen query for the target table
 			SPJQuery q = new SPJQuery();
@@ -444,7 +446,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	        	Projection att;
 	        	
 	        	if(j < keySize)
-	        		att = new Projection(new Variable("X"), m.getAttrId(i, j, true));
+	        		att = new Projection(new Variable("X"), m.getAttrId(0, j, true));
 	        	else
 	        		att = new Projection(new Variable("X"), trgAttrName);
 	        	

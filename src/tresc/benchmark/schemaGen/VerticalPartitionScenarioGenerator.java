@@ -317,9 +317,13 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         	String hook = getRelHook(i);
         	int attrNum = (i < numOfTgtTables - 1) ? attsPerTargetRel:
         		attsPerTargetRel + attrRemainder;
-        	int fkAttrs = ((jk == JoinKind.CHAIN && 
-        			(i != 0 && i != numOfTgtTables - 1)) 
-        			? 2 : 1);
+  //TODO according to patricia, the chain and star joins should be the same here, because single
+  // skolem on all input attributes
+        	
+//        	int fkAttrs = ((jk == JoinKind.CHAIN && 
+//        			(i != 0 && i != numOfTgtTables - 1)) 
+//        			? 2 : 1);
+        	int fkAttrs = 1;
         	int attWithFK = attrNum + fkAttrs;
         	attrs = new String[attWithFK];
         
@@ -335,17 +339,18 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             		attrs[attrs.length - 1] = joinAttName;
             	else
             		attrs[attrs.length - 1] = joinAttNameRef;
-            // for chain join each one has a join and join ref to the previous
-            // thus, the first does not have a ref and the last one does not have a join attr
+            // for chain join each one has one join attribute             	
+//            OLD	has a join and join ref to the previous
+//             thus, the first does not have a ref and the last one does not have a join attr
             } else { // chain
-            	if (i == 0)
+//            	if (i == 0)
             		attrs[attrs.length - 1] = joinAttName;
-            	else if (i == numOfTgtTables - 1)
-            		attrs[attrs.length - 1] = joinAttNameRef;
-            	else {
-            		attrs[attrs.length - 2] = joinAttName;
-            		attrs[attrs.length - 1] = joinAttNameRef;
-            	}
+//            	else if (i == numOfTgtTables - 1)
+//            		attrs[attrs.length - 1] = joinAttNameRef;
+//            	else {
+//            		attrs[attrs.length - 2] = joinAttName;
+//            		attrs[attrs.length - 1] = joinAttNameRef;
+//            	}
             }
             
             fac.addRelation(hook, trgName, attrs, false);
@@ -361,12 +366,12 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             } 
             else 
             { // chain
-            	if (i == 0)
+//            	if (i == 0)
             		fac.addPrimaryKey(trgName, joinAttName, false);
-            	else if (i == numOfTgtTables - 1)
-            		fac.addPrimaryKey(trgName, joinAttNameRef, false);
-            	else 
-            		fac.addPrimaryKey(trgName, new String[] {joinAttName, joinAttNameRef}, false);
+//            	else if (i == numOfTgtTables - 1)
+//            		fac.addPrimaryKey(trgName, joinAttNameRef, false);
+//            	else 
+//            		fac.addPrimaryKey(trgName, new String[] {joinAttName, joinAttNameRef}, false);
             }
         }
         
@@ -382,13 +387,13 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				addFK(0, toA, i, fromA, false);
 			}
 		} else { // chain
-			int toA = m.getNumRelAttr(1, false) - 1;
-			int fromA = m.getNumRelAttr(0, false) - 1;
-			addFK(0, fromA, 1, toA, false);
-			addFK(1, toA, 0, fromA, false);
-			for(int i = 1; i < numOfTgtTables - 1; i++) {
-				toA = m.getNumRelAttr(i + 1, false) - 1;
-				fromA = m.getNumRelAttr(i, false) - 2;
+//			int toA = m.getNumRelAttr(1, false) - 1;
+//			int fromA = m.getNumRelAttr(0, false) - 1;
+//			addFK(0, fromA, 1, toA, false);
+//			addFK(1, toA, 0, fromA, false);
+			for(int i = 0; i < numOfTgtTables - 1; i++) {
+				int toA = m.getNumRelAttr(i + 1, false) - 1;
+				int fromA = m.getNumRelAttr(i, false) - 1;
 				addFK(i, fromA, i+1, toA, false);
 				addFK(i+1, toA, i, fromA, false);
 			}

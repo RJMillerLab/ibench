@@ -7,12 +7,16 @@ import tresc.benchmark.Constants.ScenarioName;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	TestCreatingPartOfTheModelWithSO.class,
+	TestCreatingPartOfTheModelWithSOWithSourceSkolems.class,
+	
 	TestLoadingCreatedModel.class,
 	TestLoadToDB.class,
 	TestLoadToDBWithData.class,
-	TestCreatingPartOfTheModelWithSO.class,
+	
 	TestCreationReusingSchemas.class,
 	TestLoadingToDBWithDataReusingSchema.class,
+	
 	TestFormerCrashConfigurations.class
 })
 public class AllTrampXMLTests {

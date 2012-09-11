@@ -210,7 +210,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		String sourceRelName = m.getSourceRels().get(0).getName();
 		SPJQuery[] queries = new SPJQuery[numOfTgtTables + 1];
 		MappingType m1 = m.getMaps().get(0);
-		
+	
 		String joinAtt1;
 		String joinAtt2;
 		
@@ -243,6 +243,11 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		q.getFrom().add(new Variable("X"), new Projection(Path.ROOT, sourceRelName));
         generatedQuery.addTarget(m.getTargetRels().get(2).getName());
 		
+        if (mapLang.equals(MappingLanguageType.FOtgds)) {
+        	skId1 = fac.getNextId("SK");
+        	skId2 = fac.getNextId("SK");
+        }
+        
 		// add skolem function for join
 		for(int i = 0; i < numOfTgtTables; i++) 
 		{
@@ -251,8 +256,10 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			
 			String name;
 			int numVar;
-			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
+			int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel 
+					: attsPerTargetRel + attrRemainder;
 
+			// get sk function data
 			if (mapLang.equals(MappingLanguageType.SOtgds)) 
 			{
 				SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
@@ -261,10 +268,18 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			}
 			else 
 			{
-				name = fac.getNextId("SK");
-				numVar = _generator.nextInt(numOfSrcTblAttr);
+				if (i == 0)
+					name = skId1;
+				else
+					name = skId2;
+				
+				if (i != 2)
+					numVar = m.getNumRelAttr(i, false);
+				else
+					numVar = 2;
 			}
 
+			// create SK projection
 			vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(name);
 
 			for(int k = 0; k < numVar; k++) 

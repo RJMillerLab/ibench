@@ -88,8 +88,9 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         	String hook = getRelHook(i);
         	int attrNum = (i < numOfTgtTables - 1) ? attsPerTargetRel:
         		attsPerTargetRel + attrRemainder;
-        	int fkAttrs = ((jk == JoinKind.CHAIN && 
-        			(i != 0 && i != numOfTgtTables - 1)) 
+        	int fkAttrs = (
+        			(jk == JoinKind.CHAIN && i != 0) ||
+        			(jk == JoinKind.STAR && i != 0)
         			? 2 : 1);
         	int attWithFK = attrNum + fkAttrs;
         	attrs = new String[attWithFK];
@@ -104,15 +105,15 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
             if (jk == JoinKind.STAR) {
             	if (i == 0)//TODO check
             		attrs[attrs.length - 1] = joinAttName;
-            	else 
+            	else {
+            		attrs[attrs.length - 2] = joinAttName;
             		attrs[attrs.length - 1] = joinAttNameRef;
+            	}
             // for chain join each one has a join and join ref to the previous
             // thus, the first does not have a ref and the last one does not have a join attr
             } else { // chain
             	if (i == 0)
             		attrs[attrs.length - 1] = joinAttName;
-            	else if (i == numOfTgtTables - 1)
-            		attrs[attrs.length - 1] = joinAttNameRef;
             	else {
             		attrs[attrs.length - 2] = joinAttName;
             		attrs[attrs.length - 1] = joinAttNameRef;
@@ -125,6 +126,8 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
             {
             	if (i == 0) // foreign key only goes in one direction so the primary key is set only for the first relation
             		fac.addPrimaryKey(trgName, joinAttName, false);
+            	else
+            		fac.addPrimaryKey(trgName, attrs[attrs.length - 2], false);
             } 
             
             else 
@@ -147,13 +150,15 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 				addFK(i, fromA, 0, toA, false);
 			}
 		} else { // chain
-			int toA = m.getNumRelAttr(1, false) - 1;
-			int fromA = m.getNumRelAttr(0, false) - 1;
-			addFK(0, fromA, 1, toA, false);
-			for(int i = 1; i < numOfTgtTables - 1; i++) {
-				toA = m.getNumRelAttr(i + 1, false) - 1;
-				fromA = m.getNumRelAttr(i, false) - 2;
-				addFK(i, fromA, i+1, toA, false);
+			int toA = m.getNumRelAttr(0, false) - 1;
+			int fromA = m.getNumRelAttr(1, false) - 1;
+			addFK(1, fromA, 0, toA, false);
+			for(int i = 2; i < numOfTgtTables; i++) {
+				int toRel = i - 1;
+				int fromRel = i;
+				toA = m.getNumRelAttr(toRel, false) - 2;
+				fromA = m.getNumRelAttr(fromRel, false) - 1;
+				addFK(fromRel, fromA, toRel, toA, false);
 			}
 		}
 	}
@@ -161,7 +166,6 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
-		String[] keyVars = fac.getFreshVars(numOfSrcTblAttr, 1);
 		
 		// source table gets fresh variables
 		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
@@ -169,18 +173,41 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		switch (mapLang) 
 		{
 			case FOtgds:
+				// vars for the primary keys
+				String[] keyVars = fac.getFreshVars(numOfSrcTblAttr, numOfTgtTables);
+				
 				for(int i = 0; i < numOfTgtTables; i++) {
-					int offset = i * attsPerTargetRel + ((i > 0) ? 1 : 0);
+					int offset = i * attsPerTargetRel;
 		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
 		    				attsPerTargetRel + attrRemainder;
+		        	String[] fkVar = new String[] {};
+		        	String[] vars;
 		        	
-		        	fac.addExistsAtom(m1, i, 
-		        			CollectionUtils.concat(
-		        					fac.getFreshVars(offset, numAtts), keyVars));
+		        	if (i != 0) {
+		        		switch(jk) {
+		        		case STAR:
+		        			fkVar = new String[] {keyVars[0]};
+		        			break;
+		        		case CHAIN:
+		        			fkVar = new String[] {keyVars[i - 1]};
+		        			break;
+		        		}
+		        	}
+		        	
+		        	vars = CollectionUtils.concatArrays(
+        					fac.getFreshVars(offset, numAtts), 
+        					new String[] {keyVars[i]},
+        					fkVar);
+		        	
+		        	fac.addExistsAtom(m1, i, vars);
 				}
 				break;
 				
 			case SOtgds:
+				String[] skIds = new String[numOfTgtTables];
+				for(int i = 0; i < numOfTgtTables; i++)
+					skIds[i] = fac.getNextId("SK");
+				
 				for(int i = 0; i < numOfTgtTables; i++) {
 					int offset = i * attsPerTargetRel;
 		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
@@ -189,35 +216,65 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
 		        	fac.addEmptyExistsAtom(m1, i);
 		        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
-		        	generateSKs(m1, i, offset, numAtts);
+		        	generateSKs(m1, i, offset, numAtts, skIds);
 				}
 				break;
 		}
 	}
 	
 	//TODO does not seem to make a lot of sense, using the same skolem function, but with different number of arguments is wrong
-	private void generateSKs(MappingType m1, int rel, int offset, int numAtts) {
-		int numArgsForSkolem = numOfSrcTblAttr;
+	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, String[] skIds) {
+		int numArgsForSkolem;
 
-		// generate random number arguments for skolem function
-		if (sk == SkolemKind.RANDOM)
-			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
-
-		// ensure that we are still within the bounds of the number of source attributes
-		numArgsForSkolem = (numArgsForSkolem > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
-
-		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
-		int start = 0;
-		if(sk == SkolemKind.EXCHANGED)
-		{
-			start = offset;
-			numArgsForSkolem = numAtts;
-		}
+//		// generate random number arguments for skolem function
+//		if (sk == SkolemKind.RANDOM)
+//			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+//
+//		// ensure that we are still within the bounds of the number of source attributes
+//		numArgsForSkolem = (numArgsForSkolem > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
+//
+//		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
+//		int start = 0;
+//		if(sk == SkolemKind.EXCHANGED)
+//		{
+//			start = offset;
+//			numArgsForSkolem = numAtts;
+//		}
 		
-		if (rel == 0)
-			skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem));
-		else
-			fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem), skId);
+		if (jk.equals(JoinKind.STAR)) {
+			if (rel == 0)
+				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, attsPerTargetRel), 
+						skIds[rel]);
+			else {
+				// pk skolem = attrs of center + attrs of fragment
+				fac.addSKToExistsAtom(m1, rel, 
+						CollectionUtils.concatArrays(
+								fac.getFreshVars(0, attsPerTargetRel),
+								fac.getFreshVars(rel * attsPerTargetRel, 
+										attsPerTargetRel)), 
+						skIds[rel]);
+				// fk to center of star
+				fac.addSKToExistsAtom(m1, rel, 
+						fac.getFreshVars(0, attsPerTargetRel), 
+						skIds[rel - 1]);			
+				}
+		}
+		// CHAIN join
+		else {
+			// first rel add pk skolem
+			if (rel == 0)
+				fac.addSKToExistsAtom(m1, rel, 
+						fac.getFreshVars(0, attsPerTargetRel), skIds[rel]);
+			// intermediate rel add pk skolem + fk skolem to previous
+			else {
+				fac.addSKToExistsAtom(m1, rel, 
+						fac.getFreshVars(0, (rel + 1) * attsPerTargetRel), 
+						skIds[rel]);
+				fac.addSKToExistsAtom(m1, rel, 
+						fac.getFreshVars(0, rel * attsPerTargetRel), 
+						skIds[rel - 1]);
+			}
+		}
 	}
 	
 	@Override

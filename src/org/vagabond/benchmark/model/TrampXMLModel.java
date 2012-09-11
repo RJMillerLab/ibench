@@ -334,4 +334,21 @@ public class TrampXMLModel extends MapScenarioHolder {
 				a.addVar((String) x);
 		}
 	}
+
+	public boolean hasRelName(String name) {
+		RelationType r;
+		
+		try {
+			r = super.getRelForName(name, false);
+			return true;
+		}
+		catch (Exception e) {}
+		try {
+			r = super.getRelForName(name, true);
+			return true;
+		}
+		catch (Exception e) {}
+		
+		return false;
+	}
 }

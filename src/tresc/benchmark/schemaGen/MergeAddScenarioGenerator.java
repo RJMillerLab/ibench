@@ -554,7 +554,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 
 			else if (sk == SkolemKind.ALL)
 			{
-				log.debug("--- SKOLEM MODE = RANDOM ---");
+				log.debug("--- SKOLEM MODE = ALL ---");
 
 				List<String> tgtVars = Arrays.asList(targetVars);
 				log.debug("arguments: ");
@@ -609,7 +609,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
         // tables (apart from the first one) 
         // also, all the join attributes will be added to the target table
         // and to the select clause of the local query
-        for (int tbli = 1, tblimax = numOfAttributes.length; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
+        for (int tbli = 1, tblimax = numOfTables; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
         {
             for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
             {
@@ -626,7 +626,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
         // create the join conditions in the where clause and the fkeys.
         AND andCond = new AND();
         andCond.toString();
-        for (int tbli = 1, tblimax = numOfAttributes.length; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
+        for (int tbli = 1, tblimax = numOfTables; ((tbli < tblimax) && (jk == JoinKind.STAR)); tbli++)
         {    	
         	for (int i = 0, imax = numOfJoinAttributes; i < imax; i++)
         	{
@@ -677,9 +677,14 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
             }
        }
         
-        // retrieve skolems for the new attributes from what was generated in genMappings - this is basically just a way of cloning the existing skolem
+        // retrieve skolems for the new attributes from what was generated in genMappings 
+        // - this is basically just a way of cloning the existing skolem
         for(int i = 0 ; i < numNewAttr; i++) {
-        	int attPos = i + getTotalNumNormalAttrs() + numOfJoinAttributes;
+        	int attPos = i + getTotalNumNormalAttrs() +
+        			(jk.equals(JoinKind.CHAIN) 
+        				? numOfJoinAttributes * (numOfTables - 1) //TODO check
+        				: numOfJoinAttributes * (numOfTables - 1)
+        				);
         	String attName = m.getAttrIds(0, false)[attPos];
         	MappingType m1 = m.getMaps().get(0);
         	int numArgs = 0;
@@ -691,7 +696,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
         		numArgs = sk.sizeOfVarArray();
         	}
         	else {
-        		numArgs = 1;
+        		numArgs = numOfJoinAttributes; //TODO check other cases here
         		skName = fac.getNextId("SK");
         	}
 
@@ -699,9 +704,9 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
         			new vtools.dataModel.expression.SKFunction(skName);
 
         	// this works because the keys are always the first attributes 
-        	for(int j = 0; j < numArgs; j++) {			
+        	for(int j = 0; j < numArgs; j++) {		// TODO need to get the right relation + attribute for each argument to skolem  
         		String sAttName = m.getAttrId(0, j, false);
-        		Projection att = new Projection(new Variable("X"), sAttName);
+        		Projection att = new Projection(new Variable("X0"), sAttName);
         		stSK.addArg(att);
         	}
 
