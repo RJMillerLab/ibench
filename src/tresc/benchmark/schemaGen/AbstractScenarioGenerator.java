@@ -233,12 +233,22 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		return getRandomRel(source, minAttrs, false);//TODO use xpath over XBeans?		
 	}
 	
+	protected RelationType getRandomRel (boolean source, int minAttrs, int maxAttrs) {
+		return getRandomRel(source, minAttrs, maxAttrs, false);		
+	}
+	
+	
 	protected RelationType getRandomRel (boolean source, int minAttrs, boolean key) {
+		return getRandomRel(source, minAttrs, Integer.MAX_VALUE, key);
+	}
+	
+	protected RelationType getRandomRel (boolean source, int minAttrs, int maxAttr, boolean key) {
 		List<RelationType> cand = new ArrayList<RelationType> ();
 		
 		for(RelationType r: model.getSchema(source).getRelationArray()) {
 			boolean ok = !key || r.isSetPrimaryKey();
 			ok &= r.sizeOfAttrArray() >= minAttrs;
+			ok &= r.sizeOfAttrArray() <= maxAttr;
 			if (ok)
 				cand.add(r);
 		}
@@ -401,7 +411,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	}
 	
 	protected String randomRelName(int relNum) {
-		String randomName = Modules.nameFactory.getARandomName();
+		String randomName = Modules.nameFactory.getSafeRandomName();
 		String name =
 				randomName + "_" + getStamp() + curRep + "NL"
 						+ 0 + "CE" + relNum;
@@ -414,7 +424,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	}
 	
 	protected String randomAttrName(int relNum, int attrNum) {
-		String randomName = Modules.nameFactory.getARandomName();
+		String randomName = Modules.nameFactory.getSafeRandomName();
 		String name = randomName + "_" + getStamp() + curRep + "NL"
 						+ relNum + "AE" + attrNum;
 		return name.toLowerCase();

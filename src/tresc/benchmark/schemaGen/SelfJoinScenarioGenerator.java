@@ -1,5 +1,7 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
@@ -268,9 +270,8 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	String srcName;
     	
     	// fetch random rel with enough attrs
-    	while(numTries < MAX_NUM_TRIES && rel == null) {
+    	while(numTries < MAX_NUM_TRIES && rel == null)
     		rel = getRandomRel(true, K + K + 1);
-    	}
     	
     	//TODO try to reduce number of keys and foreign keys?
     	
@@ -289,7 +290,20 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     		
     		// already has PK, get positions of PK attrs
     		if (rel.isSetPrimaryKey()) {
+    			keyPos = model.getPKPos(srcName, true);
+    			keys = model.getPK(srcName, true);
     			
+    			// find attributes to use as fk
+    			int fkDone = 0, pos = 0;
+    			while(fkDone < K) {
+    				// is pk position?
+    				if (Arrays.binarySearch(keyPos, pos) < 0) {
+    					fkPos[fkDone] = pos;
+    					fks[fkDone] = m.getAttrId(0, pos, true); 
+    					fkDone++;
+    				}
+					pos++;
+    			}
     		}
     		else {
     			keyPos = CollectionUtils.createSequence(0, K);

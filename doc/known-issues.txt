@@ -11,9 +11,6 @@ URGENT ISSUES
 
 18. SANITY CHECK SCENARIO KEY AND FK AND MAPPINGS [Boris - 05.09.2012]
 
-20. Skolems created for VP variants under Chain Join. [Boris - 07.09.2012]
-    	    The middle relations in a join chain (not first, not last) are not getting two skolems (join attr + join ref).
-
 -------------
 KNOWN ISSUES   (Last Used Item # was 19)
 -------------
@@ -131,6 +128,11 @@ FIXED ISSUES (to check)
 	   Caused by Merge Scenario generator.
 
      Update [Boris - Sept 7, 2012]: Sorry Patricia, have overwritten your changes with similar fix.
+
+20. Skolems created for VP variants under Chain Join. [Boris - 07.09.2012]
+    	    The middle relations in a join chain (not first, not last) are not getting two skolems (join attr + join ref).
+
+	Update [Boris - Sept 11th]: solved
 
 -------------
 FIXED ISSUES (confirmed)

@@ -12,6 +12,7 @@ import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
+import smark.support.PartialMapping;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
@@ -32,18 +33,13 @@ import vtools.dataModel.expression.Variable;
 // PRG PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
 // PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
 
-public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
+public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
 	// PRG ADD August 30, 2012
 	static Logger log = Logger.getLogger(MergeAddScenarioGenerator.class);
 	
 	public static final int MAX_NUM_TRIES = 10;
 	
-	private int numOfTables;
-	private int numOfJoinAttributes;
-	private JoinKind jk;
-	private int[] numOfAttributes;
-	private String[] joinAttrs;
 	private SkolemKind sk;
 	
     public MergeAddScenarioGenerator()
@@ -51,7 +47,8 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
     
     @Override
     protected void initPartialMapping() {
-    	super.initPartialMapping();
+    	m = new PartialMapping();
+		fac.setPartialMapping(m);
     	
         numOfTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);
@@ -81,34 +78,6 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
         sk = SkolemKind.values()[typeOfSkolem];
     }
     
-    /**
-     * Find source rels that have enough attributes and either have no key or
-     * have a key on the last numOfJoinAttributes attrs (except for the first
-     * one in a STAR join)
-     */
-    @Override
-	protected void chooseSourceRels() {
-		if (jk == JoinKind.STAR)
-			chooseStarSourceRels();
-		else if (jk == JoinKind.CHAIN)
-			chooseChainSourceRels();
-		
-	}
-
-    /**
-     * 
-     */
-    private void chooseChainSourceRels() {
-		//TODO
-	}
-
-    /**
-     * 
-     */
-	private void chooseStarSourceRels() {
-		//TODO
-	}
-	
 	@Override
 	protected void genSourceRels() throws Exception {
 		String[] sourceNames = new String[numOfTables];
@@ -144,23 +113,7 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 			createChainConstraints(attrs);
 	}
 
-	private int getNumJoinAttrs(int i) {
-		if (jk == JoinKind.STAR) {
-			if (i == 0)
-				return numOfJoinAttributes * (numOfTables - 1);
-			return numOfJoinAttributes;
-		}
-		if (jk == JoinKind.CHAIN) {
-			if (i == 0 || i == numOfTables - 1)
-				return numOfJoinAttributes;
-			return 2 * numOfJoinAttributes;
-		}
-		return -1;
-	}
 	
-	private int getNumNormalAttrs(int i) {
-		return numOfAttributes[i] - getNumJoinAttrs(i);
-	}
 	
 	private int getTotalNumNormalAttrs() {
 		int totalNormalAttributes = 0;
@@ -169,99 +122,11 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
     	
     	return totalNormalAttributes;
 	}
-
-	private void createChainConstraints(String[][] attrs) throws Exception {
-		// create primary keys
-		for(int i = 0; i < numOfTables - 1; i++) {
-			String relName = m.getRelName(i, true);
-			fac.addPrimaryKey(relName, getJoinAttrs(i), true);
-		}
-		// join every table with the previous one
-		for(int i = 1; i < numOfTables; i++) {
-			String[] fAttr, tAttr;
-			fAttr = getJoinRefs(i);
-			tAttr = getJoinAttrs(i - 1);
-			addFK(i, fAttr, i - 1, tAttr, true);
-		}
-	}
-
-	private void createStarConstraints(String[][] attrs) throws Exception {
-		// create primary keys
-		for(int i = 1; i < numOfTables; i++) {
-			String relName = m.getRelName(i, true);
-			fac.addPrimaryKey(relName, getJoinAttrs(i), true);
-		}
-		// create fks from every table to the first table
-		for(int i = 1; i < numOfTables; i++) {
-			String[] fAttr, tAttr;
-			tAttr = getJoinAttrs(i);
-			fAttr = getJoinRefs(i);
-			addFK(0, fAttr, i, tAttr, true);
-		}
-	}
-	
-	private String[] getJoinRefs(int i) {
-		String[] result = new String[numOfJoinAttributes];
-		for(int j = 0; j < numOfJoinAttributes; j++)
-			result[j] = getJoinRef(i, j);
 		
-		return result;
-	}
-
-	private String[] getJoinAttrs (int i) {
-		String[] result = new String[numOfJoinAttributes];
-		for(int j = 0; j < numOfJoinAttributes; j++)
-			result[j] = getJoinAttr(i, j);
-		
-		return result;
-	}
-
-	private void createStarJoinAttrs(String[][] attrs) {
-		// create join attrs in all except the first table (center of star)
-		for(int i = 1; i < numOfTables; i++) {
-			int offset = numOfAttributes[i] - (numOfJoinAttributes);
-			for(int j = 0; j < numOfJoinAttributes; j++)
-				attrs[i][offset + j] = getJoinAttr(i, j);
-		}
-		
-		// create fk attributes in first table
-		int offset = numOfAttributes[0] - ((numOfTables - 1) * numOfJoinAttributes);
-		for(int i = 1; i < numOfTables; i++) {
-			for(int j = 0; j < numOfJoinAttributes; j++)
-				attrs[0][offset + j] = getJoinRef(i, j);
-			offset += numOfJoinAttributes;
-		}
-	}
- 
-
-	private void createChainJoinAttrs(String[][] attrs) {
-		// create join attributes in all tables except the last one
-		for(int i = 0; i < numOfTables - 1; i++) {
-			int fac = i == 0 ? 1 : 2;
-			int offset = numOfAttributes[i] - (numOfJoinAttributes * fac);
-			for(int j = 0; j < numOfJoinAttributes; j++)
-				attrs[i][offset + j] = getJoinAttr(i, j);
-		}
-		
-		// create fk attributes in all tables except first
-		for (int i = 1; i < numOfTables; i++) {
-			int offset = numOfAttributes[i] - numOfJoinAttributes;
-			for(int j = 0; j < numOfJoinAttributes; j++)
-				attrs[i][offset + j] = getJoinRef( i, j);
-		}
-	}
-	
-	private String getJoinRef(int i, int j) {
-		return joinAttrs[j] + "comp" + i + "_joinref_" + j;
-	}
-
-	private String getJoinAttr(int i, int j) {
-		return joinAttrs[j] + "comp" + i +  "_joinattr_" + j;
-	}
-	
 	/**
-	 * Find a table that has at least numOfTables * (numOfJoinAttributes + 1)
-	 * attributes and either no key or the key is on the last 
+	 * Find a table that has at least numOfTables * (numOfJoinAttributes + 1) + numNewAttr
+	 * attributes and at most SUM(numOfAttributes) attirbutes. The table should 
+	 * either have no key or the key should be on the last 
 	 * numOfJoin Attributes * (numOfTables - 1) attributes.  
 	 * @throws Exception 
 	 */
@@ -269,14 +134,15 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 	protected void chooseTargetRels() throws Exception { //TODO more flexible to adapt numOfJoinAttributes
 		RelationType r = null;
 		int tries = 0;
-		int minAttrs = numOfTables * (numOfJoinAttributes + 1);
+		int minAttrs = numOfTables * (numOfJoinAttributes + 1) + numNewAttr;
+		int maxAttrs = CollectionUtils.sum(numOfAttributes) + numNewAttr;
 		int numTJoinAttrs = getTargetNumJoinAttrs();
 		boolean ok = false;
 		int numNormalAttr = 0;
 		int[] joinAttPos = null;
 		
-		while(tries < MAX_NUM_TRIES && !ok) {
-			r = getRandomRel(false, minAttrs);
+		while(tries++ < MAX_NUM_TRIES && !ok) {
+			r = getRandomRel(false, minAttrs, maxAttrs);
 			
 			if (r == null)
 				break;
@@ -307,11 +173,15 @@ public class MergeAddScenarioGenerator extends AbstractScenarioGenerator {
 			if (!r.isSetPrimaryKey())
 				fac.addPrimaryKey(r.getName(), joinAttPos, false);
 			
-			// adapt number of attribute per source rel
+			// adapt number of normal attributes used (copied to target) per source rel
 			int numPerSrcRel = numNormalAttr / numOfTables;
-			for(int i = 0; i < numOfTables; i++)
-				numOfAttributes[i] = numPerSrcRel; 
-			numOfAttributes[numOfTables - 1] = numNormalAttr % numOfTables;
+			int usedAttrs = 0;
+			for(int i = 0; i < numOfTables; i++) {
+				numOfUseAttrs[i] = (numPerSrcRel > getNumNormalAttrs(i)) 
+						? getNumNormalAttrs(i) : numPerSrcRel;
+				usedAttrs += numOfUseAttrs[i];
+			}
+			numOfUseAttrs[numOfTables - 1] += numNormalAttr - usedAttrs;
 		}
 	}
 	

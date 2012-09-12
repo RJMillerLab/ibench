@@ -10,6 +10,7 @@ public NameFactory()
 {
     _generator = new Random(16011978);    
 }
+
 public String getARandomName()
 {
     int position = _generator.nextInt(Words.length);
@@ -24,6 +25,18 @@ public String getARandomName()
     letters[0] = Character.toUpperCase(letters[0] );
     return new String( letters );
     // return Words[position];
+}
+
+/**
+ * Get a name without spaces
+ * @return
+ */
+//TODO whether other characters should be replaced too
+public String getSafeRandomName () {
+	String name = getARandomName();
+	
+	name = name.replace(' ', '_');
+	return name;
 }
 
 private String[] Words = {

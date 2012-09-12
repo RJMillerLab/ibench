@@ -171,7 +171,10 @@ public class Configuration {
 		
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);
-		randomGenerator.setSeed(_seed);
+		if (_seed == 0L)
+			randomGenerator = new Random();
+		else
+			randomGenerator.setSeed(_seed);
 
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);
