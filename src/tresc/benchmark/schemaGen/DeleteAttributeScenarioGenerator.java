@@ -1,8 +1,10 @@
 package tresc.benchmark.schemaGen;
 
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
@@ -20,6 +22,7 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 {
 	private int numOfSrcTblAttr;
 	private int numDelAttr;
+	private int keySize;
 	
     public DeleteAttributeScenarioGenerator()
     {
@@ -32,9 +35,20 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,numOfElementsDeviation);
 		numDelAttr = Utils.getRandomNumberAroundSomething(_generator, numRemovedAttr, numRemovedAttrDeviation);
 		
+		// PRG BUG FIX - Generate source relation with at least 2 elements - Sep 16, 2012
+		numOfSrcTblAttr = (numOfSrcTblAttr > 1 ? numOfSrcTblAttr : 2);
+		
 		// make sure we never delete all attributes, and that we never delete no attributes
 		numDelAttr = (numDelAttr > 0) ? numDelAttr : 1;
 		numDelAttr = (numDelAttr < numOfSrcTblAttr) ? numDelAttr : (numOfSrcTblAttr-1);
+		
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+		// PRG Adjust keySize w.r.t number of source table attributes and number of to be deleted attributes
+		// e.g. numOfSrcTblAttr = 3, numDelAttr = 2 and ConfigOptions.PrimaryKeySize = 2. Then keySize should be 1
+		// e.g. numOfSrcTblAttr = 3, numDelAttr = 1 and ConfigOptions.PrimaryKeySize = 2. Then keySize should be 2
+		keySize = (keySize > numOfSrcTblAttr - numDelAttr) ? numOfSrcTblAttr - numDelAttr : keySize;
+		
 	}
 	
    /* public void generateScenario(MappingScenario scenario, Configuration configuration)
@@ -125,21 +139,42 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
     }*/
 
 	@Override
-	protected void genSourceRels() {
+	// PRG ADD Source Code to Support Key Generation - Sep 17, 2012
+	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
+		
+		// First, generate the appropriate number of key elements
+		// Note: keySize should be > 0 to generate any key elements
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "ke" + j;
 
-		// generate all the source attributes
+		// Second, generate remaining source attributes
+		int keyCount = 0;
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
+			
 			String attrName = randomAttrName(0, i);
+
+			// Note: the body of this IF construct would not be executed when keySize = 0
+			if (keyCount < keySize)
+				attrName = keys[keyCount];
+			
+			keyCount++;
+			
 			attrs[i] = attrName;
 		}
 		
 		fac.addRelation(getRelHook(0), srcName, attrs, true);
+		// Add primary key if explicitly requested 
+		if (keySize > 0)
+			fac.addPrimaryKey(srcName, keys, true);
+	
 	}
 
 	@Override
-	protected void genTargetRels() {
+	// PRG ADD Source Code to Support Key Generation - Sep 17, 2012
+	protected void genTargetRels() throws Exception {
 		String trgName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr-numDelAttr];
 		String[] srcAttrs = m.getAttrIds(0, true);
@@ -148,6 +183,15 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr-numDelAttr);
 
 		fac.addRelation(getRelHook(0), trgName, attrs, false);
+		
+		// PRG ADD primary key to target relation if necessary
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = srcAttrs[j];
+		
+		if (keySize > 0)
+			fac.addPrimaryKey(trgName, keys, false);
+		
 	}
 
 	@Override

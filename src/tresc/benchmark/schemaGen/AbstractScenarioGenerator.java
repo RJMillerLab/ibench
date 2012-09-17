@@ -149,6 +149,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			Configuration configuration) throws Exception {
 		initPartialMapping();
 		genSchemas();
+		log.debug("Repetition <" + curRep +">");
 		log.debug("\n\nGENERATED SCHEMAS: \nSOURCE:\n" + m.getSourceRels().toString() 
 				+ "\n\nTARGET:\n" + m.getTargetRels().toString());
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences)) {
@@ -162,7 +163,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());
 		}
 		scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
-		log.debug("Repetition <" + curRep +"> is " + m.toString());
+		//log.debug("Repetition <" + curRep +"> is " + m.toString());
 	}
 
 	protected abstract void genCorrespondences();

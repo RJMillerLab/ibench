@@ -29,12 +29,20 @@ public class SourceFDGenerator implements ScenarioGenerator
 	public void generateScenario(MappingScenario scenario,Configuration configuration) throws Exception 
 	{
 		Random _generator = configuration.getRandomGenerator();
+		
+		log.debug("Attempting to Generate Source FDs");
 
 		// create PK FDs R(A,B,C) if A is key then add A -> B,C
-		if (configuration.getParam(ParameterName.PrimaryKeyFDs) == 1)
+		if (configuration.getParam(ParameterName.PrimaryKeyFDs) == 1) {
+			log.debug("Generating PK FDs for those Relations with PKs");
 			generatePKFDs(scenario);
+		}
 
-		generateRandomFDs(scenario, configuration, _generator);
+		if (configuration.getParam(Constants.ParameterName.SourceFDPerc) > 0) {
+			log.debug("Generating Random FDs as SourceFDPerc > 0");	
+			generateRandomFDs(scenario, configuration, _generator);
+		}
+	
 	}
 
 	private void generateRandomFDs(MappingScenario scenario,
@@ -48,6 +56,8 @@ public class SourceFDGenerator implements ScenarioGenerator
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceFDPerc))/(double) 100;
 			int numAtts = r.getAttrArray().length;
 			int numFDs = (int) Math.floor(percentage * numAtts);
+			
+			log.debug("Attempting to Generate <" + numFDs + "> Random FDs for Relation " + r.getName());
 
 			// get positions for all of the attributes
 			int[] attrPos = new int[r.getAttrArray().length];
