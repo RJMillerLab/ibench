@@ -50,9 +50,15 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		numAddAttr = (numAddAttr > 0) ? numAddAttr : 1;
 		numOfSrcTblAttr = (numOfSrcTblAttr > 1) ? numOfSrcTblAttr : 2;
 		keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
-		keySize = (keySize > 0) ? keySize : 1;
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		// keySize = (keySize > 0) ? keySize : 1;
 		
 		sk = SkolemKind.values()[typeOfSkolem];
+		
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		// PRG Added the following code to always force key generation when SkolemKind.KEY 
+		if (sk == SkolemKind.KEY)
+			keySize = (keySize > 0) ? keySize : 1;
 	}
 
 	/**
@@ -315,7 +321,9 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0, i);
 
-			if (sk == SkolemKind.KEY && keyCount < keySize)
+			// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+			// if (sk == SkolemKind.KEY && keyCount < keySize)
+			if ((keySize > 0 || sk == SkolemKind.KEY) && keyCount < keySize)
 				attrName = keys[keyCount];
 			
 			keyCount++;
@@ -325,7 +333,9 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 		fac.addRelation(getRelHook(0), srcName, attrs, true);
 
-		if (sk == SkolemKind.KEY)
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		// if (sk == SkolemKind.KEY)
+		if (keySize > 0 || sk == SkolemKind.KEY)
 			fac.addPrimaryKey(srcName, keys, true);
 	}
 
@@ -348,7 +358,9 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		for (int j = 0; j < keySize; j++)
 			keys[j] = srcAttrs[j];
 		
-		if (sk == SkolemKind.KEY)
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		// if (sk == SkolemKind.KEY)
+		if (keySize > 0 || sk == SkolemKind.KEY)
 			fac.addPrimaryKey(trgName, keys, false);
 	}
 

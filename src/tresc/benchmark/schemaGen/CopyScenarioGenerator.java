@@ -32,7 +32,8 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		
 		A = (A > 1) ? A : 2;
 		keySize = (keySize >= A) ? A - 1 : keySize;
-		keySize = (keySize > 0) ? keySize : 1;
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		// keySize = (keySize > 0) ? keySize : 1;
 		
 		log.debug("-----AFTER-----");
 		log.debug("Atomic Elements: " + A);
@@ -119,7 +120,9 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		}
 		
 		RelationType rel = fac.addRelation(hook, relName, attrs, true);
-		fac.addPrimaryKey(rel.getName(), keys, true);
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		if (keySize > 0)
+			fac.addPrimaryKey(rel.getName(), keys, true);
 	}
 
 	@Override
@@ -137,7 +140,9 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		for (int j = 0; j < keySize; j++)
 			keys[j] = attrs[j];
 		
-		fac.addPrimaryKey(relName, keys, false);
+		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
+		if (keySize > 0)
+			fac.addPrimaryKey(relName, keys, false);
 	}
 
 	@Override
