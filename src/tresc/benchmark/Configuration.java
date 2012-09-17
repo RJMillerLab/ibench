@@ -615,7 +615,7 @@ public class Configuration {
 			checkParameterRange(p, 0, 1.0);
 		
 		/* check specific parameter derivations */
-		checkParameterRange(ParameterName.PrimaryKeySize, 1, 0.5);
+		checkParameterRange(ParameterName.PrimaryKeySize, 0, 0.5);
 		checkParameterRange(ParameterName.JoinSize, 1, 0.5);
 		checkParameterRange(ParameterName.NumOfAttributesToDelete, 1, 0.5);
 		checkParameterRange(ParameterName.NumOfJoinAttributes, 1, 0.5);
