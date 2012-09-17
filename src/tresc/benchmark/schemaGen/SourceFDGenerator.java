@@ -12,6 +12,7 @@ import org.vagabond.xmlmodel.RelationType;
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
+import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.utils.Utils;
 
 /**
@@ -30,29 +31,14 @@ public class SourceFDGenerator implements ScenarioGenerator
 		Random _generator = configuration.getRandomGenerator();
 
 		// create PK FDs R(A,B,C) if A is key then add A -> B,C
-		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray())
-		{	
-			if (r.isSetPrimaryKey()) 
-			{
-				String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
-				String[] nonKeyAttrs = getNonKeyAttributes(r, scenario);
+		if (configuration.getParam(ParameterName.PrimaryKeyFDs) == 1)
+			generatePKFDs(scenario);
 
-				scenario.getDocFac().addFD(r.getName(), pkAttrs, nonKeyAttrs);
-				
-				// convert to vector to facilitate printing
-		        List<String> pkList = Arrays.asList(pkAttrs);
-		        Vector<String> pkVect = new Vector<String>(pkList);
-		        List<String> nonkeyList = Arrays.asList(nonKeyAttrs);
-		        Vector<String> nonkeyVect = new Vector<String>(nonkeyList);
-				
-		        log.debug("---------GENERATING PRIMARY KEY FD---------");
-		        
-				log.debug("relName: " + r.getName());
-				log.debug("LHS: " + pkVect.toString());
-				log.debug("RHS: " + nonkeyVect.toString());
-			}
-		}
+		generateRandomFDs(scenario, configuration, _generator);
+	}
 
+	private void generateRandomFDs(MappingScenario scenario,
+			Configuration configuration, Random _generator) throws Exception {
 		// create random FDs by randomly selecting non primary key attributes
 		// and linking them
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
@@ -160,6 +146,31 @@ public class SourceFDGenerator implements ScenarioGenerator
 				log.debug("relName: " + r.getName());
 				log.debug("LHS: " + LHSAtts.toString());
 				log.debug("RHS: " + RHSAtt);
+			}
+		}
+	}
+
+	private void generatePKFDs(MappingScenario scenario) throws Exception {
+		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray())
+		{	
+			if (r.isSetPrimaryKey()) 
+			{
+				String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
+				String[] nonKeyAttrs = getNonKeyAttributes(r, scenario);
+
+				scenario.getDocFac().addFD(r.getName(), pkAttrs, nonKeyAttrs);
+				
+				// convert to vector to facilitate printing
+		        List<String> pkList = Arrays.asList(pkAttrs);
+		        Vector<String> pkVect = new Vector<String>(pkList);
+		        List<String> nonkeyList = Arrays.asList(nonKeyAttrs);
+		        Vector<String> nonkeyVect = new Vector<String>(nonkeyList);
+				
+		        log.debug("---------GENERATING PRIMARY KEY FD---------");
+		        
+				log.debug("relName: " + r.getName());
+				log.debug("LHS: " + pkVect.toString());
+				log.debug("RHS: " + nonkeyVect.toString());
 			}
 		}
 	}

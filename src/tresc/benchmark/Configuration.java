@@ -621,6 +621,7 @@ public class Configuration {
 		checkParameterRange(ParameterName.NumOfJoinAttributes, 1, 0.5);
 		checkParameterRange(ParameterName.NumOfNewAttributes, 1, 0.5);
 		checkParameterRange(ParameterName.NumOfParamsInFunctions, 1, 0.5);
+		checkParameterRange(ParameterName.PrimaryKeyFDs, 0, 1);
 		
 		/* check that number of elements including variation is large enough. If number of elements is
 		 * not sufficiently large we increase the number of elements 
@@ -646,6 +647,24 @@ public class Configuration {
 		
 	}
 
+	private void checkParameterRange(ParameterName p, int min, int max) {//TODO log warnings?
+		int pValue = _configurations[p.ordinal()][0];
+		int pDev = _configurations[p.ordinal()][1];
+		
+		if (pValue < min)
+			pValue = min;
+		if (pValue > max)
+			pValue = max;
+		
+		if (pValue - pDev < min)
+			pDev = (pValue - min);
+		if (pValue + pDev < max)
+			pDev = (max - pValue);
+		
+		_configurations[p.ordinal()][0] = pValue;
+		_configurations[p.ordinal()][1] = pDev;
+	}
+	
 	private void checkParameterRange(ParameterName p, int min) {
 		checkParameterRange(p, min, 1.0);
 	}

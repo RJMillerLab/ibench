@@ -36,6 +36,7 @@ public class Constants
         NoReuseScenPerc,	// percentage of basic scenarios where we do not do a reuse
         SourceSkolemPerc,	// associates skolems with source  
         SourceFDPerc,	// associate FDs with source
+        PrimaryKeyFDs,
         SourceSkolemNumAttr,		// attributes and use them in mappings
         PrimaryKeySize
     };
@@ -57,6 +58,7 @@ public class Constants
     	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceSkolemPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceFDPerc, 40);
+    	defaultParameterValues.put(ParameterName.PrimaryKeyFDs, 1);
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
     	defaultParameterValues.put(ParameterName.PrimaryKeySize, 2);
@@ -82,6 +84,7 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeySize, 0);
+    	defaultParameterDeviation.put(ParameterName.PrimaryKeyFDs, 0);
     }
     
     public enum JoinKind {
