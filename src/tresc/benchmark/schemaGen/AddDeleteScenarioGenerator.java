@@ -1,5 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Collections;
+import java.util.Vector;
+
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.SKFunction;
 
@@ -19,6 +22,9 @@ import vtools.dataModel.expression.Variable;
  * 
  * @author mdangelo
  */
+
+//PRG FIXED Bogus Generation of Random Skolem Argument Sets (method generateSKs(), SkolemKind.RANDOM )- Sep 18, 2012
+
 public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator 
 {
 	private int numOfSrcTblAttr;
@@ -148,6 +154,9 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		}
 	}
 	
+	// PRG Rewrote method generateSKs() to fixed Bogus Generation of Random Skolem Argument Sets - Sep 18, 2012
+	
+	/* mdangelo's Version prior Sep 18, 2012
 	private void generateSKs(MappingType m1, SkolemKind sk) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
@@ -176,8 +185,55 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 			for (int i = 0; i < numAddAttr; i++)
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 		}
-	}
+	} */
+	
+	// PRG Newly implemented method generateSKs() - Sep 18, 2012
+	// PRG NOTE: we purposely generate a different random argument set for each newly added attribute when sk == SkolemKind.RANDOM
+		
+	private void generateSKs(MappingType m1, SkolemKind sk) 
+	{
+		int numArgsForSkolem = numOfSrcTblAttr;
 
+		for (int j = 0; j < numAddAttr; j++) {
+			
+			// if we are using a key in the original relation then we base the
+			// skolem on just that key
+			if (sk == SkolemKind.KEY)
+
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
+
+			else if (sk == SkolemKind.RANDOM) {
+
+				// Generate a random number of arguments for this Skolem and also a random argument set!
+
+				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
+
+				Vector<String> randomArgs = new Vector<String>();
+				for (int i = 0; i < numArgsForSkolem; i++) {
+
+					int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+
+					// ensure that we are still within the bounds of the number of source table attributes
+					pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
+
+					// if we haven't already added this variable as an argument, add it
+					if (randomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+						randomArgs.add(fac.getFreshVars(pos, 1)[0]);
+					else
+						i--;
+				}
+				Collections.sort(randomArgs);
+
+				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
+				
+			} else { // SkolemKind.ALL
+
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
+			}
+		}
+	}
+	
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
