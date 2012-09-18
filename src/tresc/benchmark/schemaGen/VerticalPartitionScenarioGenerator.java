@@ -1,5 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Collections;
+import java.util.Vector;
+
 import net.sf.saxon.functions.Concat;
 
 import org.vagabond.util.CollectionUtils;
@@ -18,6 +21,9 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+// PRG Enhanced VERTICAL PARTITION to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
+// PRG REMOVED HardCoded Skolemization Mode (SkolemKind.ALL) and ADDED dynamic Skolemization Modes (i.e. KEY, ALL and RANDOM) - Sep 18, 2012
+
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
 
@@ -26,9 +32,18 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	private int numOfTgtTables;
 	private int attsPerTargetRel;
 	private int attrRemainder;
-	private SkolemKind sk = SkolemKind.ALL;
-	private String skId;
-    
+	// PRG REMOVED Hard coded Skolemization Mode - Sep 18, 2012
+    // private SkolemKind sk = SkolemKind.ALL;
+    private SkolemKind sk;
+    // PRG ADDED instance variable skIdRandomArgs and comments below - Sep 18, 2012
+	// VP only needs to generate 1 Skolem Function; skId keeps track of its Skolem Id
+    private String skId;
+    // skIdRandomArgs keeps track of the randomly generated argument set (only used for SkolemKind.RANDOM mode)
+    private Vector<String> skIdRandomArgs;
+	    
+	// PRG ADDED to Support Optional Source Keys - Sep 18, 2012
+	private int keySize;
+	
     public VerticalPartitionScenarioGenerator()
     {
         ;
@@ -58,6 +73,17 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
                 jk = JoinKind.STAR;
             else jk = JoinKind.CHAIN;
         }
+        
+		// PRG ENHANCED VERTICAL PARTITION according to Configuration Options - Sep 18, 2012
+		// Reading ConfigOptions.PrimaryKeySize and ConfigOptions.SkolemKind
+		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+		sk = SkolemKind.values()[typeOfSkolem];
+		// adjust keySize as necessary with respect to number of source table attributes
+		// NOTE: we are not strictly enforcing a source key for VERTICAL PARTITION, unless SkolemKind.KEY explicitly requested
+		keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
+		if (sk == SkolemKind.KEY)
+			keySize = (keySize > 0) ? keySize : 1;
+		
     }
 
 	
@@ -65,6 +91,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     /**
      * This is the main function. It generates a table in the source, a number
      * of tables in the target and a respective number of queries.
+     * @throws Exception 
      */
     /*private SMarkElement createSubElements(Schema source, Schema target, int numOfSrcTblAttr, int numOfTgtTables,
             JoinKind jk, int repetition, SPJQuery pquery, SPJQuery generatedQuery)
@@ -290,16 +317,40 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     }*/
 
 	@Override
-	protected void genSourceRels() {
+	protected void genSourceRels() throws Exception {
 		String sourceRelName = randomRelName(0);
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
 		
-		for (int i = 0; i < numOfSrcTblAttr; i++)
-			attNames[i] = randomAttrName(0, i);
+		// for (int i = 0; i < numOfSrcTblAttr; i++)
+		// 	attNames[i] = randomAttrName(0, i);
+		
+		// PRG ADDED Generation of Source Key Elements when keySize > 0
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "ke" + j;
+		
+		int keyCount = 0;
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
+			String attrName = randomAttrName(0, i);
+
+			if (keyCount < keySize)
+				attrName = keys[keyCount];
+			
+			keyCount++;
+			
+			attNames[i] = attrName;
+		}
+		
 		
 		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		
+		// PRG ADDED - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 18, 2012
+		if (keySize > 0 )
+			fac.addPrimaryKey(sourceRelName, keys, true);
+		
 		m.addSourceRel(sRel);
+		
 	}
 
 	@Override
@@ -439,28 +490,64 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		}
 	}
 	
+	// PRG Rewrote method generateSKs() to permit dynamic Skolemization Modes - Sep 18, 2012
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, SkolemKind sk) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
-		// generate random number arguments for skolem function
-		if (sk == SkolemKind.RANDOM)
-			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+		// if we are using a key in the original relation then we base the skolem on just that key	
+		if (sk == SkolemKind.KEY) {
+			
+			// We always generate the same Skolem function (i.e. same id, as recorded by instance variable "skId"),
+			// using the source key as argument set
+			if (rel == 0)
+				skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, keySize));
+			else
+				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, keySize), skId);		
+		}
+				
+		else if (sk == SkolemKind.RANDOM) {
+			
+			if (rel == 0) {
+				
+				// Generate a random argument set for the only Skolem Function in this scenario, and save it for following method invocations
+				// Thus, generate a random number of arguments for this Skolem and also a random argument set!
+				
+				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
+				
+				skIdRandomArgs = new Vector<String>();
+				for (int i = 0; i < numArgsForSkolem; i++) {
 
-		// ensure that we are still within the bounds of the number of source attributes
-		numArgsForSkolem = (numArgsForSkolem > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
+					int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+					
+					pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
 
-		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
-		int start = 0;
-		if(sk == SkolemKind.EXCHANGED)
-		{
-			start = offset;
-			numArgsForSkolem = numAtts;
+					// if we haven't already added this variable as an argument, add it
+					if (skIdRandomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+						skIdRandomArgs.add(fac.getFreshVars(pos, 1)[0]);
+					else
+						i--;
+				}
+				Collections.sort(skIdRandomArgs);
+				
+				skId = fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(skIdRandomArgs));
+			
+			}
+			else { 
+				
+				// Simply add the previously generated Skolem Function to any other relation except number 0
+				fac.addSKToExistsAtom(m1, rel, Utils.convertVectorToStringArray(skIdRandomArgs), skId);	
+			}
+				
+		}
+		else { // SkolemKind.ALL
+			if (rel == 0)
+				skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem));
+			else
+				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem), skId);
+			
 		}
 		
-		if (rel == 0)
-			skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem));
-		else
-			fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(start, numArgsForSkolem), skId);
 	}
 	
 	@Override
