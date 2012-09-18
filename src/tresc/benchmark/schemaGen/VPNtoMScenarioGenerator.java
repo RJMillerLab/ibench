@@ -7,12 +7,15 @@ import org.vagabond.xmlmodel.SKFunction;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
+
+//PRG Enhanced VP N-TO-M to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
@@ -25,6 +28,9 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 	private String skId1, skId2;
 	private String[] sk1Args, sk2Args;
     
+	// PRG ADDED to Support Optional Source Keys - Sep 18, 2012
+	private int keySize;
+	
     public VPNtoMScenarioGenerator()
     {
         ;
@@ -44,18 +50,50 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         jk = JoinKind.values()[joinKind];
         // join kind must be STAR for VP N-to-M
         // jk = JoinKind.STAR;
+        
+     
+        // PRG ENHANCED VP N-TO-M according to Configuration Options - Sep 18, 2012
+        // Reading ConfigOptions.PrimaryKeySize 
+     	keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+     	// adjust keySize as necessary with respect to number of source table attributes
+     	// NOTE: we are not strictly enforcing a source key for VERTICAL PARTITION
+     	keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
+     	
     }
 
 	@Override
-	protected void genSourceRels() {
+	protected void genSourceRels() throws Exception {
 		String sourceRelName = randomRelName(0);
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
 		
-		for (int i = 0; i < numOfSrcTblAttr; i++)
-			attNames[i] = randomAttrName(0, i);
+		//for (int i = 0; i < numOfSrcTblAttr; i++)
+		//	attNames[i] = randomAttrName(0, i);
+		
+		// PRG ADDED Generation of Source Key Elements when keySize > 0
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "ke" + j;
+		
+		int keyCount = 0;
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
+			String attrName = randomAttrName(0, i);
+
+			if (keyCount < keySize)
+				attrName = keys[keyCount];
+			
+			keyCount++;
+			
+			attNames[i] = attrName;
+		}
+		
 		
 		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		
+		// PRG ADDED - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 18, 2012
+		if (keySize > 0 )
+			fac.addPrimaryKey(sourceRelName, keys, true);
+	
 		m.addSourceRel(sRel);
 	}
 
