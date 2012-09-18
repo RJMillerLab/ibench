@@ -32,6 +32,7 @@ import vtools.dataModel.expression.Variable;
 // PRG FIXED Chain Join Problems - August 30, 2012
 // PRG PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
 // PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
+// PRG Enhanced MERGE ADD to handle mandatory keys based on ConfigOptions.NumOfJoinAttributes - Sep 18, 2012
 
 public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
@@ -107,6 +108,8 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 			fac.addRelation(getRelHook(i), sourceNames[i], attrs[i], true);
 		
 		// create FK and key constraints
+		// PRG ADD Creation of Primary Keys (method createPK() is implemented by the parent) - Sep 18, 2012
+		createPKs(attrs);
 		if (jk == JoinKind.STAR)
 			createStarConstraints(attrs);
 		if (jk == JoinKind.CHAIN)

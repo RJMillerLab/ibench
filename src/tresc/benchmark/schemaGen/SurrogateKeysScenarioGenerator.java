@@ -17,7 +17,7 @@ import vtools.dataModel.expression.Variable;
 
 // PRG Enhanced SURROGATE KEY Scenario to handle Source Keys based on ConfigOptions.PrimaryKeySize
 // and both dynamic and custom Skolemization Modes for Skolem 1 ("IDIndep" attr) and Skolem 2 ("IDOnFirst" attr), respectively.
-// By default (when ConfigOptions.NumOfParamsInFunctions = 0), we enforce a key of size 1 - Sep 17, 2012
+// By default (when ConfigOptions.PrimaryKeySize = 0), we enforce a key of size 1 - Sep 17, 2012
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
 
