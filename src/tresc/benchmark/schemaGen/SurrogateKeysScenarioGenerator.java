@@ -15,12 +15,21 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+// PRG Enhanced SURROGATE KEY Scenario to handle Source Keys based on ConfigOptions.NumOfParamsInFunctions
+// and both dynamic and custom Skolemization Modes for Skolem 1 ("IDIndep" attr) and Skolem 2 ("IDOnFirst" attr), respectively.
+// By default (when ConfigOptions.NumOfParamsInFunctions = 0), we enforce a key of size 1 - Sep 17, 2012
+
+// BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
+
 public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 {
 
 	private int params;
-	private int elements;
-	private SkolemKind sk = SkolemKind.ALL;
+	private int numOfSrcTblAttr;
+	// PRG REMOVED Hard coded Skolemization Mode - Sep 17, 2012
+	// private SkolemKind sk = SkolemKind.ALL;
+	private SkolemKind sk;
+	private int keySize;
     
     public SurrogateKeysScenarioGenerator()
     {
@@ -30,15 +39,24 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
     @Override
 	protected void initPartialMapping() {
 		super.initPartialMapping();
-		elements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-						numOfElementsDeviation);
-		params = Utils.getRandomNumberAroundSomething(_generator, numOfParams,
-						numOfParamsDeviation);
+		numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+		// this reading corresponds to ConfigOptions.NumOfParamsInFunctions and shall be used to determine the number of arguments of Skolem 2
+		params = Utils.getRandomNumberAroundSomething(_generator, numOfParams, numOfParamsDeviation);
 		// make sure params are at least 2
 		params = (params < 2) ? 2 : params;
 		// and the elements are at least as many as the the params
-		if (params > elements)
-			elements = params;
+		if (params > numOfSrcTblAttr)
+			numOfSrcTblAttr = params;
+		
+		// PRG ENHANCED Key Generation and Skolemization Modes for SURROGATE KEY Scenario according to Configuration Options - Sep 17, 2012
+		// Reading ConfigOptions.PrimaryKeySize and ConfigOptions.SkolemKind
+		sk = SkolemKind.values()[typeOfSkolem];
+		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+		// adjust keySize as necessary with respect to number of source table attributes
+		keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
+		// PRG ENFORCE MANDATORY KEY - Sep 17, 2012
+		keySize = (keySize > 0) ? keySize : 1;
+		
 	}
 
 
@@ -127,26 +145,52 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genSourceRels() throws Exception {
 		String relName = randomRelName(0);
-		String[] attrs = new String[elements];
+		String[] attrs = new String[numOfSrcTblAttr];
 		
-		for(int i =0; i < elements; i++) {
-			attrs[i] = randomAttrName(0, i);
-		}
+		//for(int i =0; i < numOfSrcTblAttr; i++) {
+		//	attrs[i] = randomAttrName(0, i);
+		//}
+		
+		// generate the appropriate number of keys
+		String[] keys = new String[keySize];
+		for (int j = 0; j < keySize; j++)
+			keys[j] = randomAttrName(0, 0) + "ke" + j;
+				
+				
+		int keyCount = 0;				
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
+					
+			String attrName = randomAttrName(0, i);		
+			
+			if (keyCount < keySize)						
+				attrName = keys[keyCount];					
+					
+			keyCount++;		
+			
+			attrs[i] = attrName;
+					
+		}		
 		
 		fac.addRelation(getRelHook(0), relName, attrs, true);
-		fac.addPrimaryKey(relName, 0, true);
+		// PRG FIX BUG - The generated key may have more than 1 element as indicated by keySize - Sep 17, 2012
+		//fac.addPrimaryKey(relName, 0, true);
+		fac.addPrimaryKey(relName, keys, true);
 	}
 
 	@Override
 	protected void genTargetRels() {
 		String tRelName = randomRelName(0);
-		int numTargetEl = elements + 2;
+		int numTargetEl = numOfSrcTblAttr + 2;
 		String[] attrs = new String[numTargetEl];
 		
-		for(int i = 0; i < elements; i++)
+		for(int i = 0; i < numOfSrcTblAttr; i++)
 			attrs[i] = m.getAttrId(0, i, true);
-		attrs[elements] = randomAttrName(0, elements) + "IDindep";
-		attrs[elements + 1] = randomAttrName(0, elements + 1) + "IDOnFirst";
+		// PRG NOTE - We're explicitly creating two new target attributes for which we need to generate appropriate Skolems 
+		attrs[numOfSrcTblAttr] = randomAttrName(0, numOfSrcTblAttr) + "IDindep";
+		attrs[numOfSrcTblAttr + 1] = randomAttrName(0, numOfSrcTblAttr + 1) + "IDOnFirst";
+		
+		// PRG NOTE - The original StBench does not generate a target key at all for SURROGATE KEY Scenarios.
+		// In lieu of this, we do likewise (that is, no target key is being generated so far) - Sep 17, 2012
 		
 		fac.addRelation(getRelHook(0), tRelName, attrs, false);
 	}
@@ -155,17 +199,17 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
 		
-		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, elements));
+		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
 
 		switch (mapLang) 
 		{
 			case FOtgds:
-				fac.addExistsAtom(m1, 0, fac.getFreshVars(0, elements + 2));
+				fac.addExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr + 2));
 				break;
 				
 			case SOtgds:
 				fac.addEmptyExistsAtom(m1, 0);
-				fac.addVarsToExistsAtom(m1, 0, fac.getFreshVars(0, elements));
+				fac.addVarsToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
 				SkolemKind sk1 = sk;
 				if(sk == SkolemKind.VARIABLE)
 					sk1 = SkolemKind.values()[_generator.nextInt(4)];
@@ -174,25 +218,33 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		}
 	}
 	
+	// PRG Rewrote method generateSKs() to permit different types of Skolemizations over Skolem 1 "IDIndep" attribute - Sep 17, 2012
 	private void generateSKs(MappingType m1, SkolemKind sk) {
-		int numArgsForSkolem = elements;
+		
+		// Generate two Skolems, one for target attribute "IDindep" and one for target attribute "IDOnFirst"
+		
+		// worst case, get ready for SkolemKind.ALL and assume the number of source table attributes 
+		int numArgsForSkolem = numOfSrcTblAttr;
 
 		// if we are using a key in the original relation then we base the skolem on just that key
-		if (sk == SkolemKind.KEY)
-			for (int i = 0; i < numNewAttr; i++)
-				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, 1));
+		if (sk == SkolemKind.KEY) {
+			
+			// Skolem 1 "IDIndep": define argument set based on the source relation key 
+			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
+		    
+		}
 		else if (sk == SkolemKind.RANDOM)
 		{
-			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, elements/2, elements/2);
+			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr/2, numOfSrcTblAttr/2);
 			// ensure that we are still within bounds
-			numArgsForSkolem = (numArgsForSkolem >= elements) ? elements : numArgsForSkolem;
+			numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 			
 			// generate the random vars to be arguments for the skolem
 			Vector<String> randomVars = new Vector<String> ();
 			for (int i=0; i < numArgsForSkolem; i++)
 			{
-				int pos = Utils.getRandomNumberAroundSomething(_generator, elements/2, elements/2);
-				pos = (pos >= elements) ? elements-1 : pos;
+				int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr/2, numOfSrcTblAttr/2);
+				pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr-1 : pos;
 				
 				// if we haven't already added this variable as an argument, add it
 				if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
@@ -203,16 +255,19 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			
 			Collections.sort(randomVars);
 			
+			// Skolem 1 "IDIndep": define argument set based on randomly picked source attributes
 			fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
 		}
-		else 
+		else // SkolemKind.ALL
 		{
-			// add all the source attributes as arguments for the IDIndep skolem
+			// Skolem 1 "IDIndep": define argument set based on all source attributes 
 			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 			
-			// add only amount specified in config file for the IDOnFirst skolem
-			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfParams));
 		}
+		
+		// Skolem 2 IDOnFirst": use only amount of source table attributes specified in config file 		
+		fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfParams));
+		
 	}
 	
 	@Override
@@ -242,7 +297,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 
 		SelectClauseList select = query.getSelect();
 		
-		for (int i = 0; i < elements; i++) {
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			// create the atomic element in the source and the target
 			// add the subelements as attributes to the Select clause of the
 			// query
@@ -272,7 +327,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 			break;
 		case SOtgds:
 		default:
-			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, elements);
+			SKFunction sk = m.getSkolemFromAtom(m1, false, 0, numOfSrcTblAttr);
 	 		stSK1 = new vtools.dataModel.expression.SKFunction(sk.getSkname());
 	 			
 	 		for(int k = 0; k < sk.getVarArray().length; k++) {			
@@ -282,7 +337,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	 		}
 
 	 		// second skolem function
-	 		SKFunction sk2 = m.getSkolemFromAtom(m1, false, 0, elements + 1);
+	 		SKFunction sk2 = m.getSkolemFromAtom(m1, false, 0, numOfSrcTblAttr + 1);
 	 		stSK2 = new vtools.dataModel.expression.SKFunction(sk2.getSkname());
 	 			
 	 		for(int k = 0; k < sk2.getVarArray().length; k++) {			
@@ -295,8 +350,8 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		}
 
 		// add
- 		select.add(attrNames[elements], stSK1);
- 		select.add(attrNames[elements + 1], stSK2);
+ 		select.add(attrNames[numOfSrcTblAttr], stSK1);
+ 		select.add(attrNames[numOfSrcTblAttr + 1], stSK2);
 		
 		// add the subquery to the final transformation query
 		query.setSelect(select);
@@ -309,7 +364,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 
 	@Override
 	protected void genCorrespondences() {
-		for(int i = 0; i < elements; i++)
+		for(int i = 0; i < numOfSrcTblAttr; i++)
 			addCorr(0, i, 0, i);
 	}
 
