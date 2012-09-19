@@ -15,7 +15,8 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
-//PRG Enhanced VP N-TO-M to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
+// PRG Enhanced VP N-TO-M to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
+// PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
@@ -43,6 +44,9 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
             numOfElementsDeviation);
 
+        // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
+        numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
+        
         attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
         

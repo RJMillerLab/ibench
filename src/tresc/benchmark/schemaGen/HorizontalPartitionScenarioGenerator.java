@@ -22,6 +22,8 @@ import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.values.IntegerValue;
 
+//PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
+
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
 	private static final int MAX_NUM_TRIES = 10;
@@ -40,6 +42,12 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
     	super.initPartialMapping();
         randomElements = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
+       
+        // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
+        // This enforcement is because HP's chosen selector attribute (always source attribute 0) is never copied into the target relation.
+        // Thus generating a source relation of size 1, for example, would mean getting an empty target relation.
+        randomElements = (randomElements > 2 ? randomElements : 2);
+        
         randomFragments = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         randomFragments = (randomFragments > 1) ? randomFragments : 2;
         fragmentWidth = 10000 / randomFragments;

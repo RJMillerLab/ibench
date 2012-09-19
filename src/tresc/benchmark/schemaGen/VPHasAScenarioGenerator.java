@@ -16,6 +16,8 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+//PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
+
 public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 
 	private JoinKind jk;
@@ -38,6 +40,9 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
     	
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
             numOfElementsDeviation);
+        
+        // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
+        numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
 
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);

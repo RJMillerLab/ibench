@@ -130,13 +130,13 @@ public class Constants
     	nameForScenarios.put(ScenarioName.COPY, "_CP");
     	nameForScenarios.put(ScenarioName.VALUEGEN, "_VG");
     	nameForScenarios.put(ScenarioName.HORIZPARTITION, "_HP");
-    	nameForScenarios.put(ScenarioName.SURROGATEKEY, "_SK");
-    	nameForScenarios.put(ScenarioName.MERGING, "_DE");
+    	nameForScenarios.put(ScenarioName.SURROGATEKEY, "_SU");
+    	nameForScenarios.put(ScenarioName.MERGING, "_ME");
     	nameForScenarios.put(ScenarioName.VALUEMANAGEMENT, "_AV");
     	nameForScenarios.put(ScenarioName.FUSION, "_OF");
     	nameForScenarios.put(ScenarioName.FLATTENING, "_FL");
     	nameForScenarios.put(ScenarioName.NESTING, "_NE");
-    	nameForScenarios.put(ScenarioName.SELFJOINS, "_CF");
+    	nameForScenarios.put(ScenarioName.SELFJOINS, "_SJ");
     	nameForScenarios.put(ScenarioName.VERTPARTITION, "_VP");
     	nameForScenarios.put(ScenarioName.GLAV, "_GL");
     	nameForScenarios.put(ScenarioName.VERTPARTITIONISA, "_VI");

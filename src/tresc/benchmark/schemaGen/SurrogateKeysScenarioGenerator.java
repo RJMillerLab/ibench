@@ -20,6 +20,8 @@ import vtools.dataModel.expression.Variable;
 // and both dynamic and custom Skolemization Modes for Skolem 1 ("IDIndep" attr) and Skolem 2 ("IDOnFirst" attr), respectively.
 // By default (when ConfigOptions.PrimaryKeySize = 0), we enforce a key of size 1 - Sep 17, 2012
 // PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
+// PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
+
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
 
@@ -42,6 +44,10 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	protected void initPartialMapping() {
 		super.initPartialMapping();
 		numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+		
+		// PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
+        numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
+        
 		// this reading corresponds to ConfigOptions.NumOfParamsInFunctions and shall be used to determine the number of arguments of Skolem 2
 		params = Utils.getRandomNumberAroundSomething(_generator, numOfParams, numOfParamsDeviation);
 		// make sure params are at least 2

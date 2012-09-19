@@ -135,14 +135,23 @@ public class SourceFDGenerator implements ScenarioGenerator
 						RHSAtt = allAttrs[position];
 				} while (!done);
 
+				log.trace("Potential FDs, must be checked for duplicates");
+				log.trace("LHS: " + LHSAtts.toString());
+				log.trace("RHS: " + RHSAtt);
+				
 				// look through all of the existing FDs and check if we would be adding a duplicates
 				FDType[] functionalDep = scenario.getDocFac().getRelFDs(r.getName());
+				
 				Boolean duplicate = false;
-				for (FDType fd : functionalDep)
+				for (FDType fd : functionalDep) {	
+					
+					log.trace("Comparing it against previously added FD " + fd.toString());
+					
 					if (fd.getTo().getAttrArray(0).equals(RHSAtt)
 							&& Arrays.equals(fd.getFrom().getAttrArray(),
 									Utils.convertVectorToStringArray(LHSAtts)))
 						duplicate = true;
+				}
 
 				// if the FD was a duplicate then we must create a new FD in its place so decrement the counter, 
 				// otherwise we add the FD to the relation
@@ -167,7 +176,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 			{
 				String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
 				String[] nonKeyAttrs = getNonKeyAttributes(r, scenario);
-
+				
 				scenario.getDocFac().addFD(r.getName(), pkAttrs, nonKeyAttrs);
 				
 				// convert to vector to facilitate printing
