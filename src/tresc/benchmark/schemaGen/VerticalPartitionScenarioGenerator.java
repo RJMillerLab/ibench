@@ -1,5 +1,6 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -23,6 +24,7 @@ import vtools.dataModel.expression.Variable;
 
 // PRG Enhanced VERTICAL PARTITION to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
 // PRG REMOVED HardCoded Skolemization Mode (SkolemKind.ALL) and ADDED dynamic Skolemization Modes (i.e. KEY, ALL and RANDOM) - Sep 18, 2012
+// PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
@@ -473,6 +475,11 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				break;
 				
 			case SOtgds:
+				
+				SkolemKind sk1 = sk;
+				if(sk == SkolemKind.VARIABLE)
+					sk1 = SkolemKind.values()[_generator.nextInt(4)];
+				
 				for(int i = 0; i < numOfTgtTables; i++) {
 					int offset = i * attsPerTargetRel;
 		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
@@ -481,9 +488,10 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
 		        	fac.addEmptyExistsAtom(m1, i);
 		        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
-		        	SkolemKind sk1 = sk;
-					if(sk == SkolemKind.VARIABLE)
-						sk1 = SkolemKind.values()[_generator.nextInt(4)];
+		        	// PRG FIX BUG - The selection can't be done here or else it affects record keeping (skId and skIdRandomArgs) - Sep 18, 2012
+		        	// SkolemKind sk1 = sk;
+					// if(sk == SkolemKind.VARIABLE)
+					//  	sk1 = SkolemKind.values()[_generator.nextInt(4)];
 		        	generateSKs(m1, i, offset, numAtts, sk1);
 				}
 				break;
@@ -494,13 +502,18 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, SkolemKind sk) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
+		log.debug("VP - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = 1");
+		
 		// if we are using a key in the original relation then we base the skolem on just that key	
 		if (sk == SkolemKind.KEY) {
 			
 			// We always generate the same Skolem function (i.e. same id, as recorded by instance variable "skId"),
 			// using the source key as argument set
-			if (rel == 0)
+			if (rel == 0) {
+				log.debug("--- SKOLEM MODE = KEY ---");
+			    log.debug("Key Argument Set: " + Arrays.toString(fac.getFreshVars(0, keySize)));
 				skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, keySize));
+			}
 			else
 				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, keySize), skId);		
 		}
@@ -509,28 +522,54 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			
 			if (rel == 0) {
 				
+				log.debug("--- SKOLEM MODE = RANDOM ---");
+				
 				// Generate a random argument set for the only Skolem Function in this scenario, and save it for following method invocations
 				// Thus, generate a random number of arguments for this Skolem and also a random argument set!
 				
 				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
 				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 				
-				skIdRandomArgs = new Vector<String>();
-				for (int i = 0; i < numArgsForSkolem; i++) {
-
-					int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
-					
-					pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
-
-					// if we haven't already added this variable as an argument, add it
-					if (skIdRandomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
-						skIdRandomArgs.add(fac.getFreshVars(pos, 1)[0]);
-					else
-						i--;
-				}
-				Collections.sort(skIdRandomArgs);
+				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
 				
-				skId = fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(skIdRandomArgs));
+				skIdRandomArgs = new Vector<String>();
+				
+				int MaxRandomTries = 30;
+				int attempts = 0;
+				boolean ok = false;
+				
+				for (int i = 0; i < numArgsForSkolem; i++) {
+				
+					while (!ok & attempts++ < MaxRandomTries) {
+						
+						// Get random position 
+						int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+						// Adjust random position value just in case it falls outside limits
+						pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
+						
+						// Make sure we have not already added this variable before
+						// If so, attempt to get another random position up to a max of 30 tries
+						if (skIdRandomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1) {
+							skIdRandomArgs.add(fac.getFreshVars(pos, 1)[0]);
+							ok = true;
+						    break;
+						}
+						
+					}
+					// Plainly give up after 30 tries. If so, we may end up with an argument set with fewer variables.
+					
+				}
+				// Make sure we were able to generate at least 1 variable from randomArgs. If not, we use all source attributes
+				if (skIdRandomArgs.size() > 0) {
+				
+					Collections.sort(skIdRandomArgs);
+					log.debug("Random Argument Set: " + skIdRandomArgs.toString());
+					skId = fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(skIdRandomArgs));
+					
+				} else  { // If not, just use all source attributes for the sake of completion
+					log.debug("Random Argument Set [using ALL instead] : " + Arrays.toString(fac.getFreshVars(0, numOfSrcTblAttr)));
+					skId = fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
+				}
 			
 			}
 			else { 
@@ -541,8 +580,12 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				
 		}
 		else { // SkolemKind.ALL
-			if (rel == 0)
+			if (rel == 0) {
+				log.debug("--- SKOLEM MODE = ALL ---");
+				log.debug("ALL Argument Set: " + Arrays.toString(fac.getFreshVars(0, numArgsForSkolem)));
 				skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem));
+			}
+				
 			else
 				fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem), skId);
 			

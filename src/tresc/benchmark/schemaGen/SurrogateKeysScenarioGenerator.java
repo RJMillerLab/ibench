@@ -1,5 +1,6 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -18,6 +19,7 @@ import vtools.dataModel.expression.Variable;
 // PRG Enhanced SURROGATE KEY Scenario to handle Source Keys based on ConfigOptions.PrimaryKeySize
 // and both dynamic and custom Skolemization Modes for Skolem 1 ("IDIndep" attr) and Skolem 2 ("IDOnFirst" attr), respectively.
 // By default (when ConfigOptions.PrimaryKeySize = 0), we enforce a key of size 1 - Sep 17, 2012
+// PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
 
@@ -223,11 +225,16 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		
 		// Generate two Skolems, one for target attribute "IDindep" and one for target attribute "IDOnFirst"
 		
+		log.debug("SURROGATE KEY - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = 2");
+		
 		// worst case, get ready for SkolemKind.ALL and assume the number of source table attributes 
 		int numArgsForSkolem = numOfSrcTblAttr;
 
 		// if we are using a key in the original relation then we base the skolem on just that key
 		if (sk == SkolemKind.KEY) {
+			
+			log.debug("--- SKOLEM MODE = KEY ---");
+			log.debug("1st Skolem, Key Argument Set: " + Arrays.toString(fac.getFreshVars(0, keySize)));
 			
 			// Skolem 1 "IDIndep": define argument set based on the source relation key 
 			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, keySize));
@@ -235,36 +242,66 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		}
 		else if (sk == SkolemKind.RANDOM)
 		{
+			log.debug("--- SKOLEM MODE = RANDOM ---");
+			
 			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr/2, numOfSrcTblAttr/2);
 			// ensure that we are still within bounds
 			numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 			
+			log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+			
 			// generate the random vars to be arguments for the skolem
 			Vector<String> randomVars = new Vector<String> ();
-			for (int i=0; i < numArgsForSkolem; i++)
-			{
-				int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr/2, numOfSrcTblAttr/2);
-				pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr-1 : pos;
-				
-				// if we haven't already added this variable as an argument, add it
-				if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
+			
+			int MaxRandomTries = 30;
+			int attempts = 0;
+			boolean ok = false;
+			
+			for (int i = 0; i < numArgsForSkolem; i++) {
+
+				while (!ok & attempts++ < MaxRandomTries) {
+					
+					// Get random position 
+					int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+					// Adjust random position value just in case it falls outside limits
+					pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
+					
+					// Make sure we have not already added this variable before
+					// If so, attempt to get another random position up to a max of 30 tries
+					if (randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1) {
 						randomVars.add(fac.getFreshVars(pos, 1)[0]);
-				else
-					i--;
+						ok = true;
+					    break;
+					}
+					
+				}
+				// Plainly give up after 30 tries. If so, we may end up with an argument set with fewer variables.
+			
 			}
+			// Make sure we were able to generate at least 1 variable from randomArgs. If not, we use all source attributes
+			if (randomVars.size() > 0) {
 			
-			Collections.sort(randomVars);
+				Collections.sort(randomVars);
+				log.debug("1st Skolem, Random Argument Set: " + randomVars.toString());
+				// Skolem 1 "IDIndep": define argument set based on randomly picked source attributes
+				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
+				
+			} else  // If not, just use all source attributes for the sake of completion
+				log.debug("1st Skolem, Random Argument Set [using ALL instead]: " + Arrays.toString(fac.getFreshVars(0, numOfSrcTblAttr)));
+				// Skolem 1 "IDIndep": define argument set based on all source attributes
+				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
 			
-			// Skolem 1 "IDIndep": define argument set based on randomly picked source attributes
-			fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
 		}
 		else // SkolemKind.ALL
 		{
+			log.debug("--- SKOLEM MODE = ALL ---");
+			log.debug("1st Skolem, ALL Argument Set: " + Arrays.toString(fac.getFreshVars(0, numArgsForSkolem)));
 			// Skolem 1 "IDIndep": define argument set based on all source attributes 
 			fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));
 			
 		}
 		
+		log.debug("2nd Skolem, Custom Argument Set: " + Arrays.toString(fac.getFreshVars(0, numOfParams)));
 		// Skolem 2 IDOnFirst": use only amount of source table attributes specified in config file 		
 		fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfParams));
 		

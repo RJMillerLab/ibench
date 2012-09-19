@@ -27,7 +27,8 @@ import vtools.dataModel.expression.Variable;
  * 
  */
 
-//PRG FIXED Bogus Generation of Random Skolem Argument Sets (method generateSKs(), SkolemKind.RANDOM )- Sep 18, 2012
+// PRG FIXED Bogus Generation of Random Skolem Argument Sets (method generateSKs(), SkolemKind.RANDOM )- Sep 18, 2012
+// PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
 
 public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
@@ -441,6 +442,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	private void generateSKs(MappingType m1, SkolemKind sk) 
 	{
 		int numArgsForSkolem = numOfSrcTblAttr;
+		
+		log.debug("ADD - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = " + numAddAttr);
 
 		for (int j = 0; j < numAddAttr; j++) {
 			
@@ -458,23 +461,41 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 
 				Vector<String> randomArgs = new Vector<String>();
+				
+				int MaxRandomTries = 30;
+				int attempts = 0;
+				boolean ok = false;
+				
 				for (int i = 0; i < numArgsForSkolem; i++) {
 
-					int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
-
-					// ensure that we are still within the bounds of the number of source table attributes
-					pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
-
-					// if we haven't already added this variable as an argument, add it
-					if (randomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
-						randomArgs.add(fac.getFreshVars(pos, 1)[0]);
-					else
-						i--;
-				}
-				Collections.sort(randomArgs);
-
-				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
+					while (!ok & attempts++ < MaxRandomTries) {
+						
+						// Get random position 
+						int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+						// Adjust random position value just in case it falls outside limits
+						pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
+						
+						// Make sure we have not already added this variable before
+						// If so, attempt to get another random position up to a max of 30 tries
+						if (randomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1) {
+							randomArgs.add(fac.getFreshVars(pos, 1)[0]);
+							ok = true;
+						    break;
+						}
+						
+					}
+					// Plainly give up after 30 tries. If so, we may end up with an argument set with fewer variables.
 				
+				}
+				// Make sure we were able to generate at least 1 variable from randomArgs. If not, we use all source attributes
+				if (randomArgs.size() > 0) {
+				
+					Collections.sort(randomArgs);
+					fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
+					
+				} else  // If not, just use all source attributes for the sake of completion
+					fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
+					
 			} else { // SkolemKind.ALL
 
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numArgsForSkolem));

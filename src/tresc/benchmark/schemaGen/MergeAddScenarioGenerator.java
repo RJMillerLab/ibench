@@ -33,6 +33,7 @@ import vtools.dataModel.expression.Variable;
 // PRG PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
 // PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
 // PRG Enhanced MERGE ADD to handle mandatory keys based on ConfigOptions.NumOfJoinAttributes - Sep 18, 2012
+// PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM - Sep 18, 2012
 
 public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
@@ -342,7 +343,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
 	private void generateSKs(MappingType m1, SkolemKind sk, int totalVars, String[][] vars, String[] targetVars) 
 	{	
-		log.debug("Method generateSKs with totalVars " + totalVars);
+		log.debug("MERGE ADD - Method generateSKs() with totalVars = " + totalVars + " and Num of New Skolems = " + numNewAttr);
 		for (int i = 0; i < numNewAttr; i++)
 		{
 			// in KEY mode we use the join attributes as the skolem arguments
@@ -380,60 +381,69 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 					}
 				}
 				
+				log.debug("Key Argument Set: " + Arrays.toString(argVars));
 				fac.addSKToExistsAtom(m1, 0, argVars);
 			}
 
 			else if (sk == SkolemKind.RANDOM)
 			{
 				log.debug("--- SKOLEM MODE = RANDOM ---");
-
+ 
 				int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
-				
-				log.debug("number of arguments: " + numArgsForSkolem);
-
-				// ensure that we are still within bounds
+				// Adjust random position value just in case it falls outside limits
 				numArgsForSkolem = (numArgsForSkolem >= totalVars) ? totalVars : numArgsForSkolem;
-
+				
+				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				
 				// generate the random vars to be arguments for the skolem
-				int tries = 0;
 				Vector<String> randomVars = new Vector<String> ();
-				for (int k=0; k < numArgsForSkolem; k++)
-				{
-					// use max tries to avoid infinite loops
-					if (tries == MAX_NUM_TRIES)
-						if (randomVars.size() != 0 && k == numArgsForSkolem-1)
-							break;
-						else
-							tries--;
-					
-					int pos = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
-					pos = (pos >= totalVars) ? totalVars-1 : pos;
+				
+				int MaxRandomTries = 30;
+				int attempts = 0;
+				boolean ok = false;
+				
+				for (int k = 0; k < numArgsForSkolem; k++) {
 
-					// if we haven't already added this variable as an argument, add it
-					if(randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1)
-						randomVars.add(fac.getFreshVars(pos, 1)[0]);
-					else
-						k--;
-					
-					tries++;
+					while (!ok & attempts++ < MaxRandomTries) {
+						
+						// Get random position 
+						int pos = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
+						// Adjust random position value just in case it falls outside limits
+						pos = (pos >= totalVars) ? totalVars-1 : pos;
+						
+						// Make sure we have not already added this variable before
+						// If so, attempt to get another random position up to a max of 30 tries
+						if (randomVars.indexOf(fac.getFreshVars(pos, 1)[0]) == -1) {
+							randomVars.add(fac.getFreshVars(pos, 1)[0]);
+							ok = true;
+						    break;
+						}
+						
+					}
+					// Plainly give up after 30 tries. If so, we may end up with an argument set with fewer variables.
+				
 				}
-
-				Collections.sort(randomVars);
-
-				log.debug("arguments: " + randomVars.toString());
-
-				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
+				// Make sure we were able to generate at least 1 variable from randomArgs. If not, we use all source attributes
+				if (randomVars.size() > 0) {
+				
+					Collections.sort(randomVars);
+					log.debug("Random Argument Set: " + randomVars.toString());
+					fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
+					
+				} else  { // If not, just use all source attributes for the sake of completion
+					
+					log.debug("Random Argument Set [using ALL instead]: " + Arrays.toString(targetVars));
+					fac.addSKToExistsAtom(m1, 0, targetVars);
+					
+				}
+			
 			}
-
-			else if (sk == SkolemKind.ALL)
-			{
+			else { // SkolemKind.ALL
+			
 				log.debug("--- SKOLEM MODE = ALL ---");
+				log.debug("ALL Argument Set: " + Arrays.toString(targetVars));
 
-				List<String> tgtVars = Arrays.asList(targetVars);
-				log.debug("arguments: ");
-				log.debug(tgtVars.toString());
-
-				fac.addSKToExistsAtom(m1, 0,targetVars);
+				fac.addSKToExistsAtom(m1, 0, targetVars);
 			}
 		}
 	}
