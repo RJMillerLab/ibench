@@ -95,13 +95,16 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		
 		for(int i = 0; i < ScenarioName.values().length; i++) {
 			ScenarioName n = ScenarioName.values()[i];
-			String stamp = n.toString().substring(0, 1).toUpperCase();
-			int pos = 1;
-			
-			while (s.contains(stamp)) {
-				stamp = n.toString().substring(0, pos++).toUpperCase();
+			String stamp = Constants.nameForScenarios.get(n);
+					
+			if (stamp == null && s.contains(stamp)) {
+				stamp =	"_" + n.toString().substring(0, 1).toUpperCase();
+				int pos = 1;
+				
+				while (s.contains(stamp)) {
+					stamp = "_" + n.toString().substring(0, pos++).toUpperCase();
+				}
 			}
-			
 			s.add(stamp);
 			stamps[i] = stamp;
 		}
@@ -414,8 +417,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected String randomRelName(int relNum) {
 		String randomName = Modules.nameFactory.getSafeRandomName();
 		String name =
-				randomName + "_" + getStamp() + curRep + "NL"
-						+ 0 + "CE" + relNum;
+				randomName  + getStamp() + "_" + curRep +  "_NL"
+						+ 0 + "_CE" + relNum;
 		name = name.toLowerCase();
 		
 		while(model.hasRelName(name))
@@ -426,13 +429,13 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	protected String randomAttrName(int relNum, int attrNum) {
 		String randomName = Modules.nameFactory.getSafeRandomName();
-		String name = randomName + "_" + getStamp() + curRep + "NL"
-						+ relNum + "AE" + attrNum;
+		String name = randomName + getStamp() + "_" + curRep + "_NL"
+						+ relNum + "_AE" + attrNum;
 		return name.toLowerCase();
 	}
 	
 	protected String getAttrHook (int relNum, int attrNum) {
-		return getStamp() + curRep + "NL" + relNum + "AE" + attrNum;
+		return getStamp() + curRep + "_NL" + relNum + "_AE" + attrNum;
 	}
 	
 	protected String getRelHook (int relNum) {
