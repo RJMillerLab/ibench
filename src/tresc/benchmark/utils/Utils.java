@@ -6,6 +6,17 @@ import java.util.Vector;
 public class Utils
 {
 
+	public static int getRandomUniformNumber (Random generator, int max) {
+		return generator.nextInt(max);
+	}
+	
+	public static int getRandomUniformNumber (Random generator, int center, int deviation) {
+		if (deviation == 0)
+			return center;
+		
+		return center + (generator.nextInt(2 * deviation)) - deviation;
+	}
+	
     /*
      * Returns a random number (positive one) around some specific number given
      * as argument Note that the Random generator is provided so that this

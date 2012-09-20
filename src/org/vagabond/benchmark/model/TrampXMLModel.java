@@ -2,6 +2,7 @@ package org.vagabond.benchmark.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -101,6 +102,16 @@ public class TrampXMLModel extends MapScenarioHolder {
 			ret[i++] = m;
 			
 		return ret;
+	}
+	
+	public void getAllVarsInMapping (MappingType m, boolean source, Vector<String> varList, Set<String> varSet) {
+		for(RelAtomType a: (source ? m.getForeach().getAtomArray() 
+				: m.getExists().getAtomArray())) {
+			for(String var: a.getVarArray()) {
+				varList.add(var);
+				varSet.add(var);
+			}
+		}
 	}
 	
 	/** 

@@ -169,6 +169,15 @@ public class PartialMapping {
 			return targetRels.get(sRel).getName();
 	}
 	
+	public int[] getSourceNumAttrs () {
+		int[] result = new int[sourceRels.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = sourceRels.get(i).sizeOfAttrArray();
+		}
+		
+		return result;
+	}
+	
 	public int getNumRelAttr (int relId, boolean source) {
 		if (source)
 			return sourceRels.get(relId).getAttrArray().length;

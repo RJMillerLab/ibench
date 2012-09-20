@@ -1,16 +1,19 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
 import org.vagabond.xmlmodel.AttrDefType;
+import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
@@ -20,6 +23,7 @@ import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
+import tresc.benchmark.utils.Utils;
 import tresc.benchmark.Modules;
 import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
@@ -400,6 +404,57 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 
 	public String getStamp() {
 		return stamps[getScenType().ordinal()];
+	}
+	
+	protected Vector<String> getRandomSourceVars(int numArgsForSkolem, MappingType m1) {
+		Vector<String> randomArgs = new Vector<String> ();
+		Vector<String> allVars = new Vector<String> (); 
+		HashSet<String> varSet = new HashSet<String> ();
+		
+		model.getAllVarsInMapping(m1, true, allVars, varSet);
+		
+		// not enough source vars?
+		if (numArgsForSkolem > varSet.size()) {
+			randomArgs = new Vector<String> (varSet);
+			Collections.sort(randomArgs);
+			return randomArgs;
+		}
+		
+		// randomly select source vars until we have enough. Remove chosen vars to guarantee convergence.
+		for(int i = 0; i < numArgsForSkolem; i++) {
+			int pos = Utils.getRandomUniformNumber(_generator, allVars.size());
+			String var = allVars.get(pos);
+			randomArgs.add(var);
+			
+			// remove all occurances of var
+			varSet.remove(var);
+			allVars.removeAll(Collections.singleton(var));
+		}
+		
+		Collections.sort(randomArgs);
+//		for (int i = 0; i < numArgsForSkolem; i++) {
+//
+//			while (!ok & attempts++ < MaxRandomTries) {
+//				
+//				// Get random position 
+//				int pos = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
+//				// Adjust random position value just in case it falls outside limits
+//				pos = (pos >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : pos;
+//				
+//				// Make sure we have not already added this variable before
+//				// If so, attempt to get another random position up to a max of 30 tries
+//				if (randomArgs.indexOf(fac.getFreshVars(pos, 1)[0]) == -1) {
+//					randomArgs.add(fac.getFreshVars(pos, 1)[0]);
+//					ok = true;
+//				    break;
+//				}
+//				
+//			}
+//			// Plainly give up after 30 tries. If so, we may end up with an argument set with fewer variables.
+//		
+//		}
+		
+		return randomArgs;
 	}
 	
 	protected RelationType createFreeRandomRel (int relId, int numAttr) {
