@@ -2,7 +2,6 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -36,6 +35,7 @@ import vtools.dataModel.schema.Schema;
  */
 
 // PRG RESTORED Reading Deviation Parameter (numOfElementsDeviation) from config file - August 28, 2012
+// PRG MOVED method getRandomSourceVars(int numArgsForSkolem, MappingType m1) to tresc.benchmark.utils.Utils.java to facilitate code reuse - Sep 21, 2012
 
 public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
@@ -190,7 +190,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			boolean reuseSrc = _generator.nextInt(100) <= srcReusePerc;
 			boolean reuseTrg = _generator.nextInt(100) <= trgReusePerc;
 			
-			// check wether at least one target or source relation exists when reusing
+			// check whether at least one target or source relation exists when reusing
 			if (reuseSrc && model.getSchema(true).sizeOfRelationArray() == 0)
 				reuseSrc = false;
 			if (reuseTrg && model.getSchema(false).sizeOfRelationArray() == 0)
@@ -406,6 +406,10 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		return stamps[getScenType().ordinal()];
 	}
 	
+	// PRG MOVED method getRandomSourceVars(int numArgsForSkolem, MappingType m1) to tresc.benchmark.utils.Utils.java to facilitate code reuse - Sep 21, 2012
+	// (renamed it as getRandomWithoutReplacementSequence() so that we can invoked in other occasions as well)
+	
+	/*
 	protected Vector<String> getRandomSourceVars(int numArgsForSkolem, MappingType m1) {
 		Vector<String> randomArgs = new Vector<String> ();
 		Vector<String> allVars = new Vector<String> (); 
@@ -414,7 +418,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		model.getAllVarsInMapping(m1, true, allVars, varSet);
 		
 		// not enough source vars?
-		if (numArgsForSkolem > varSet.size()) {
+		if (numArgsForSkolem >= varSet.size()) {
 			randomArgs = new Vector<String> (varSet);
 			Collections.sort(randomArgs);
 			return randomArgs;
@@ -456,7 +460,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		
 		return randomArgs;
 	}
-	
+	*/
+		
 	protected RelationType createFreeRandomRel (int relId, int numAttr) {
 		RelationType r = RelationType.Factory.newInstance();
 		r.setName(randomRelName(relId));

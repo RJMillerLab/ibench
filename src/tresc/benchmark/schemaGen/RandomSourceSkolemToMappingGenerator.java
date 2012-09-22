@@ -27,6 +27,13 @@ import vtools.dataModel.types.RandSrcSkolem;
  * 
  * @author mdangelo
  */
+
+// PRG RE-IMPLEMENTED method useRandomAsArgument() to be based on Utils.getRandomWithoutReplacementSequence() - Sep 21, 2012
+// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+
+// PRG + BORIS TO DO: The source code quality in this file is dubious :( It might be worth rewriting it if time permits (e.g. class variables
+// are being passed as arguments!, method generateVictims() should also use a "Random Without Replacement" strategy to guarantee convergence, etc.)
+
 public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator 
 {
 	static Logger log = Logger.getLogger(RandomSourceSkolemToMappingGenerator.class);
@@ -82,10 +89,10 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
+				log.debug("New Skolem Identifier: " + rsk.getSkId());
 				log.debug("Victim: " + rsk.getAttr());
 				log.debug("Victim Position: " + rsk.getAttrPosition());
 				log.debug("Victim Variable: " + rsk.getAttrVar());
-				log.debug("Identifier: " + rsk.getSkId());
 				
 				if(rsk.getArgAttrs().length != 0)
 				{
@@ -220,7 +227,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),getAttrPositions(r.getAttrArray().length), true);
 			
 			// KEY and RANDOM cases include and if statement to check if the mode has been changed in the case of 
-			// a) a primary key not being set for KEY mode which causes it to switch to RANDOM, and 
+			// a) a primary key not being set for KEY mode which causes it to switch to ALL, and 
 			// b) no arguments being chosen in RANDOM (because of the limit on the amount of tries) which causes it to switch to ALL
 			switch(sk)
 			{
@@ -259,7 +266,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useKeyAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		log.debug("mode: KEY");
+		log.debug("Using SkolemKind.KEY Mode for " + rsk.getSkId());
 	
 		// make sure there is a key for the relation, if there is not then we will switch to using all attributes for the skolem
 		if (r.isSetPrimaryKey()) 
@@ -284,7 +291,9 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		} 
 		
 		else 
-			sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
+			// PRG - When there is no key, we should use SkolemKind.ALL instead - Sep 21, 2012
+			// sk = SkolemKind.values()[Constants.SkolemKind.RANDOM.ordinal()];
+			sk = SkolemKind.values()[Constants.SkolemKind.ALL.ordinal()];
 	}
 
 	/**
@@ -307,12 +316,23 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 * 
 	 * @author mdangelo
 	 */
+	
+	// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+	
 	private static void useRandomAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		log.debug("mode: RANDOM");
+		log.debug("Using SkolemKind.RANDOM Mode for " + rsk.getSkId());
 	
+		// Generate a random number of args for Skolem rsk (Uniform distribution between 0 (inclusive) and allAttrs.length (exclusive))
 		int numArgsForSkolem = _generator.nextInt(allAttrs.length);
-	
+		// Ensure we generate at least a random argument set of at least size > 0
+		numArgsForSkolem = (numArgsForSkolem == 0 ? allAttrs.length : numArgsForSkolem);
+		
+		log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+		
+		// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
+		// Instead we rely on method Utils.getRandomWithoutReplacementSequence() which guarantees convergence
+		/*	
 		int max_tries = 20;
 	
 		// generate the random vars to be arguments for the skolem
@@ -337,7 +357,23 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 				tries++;
 			}
 		}
-	
+		*/
+		
+		Vector<String> allAttrsVector = new Vector<String>(Arrays.asList(allAttrs));
+		
+		// Generate a random argument set
+		Vector<String> randomAttrs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, allAttrsVector);
+		
+		// Exclude Skolem rsk's attribute (the victim) from the list of randomArgs
+		for (String arg: randomAttrs) {
+			if (rsk.getAttr().equals(arg)) {
+				randomAttrs.removeElement(arg);
+				break;
+			}
+		}
+		
+		log.debug("Random Argument Set: " + randomAttrs.toString());
+		
 		String[] randAtts = Utils.convertVectorToStringArray(randomAttrs);
 		int[] attrPos = getAttrPositions(allAttrs, randAtts);
 		java.util.Arrays.sort(attrPos);
@@ -368,7 +404,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useAllAsArgument(RelationType r, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		log.debug("mode: ALL");
+		log.debug("Using SkolemKind.ALL Mode for " + rsk.getSkId());
 	
 		Vector<String> skAtts = new Vector<String>();
 		
@@ -379,6 +415,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		for (int i = 0; i < allAttrs.length; i++) 
 			if (skAtts.indexOf(rsk.getAttr()) != -1)
 				skAtts.remove(skAtts.indexOf(rsk.getAttr()));
+		
+		log.debug("All Argument Set: " + skAtts.toString());
 		
 		rsk.setArgAttrs(Utils.convertVectorToStringArray(skAtts));
 		rsk.setArgPositions(getAttrPositions(allAttrs, rsk.getArgAttrs()));

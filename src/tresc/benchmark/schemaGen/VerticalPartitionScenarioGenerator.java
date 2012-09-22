@@ -1,10 +1,9 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Vector;
 
-import net.sf.saxon.functions.Concat;
+//import net.sf.saxon.functions.Concat;
 
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
@@ -26,6 +25,10 @@ import vtools.dataModel.expression.Variable;
 // PRG REMOVED HardCoded Skolemization Mode (SkolemKind.ALL) and ADDED dynamic Skolemization Modes (i.e. KEY, ALL and RANDOM) - Sep 18, 2012
 // PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
 // PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
+// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+
+// BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 21, 2012
+
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
@@ -503,6 +506,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	}
 	
 	// PRG Rewrote method generateSKs() to permit dynamic Skolemization Modes - Sep 18, 2012
+	// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+	
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, SkolemKind sk) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
@@ -528,9 +533,28 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				
 				log.debug("--- SKOLEM MODE = RANDOM ---");
 				
-				// Generate a random argument set for the only Skolem Function in this scenario, and save it for following method invocations
-				// Thus, generate a random number of arguments for this Skolem and also a random argument set!
+				// PRG NOTE: We must save the only generated Skolem function (skId and skIdRandomArgs values)for following method invocations
 				
+				// Generate a random number of args for this Skolem (Uniform distribution between 0 (inclusive) and totalVars (exclusive))
+				numArgsForSkolem = Utils.getRandomUniformNumber(_generator, numOfSrcTblAttr);
+				// Ensure we generate at least a random argument set of size > 0
+				numArgsForSkolem = (numArgsForSkolem == 0 ? numOfSrcTblAttr : numArgsForSkolem);
+
+				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				
+				// Generate a random argument set
+				skIdRandomArgs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, model.getAllVarsInMapping(m1, true));
+				
+				if (skIdRandomArgs.size() == numOfSrcTblAttr) {
+					log.debug("Random Argument Set [using ALL instead]: " + skIdRandomArgs.toString());
+				}
+				else {
+					log.debug("Random Argument Set: " + skIdRandomArgs.toString());
+				}
+				skId = fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(skIdRandomArgs));
+				
+				// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
+				/*
 				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
 				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 				
@@ -574,6 +598,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 					log.debug("Random Argument Set [using ALL instead] : " + Arrays.toString(fac.getFreshVars(0, numOfSrcTblAttr)));
 					skId = fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
 				}
+				*/
 			
 			}
 			else { 

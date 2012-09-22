@@ -1,6 +1,5 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.Collections;
 import java.util.Vector;
 
 import org.vagabond.xmlmodel.MappingType;
@@ -25,6 +24,9 @@ import vtools.dataModel.expression.Variable;
 
 // PRG FIXED Bogus Generation of Random Skolem Argument Sets (method generateSKs(), SkolemKind.RANDOM )- Sep 18, 2012
 // PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
+// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+
+// BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 21, 2012 
 
 public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator 
 {
@@ -190,6 +192,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	
 	// PRG Newly implemented method generateSKs() - Sep 18, 2012
 	// PRG NOTE: we purposely generate a different random argument set for each newly added attribute when sk == SkolemKind.RANDOM
+	// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
 		
 	private void generateSKs(MappingType m1, SkolemKind sk) 
 	{
@@ -212,14 +215,19 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr - numDelAttr));
 			}
 			else if (sk == SkolemKind.RANDOM) {
-
-				// Generate a random number of arguments for this Skolem and also a random argument set!
-
-				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
-				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
-
-				Vector<String> randomArgs = new Vector<String>();
 				
+				// Generate a random number of args for this Skolem (Uniform distribution between 0 (inclusive) and numOfSrcTblAttr (exclusive))
+				numArgsForSkolem = Utils.getRandomUniformNumber(_generator, numOfSrcTblAttr);
+				// Ensure we generate at least a random argument set of size > 0
+				numArgsForSkolem = (numArgsForSkolem == 0 ? numOfSrcTblAttr : numArgsForSkolem);
+
+				// Generate a random argument set	
+				Vector<String> randomArgs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, model.getAllVarsInMapping(m1, true));
+				
+				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
+				
+				// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
+				/* 
 				int MaxRandomTries = 30;
 				int attempts = 0;
 				boolean ok = false;
@@ -253,6 +261,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 					
 				} else  // If not, just use all source attributes for the sake of completion
 					fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
+				*/
 					
 			} else { // SkolemKind.ALL
 

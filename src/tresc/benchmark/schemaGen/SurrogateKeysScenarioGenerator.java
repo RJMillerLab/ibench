@@ -1,7 +1,6 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Vector;
 
 import org.vagabond.xmlmodel.MappingType;
@@ -21,7 +20,7 @@ import vtools.dataModel.expression.Variable;
 // By default (when ConfigOptions.PrimaryKeySize = 0), we enforce a key of size 1 - Sep 17, 2012
 // PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM  - Sep 18, 2012
 // PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
-
+// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
 
@@ -227,6 +226,8 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	}
 	
 	// PRG Rewrote method generateSKs() to permit different types of Skolemizations over Skolem 1 "IDIndep" attribute - Sep 17, 2012
+	// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+	
 	private void generateSKs(MappingType m1, SkolemKind sk) {
 		
 		// Generate two Skolems, one for target attribute "IDindep" and one for target attribute "IDOnFirst"
@@ -250,6 +251,28 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		{
 			log.debug("--- SKOLEM MODE = RANDOM ---");
 			
+			// Generate a random number of args for this Skolem (Uniform distribution between 0 (inclusive) and numOfSrcTblAttr (exclusive))
+			numArgsForSkolem = Utils.getRandomUniformNumber(_generator, numOfSrcTblAttr);
+			// Ensure we generate at least a random argument set of size > 0
+			numArgsForSkolem = (numArgsForSkolem == 0 ? numOfSrcTblAttr : numArgsForSkolem);
+
+			log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+			
+			// Generate a random argument set	
+			Vector<String> randomArgs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, model.getAllVarsInMapping(m1, true));
+			
+			if (randomArgs.size() == numOfSrcTblAttr) {
+				log.debug("1st Skolem, Random Argument Set [using ALL instead]: " + randomArgs.toString());
+			}
+			else {
+				log.debug("1st Skolem, Random Argument Set: " + randomArgs.toString());
+			}
+			
+			// Skolem 1 "IDIndep": define argument set based on randomly picked source attributes
+			fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
+			
+			// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
+			/*
 			numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr/2, numOfSrcTblAttr/2);
 			// ensure that we are still within bounds
 			numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
@@ -296,7 +319,7 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 				log.debug("1st Skolem, Random Argument Set [using ALL instead]: " + Arrays.toString(fac.getFreshVars(0, numOfSrcTblAttr)));
 				// Skolem 1 "IDIndep": define argument set based on all source attributes
 				fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
-			
+			*/
 		}
 		else // SkolemKind.ALL
 		{

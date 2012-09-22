@@ -114,6 +114,17 @@ public class TrampXMLModel extends MapScenarioHolder {
 		}
 	}
 	
+	// PRG ADDED method getAllVarsInMapping with Return Statement - Sep 21, 2012 
+	public Vector<String> getAllVarsInMapping (MappingType m, boolean source) {
+		Vector<String> varList = new Vector<String> (); 
+		for(RelAtomType a: (source ? m.getForeach().getAtomArray() : m.getExists().getAtomArray())) {
+			for(String var: a.getVarArray()) {
+				varList.add(var);
+			}
+		}
+		return varList;
+	}
+	
 	/** 
 	 * Returns the position of an atom in a given mapping
 	 * 

@@ -2,7 +2,6 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -34,6 +33,10 @@ import vtools.dataModel.expression.Variable;
 // PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
 // PRG Enhanced MERGE ADD to handle mandatory keys based on ConfigOptions.NumOfJoinAttributes - Sep 18, 2012
 // PRG FIXED Infinite Loop Bug in method generateSKs(), case SkolemKind.RANDOM - Sep 18, 2012
+// PRG Systematically using "Random Without Replacement" strategy/algorithm when dealing with SkolemKind.RANDOM mode everywhere! - Sep 21, 2012
+
+// BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
+
 
 public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
@@ -389,6 +392,26 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 			{
 				log.debug("--- SKOLEM MODE = RANDOM ---");
  
+				// Generate a random number of args for this Skolem (Uniform distribution between 0 (inclusive) and totalVars (exclusive))
+				int numArgsForSkolem = Utils.getRandomUniformNumber(_generator, totalVars);
+				// Ensure we generate at least a random argument set of size > 0
+				numArgsForSkolem = (numArgsForSkolem == 0 ? totalVars : numArgsForSkolem);
+
+				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				
+				// Generate a random argument set		
+				Vector<String> randomArgs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, model.getAllVarsInMapping(m1, true));
+				
+				if (randomArgs.size() == targetVars.length) {
+					log.debug("Random Argument Set [using ALL instead]: " + randomArgs.toString());
+				}
+				else {
+					log.debug("Random Argument Set: " + randomArgs.toString());
+				}
+				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
+				
+				// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
+				/*
 				int numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, totalVars/2, totalVars/2);
 				// Adjust random position value just in case it falls outside limits
 				numArgsForSkolem = (numArgsForSkolem >= totalVars) ? totalVars : numArgsForSkolem;
@@ -436,7 +459,8 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 					fac.addSKToExistsAtom(m1, 0, targetVars);
 					
 				}
-			
+				*/
+				            
 			}
 			else { // SkolemKind.ALL
 			
