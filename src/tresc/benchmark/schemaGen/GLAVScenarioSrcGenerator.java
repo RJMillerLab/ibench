@@ -153,15 +153,15 @@ public class GLAVScenarioSrcGenerator
             int rt = generator.nextInt(toAtomicSubElem.size());
             SMarkElement toAtomicElement = toAtomicSubElem.remove(rt);
 
-            // log.debug(fromAtomicElement + " "
+            // if (log.isDebugEnabled()) {log.debug(fromAtomicElement + " "
             // +
             // eqClassMgr.getEqClassHook(eqClassMgr.getEqClass(fromAtomicElement))
             // + "\n" + fromSetElement
-            // + "\n");
-            // log.debug(toAtomicElement + " "
+            // + "\n");};
+            // if (log.isDebugEnabled()) {log.debug(toAtomicElement + " "
             // +
             // eqClassMgr.getEqClassHook(eqClassMgr.getEqClass(toAtomicElement))
-            // + "\n" + toSetElement + "\n");
+            // + "\n" + toSetElement + "\n");};
 
             // and now we need to create a foreign key from the
             // fromAtomicElement (part of the fromSetElement) to the

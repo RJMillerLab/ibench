@@ -53,20 +53,20 @@ public class DB
             // if (dbConnection != null)
             // {
             // ;
-            // log.debug();
-            // log.debug("Successfully connected");
-            // log.debug();
+            // if (log.isDebugEnabled()) {log.debug();};
+            // if (log.isDebugEnabled()) {log.debug("Successfully connected");};
+            // if (log.isDebugEnabled()) {log.debug();};
             // Meta data
             // DatabaseMetaData meta = _connection.getMetaData();
-            // log.debug("\nDriver Information");
-            // log.debug("Driver Name: " + meta.getDriverName());
-            // log.debug("Driver Version: " +
-            // meta.getDriverVersion());
-            // log.debug("\nDatabase Information ");
-            // log.debug("Database Name: " +
-            // meta.getDatabaseProductName());
-            // log.debug("Database Version: " +
-            // meta.getDatabaseProductVersion());
+            // if (log.isDebugEnabled()) {log.debug("\nDriver Information");};
+            // if (log.isDebugEnabled()) {log.debug("Driver Name: " + meta.getDriverName());};
+            // if (log.isDebugEnabled()) {log.debug("Driver Version: " +
+            // meta.getDriverVersion());};
+            // if (log.isDebugEnabled()) {log.debug("\nDatabase Information ");};
+            // if (log.isDebugEnabled()) {log.debug("Database Name: " +
+            // meta.getDatabaseProductName());};
+            // if (log.isDebugEnabled()) {log.debug("Database Version: " +
+            // meta.getDatabaseProductVersion());};
             // }
         }
         catch (Exception e)
@@ -100,7 +100,7 @@ public class DB
         {
             if (unconditionally)
                 return;
-            log.debug("Statement: \n" + q);
+            if (log.isDebugEnabled()) {log.debug("Statement: \n" + q);};
             e.printStackTrace();
             throw new RuntimeException("Query " + q);
         }
@@ -152,7 +152,7 @@ public class DB
     // {
     // if (unconditionally)
     // return;
-    // log.debug("Statement: \n" + q);
+    // if (log.isDebugEnabled()) {log.debug("Statement: \n" + q);};
     // e.printStackTrace();
     // throw new RuntimeException();
     // }

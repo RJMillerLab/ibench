@@ -95,7 +95,7 @@ public class GLAVScenarioGenerator extends AbstractScenarioGenerator
         }
 
         // print now the schema and the elements for debugging purposes
-        log.debug("\n\n*****\nBasis Query:\n" + basisQuery + "\n");
+        if (log.isDebugEnabled()) {log.debug("\n\n*****\nBasis Query:\n" + basisQuery + "\n");};
         for (int i = 0, imax = 0; i < imax; i++)
         {
             SMarkElement el = atomicElements.elementAt(i);
@@ -127,7 +127,7 @@ public class GLAVScenarioGenerator extends AbstractScenarioGenerator
         }
 
         //DEBUG
-        //log.debug(" schema \n"+ scenario);
+        //if (log.isDebugEnabled()) {log.debug(" schema \n"+ scenario);};
         
         Vector<SPJQuery> mapRes = mapGenerator.generateMapping(rootSetsT, basisQuery, eqClassMgr);
         // each sub query from the vector has to be added in the select 

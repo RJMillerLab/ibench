@@ -125,8 +125,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	public void generateNextScenario(MappingScenario scenario, 
 			Configuration configuration) throws Exception {
 		if (curRep++ < repetitions) {
-			log.debug("CREATE " + curRep + "th scenario of type <" 
-					+ getScenType() + ">");
+			if (log.isDebugEnabled()) {log.debug("CREATE " + curRep + "th scenario of type <" 
+					+ getScenType() + ">");};
 			// already created enough basic scenarios to start reusing?
 			doSchemaElReuse = scenario.getNumBasicScen() 
 					>= configuration.getReuseThreshold();
@@ -146,7 +146,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	public void generateScenario(MappingScenario scenario,
 			Configuration configuration) throws Exception {
 		init(configuration, scenario);
-		log.debug("CREATE " + repetitions + " scenarios of type <" + getScenType() + ">");
+		if (log.isDebugEnabled()) {log.debug("CREATE " + repetitions + " scenarios of type <" + getScenType() + ">");};
 		
 		for (curRep = 0; curRep < repetitions; curRep++)
 			createOneInstanceOfScenario(scenario, configuration);
@@ -156,21 +156,21 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			Configuration configuration) throws Exception {
 		initPartialMapping();
 		genSchemas();
-		log.debug("Repetition <" + curRep +">");
-		log.debug("\n\nGENERATED SCHEMAS: \nSOURCE:\n" + m.getSourceRels().toString() 
-				+ "\n\nTARGET:\n" + m.getTargetRels().toString());
+		if (log.isDebugEnabled()) {log.debug("Repetition <" + curRep +">");};
+		if (log.isDebugEnabled()) {log.debug("\n\nGENERATED SCHEMAS: \nSOURCE:\n" + m.getSourceRels().toString() 
+				+ "\n\nTARGET:\n" + m.getTargetRels().toString());};
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Correspondences)) {
 			genCorrespondences();
-			log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());
+			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());};
 		}
 		genMappings();
-		log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());
+		if (log.isDebugEnabled()) {log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());};
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Transformations)) {
 			genTransformations();
-			log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());
+			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());};
 		}
 		scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
-		//log.debug("Repetition <" + curRep +"> is " + m.toString());
+		//if (log.isDebugEnabled()) {log.debug("Repetition <" + curRep +"> is " + m.toString());};
 	}
 
 	protected abstract void genCorrespondences();

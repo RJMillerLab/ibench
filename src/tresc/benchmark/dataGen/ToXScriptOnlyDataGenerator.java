@@ -118,7 +118,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		generateTemplateClosing(templateBuffer);
 
-		log.debug(templateBuffer);
+		if (log.isDebugEnabled()) {log.debug(templateBuffer);};
 
 		BufferedWriter bufWriter =
 				new BufferedWriter(new FileWriter(new File(
@@ -131,8 +131,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	private void outputToxLists(StringBuffer templateBuffer2) throws Exception {
 		List<String> topoSort = dependencies.topologicalSort();
 		
-		log.debug("sorted as " + topoSort.toString() 
-				+ "\n\n base on\n" + dependencies.toString());
+		if (log.isDebugEnabled()) {log.debug("sorted as " + topoSort.toString() 
+				+ "\n\n base on\n" + dependencies.toString());};
 		
 		for(int i = 0; i < topoSort.size(); i++) {
 			int pos = toxListPos.getId(topoSort.get(i));
@@ -208,7 +208,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	private SMarkElement[][] findConstraint(SMarkElement schemaElement) {
 		for (SMarkElement[][] constraint : constraints) {
 			for (int i = 0; i < constraint.length; i++) {
-				log.debug(constraint[i][0]);
+				if (log.isDebugEnabled()) {log.debug(constraint[i][0]);};
 				if (constraint[i][0].toString()
 						.equals(schemaElement.toString()))
 					return constraint;
@@ -478,7 +478,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String thisList = getParentList(constraint[0][0]);
 		String otherList = getParentList(parent);
 		dependencies.addNodesAndEdge(otherList, thisList);
-		log.debug("added dependency from <" + thisList + "> to <" + otherList + ">");
+		if (log.isDebugEnabled()) {log.debug("added dependency from <" + thisList + "> to <" + otherList + ">");};
 	}
 
 	private void generateToxSampleOpening(SMarkElement schemaElement,

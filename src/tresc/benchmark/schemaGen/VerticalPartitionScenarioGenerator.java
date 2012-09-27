@@ -511,7 +511,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, SkolemKind sk) {
 		int numArgsForSkolem = numOfSrcTblAttr;
 
-		log.debug("VP - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = 1");
+		if (log.isDebugEnabled()) {log.debug("VP - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = 1");};
 		
 		// if we are using a key in the original relation then we base the skolem on just that key	
 		if (sk == SkolemKind.KEY) {
@@ -519,8 +519,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			// We always generate the same Skolem function (i.e. same id, as recorded by instance variable "skId"),
 			// using the source key as argument set
 			if (rel == 0) {
-				log.debug("--- SKOLEM MODE = KEY ---");
-			    log.debug("Key Argument Set: " + Arrays.toString(fac.getFreshVars(0, keySize)));
+				if (log.isDebugEnabled()) {log.debug("--- SKOLEM MODE = KEY ---");};
+			    if (log.isDebugEnabled()) {log.debug("Key Argument Set: " + Arrays.toString(fac.getFreshVars(0, keySize)));};
 				skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, keySize));
 			}
 			else
@@ -531,7 +531,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			
 			if (rel == 0) {
 				
-				log.debug("--- SKOLEM MODE = RANDOM ---");
+				if (log.isDebugEnabled()) {log.debug("--- SKOLEM MODE = RANDOM ---");};
 				
 				// PRG NOTE: We must save the only generated Skolem function (skId and skIdRandomArgs values)for following method invocations
 				
@@ -540,16 +540,16 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				// Ensure we generate at least a random argument set of size > 0
 				numArgsForSkolem = (numArgsForSkolem == 0 ? numOfSrcTblAttr : numArgsForSkolem);
 
-				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				if (log.isDebugEnabled()) {log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);};
 				
 				// Generate a random argument set
 				skIdRandomArgs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, model.getAllVarsInMapping(m1, true));
 				
 				if (skIdRandomArgs.size() == numOfSrcTblAttr) {
-					log.debug("Random Argument Set [using ALL instead]: " + skIdRandomArgs.toString());
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set [using ALL instead]: " + skIdRandomArgs.toString());};
 				}
 				else {
-					log.debug("Random Argument Set: " + skIdRandomArgs.toString());
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set: " + skIdRandomArgs.toString());};
 				}
 				skId = fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(skIdRandomArgs));
 				
@@ -558,7 +558,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				numArgsForSkolem = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
 				numArgsForSkolem = (numArgsForSkolem >= numOfSrcTblAttr) ? numOfSrcTblAttr : numArgsForSkolem;
 				
-				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				if (log.isDebugEnabled()) {log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);};
 				
 				skIdRandomArgs = new Vector<String>();
 				
@@ -591,11 +591,11 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				if (skIdRandomArgs.size() > 0) {
 				
 					Collections.sort(skIdRandomArgs);
-					log.debug("Random Argument Set: " + skIdRandomArgs.toString());
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set: " + skIdRandomArgs.toString());};
 					skId = fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(skIdRandomArgs));
 					
 				} else  { // If not, just use all source attributes for the sake of completion
-					log.debug("Random Argument Set [using ALL instead] : " + Arrays.toString(fac.getFreshVars(0, numOfSrcTblAttr)));
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set [using ALL instead] : " + Arrays.toString(fac.getFreshVars(0, numOfSrcTblAttr)));};
 					skId = fac.addSKToExistsAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
 				}
 				*/
@@ -610,8 +610,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		}
 		else { // SkolemKind.ALL
 			if (rel == 0) {
-				log.debug("--- SKOLEM MODE = ALL ---");
-				log.debug("ALL Argument Set: " + Arrays.toString(fac.getFreshVars(0, numArgsForSkolem)));
+				if (log.isDebugEnabled()) {log.debug("--- SKOLEM MODE = ALL ---");};
+				if (log.isDebugEnabled()) {log.debug("ALL Argument Set: " + Arrays.toString(fac.getFreshVars(0, numArgsForSkolem)));};
 				skId = fac.addSKToExistsAtom(m1, rel, fac.getFreshVars(0, numArgsForSkolem));
 			}
 				

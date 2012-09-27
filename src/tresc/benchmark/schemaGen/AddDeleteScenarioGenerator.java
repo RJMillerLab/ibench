@@ -198,7 +198,7 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	{
 		int numArgsForSkolem = numOfSrcTblAttr;
 
-		log.debug("ADD DELETE - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = " + numAddAttr);
+		if (log.isDebugEnabled()) {log.debug("ADD DELETE - Method generateSKs() with totalVars = " + numOfSrcTblAttr + " and Num of New Skolems = " + numAddAttr);};
 		
 		for (int j = 0; j < numAddAttr; j++) {
 			

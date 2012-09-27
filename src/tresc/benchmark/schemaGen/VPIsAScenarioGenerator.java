@@ -295,10 +295,10 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 			attrs[i] = attrName;
 		}
 		
-		log.debug("----------" + sourceRelName + "----------");
+		if (log.isDebugEnabled()) {log.debug("----------" + sourceRelName + "----------");};
 		
 		for (String a : attrs)
-			log.debug("attr: " + a);
+			if (log.isDebugEnabled()) {log.debug("attr: " + a);};
 		
 		RelationType sRel = fac.addRelation(hook, sourceRelName, attrs, true);
 		m.addSourceRel(sRel);
@@ -332,7 +332,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         	String trgName = randomRelName(i);
         	String hook = getRelHook(i);
         	
-        	log.debug("----------" + trgName + "----------");
+        	if (log.isDebugEnabled()) {log.debug("----------" + trgName + "----------");};
         	
         	// offset determines which source attributes go to which table (so there is no overlap)
         	int offset = i * attsPerTargetRel;
@@ -340,7 +340,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         	int attrNum = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) : (attsPerTargetRel + attrRemainder + keySize);
         	attrs = new String[attrNum];
         	
-        	log.debug("attrNum: " + attrNum);
+        	if (log.isDebugEnabled()) {log.debug("attrNum: " + attrNum);};
         	
         	int j = 0;
         	// if its the first relation then we add a join attribute, otherwise it is a foreign key so we use the ref attribute
@@ -356,7 +356,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             	attrs[j] = srcAttrs[offset + j];
             
             for (String s : attrs)
-        	   log.debug("attr: " + s);
+        	   if (log.isDebugEnabled()) {log.debug("attr: " + s);};
             
             fac.addRelation(hook, trgName, attrs, false);
             

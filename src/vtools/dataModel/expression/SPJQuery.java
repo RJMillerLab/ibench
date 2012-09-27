@@ -293,7 +293,7 @@ public class SPJQuery extends Query implements Visitable, Cloneable, Trampable
 			result.append(attrString);
 			if (i != _select.size() - 1)
 				result.append(", ");
-			log.debug("Add attr " + attrString);
+			if (log.isDebugEnabled()) {log.debug("Add attr " + attrString);};
 		}
 		
 		if (_from.size() > 0) {
@@ -377,7 +377,7 @@ public class SPJQuery extends Query implements Visitable, Cloneable, Trampable
 			result.append(group);
 		}
 		
-		log.debug(result);
+		if (log.isDebugEnabled()) {log.debug(result);};
 		return result.toString();
     }
 

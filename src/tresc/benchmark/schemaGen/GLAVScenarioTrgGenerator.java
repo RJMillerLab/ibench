@@ -52,7 +52,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            log.debug(" fragment "+i+ " " + fragments[i]);
+            if (log.isDebugEnabled()) {log.debug(" fragment "+i+ " " + fragments[i]);};
         }*/
         
         shuffle(fragments, generator);
@@ -60,7 +60,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            log.debug(" after Shuffle fragment "+i+ " " + fragments[i]);
+            if (log.isDebugEnabled()) {log.debug(" after Shuffle fragment "+i+ " " + fragments[i]);};
         }*/
         
         distribute(constantElements, fragments, generator);
@@ -68,7 +68,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            log.debug(" after Distribute Constants fragment "+i+ " " + fragments[i]);
+            if (log.isDebugEnabled()) {log.debug(" after Distribute Constants fragment "+i+ " " + fragments[i]);};
         }*/
         
         distribute(combElements, fragments, generator);
@@ -77,7 +77,7 @@ public class GLAVScenarioTrgGenerator
         //DEBUG
         /*for (int i = 0, imax = fragments.length; i < imax; i++)
         {
-            log.debug(" after Distribute fragment "+i+ " " + fragments[i]);
+            if (log.isDebugEnabled()) {log.debug(" after Distribute fragment "+i+ " " + fragments[i]);};
         }*/
 
         // and now nest each fragment
@@ -346,7 +346,7 @@ public class GLAVScenarioTrgGenerator
             el.setHook(coding);
             
             //DEBUG
-            //log.debug(" constant el "+el);
+            //if (log.isDebugEnabled()) {log.debug(" constant el "+el);};
             
             // create a constant value
             String value = Modules.nameFactory.getARandomName();
@@ -373,7 +373,7 @@ public class GLAVScenarioTrgGenerator
 
         int A = elements.size();
 
-        // log.debug("A=" + A + " D=" + D);
+        // if (log.isDebugEnabled()) {log.debug("A=" + A + " D=" + D);};
 
         int[][] counters = new int[D][D];
 
@@ -542,15 +542,15 @@ public class GLAVScenarioTrgGenerator
         // for (int line = D - 1; line >= 0; line--)
         // {
         // if (rootSets[line][col] != null)
-        // log.debug("\t" + rootSets[line][col].size());
-        // else log.debug("X");
-        // log.debug("");
+        // if (log.isDebugEnabled()) {log.debug("\t" + rootSets[line][col].size());};
+        // else if (log.isDebugEnabled()) {log.debug("X");};
+        // if (log.isDebugEnabled()) {log.debug("");};
         // }
         // }
 
         // StringBuffer buf = new StringBuffer();
         // rootSets[0][0].prettyPrint(buf, 0);
-        // log.debug(buf.toString());
+        // if (log.isDebugEnabled()) {log.debug(buf.toString());};
 
         // System.exit(0);
         // return null;

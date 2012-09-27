@@ -23,13 +23,13 @@ public static long dumpCheckPoint(long prevCheck, String msg)
     long mills = System.currentTimeMillis();
     if (prevCheck == -1)
         prevCheck = _programTime;
-    //log.debug((mills - prevCheck) + "ms " + msg);
+    //if (log.isDebugEnabled()) {log.debug((mills - prevCheck) + "ms " + msg);};
     long ms = (mills - prevCheck);
     long sec = ms / 1000;
     ms = ms % 1000;
     long min = sec / 60;
     sec = sec % 60;
-    log.debug(min + "min " + sec + "sec and " + ms + "ms " + msg);
+    if (log.isDebugEnabled()) {log.debug(min + "min " + sec + "sec and " + ms + "ms " + msg);};
     return mills;
 }
 

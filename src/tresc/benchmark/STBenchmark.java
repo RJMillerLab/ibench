@@ -59,12 +59,12 @@ public class STBenchmark {
 		
 		if(args.length == 0)
 		{
-			log.debug("Please specify command line arguments");
+			if (log.isDebugEnabled()) {log.debug("Please specify command line arguments");};
 			parser.printUsage(System.err);
 			System.exit(1);
 		}
 		
-		log.debug("Command line args are: <" + LoggerUtil.arrayToString(args) + ">");
+		if (log.isDebugEnabled()) {log.debug("Command line args are: <" + LoggerUtil.arrayToString(args) + ">");};
 		try {
 			parser.parseArgument(args);
 		}
@@ -115,7 +115,7 @@ public class STBenchmark {
 
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
-		log.debug("Printing results !");
+		if (log.isDebugEnabled()) {log.debug("Printing results !");};
 		File instDir = new File (Configuration.instancePathPrefix);
 		if (!instDir.exists())
 			instDir.mkdirs();
@@ -123,8 +123,8 @@ public class STBenchmark {
 		if (!schemDir.exists())
 			schemDir.mkdirs();
 		
-		log.debug("instance path: " + instDir.toString());
-		log.debug("schema path: " + schemDir.toString());
+		if (log.isDebugEnabled()) {log.debug("instance path: " + instDir.toString());};
+		if (log.isDebugEnabled()) {log.debug("schema path: " + schemDir.toString());};
 		
 		XSDWriter schemaPrinter = new XSDWriter();
 		XMLWriter schemaWriter = new XMLWriter();
@@ -132,7 +132,7 @@ public class STBenchmark {
 		// print scenario on the screen
 		StringBuffer buf = new StringBuffer();
 		scenario.prettyPrint(buf, 0);
-		log.debug(buf);
+		if (log.isDebugEnabled()) {log.debug(buf);};
 
 		// print scenario on file
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
@@ -243,10 +243,10 @@ public class STBenchmark {
 		}
 		else if (_configuration.propertyFileName != null) {
 			PropertyWrapper props = new PropertyWrapper(_configuration.propertyFileName);
-			log.debug(props.toString());
+			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);
 			parseArgs(args);
-			log.debug(_configuration.toString());
+			if (log.isDebugEnabled()) {log.debug(_configuration.toString());};
 			runConfig();
 		}
 		else {
@@ -285,7 +285,7 @@ public class STBenchmark {
 
 	public void run(String configLine) throws Exception {
 		_configuration = new Configuration(configLine);
-		log.debug("Configuration is: " + _configuration.toString());
+		if (log.isDebugEnabled()) {log.debug("Configuration is: " + _configuration.toString());};
 		runConfig();
 	}
 

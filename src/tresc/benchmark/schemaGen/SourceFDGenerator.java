@@ -30,16 +30,16 @@ public class SourceFDGenerator implements ScenarioGenerator
 	{
 		Random _generator = configuration.getRandomGenerator();
 		
-		log.debug("Attempting to Generate Source FDs");
+		if (log.isDebugEnabled()) {log.debug("Attempting to Generate Source FDs");};
 
 		// create PK FDs R(A,B,C) if A is key then add A -> B,C
 		if (configuration.getParam(ParameterName.PrimaryKeyFDs) == 1) {
-			log.debug("Generating PK FDs for those Relations with PKs");
+			if (log.isDebugEnabled()) {log.debug("Generating PK FDs for those Relations with PKs");};
 			generatePKFDs(scenario);
 		}
 
 		if (configuration.getParam(Constants.ParameterName.SourceFDPerc) > 0) {
-			log.debug("Generating Random FDs as SourceFDPerc > 0");	
+			if (log.isDebugEnabled()) {log.debug("Generating Random FDs as SourceFDPerc > 0");};	
 			generateRandomFDs(scenario, configuration, _generator);
 		}
 	
@@ -57,7 +57,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 			int numAtts = r.getAttrArray().length;
 			int numFDs = (int) Math.floor(percentage * numAtts);
 			
-			log.debug("Attempting to Generate <" + numFDs + "> Random FDs for Relation " + r.getName());
+			if (log.isDebugEnabled()) {log.debug("Attempting to Generate <" + numFDs + "> Random FDs for Relation " + r.getName());};
 
 			// get positions for all of the attributes
 			int[] attrPos = new int[r.getAttrArray().length];
@@ -160,11 +160,11 @@ public class SourceFDGenerator implements ScenarioGenerator
 				else
 					scenario.getDocFac().addFD(r.getName(),Utils.convertVectorToStringArray(LHSAtts),new String[] { RHSAtt });
 				
-				log.debug("---------NEW FD---------");
+				if (log.isDebugEnabled()) {log.debug("---------NEW FD---------");};
 
-				log.debug("relName: " + r.getName());
-				log.debug("LHS: " + LHSAtts.toString());
-				log.debug("RHS: " + RHSAtt);
+				if (log.isDebugEnabled()) {log.debug("relName: " + r.getName());};
+				if (log.isDebugEnabled()) {log.debug("LHS: " + LHSAtts.toString());};
+				if (log.isDebugEnabled()) {log.debug("RHS: " + RHSAtt);};
 			}
 		}
 	}
@@ -185,11 +185,11 @@ public class SourceFDGenerator implements ScenarioGenerator
 		        List<String> nonkeyList = Arrays.asList(nonKeyAttrs);
 		        Vector<String> nonkeyVect = new Vector<String>(nonkeyList);
 				
-		        log.debug("---------GENERATING PRIMARY KEY FD---------");
+		        if (log.isDebugEnabled()) {log.debug("---------GENERATING PRIMARY KEY FD---------");};
 		        
-				log.debug("relName: " + r.getName());
-				log.debug("LHS: " + pkVect.toString());
-				log.debug("RHS: " + nonkeyVect.toString());
+				if (log.isDebugEnabled()) {log.debug("relName: " + r.getName());};
+				if (log.isDebugEnabled()) {log.debug("LHS: " + pkVect.toString());};
+				if (log.isDebugEnabled()) {log.debug("RHS: " + nonkeyVect.toString());};
 			}
 		}
 	}

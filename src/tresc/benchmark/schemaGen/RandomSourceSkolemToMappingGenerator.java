@@ -69,12 +69,12 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
 		{
-			log.debug("---------GENERATING SKOLEMS---------");
-			log.debug("Relation: " + r.getName());
+			if (log.isDebugEnabled()) {log.debug("---------GENERATING SKOLEMS---------");};
+			if (log.isDebugEnabled()) {log.debug("Relation: " + r.getName());};
 			
-	        log.debug("Attributes: ");
+	        if (log.isDebugEnabled()) {log.debug("Attributes: ");};
 	        for (AttrDefType ra : r.getAttrArray())
-	        	log.debug(ra.getName() + " ");
+	        	if (log.isDebugEnabled()) {log.debug(ra.getName() + " ");};
 	        
 			double percentage = ((double) configuration.getParam(Constants.ParameterName.SourceSkolemPerc)) / (double) 100;
 			int numAtts = r.getAttrArray().length;
@@ -85,26 +85,26 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			generateVictims(r, scenario, RandomSkolems, addedSKs, numSKs);
 			generateSkolemArguments(r, scenario, RandomSkolems, numSKs);
 	        
-			log.debug("---------NEW SKOLEMS---------");
+			if (log.isDebugEnabled()) {log.debug("---------NEW SKOLEMS---------");};
 			
 			for (RandSrcSkolem rsk : RandomSkolems)
 			{
-				log.debug("New Skolem Identifier: " + rsk.getSkId());
-				log.debug("Victim: " + rsk.getAttr());
-				log.debug("Victim Position: " + rsk.getAttrPosition());
-				log.debug("Victim Variable: " + rsk.getAttrVar());
+				if (log.isDebugEnabled()) {log.debug("New Skolem Identifier: " + rsk.getSkId());};
+				if (log.isDebugEnabled()) {log.debug("Victim: " + rsk.getAttr());};
+				if (log.isDebugEnabled()) {log.debug("Victim Position: " + rsk.getAttrPosition());};
+				if (log.isDebugEnabled()) {log.debug("Victim Variable: " + rsk.getAttrVar());};
 				
 				if(rsk.getArgAttrs().length != 0)
 				{
 					// convert to vector to facilitate printing
 			        List<String> argList = Arrays.asList(rsk.getArgAttrs());
 			        Vector<String> argVect = new Vector<String>(argList);
-			        log.debug("Arguments: " + argVect.toString());
+			        if (log.isDebugEnabled()) {log.debug("Arguments: " + argVect.toString());};
 			        
-			        log.debug("Positions: ");
+			        if (log.isDebugEnabled()) {log.debug("Positions: ");};
 			        for (int pos : rsk.getArgPositions())
-						log.debug(pos + " ");
-			        log.debug("");
+						if (log.isDebugEnabled()) {log.debug(pos + " ");};
+			        if (log.isDebugEnabled()) {log.debug("");};
 				}
 			}
 			
@@ -266,7 +266,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useKeyAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		log.debug("Using SkolemKind.KEY Mode for " + rsk.getSkId());
+		if (log.isDebugEnabled()) {log.debug("Using SkolemKind.KEY Mode for " + rsk.getSkId());};
 	
 		// make sure there is a key for the relation, if there is not then we will switch to using all attributes for the skolem
 		if (r.isSetPrimaryKey()) 
@@ -321,14 +321,14 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	
 	private static void useRandomAsArgument(RelationType r, MappingScenario scenario, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		log.debug("Using SkolemKind.RANDOM Mode for " + rsk.getSkId());
+		if (log.isDebugEnabled()) {log.debug("Using SkolemKind.RANDOM Mode for " + rsk.getSkId());};
 	
 		// Generate a random number of args for Skolem rsk (Uniform distribution between 0 (inclusive) and allAttrs.length (exclusive))
 		int numArgsForSkolem = _generator.nextInt(allAttrs.length);
 		// Ensure we generate at least a random argument set of at least size > 0
 		numArgsForSkolem = (numArgsForSkolem == 0 ? allAttrs.length : numArgsForSkolem);
 		
-		log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+		if (log.isDebugEnabled()) {log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);};
 		
 		// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
 		// Instead we rely on method Utils.getRandomWithoutReplacementSequence() which guarantees convergence
@@ -372,7 +372,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			}
 		}
 		
-		log.debug("Random Argument Set: " + randomAttrs.toString());
+		if (log.isDebugEnabled()) {log.debug("Random Argument Set: " + randomAttrs.toString());};
 		
 		String[] randAtts = Utils.convertVectorToStringArray(randomAttrs);
 		int[] attrPos = getAttrPositions(allAttrs, randAtts);
@@ -404,7 +404,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	 */
 	private static void useAllAsArgument(RelationType r, RandSrcSkolem rsk, String[] allAttrs) throws Exception 
 	{
-		log.debug("Using SkolemKind.ALL Mode for " + rsk.getSkId());
+		if (log.isDebugEnabled()) {log.debug("Using SkolemKind.ALL Mode for " + rsk.getSkId());};
 	
 		Vector<String> skAtts = new Vector<String>();
 		
@@ -416,7 +416,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			if (skAtts.indexOf(rsk.getAttr()) != -1)
 				skAtts.remove(skAtts.indexOf(rsk.getAttr()));
 		
-		log.debug("All Argument Set: " + skAtts.toString());
+		if (log.isDebugEnabled()) {log.debug("All Argument Set: " + skAtts.toString());};
 		
 		rsk.setArgAttrs(Utils.convertVectorToStringArray(skAtts));
 		rsk.setArgPositions(getAttrPositions(allAttrs, rsk.getArgAttrs()));

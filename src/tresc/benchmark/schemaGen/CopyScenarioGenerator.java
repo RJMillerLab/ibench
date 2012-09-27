@@ -26,18 +26,18 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		A = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
 		keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
 		
-		log.debug("-----BEFORE-----");
-		log.debug("Atomic Elements: " + A);
-		log.debug("Key Size: " + keySize);
+		if (log.isDebugEnabled()) {log.debug("-----BEFORE-----");};
+		if (log.isDebugEnabled()) {log.debug("Atomic Elements: " + A);};
+		if (log.isDebugEnabled()) {log.debug("Key Size: " + keySize);};
 		
 		A = (A > 1) ? A : 2;
 		keySize = (keySize >= A) ? A - 1 : keySize;
 		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
 		// keySize = (keySize > 0) ? keySize : 1;
 		
-		log.debug("-----AFTER-----");
-		log.debug("Atomic Elements: " + A);
-		log.debug("Key Size: " + keySize);
+		if (log.isDebugEnabled()) {log.debug("-----AFTER-----");};
+		if (log.isDebugEnabled()) {log.debug("Atomic Elements: " + A);};
+		if (log.isDebugEnabled()) {log.debug("Key Size: " + keySize);};
 	}
 
 	public CopyScenarioGenerator() {

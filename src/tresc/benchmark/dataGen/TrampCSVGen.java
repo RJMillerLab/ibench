@@ -78,7 +78,7 @@ public class TrampCSVGen extends ToXDataGenerator {
 			String relName = rootSetElt.getLabel();
 			String xsltScript = templateXSLT.replace("$RELNAME$", relName);
 			outFile = new File(outputPath, relName + ".csv");
-			log.debug("use XSLT script:\n" + xsltScript);
+			if (log.isDebugEnabled()) {log.debug("use XSLT script:\n" + xsltScript);};
 			
 			transform(xsltScript, instFile, outFile);
 		}

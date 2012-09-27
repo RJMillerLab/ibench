@@ -260,7 +260,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 		
 		// each table get fresh vars for its free and join attributes
 		// the fk vars are takes from the join attributes they reference
-		log.debug("Relation 0 is of size " + numOfAttributes[0]);
+		if (log.isDebugEnabled()) {log.debug("Relation 0 is of size " + numOfAttributes[0]);};
 		for(int i = 1; i < numOfTables; i++) {
 			int numFreshVars = numOfAttributes[i] - numOfJoinAttributes;
 			String[] freeVars = fac.getFreshVars(offset, numFreshVars);
@@ -274,7 +274,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 			}
 			// get vars for the referenced attributes from the previous table
 			if (jk == JoinKind.CHAIN) {
-				log.debug("Relation i is " + i  + " of size " + numOfAttributes[i] + ", " + numFreshVars + " , " + numOfJoinAttributes);
+				if (log.isDebugEnabled()) {log.debug("Relation i is " + i  + " of size " + numOfAttributes[i] + ", " + numFreshVars + " , " + numOfJoinAttributes);};
 				// PRG FIXED CHAIN JOIN PROBLEMS - August 30, 2012
 				// fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
 				//		numFreshVars + numOfJoinAttributes);
@@ -282,14 +282,14 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 				// int fromIndex = vars[i-1].length - numOfJoinAttributes;
 				int fromIndex = vars[i-1].length - getNumJoinAttrs(i-1); 
 				int toIndex = (numOfJoinAttributes == 1 ? fromIndex + 1 : fromIndex + numOfJoinAttributes);
-				log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);
+				if (log.isDebugEnabled()) {log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);};
 				fkVars = Arrays.copyOfRange(vars[i - 1], fromIndex, toIndex);
 			}
 			vars[i] = CollectionUtils.concat(freeVars, fkVars);
 			
 			fac.addForeachAtom(m1, i, vars[i]);
 			
-			log.debug("For Each Clause is: " + m1.getForeach().toString());
+			if (log.isDebugEnabled()) {log.debug("For Each Clause is: " + m1.getForeach().toString());};
 		}
 		
 		// generate an array of vars for the target
@@ -346,13 +346,13 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
 	private void generateSKs(MappingType m1, SkolemKind sk, int totalVars, String[][] vars, String[] targetVars) 
 	{	
-		log.debug("MERGE ADD - Method generateSKs() with totalVars = " + totalVars + " and Num of New Skolems = " + numNewAttr);
+		if (log.isDebugEnabled()) {log.debug("MERGE ADD - Method generateSKs() with totalVars = " + totalVars + " and Num of New Skolems = " + numNewAttr);};
 		for (int i = 0; i < numNewAttr; i++)
 		{
 			// in KEY mode we use the join attributes as the skolem arguments
 			if (sk == SkolemKind.KEY)
 			{
-				log.debug("--- SKOLEM MODE = KEY ---");
+				if (log.isDebugEnabled()) {log.debug("--- SKOLEM MODE = KEY ---");};
 
 				// PRG FIXED BUG - ArrayCopy was always invoked with Null Destiny Array - Sep 5, 2012
 				// Initially we thought about allocating a max number of elements, as determined by the length of targetVars
@@ -377,36 +377,36 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 				if (jk == JoinKind.CHAIN) {
 					for(int j = 0; j < numOfTables - 1; j++) {
 						int start = getNumNormalAttrs(j);
-						log.debug("Relation j is " + j  + " of size " + numOfAttributes[j] + ", Num Join Attrs: " + numOfJoinAttributes);
-						log.debug("Copying Chain Join Variables from  " + start  + " to " + numOfJoinAttributes);
+						if (log.isDebugEnabled()) {log.debug("Relation j is " + j  + " of size " + numOfAttributes[j] + ", Num Join Attrs: " + numOfJoinAttributes);};
+						if (log.isDebugEnabled()) {log.debug("Copying Chain Join Variables from  " + start  + " to " + numOfJoinAttributes);};
 						System.arraycopy(vars[j], start, argVars, offset, numOfJoinAttributes);
 						offset += numOfJoinAttributes;
 					}
 				}
 				
-				log.debug("Key Argument Set: " + Arrays.toString(argVars));
+				if (log.isDebugEnabled()) {log.debug("Key Argument Set: " + Arrays.toString(argVars));};
 				fac.addSKToExistsAtom(m1, 0, argVars);
 			}
 
 			else if (sk == SkolemKind.RANDOM)
 			{
-				log.debug("--- SKOLEM MODE = RANDOM ---");
+				if (log.isDebugEnabled()) {log.debug("--- SKOLEM MODE = RANDOM ---");};
  
 				// Generate a random number of args for this Skolem (Uniform distribution between 0 (inclusive) and totalVars (exclusive))
 				int numArgsForSkolem = Utils.getRandomUniformNumber(_generator, totalVars);
 				// Ensure we generate at least a random argument set of size > 0
 				numArgsForSkolem = (numArgsForSkolem == 0 ? totalVars : numArgsForSkolem);
 
-				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				if (log.isDebugEnabled()) {log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);};
 				
 				// Generate a random argument set		
 				Vector<String> randomArgs = Utils.getRandomWithoutReplacementSequence(_generator, numArgsForSkolem, model.getAllVarsInMapping(m1, true));
 				
 				if (randomArgs.size() == targetVars.length) {
-					log.debug("Random Argument Set [using ALL instead]: " + randomArgs.toString());
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set [using ALL instead]: " + randomArgs.toString());};
 				}
 				else {
-					log.debug("Random Argument Set: " + randomArgs.toString());
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set: " + randomArgs.toString());};
 				}
 				fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomArgs));
 				
@@ -416,7 +416,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 				// Adjust random position value just in case it falls outside limits
 				numArgsForSkolem = (numArgsForSkolem >= totalVars) ? totalVars : numArgsForSkolem;
 				
-				log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);
+				if (log.isDebugEnabled()) {log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);};
 				
 				// generate the random vars to be arguments for the skolem
 				Vector<String> randomVars = new Vector<String> ();
@@ -450,12 +450,12 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 				if (randomVars.size() > 0) {
 				
 					Collections.sort(randomVars);
-					log.debug("Random Argument Set: " + randomVars.toString());
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set: " + randomVars.toString());};
 					fac.addSKToExistsAtom(m1, 0, Utils.convertVectorToStringArray(randomVars));
 					
 				} else  { // If not, just use all source attributes for the sake of completion
 					
-					log.debug("Random Argument Set [using ALL instead]: " + Arrays.toString(targetVars));
+					if (log.isDebugEnabled()) {log.debug("Random Argument Set [using ALL instead]: " + Arrays.toString(targetVars));};
 					fac.addSKToExistsAtom(m1, 0, targetVars);
 					
 				}
@@ -464,8 +464,8 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 			}
 			else { // SkolemKind.ALL
 			
-				log.debug("--- SKOLEM MODE = ALL ---");
-				log.debug("ALL Argument Set: " + Arrays.toString(targetVars));
+				if (log.isDebugEnabled()) {log.debug("--- SKOLEM MODE = ALL ---");};
+				if (log.isDebugEnabled()) {log.debug("ALL Argument Set: " + Arrays.toString(targetVars));};
 
 				fac.addSKToExistsAtom(m1, 0, targetVars);
 			}

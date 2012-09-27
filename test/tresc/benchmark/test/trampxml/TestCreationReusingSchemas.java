@@ -54,7 +54,7 @@ public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
 	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-			log.debug(doc.getScenario().toString());
+			if (log.isDebugEnabled()) {log.debug(doc.getScenario().toString());};
 		}
 		catch (Exception e) {
 			log.error(n + "\n\n" + loadToString());

@@ -81,7 +81,7 @@ public class TestFormerCrashConfigurations {
 	private void testLoad(String name) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-			log.debug(doc.getScenario().toString());
+			if (log.isDebugEnabled()) {log.debug(doc.getScenario().toString());};
 		}
 		catch (Exception e) {
 			log.error(name + "\n\n" + loadToString());

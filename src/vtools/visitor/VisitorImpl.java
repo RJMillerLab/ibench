@@ -27,9 +27,9 @@ public class VisitorImpl implements Visitor
         {
             try
             {
-                // log.debug("Looking for " + this.getClass().getName()
+                // if (log.isDebugEnabled()) {log.debug("Looking for " + this.getClass().getName()
                 // + ".visit(" + currClass.getName()
-                // + "," + objArrayClass.getName() + ")");
+                // + "," + objArrayClass.getName() + ")");};
                 m = this.getClass().getMethod("visit", new Class[]
                 {
                         currClass, objArrayClass
@@ -37,7 +37,7 @@ public class VisitorImpl implements Visitor
             }
             catch (NoSuchMethodException e)
             {
-                // log.debug("Nothing for " + currClass.getName());
+                // if (log.isDebugEnabled()) {log.debug("Nothing for " + currClass.getName());};
                 currClass = currClass.getSuperclass();
             }
         }

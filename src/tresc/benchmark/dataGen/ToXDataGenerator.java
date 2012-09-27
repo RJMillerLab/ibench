@@ -41,7 +41,7 @@ public class ToXDataGenerator extends ToXScriptOnlyDataGenerator {
 	protected void generateInstanceXML() throws Exception {
 		instanceXMLFile =
 				toxGen.generate(new File(outputPath, template), outputPath);
-		log.debug("created XML file " + instanceXMLFile + " in folder " + outputPath);
+		if (log.isDebugEnabled()) {log.debug("created XML file " + instanceXMLFile + " in folder " + outputPath);};
 	}
 
 	public StringBuffer getDataBuffer() {

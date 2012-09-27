@@ -38,7 +38,7 @@ public class XMLReader
 		switch (node.getNodeType()){
 		
 		  case Node.DOCUMENT_NODE :
-			log.debug("<xml version = \"1.0\">\n");
+			if (log.isDebugEnabled()) {log.debug("<xml version = \"1.0\">\n");};
 			NodeList nodes = node.getChildNodes();
 			int nrNodes= nodes.getLength();
 			if (nodes != null){
@@ -48,32 +48,32 @@ public class XMLReader
 			
 		case Node.ELEMENT_NODE:
 			String name = node.getNodeName();
-			log.debug(indent+ "<"+name);
+			if (log.isDebugEnabled()) {log.debug(indent+ "<"+name);};
 			
 			NamedNodeMap attributes = node.getAttributes();
 			if (attributes != null){
 				int nrAttr= attributes.getLength();
-				log.debug(" nr attr = "+nrAttr);
+				if (log.isDebugEnabled()) {log.debug(" nr attr = "+nrAttr);};
 				for(int i=0; i<nrAttr; i++ ){
 					Node current = attributes.item(i);
-					log.debug(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");
+					if (log.isDebugEnabled()) {log.debug(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");};
 				}	
 			}
-			log.debug(">");
+			if (log.isDebugEnabled()) {log.debug(">");};
 			
 			NodeList children = node.getChildNodes();
 			if (children != null){
 				int nrChild= children.getLength();
-				log.debug(" nr children = "+nrChild);
+				if (log.isDebugEnabled()) {log.debug(" nr children = "+nrChild);};
 				for(int i=0; i<nrChild; i++)
 					printDOC(children.item(i),indent+" ");
 			}
 			
-			log.debug("</"+name+">");
+			if (log.isDebugEnabled()) {log.debug("</"+name+">");};
 			break;
 			
 		case Node.TEXT_NODE:
-			log.debug(node.getNodeValue());
+			if (log.isDebugEnabled()) {log.debug(node.getNodeValue());};
 			break;
 		}
 		

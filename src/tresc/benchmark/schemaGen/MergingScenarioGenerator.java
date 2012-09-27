@@ -505,7 +505,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			}
 			// get vars for the referenced attributes from the previous table
 			if (jk == JoinKind.CHAIN) {
-				log.debug("i is " + i  + " , " + numFreshVars + " , " + numOfJoinAttributes);
+				if (log.isDebugEnabled()) {log.debug("i is " + i  + " , " + numFreshVars + " , " + numOfJoinAttributes);};
 				// PRG FIXED CHAIN JOIN PROBLEMS - August 30, 2012
 				// Replaced the following 2 lines to avoid ArrayIndexOutOfBoundsException
 				//fkVars = Arrays.copyOfRange(vars[i - 1], numFreshVars, 
@@ -514,9 +514,9 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 				// int fromIndex = vars[i-1].length - numOfJoinAttributes; 
 				int fromIndex = vars[i-1].length - getNumJoinAttrs(i-1); 
 				int toIndex = (numOfJoinAttributes == 1 ? fromIndex + 1 : fromIndex + numOfJoinAttributes);
-				log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);
+				if (log.isDebugEnabled()) {log.debug("Copying Chain Join Variables from  " + fromIndex  + " to " + toIndex);};
 				fkVars = Arrays.copyOfRange(vars[i - 1], fromIndex, toIndex);
-				log.debug("FK Chain Join Vars are " + Arrays.toString(fkVars));
+				if (log.isDebugEnabled()) {log.debug("FK Chain Join Vars are " + Arrays.toString(fkVars));};
 			}
 			vars[i] = CollectionUtils.concat(freeVars, fkVars);
 			
