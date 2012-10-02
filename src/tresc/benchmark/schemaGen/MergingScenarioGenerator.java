@@ -267,10 +267,24 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
 	protected void createPKs(String[][] attrs) throws Exception {
 		for(int i = 0; i < numOfTables; i++) {
-			if ((jk == JoinKind.STAR && i != 0) || (i != numOfTables - 1)) {
+			if ((jk == JoinKind.STAR && i != 0) // center of star has different PK 
+					|| (jk == JoinKind.CHAIN && i != numOfTables - 1)) // last table for chain join has no PK 
+			{ 
 				String relName = m.getRelName(i, true);
 				if (!model.hasPK(relName, true))				
 					fac.addPrimaryKey(relName, getJoinAttrs(i, attrs), true);
+			}
+			// center of the star
+			else if (jk == JoinKind.STAR && i == 0) {
+				String relName = m.getRelName(i, true);
+				if (!model.hasPK(relName, true)) {
+					int numAttr = m.getNumRelAttr(i, true);
+					int numJoinAttr = numOfJoinAttributes * (numOfTables - 1);
+					fac.addPrimaryKey(relName, 
+							CollectionUtils.createSequence(numAttr - numJoinAttr, 
+									numJoinAttr), 
+							true);
+				}
 			}
 		}
 	}
