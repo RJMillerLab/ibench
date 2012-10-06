@@ -27,6 +27,7 @@ import vtools.xml.XMLWriter;
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated
 // PRG ADD STBenchmark's to-be generated schema mapping is called "Mapping Scenario"
+// PRG Removed redundant output and also replaced code to avoid generating string if it is not going to be output - Oct 5, 2012
 
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);
@@ -129,10 +130,12 @@ public class STBenchmark {
 		XSDWriter schemaPrinter = new XSDWriter();
 		XMLWriter schemaWriter = new XMLWriter();
 
-		// print scenario on the screen
+		// print scenario on the screen if required
 		StringBuffer buf = new StringBuffer();
-		scenario.prettyPrint(buf, 0);
-		if (log.isDebugEnabled()) {log.debug(buf);};
+		// PRG - Replaced to avoid generating string if it is not going to be output - Oct 5, 2012
+		// scenario.prettyPrint(buf, 0);
+		// if (log.isDebugEnabled()) {log.debug(buf);};
+		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
 
 		// print scenario on file
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
@@ -261,21 +264,23 @@ public class STBenchmark {
 	}
 	
 	public void runConfig() throws Exception {
-		//PRG ADD Logging Statement 
-		log.info("\n*** IN RunConfig  ***\n");
+		
 		Modules.scenarioGenerator = new Generator(_configuration);
 		// PRG MODIFY next lines to use instance variable instead of local variable
 		// PRG REPLACED "scenario" with "_scenario" in runConfig() source code
 		// MappingScenario scenario =
 		_scenario = 
 				Modules.scenarioGenerator.generateScenario(_configuration);
-		// printResults(scenario, "S", "T", "M");
-		log.info("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
+		
+		// log.debug("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 
-		printResults(_scenario, _configuration.getSourceSchemaFile(),
-				_configuration.getTargetSchemaFile(),
-				_configuration.getMappingFileName(),
-				_configuration.getSchemaFile());
+		// At last, STBenchmark must output and/or write to disk the generated output in TrampXML format
+		printResults(_scenario, 
+				     _configuration.getSourceSchemaFile(), 
+				     _configuration.getTargetSchemaFile(),
+				     _configuration.getMappingFileName(),
+				     _configuration.getSchemaFile());
+		
 
 		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(_scenario);
