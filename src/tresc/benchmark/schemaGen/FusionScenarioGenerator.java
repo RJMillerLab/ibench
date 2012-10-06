@@ -27,6 +27,9 @@ import vtools.dataModel.expression.Union;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.values.AtomicValue;
 
+// PRG ADDED LIMIT on number of generated fragments to avoid exponential blowup - Oct 6, 2012
+// Note: By design, a Fusion scenario generate 2^N - 1 mappings. For N=4 for example, this means generating 15 mappings per repetition.
+
 public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 
 	private static int NUM_TRIES = 20;
@@ -60,6 +63,9 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		super.initPartialMapping();
 		N = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
 		N = (N < 2) ? 2 : N;
+		// PRG ADDED LIMIT on number of generated fragments to avoid exponential blowup - Oct 6, 2012
+		// Note: By design, a Fusion scenario generate 2^N - 1 mappings. Thus we intend to generate a max of 15 mappings per scenario repetition. 
+		N = (N > 4) ? 4 : N;
 		K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
 		K = (K < 1) ? 1 : K;
 		S =	Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
