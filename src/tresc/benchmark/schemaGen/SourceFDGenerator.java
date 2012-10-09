@@ -98,6 +98,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
 			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(), true);
 			String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
+			int pkSize = pkAttrs == null ? 0 : pkAttrs.length;
 			
 			// randomly select attributes for each run of FD generation
 			for (int i = 0; i < numFDs; i++) {
@@ -118,17 +119,19 @@ public class SourceFDGenerator implements ScenarioGenerator
 					// check that we haven't choosen the whole key
 					// if we are using the whole key in the LHS then remove the key and
 					// add another non-key attribute
-					for(String att: LHSAtts) {
-						pkSet.remove(att);
-						noKeySet.remove(att);
+					if (pkSize != 0) {
+						for(String att: LHSAtts) {
+							pkSet.remove(att);
+							noKeySet.remove(att);
+						}
+	
+						if (pkSet.isEmpty()) {
+							String[] noKeyLeft = noKeySet.toArray(new String[noKeySet.size()]);
+							LHSAtts.remove(pkAttrs[_generator.nextInt(pkSize)]);
+							LHSAtts.add(noKeyLeft[_generator.nextInt(noKeyLeft.length)]);
+						}
 					}
-
-					if (pkSet.isEmpty()) {
-						String[] noKeyLeft = noKeySet.toArray(new String[noKeySet.size()]);
-						LHSAtts.remove(pkAttrs[_generator.nextInt(pkAttrs.length)]);
-						LHSAtts.add(noKeyLeft[_generator.nextInt(noKeyLeft.length)]);
-					}
-
+					
 					// sort LHS
 					Collections.sort(LHSAtts);
 					String[] arrayLHS = Utils.convertVectorToStringArray(LHSAtts);
