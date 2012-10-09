@@ -1,9 +1,12 @@
 package org.vagabond.benchmark.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.AttrRefType;
@@ -49,6 +52,8 @@ import vtools.dataModel.types.Set;
 
 public class TrampModelFactory {
 
+	static Logger log = Logger.getLogger(TrampModelFactory.class);
+	
 	private TrampXMLModel doc;
 	private UniqueIdGen idGen;
 	private MappingScenario stScen;
@@ -550,6 +555,27 @@ public class TrampModelFactory {
 
 	public void setStScen(MappingScenario stScen) {
 		this.stScen = stScen;
+	}
+
+	public void indexMappings() {
+		MappingType[] maps = doc.getMappings();
+		Map<String, ArrayList<MappingType>> relToMap = doc.getMapsForSourceRel();
+		
+		for(MappingType m: maps) {
+			if(m.getForeach() == null)
+				if (log.isDebugEnabled()) {log.debug("ERROR: Scenario has no Foreach clause!");};
+			
+			for (RelAtomType a: m.getForeach().getAtomArray()) {
+				String tabName = a.getTableref();
+				ArrayList<MappingType> relMaps = relToMap.get(tabName);
+				if (relMaps == null) {
+					relMaps = new ArrayList<MappingType> ();
+					relToMap.put(tabName, relMaps);
+				}
+				if (!relMaps.contains(m)) // use set?
+					relMaps.add(m);
+			}
+		}
 	}
 
 

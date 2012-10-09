@@ -29,6 +29,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 	private Map<String, int[]> pkPos;
 	private Map<String, RelationType> sourceRels;
 	private Map<String, RelationType> targetRels;
+	private Map<String, ArrayList<MappingType>> mapsForSourceRel;
 	
 	public TrampXMLModel () {
 		initDoc();
@@ -40,6 +41,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		sourceRels = new  HashMap<String, RelationType> ();
 		targetRels = new HashMap<String, RelationType> ();
 		pkPos = new HashMap<String, int[]> ();
+		mapsForSourceRel = new HashMap<String, ArrayList<MappingType>> ();
 	}
 
 
@@ -86,37 +88,19 @@ public class TrampXMLModel extends MapScenarioHolder {
 	}
 	
 	/** 
-	 * Retrieves all the mappings associated with a specified relation
+	 * Retrieves all the mappings associated with a specified relation.
+	 * BORIS: changed to use hash table lookup.
 	 * 
 	 * @author mdangelo
 	 * 
 	 * @param rel	The name of the relation
 	 * @return		An array of mappings
+	 * 
 	 */
-	public MappingType[] getMappings(String rel)
-	{
-		// use a vector for the convenience of not having to determine the size
-		Vector<MappingType> result = new Vector<MappingType> ();
-		
-		// loop through the mappings and check if any of the for each refer to the relation in question
-		// if they do, add them to our result
-		for(MappingType m: doc.getMappingScenario().getMappings().getMappingArray())
-		{
-			if(m.getForeach() == null)
-				if (log.isDebugEnabled()) {log.debug("ERROR: Scenario has no Foreach clause!");};
-			
-			for (RelAtomType a: m.getForeach().getAtomArray())
-				if(a.getTableref().equals(rel))
-					result.add(m);
-		}
-		
-		// convert the vector into an array
-		MappingType[] ret = new MappingType[result.size()];
-		int i = 0;
-		for (MappingType m : result)
-			ret[i++] = m;
-			
-		return ret;
+	public MappingType[] getMapsForSourceRelation(String rel)
+	{		
+		ArrayList<MappingType> ms = mapsForSourceRel.get(rel);
+		return ms.toArray(new MappingType[ms.size()]);
 	}
 	
 	public void getAllVarsInMapping (MappingType m, boolean source, Vector<String> varList, Set<String> varSet) {
@@ -256,7 +240,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 	 */
 	public String[] getAttrVars(String rel) throws Exception 
 	{
-		MappingType[] maps = getMappings(rel);
+		MappingType[] maps = getMapsForSourceRelation(rel);
 		String[] result = null;
 		
 		for (MappingType m : maps)
@@ -441,5 +425,16 @@ public class TrampXMLModel extends MapScenarioHolder {
 
 	public void setTargetRels(Map<String, RelationType> targetRels) {
 		this.targetRels = targetRels;
+	}
+
+
+	public Map<String, ArrayList<MappingType>> getMapsForSourceRel() {
+		return mapsForSourceRel;
+	}
+
+
+	public void setMapsForSourceRel(
+			Map<String, ArrayList<MappingType>> mapsForSourceRel) {
+		this.mapsForSourceRel = mapsForSourceRel;
 	}
 }

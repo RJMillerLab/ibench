@@ -64,7 +64,8 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		_generator = configuration.getRandomGenerator();
 		fac = scenario.getDocFac();
 		model = scenario.getDoc();
-
+		fac.indexMappings();
+		
 		RandomSkolems = new Vector<RandSrcSkolem>();
 
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
@@ -168,7 +169,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 
 				// check if the variable exists in any target mappings associated with the source relation
 				// this prevents "gaps" in SK IDs which are created when we generate a skolem that will never appear in a mapping
-				MappingType[] tgtMaps = model.getMappings(r.getName());
+				MappingType[] tgtMaps = model.getMapsForSourceRelation(r.getName());
 				Vector<String> tgtVars = new Vector<String>();
 	
 				for (MappingType m : tgtMaps)
@@ -437,7 +438,7 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 	private static void addSkolemsToMappings(RelationType r, MappingScenario scenario) 
 	{
 		// get all the mappings associated with the relation in question and go through them
-		MappingType[] mappings = model.getMappings(r.getName());
+		MappingType[] mappings = model.getMapsForSourceRelation(r.getName());
 
 		// create a new mapping to temporarily store the SKFunctions (because we need to destroy the ones in the atom before 
 		// we can add new ones) the old ones would be deallocated (and all information lost) if we did not clone them
