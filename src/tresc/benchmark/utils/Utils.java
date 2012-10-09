@@ -3,7 +3,10 @@ package tresc.benchmark.utils;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
+
+import org.vagabond.util.CollectionUtils;
 
 public class Utils
 {
@@ -52,6 +55,12 @@ public class Utils
         val = (val < 1) ? 1 : val;
         
         return (int) val;
+    }
+    
+    public static Vector<String> getRandomWithoutReplacementSequence(Random generator, 
+    		int desiredSize, String[] allElems) {
+    		return getRandomWithoutReplacementSequence(generator, desiredSize,
+    				CollectionUtils.makeVec(allElems));
     }
     
     // BORIS + PRG - Method getRandomWithoutReplacementSequence() - Sep 20 & 21, 2012

@@ -1,11 +1,16 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.RelationType;
 
@@ -23,30 +28,56 @@ import tresc.benchmark.utils.Utils;
  */
 public class SourceFDGenerator implements ScenarioGenerator 
 {
+	
+	private class FD {
+		
+		public String relName;
+		public String[] lhs;
+		public String[] rhs;
+		public String toString = null;
+		
+		public FD (String relName, String[] lhs, String[] rhs) {
+			this.relName = relName;
+			this.lhs = lhs;
+			this.rhs = rhs;
+		}
+		
+		@Override
+		public String toString () {
+			if (toString == null) {
+				toString = relName + "|" +  Arrays.toString(lhs) + "|" 
+						+ Arrays.toString(rhs);
+			}
+			return toString;
+		}
+	}
+	
 	static Logger log = Logger.getLogger(SourceFDGenerator.class);
 	
 	@Override
 	public void generateScenario(MappingScenario scenario,Configuration configuration) throws Exception 
 	{
 		Random _generator = configuration.getRandomGenerator();
+		Map<String, Map<String,FD>> fds = new HashMap<String, Map<String,FD>> ();
 		
 		if (log.isDebugEnabled()) {log.debug("Attempting to Generate Source FDs");};
 
 		// create PK FDs R(A,B,C) if A is key then add A -> B,C
 		if (configuration.getParam(ParameterName.PrimaryKeyFDs) == 1) {
 			if (log.isDebugEnabled()) {log.debug("Generating PK FDs for those Relations with PKs");};
-			generatePKFDs(scenario);
+			generatePKFDs(scenario, fds);
 		}
 
 		if (configuration.getParam(Constants.ParameterName.SourceFDPerc) > 0) {
 			if (log.isDebugEnabled()) {log.debug("Generating Random FDs as SourceFDPerc > 0");};	
-			generateRandomFDs(scenario, configuration, _generator);
+			generateRandomFDs(scenario, configuration, _generator, fds);
 		}
 	
 	}
 
 	private void generateRandomFDs(MappingScenario scenario,
-			Configuration configuration, Random _generator) throws Exception {
+			Configuration configuration, Random _generator,
+			Map<String, Map<String,FD>> fds) throws Exception {
 		// create random FDs by randomly selecting non primary key attributes
 		// and linking them
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray()) 
@@ -60,116 +91,72 @@ public class SourceFDGenerator implements ScenarioGenerator
 			if (log.isDebugEnabled()) {log.debug("Attempting to Generate <" + numFDs + "> Random FDs for Relation " + r.getName());};
 
 			// get positions for all of the attributes
-			int[] attrPos = new int[r.getAttrArray().length];
-			for (int i = 0; i < r.getAttrArray().length; i++)
-				attrPos[i] = i;
+			int[] attrPos = CollectionUtils.createSequence(0, r.sizeOfAttrArray()); 
 
 			// if there is a primary key then we must strip out the attributes
 			// associated with it, otherwise we just grab all the attributes
-			//String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
-			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
+			String[] nonKeyAttrs = (r.isSetPrimaryKey()) ? getNonKeyAttributes(r, scenario) : scenario.getDoc().getAttrNames(r.getName(),attrPos, true);
+			String[] allAttrs = scenario.getDoc().getAttrNames(r.getName(), true);
 			String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
-
-			int max_tries = 20;
+			
 			// randomly select attributes for each run of FD generation
 			for (int i = 0; i < numFDs; i++) {
 				int numLHSAtts = _generator.nextInt(allAttrs.length / 2) + 1;
+				Set<String> noKeySet = CollectionUtils.makeSet(nonKeyAttrs);
+				Set<String> pkSet = CollectionUtils.makeSet(pkAttrs);
+				Vector<String> LHSAtts;
+				String RHSAtt;
+				boolean done = false;
+			
+				int max_tries = 20;
+				while (!done && max_tries > 0) {
+					// pick LHS and single RHS attr from all attributes
+					LHSAtts = Utils.getRandomWithoutReplacementSequence(
+							_generator, numLHSAtts + 1, allAttrs);
+					RHSAtt = LHSAtts.remove(LHSAtts.size() - 1);
 
-				Vector<String> LHSAtts = new Vector<String>();
-				String RHSAtt = "";
+					// check that we haven't choosen the whole key
+					// if we are using the whole key in the LHS then remove the key and
+					// add another non-key attribute
+					for(String att: LHSAtts) {
+						pkSet.remove(att);
+						noKeySet.remove(att);
+					}
 
-				Boolean trivial = false;
-				int j = 0;
-				int tries = 0;
-				// pick the attributes to go on the left hand side
-				while (j < numLHSAtts && tries < max_tries) 
-				{
-					int position = _generator.nextInt(allAttrs.length);
+					if (pkSet.isEmpty()) {
+						String[] noKeyLeft = noKeySet.toArray(new String[noKeySet.size()]);
+						LHSAtts.remove(pkAttrs[_generator.nextInt(pkAttrs.length)]);
+						LHSAtts.add(noKeyLeft[_generator.nextInt(noKeyLeft.length)]);
+					}
 
-					// make sure that we haven't already added this to our LHS FDs to avoid trivial FDs
-					// ex. ABA -> C
-					if (LHSAtts.indexOf(allAttrs[position]) != -1)
-						trivial = true;
+					// sort LHS
+					Collections.sort(LHSAtts);
+					String[] arrayLHS = Utils.convertVectorToStringArray(LHSAtts);
 
-					if (!trivial) 
-					{
-						LHSAtts.add(allAttrs[position]);
-						j++;
-						
-						// ensure that we are only adding a partial key to the LHS at most
-						Boolean partial = false;
-						if (r.isSetPrimaryKey())
-						{
-							for (String key : pkAttrs)
-								if(LHSAtts.indexOf(key) == -1)
-									partial = true;
-							
-							if (!partial)
-							{
-								LHSAtts.remove(allAttrs[position]);
-								j--;
-							}
-						}
-					} 
+					log.trace("Potential FDs, must be checked for duplicates");
+					log.trace("LHS: " + LHSAtts.toString());
+					log.trace("RHS: " + RHSAtt);
+					
+					// check whether we have found one
+					if (addFD(fds, r.getName(), arrayLHS, new String[] {RHSAtt})) {
+						scenario.getDocFac().addFD(r.getName(), arrayLHS,
+								new String[] { RHSAtt });
+						done = true;
+						if (log.isDebugEnabled()) {log.debug("---------NEW FD---------");};
+
+						if (log.isDebugEnabled()) {log.debug("relName: " + r.getName());};
+						if (log.isDebugEnabled()) {log.debug("LHS: " + LHSAtts.toString());};
+						if (log.isDebugEnabled()) {log.debug("RHS: " + RHSAtt);};
+					}
 					else
-						tries++;
+						max_tries--;
 				}
-
-				// String[] LHSAtts = Utils.convertVectorToStringArray(LHSAtts);
-				Boolean done;
-
-				// keep trying to find a RHS attribute until we have added one
-				do 
-				{
-					done = true;
-
-					// pick the attribute to go on the right hand side
-					int position = _generator.nextInt(allAttrs.length);
-
-					// make sure it hasn't been added to the LHS attributes to avoid nonsensical FDs
-					// ex. AB -> A
-					if (LHSAtts.indexOf(allAttrs[position]) != -1)
-						done = false;
-
-					if (done)
-						RHSAtt = allAttrs[position];
-				} while (!done);
-
-				log.trace("Potential FDs, must be checked for duplicates");
-				log.trace("LHS: " + LHSAtts.toString());
-				log.trace("RHS: " + RHSAtt);
-				
-				// look through all of the existing FDs and check if we would be adding a duplicates
-				FDType[] functionalDep = scenario.getDocFac().getRelFDs(r.getName());
-				
-				Boolean duplicate = false;
-				for (FDType fd : functionalDep) {	
-					
-					log.trace("Comparing it against previously added FD " + fd.toString());
-					
-					if (fd.getTo().getAttrArray(0).equals(RHSAtt)
-							&& Arrays.equals(fd.getFrom().getAttrArray(),
-									Utils.convertVectorToStringArray(LHSAtts)))
-						duplicate = true;
-				}
-
-				// if the FD was a duplicate then we must create a new FD in its place so decrement the counter, 
-				// otherwise we add the FD to the relation
-				if (duplicate)
-					i--;
-				else
-					scenario.getDocFac().addFD(r.getName(),Utils.convertVectorToStringArray(LHSAtts),new String[] { RHSAtt });
-				
-				if (log.isDebugEnabled()) {log.debug("---------NEW FD---------");};
-
-				if (log.isDebugEnabled()) {log.debug("relName: " + r.getName());};
-				if (log.isDebugEnabled()) {log.debug("LHS: " + LHSAtts.toString());};
-				if (log.isDebugEnabled()) {log.debug("RHS: " + RHSAtt);};
 			}
 		}
 	}
 
-	private void generatePKFDs(MappingScenario scenario) throws Exception {
+	private void generatePKFDs(MappingScenario scenario, 
+			Map<String, Map<String,FD>> fds) throws Exception {
 		for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray())
 		{	
 			if (r.isSetPrimaryKey()) 
@@ -178,6 +165,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 				String[] nonKeyAttrs = getNonKeyAttributes(r, scenario);
 				
 				scenario.getDocFac().addFD(r.getName(), pkAttrs, nonKeyAttrs);
+				addFD (fds, r.getName(), pkAttrs, nonKeyAttrs);
 				
 				// convert to vector to facilitate printing
 		        List<String> pkList = Arrays.asList(pkAttrs);
@@ -192,6 +180,26 @@ public class SourceFDGenerator implements ScenarioGenerator
 				if (log.isDebugEnabled()) {log.debug("RHS: " + nonkeyVect.toString());};
 			}
 		}
+	}
+	
+	private boolean addFD (Map<String, Map<String,FD>> fds, String relName, 
+			String[] lhs, String[] rhs) {
+		FD fd = new FD (relName, lhs, rhs);
+		Map<String, FD> relMap;
+		
+		if (!fds.containsKey(relName)) {
+			relMap = new HashMap<String, FD> ();
+			fds.put(relName, relMap);
+		}
+		else {
+			relMap = fds.get(relName);
+		}
+			
+		if (relMap.get(fd.toString) == null) {
+			relMap.put(fd.toString, fd);
+			return true;
+		}
+		return false;
 	}
 
 	/**

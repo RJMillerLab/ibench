@@ -1,7 +1,9 @@
 package org.vagabond.benchmark.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -24,9 +26,22 @@ public class TrampXMLModel extends MapScenarioHolder {
 
 	static Logger log = Logger.getLogger(TrampXMLModel.class);
 	
+	private Map<String, int[]> pkPos;
+	private Map<String, RelationType> sourceRels;
+	private Map<String, RelationType> targetRels;
+	
 	public TrampXMLModel () {
 		initDoc();
+		initIndex();
 	}
+	
+
+	private void initIndex() {
+		sourceRels = new  HashMap<String, RelationType> ();
+		targetRels = new HashMap<String, RelationType> ();
+		pkPos = new HashMap<String, int[]> ();
+	}
+
 
 	private void initDoc() {
 		init();
@@ -183,6 +198,22 @@ public class TrampXMLModel extends MapScenarioHolder {
 		RelationType relation = s.getRelationArray()[rel];
 		return relation.getName();
 	}
+	
+	@Override
+	public RelationType getRelForName (String relname, boolean target) 
+			throws Exception {
+		RelationType rel;
+		
+		if (target)
+			rel = targetRels.get(relname);
+		else
+			rel = sourceRels.get(relname);
+		
+		if (rel == null)
+			throw new Exception("Did not find " + (target ? "target" : "source") 
+					+ " relation with name <" + relname + ">");
+		return rel;
+	}
 
 	public int getNumRels (boolean source) {
 		SchemaType s = getSchema(source);
@@ -246,6 +277,18 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return result;
 	}
 	
+	public String[] getAttrNames (String rel, boolean source) throws Exception {
+		RelationType r = getRelForName(rel, !source);
+		String[] result = new String[r.sizeOfAttrArray()];
+		
+		AttrDefType[] a = r.getAttrArray();
+		
+		for(int i = 0; i < result.length; i++)
+			result[i] = a[i].getName();
+		
+		return result;
+	}
+	
 	public ForeignKeyType[] getFKs (String fromRel, String toRel, boolean source) {
 		List<ForeignKeyType> result = new ArrayList<ForeignKeyType> ();
 		SchemaType s = getSchema(source);
@@ -278,14 +321,27 @@ public class TrampXMLModel extends MapScenarioHolder {
 	public int[] getPKPos (String rel, boolean source) throws Exception {
 		RelationType r = getRelForName(rel, !source);
 		int[] result;
+		String key = source ? "S." : "T." + rel;
 		
-		String[] attNames = r.getPrimaryKey().getAttrArray();
-		 
-		result = new int[attNames.length];
-		for(int i = 0; i < attNames.length; i++) {
-			String a = attNames[i];
-			result[i] = getRelAttrPos(rel, a, source);
+		result = pkPos.get(key);
+		if (result != null)
+			return result;
+		
+		String[] pkAttNames = r.getPrimaryKey().getAttrArray();
+		String[] attNames = this.getAttrNames(rel, source);
+				
+		result = new int[pkAttNames.length];
+		for(int i = 0; i < pkAttNames.length; i++) {
+			String a = pkAttNames[i];
+			for(int j = 0; j < attNames.length; j++) {
+				if (attNames[j].equals(a)) {
+					result[i] = j;
+					break;
+				}
+			}
 		}
+		
+		pkPos.put(rel, result);
 		
 		return result;
 	}
@@ -358,19 +414,32 @@ public class TrampXMLModel extends MapScenarioHolder {
 	}
 
 	public boolean hasRelName(String name) {
-		RelationType r;
 		
-		try {
-			r = super.getRelForName(name, false);
+		if (sourceRels.containsKey(name))
 			return true;
-		}
-		catch (Exception e) {}
-		try {
-			r = super.getRelForName(name, true);
+		if (targetRels.containsKey(name))
 			return true;
-		}
-		catch (Exception e) {}
 		
 		return false;
+	}
+
+
+	public Map<String, RelationType> getSourceRels() {
+		return sourceRels;
+	}
+
+
+	public void setSourceRels(Map<String, RelationType> sourceRels) {
+		this.sourceRels = sourceRels;
+	}
+
+
+	public Map<String, RelationType> getTargetRels() {
+		return targetRels;
+	}
+
+
+	public void setTargetRels(Map<String, RelationType> targetRels) {
+		this.targetRels = targetRels;
 	}
 }

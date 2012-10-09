@@ -22,6 +22,8 @@ import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
+import com.sun.tools.internal.ws.processor.model.Model;
+
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import smark.support.SMarkElement;
@@ -170,6 +172,7 @@ public class TrampModelFactory {
 						.getScenario().getSchemas().getTargetSchema();
 		RelationType rel = schema.addNewRelation();
 		rel.setName(name);
+		addToIndex(rel, source);
 		for (int i = 0; i < attrs.length; i++) {
 			AttrDefType a = rel.addNewAttr();
 			a.setName(attrs[i]);
@@ -204,11 +207,19 @@ public class TrampModelFactory {
 		s.addNewRelation();
 		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
 		addSTRelation(hook, r.getName(), attr, dTypes, source);
+		addToIndex(r, source);
 		
 		if (source)
 			p.addSourceRel(r);
 		else
 			p.addTargetRel(r);
+	}
+	
+	private void addToIndex (RelationType r, boolean source) {
+		if (source)
+			doc.getSourceRels().put(r.getName(), r);
+		else
+			doc.getTargetRels().put(r.getName(), r);
 	}
 	
 	public RelationType addRelation(String hook, String name, String[] attrs,
