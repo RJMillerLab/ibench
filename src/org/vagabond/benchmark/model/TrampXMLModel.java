@@ -12,6 +12,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.util.CollectionUtils;
+import org.vagabond.util.IdMap;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MapExprType;
@@ -30,6 +31,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 	private Map<String, RelationType> sourceRels;
 	private Map<String, RelationType> targetRels;
 	private Map<String, ArrayList<MappingType>> mapsForSourceRel;
+	private IdMap<String> relPos;
 	
 	public TrampXMLModel () {
 		initDoc();
@@ -42,6 +44,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		targetRels = new HashMap<String, RelationType> ();
 		pkPos = new HashMap<String, int[]> ();
 		mapsForSourceRel = new HashMap<String, ArrayList<MappingType>> ();
+		relPos = new IdMap<String> ();
 	}
 
 
@@ -157,9 +160,14 @@ public class TrampXMLModel extends MapScenarioHolder {
 		return relation.getAttrArray()[attr].getName();
 	}
 	
+	public String getRelAttr (RelationType r, int attr, boolean source) {
+		return r.getAttrArray()[attr].getName();
+	}
+	
 	public int getRelPos(String rel, boolean source) {
 		SchemaType s = getSchema(source);
-		for(int i = 0 ; i < s.sizeOfRelationArray(); i++) {
+		int rSize = s.sizeOfRelationArray();
+		for(int i = 0; i < rSize; i++) {
 			RelationType r = s.getRelationArray(i);
 			if (r.getName().equals(rel))
 				return i;
@@ -436,5 +444,15 @@ public class TrampXMLModel extends MapScenarioHolder {
 	public void setMapsForSourceRel(
 			Map<String, ArrayList<MappingType>> mapsForSourceRel) {
 		this.mapsForSourceRel = mapsForSourceRel;
+	}
+
+
+	public IdMap<String> getRelPos() {
+		return relPos;
+	}
+
+
+	public void setRelPos(IdMap<String> relPos) {
+		this.relPos = relPos;
 	}
 }

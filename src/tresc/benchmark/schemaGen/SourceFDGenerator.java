@@ -109,7 +109,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 				String RHSAtt;
 				boolean done = false;
 			
-				int max_tries = 20;
+				int max_tries = 10;
 				while (!done && max_tries > 0) {
 					// pick LHS and single RHS attr from all attributes
 					LHSAtts = Utils.getRandomWithoutReplacementSequence(

@@ -223,6 +223,7 @@ public class TrampModelFactory {
 			doc.getSourceRels().put(r.getName(), r);
 		else
 			doc.getTargetRels().put(r.getName(), r);
+		doc.getRelPos().put("");
 	}
 	
 	public RelationType addRelation(String hook, String name, String[] attrs,
@@ -311,8 +312,10 @@ public class TrampModelFactory {
 	
 	public void addPrimaryKey(String relName, int[] attrPos, boolean source) throws Exception {
 		String[] attrs = new String[attrPos.length];
+		RelationType r = doc.getRelForName(relName, !source);
+		AttrDefType[] allAtt = r.getAttrArray();
 		for(int i = 0; i  < attrPos.length; i++)
-			attrs[i] = doc.getRelAttr(doc.getRelPos(relName, source), attrPos[i], source);
+			attrs[i] = allAtt[attrPos[i]].getName();
 		addPrimaryKey(relName, attrs, source);
 	}
 	
