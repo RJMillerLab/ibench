@@ -22,8 +22,6 @@ import org.vagabond.xmlmodel.SchemaType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
-import com.sun.tools.internal.ws.processor.model.Model;
-
 import smark.support.MappingScenario;
 import smark.support.PartialMapping;
 import smark.support.SMarkElement;
