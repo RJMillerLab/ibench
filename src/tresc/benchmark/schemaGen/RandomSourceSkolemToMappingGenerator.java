@@ -34,6 +34,8 @@ import vtools.dataModel.types.RandSrcSkolem;
 // PRG + BORIS TO DO: The source code quality in this file is dubious :( It might be worth rewriting it if time permits (e.g. class variables
 // are being passed as arguments!, method generateVictims() should also use a "Random Without Replacement" strategy to guarantee convergence, etc.)
 
+// PRG Re-wrote block of code in generateScenario() related to log.debug stmts - Oct 10, 2012
+
 public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator 
 {
 	static Logger log = Logger.getLogger(RandomSourceSkolemToMappingGenerator.class);
@@ -85,27 +87,29 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 			
 			generateVictims(r, scenario, RandomSkolems, addedSKs, numSKs);
 			generateSkolemArguments(r, scenario, RandomSkolems, numSKs);
-	        
-			if (log.isDebugEnabled()) {log.debug("---------NEW SKOLEMS---------");};
 			
-			for (RandSrcSkolem rsk : RandomSkolems)
-			{
-				if (log.isDebugEnabled()) {log.debug("New Skolem Identifier: " + rsk.getSkId());};
-				if (log.isDebugEnabled()) {log.debug("Victim: " + rsk.getAttr());};
-				if (log.isDebugEnabled()) {log.debug("Victim Position: " + rsk.getAttrPosition());};
-				if (log.isDebugEnabled()) {log.debug("Victim Variable: " + rsk.getAttrVar());};
+			if (log.isDebugEnabled()) {
 				
-				if(rsk.getArgAttrs().length != 0)
-				{
-					// convert to vector to facilitate printing
-			        List<String> argList = Arrays.asList(rsk.getArgAttrs());
-			        Vector<String> argVect = new Vector<String>(argList);
-			        if (log.isDebugEnabled()) {log.debug("Arguments: " + argVect.toString());};
-			        
-			        if (log.isDebugEnabled()) {log.debug("Positions: ");};
-			        for (int pos : rsk.getArgPositions())
-						if (log.isDebugEnabled()) {log.debug(pos + " ");};
-			        if (log.isDebugEnabled()) {log.debug("");};
+				log.debug("---------NEW SKOLEMS---------");
+		
+				for (RandSrcSkolem rsk : RandomSkolems) {
+					
+					log.debug("New Skolem Identifier: " + rsk.getSkId());
+					log.debug("Victim: " + rsk.getAttr());
+					log.debug("Victim Position: " + rsk.getAttrPosition());
+					log.debug("Victim Variable: " + rsk.getAttrVar());
+					
+					if (rsk.getArgAttrs().length != 0) {
+						// convert to vector to facilitate printing
+						List<String> argList = Arrays.asList(rsk.getArgAttrs());
+						Vector<String> argVect = new Vector<String>(argList);
+						log.debug("Arguments: " + argVect.toString());
+						log.debug("Positions: ");
+						for (int pos : rsk.getArgPositions())
+							log.debug(pos + " ");
+						log.debug("");
+						
+					}
 				}
 			}
 			

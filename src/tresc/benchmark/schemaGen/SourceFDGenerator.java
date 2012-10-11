@@ -26,6 +26,12 @@ import tresc.benchmark.utils.Utils;
  * 
  * @author mdangelo
  */
+
+// BORIS REWROTE SourceFDGenerator to improve performance - Oct 9, 2012
+// PRG FIXED BUG - Use fd.toString() instead of fd.toString which always evaluates to null unless explicitly set - Oct 10, 2012
+// PRG FIXED BUG - Avoid using the RHS attribute in place of a key element when redefining the LHS of a random FD - Oct 10, 2012
+// PRG FIXED BUG - Correctly handle those cases where the LHS becomes empty - Oct 10, 2012
+
 public class SourceFDGenerator implements ScenarioGenerator 
 {
 	
@@ -102,6 +108,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 			
 			// randomly select attributes for each run of FD generation
 			for (int i = 0; i < numFDs; i++) {
+				// numLHSAtts should be at least one 
 				int numLHSAtts = _generator.nextInt(allAttrs.length / 2) + 1;
 				Set<String> noKeySet = CollectionUtils.makeSet(nonKeyAttrs);
 				Set<String> pkSet = CollectionUtils.makeSet(pkAttrs);
@@ -111,47 +118,68 @@ public class SourceFDGenerator implements ScenarioGenerator
 			
 				int max_tries = 10;
 				while (!done && max_tries > 0) {
+					
 					// pick LHS and single RHS attr from all attributes
-					LHSAtts = Utils.getRandomWithoutReplacementSequence(
-							_generator, numLHSAtts + 1, allAttrs);
+					LHSAtts = Utils.getRandomWithoutReplacementSequence(_generator, numLHSAtts + 1, allAttrs);
 					RHSAtt = LHSAtts.remove(LHSAtts.size() - 1);
-
-					// check that we haven't choosen the whole key
-					// if we are using the whole key in the LHS then remove the key and
-					// add another non-key attribute
+					
+					// Make sure the above random selection abides the following checks
+					// Check 1: only generate Partial FDs
+					// Therefore, check that we haven't chosen the whole key. If so, then remove one element of the key
+					// and attempt to add another non-key attribute (which should never be the RHS attribute)				
 					if (pkSize != 0) {
+						
 						for(String att: LHSAtts) {
 							pkSet.remove(att);
 							noKeySet.remove(att);
 						}
-	
+						
+						// remove the RHS attribute to avoid using it as a possible candidate next
+						noKeySet.remove(RHSAtt);
+						
 						if (pkSet.isEmpty()) {
+							
 							String[] noKeyLeft = noKeySet.toArray(new String[noKeySet.size()]);
+							// The key was part of the LHS random selection; thus, remove one element of the key from the LHS
 							LHSAtts.remove(pkAttrs[_generator.nextInt(pkSize)]);
-							LHSAtts.add(noKeyLeft[_generator.nextInt(noKeyLeft.length)]);
+							
+							// Check 2: in some cases, we might not be able to generate an FD. Two extreme cases to consider here ...						
+							// -- 2.1 noKeyLeft might be empty after having removed elements from LHSAtts and also RHSAtt. This means we can not longer
+							//        substitute the recently removed key element from the LHS. Ignore this and proceed as planned.
+							// -- 2.2 LHSAtts might become empty. This happens when the LHS random selection only yields the key, very 
+							// likely to happen when the source relation size is small (2 or 3 elements). Ignore this and proceed as planned, possibly not 
+							// being able to generate any FDs for relation r. 
+							
+							if (noKeyLeft.length > 0) {
+								LHSAtts.add(noKeyLeft[_generator.nextInt(noKeyLeft.length)]);
+							}
+							
 						}
 					}
-					
-					// sort LHS
-					Collections.sort(LHSAtts);
-					String[] arrayLHS = Utils.convertVectorToStringArray(LHSAtts);
+					// Check 3: Proceed to check potential FD LHSAtts -> RHSAtt against previously created FDs for relation r
+					// Do so only if LHSAtts is not empty (see comment above -- 2.2)
+					if (LHSAtts.size() > 0) {
+						
+						// sort LHS
+						Collections.sort(LHSAtts);
+						String[] arrayLHS = Utils.convertVectorToStringArray(LHSAtts);
+						
+						if (addFD(fds, r.getName(), arrayLHS, new String[] { RHSAtt })) {
 
-					log.trace("Potential FDs, must be checked for duplicates");
-					log.trace("LHS: " + LHSAtts.toString());
-					log.trace("RHS: " + RHSAtt);
-					
-					// check whether we have found one
-					if (addFD(fds, r.getName(), arrayLHS, new String[] {RHSAtt})) {
-						scenario.getDocFac().addFD(r.getName(), arrayLHS,
-								new String[] { RHSAtt });
-						done = true;
-						if (log.isDebugEnabled()) {log.debug("---------NEW FD---------");};
+							scenario.getDocFac().addFD(r.getName(), arrayLHS, new String[] { RHSAtt });
 
-						if (log.isDebugEnabled()) {log.debug("relName: " + r.getName());};
-						if (log.isDebugEnabled()) {log.debug("LHS: " + LHSAtts.toString());};
-						if (log.isDebugEnabled()) {log.debug("RHS: " + RHSAtt);};
-					}
-					else
+							if (log.isDebugEnabled()) {
+								log.debug("--------- GENERATING NEW RANDOM FD---------");
+								log.debug("relName: " + r.getName());
+								log.debug("LHS: " + LHSAtts.toString());
+								log.debug("RHS: " + RHSAtt);
+							}
+
+							done = true;
+
+						} 
+						
+					} else
 						max_tries--;
 				}
 			}
@@ -176,11 +204,12 @@ public class SourceFDGenerator implements ScenarioGenerator
 		        List<String> nonkeyList = Arrays.asList(nonKeyAttrs);
 		        Vector<String> nonkeyVect = new Vector<String>(nonkeyList);
 				
-		        if (log.isDebugEnabled()) {log.debug("---------GENERATING PRIMARY KEY FD---------");};
-		        
-				if (log.isDebugEnabled()) {log.debug("relName: " + r.getName());};
-				if (log.isDebugEnabled()) {log.debug("LHS: " + pkVect.toString());};
-				if (log.isDebugEnabled()) {log.debug("RHS: " + nonkeyVect.toString());};
+		        if (log.isDebugEnabled()) {
+		        	log.debug("---------GENERATING PRIMARY KEY FD---------");
+		        	log.debug("relName: " + r.getName());
+		        	log.debug("LHS: " + pkVect.toString());
+		        	log.debug("RHS: " + nonkeyVect.toString());
+		        }
 			}
 		}
 	}
@@ -197,9 +226,10 @@ public class SourceFDGenerator implements ScenarioGenerator
 		else {
 			relMap = fds.get(relName);
 		}
-			
-		if (relMap.get(fd.toString) == null) {
-			relMap.put(fd.toString, fd);
+		
+		// PRG FIXED BUG - Use fd.toString() instead of fd.toString which always evaluates to null unless explicitly set - Oct 10, 2012
+		if (relMap.get(fd.toString()) == null) {
+			relMap.put(fd.toString(), fd);
 			return true;
 		}
 		return false;
