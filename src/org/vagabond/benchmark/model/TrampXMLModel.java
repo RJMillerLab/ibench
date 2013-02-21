@@ -1,7 +1,9 @@
 package org.vagabond.benchmark.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +40,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		initIndex();
 	}
 	
-	public TrampXMLModel (MappingScenarioDocument doc) {
+	public TrampXMLModel (MappingScenarioDocument doc) throws Exception {
 		TrampModelFactory fac;
 		
 		this.doc = doc;
@@ -46,6 +48,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 		fillIndex();
 		fac = new TrampModelFactory (this);
 		fac.indexMappings();
+		fac.addPKFds();
 	}
 	
 	private void fillIndex() {
@@ -331,6 +334,22 @@ public class TrampXMLModel extends MapScenarioHolder {
 		if (r.isSetPrimaryKey())
 			return r.getPrimaryKey().getAttrArray();
 		return null;
+	}
+	
+	public String[] getNonKeyAttr (String rel, boolean source) throws Exception {
+		RelationType r = getRelForName(rel, !source);
+		Set<String> pk = new HashSet<String> ();
+		List<String> result = new ArrayList<String> ();
+		
+		if (r.isSetPrimaryKey())
+			pk.addAll(Arrays.asList(getPK(rel, source)));
+		
+		for (AttrDefType a: r.getAttrArray()) {
+			if (!pk.contains(a.getName()))
+				result.add(a.getName());
+		}
+		
+		return result.toArray(new String[] {});
 	}
 	
 	public int[] getPKPos (String rel, boolean source) throws Exception {

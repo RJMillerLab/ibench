@@ -193,7 +193,7 @@ public class SourceFDGenerator implements ScenarioGenerator
 			if (r.isSetPrimaryKey()) 
 			{
 				String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
-				String[] nonKeyAttrs = getNonKeyAttributes(r, scenario);
+				String[] nonKeyAttrs = scenario.getDoc().getNonKeyAttr(r.getName(), true);
 				
 				scenario.getDocFac().addFD(r.getName(), pkAttrs, nonKeyAttrs);
 				addFD (fds, r.getName(), pkAttrs, nonKeyAttrs);

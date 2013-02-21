@@ -73,6 +73,7 @@ public class TrampModelFactory {
 	
 	public TrampModelFactory(TrampXMLModel doc) {
 		this.doc = doc;
+		initIdGen();
 	}
 
 	public void setPartialMapping (PartialMapping p) {
@@ -148,6 +149,13 @@ public class TrampModelFactory {
 		p.addCorr(c);
 		
 		return c;
+	}
+	
+	public void addPKFds () throws Exception {
+		for (RelationType r: doc.getScenario().getSchemas().getSourceSchema().getRelationArray()) {
+			if (r.isSetPrimaryKey())
+				addFD(r.getName(), doc.getPK(r.getName(), true), doc.getNonKeyAttr(r.getName(), true));
+		}
 	}
 	
 	public FDType addFD (String rel, String[] lAttrs, String[] rAttrs) {
