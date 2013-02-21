@@ -569,7 +569,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 	 * @throws Exception
 	 */
 	@Override
-	protected void chooseSourceRels() throws Exception {
+	protected boolean chooseSourceRels() throws Exception {
 		List<RelationType> rels = new ArrayList<RelationType>();
 		RelationType cand;
 		int tries = 0;
@@ -593,7 +593,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 		// as long as there is no key and we still find rels with the same size
 		// -> add them
 		while (tries < NUM_TRIES * N && cand != null && rels.size() < N) {
-			cand = getRandomRelWithNumAttr(true, numAttrs);
+			cand = getRandomRelWithNumAttr(true, numAttrs, rels);
 			if (cand != null) {
 				if (foundKey && cand.isSetPrimaryKey())
 					break;
@@ -611,7 +611,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 
 		// we have a key or no more rels, add rels with the same key length or no key
 		while (tries < NUM_TRIES * N && cand != null && rels.size() < N) {
-			cand = getRandomRelWithNumAttr(true, numAttrs);
+			cand = getRandomRelWithNumAttr(true, numAttrs, rels);
 			if (cand != null) {
 				if (cand.isSetPrimaryKey()) {
 					// has PK, but of wrong length
@@ -666,6 +666,8 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 			for(int j = 0; j < F; j++)
 				freeAttrs[i][j] = m.getAttrId(i, getFreeAttrPos(i, j), true);
 		}
+		
+		return true;
 	}
 
 	private int getFreeAttrPos(int i, int j) {
@@ -680,7 +682,7 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 	}
 
 	@Override
-	protected void chooseTargetRels() throws Exception {
+	protected boolean chooseTargetRels() throws Exception {
 		int minAttrs = N + K;
 		RelationType cand = getRandomRel(false, minAttrs);
 		int tries = 0;
@@ -714,10 +716,10 @@ public class FusionScenarioGenerator extends AbstractScenarioGenerator {
 			E = cand.sizeOfAttrArray();
 			F = (E - K) / N;
 			targetExistsNum  = m.getNumRelAttr(0, false) - K - (F * N);
+			return true;
 		}
 		// create new one
-		else
-			genTargetRels();
+		return false;
 	}
 	
 	@Override

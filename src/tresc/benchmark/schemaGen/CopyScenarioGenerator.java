@@ -59,9 +59,12 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		RelationType source = m.getSourceRels().get(0);
 		RelationType target = m.getTargetRels().get(0);
 		
-		for(AttrDefType attr: source.getAttrArray()) {
+		for(int i = 0; i < source.sizeOfAttrArray(); i++) {
+			AttrDefType sAttr = source.getAttrArray(i);
+			AttrDefType tAttr = target.getAttrArray(i);
+		
 			fac.addCorrespondence(source.getName(), 
-					attr.getName(), target.getName(), attr.getName());
+					sAttr.getName(), target.getName(), tAttr.getName());
 		}
 	}
 	
@@ -129,7 +132,7 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	protected void genTargetRels() throws Exception {
 		RelationType s = m.getSourceRels().get(0);
 		String[] attrs = new String[s.getAttrArray().length];
-		String relName = s.getName() + "copy" + curRep;
+		String relName = s.getName() + "copy" + curRep + "_" + fac.getNextId("R");
 		String hook = getRelHook(0);
 		
 		for(int i = 0; i < s.getAttrArray().length; i++)

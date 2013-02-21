@@ -335,35 +335,6 @@ public class RandomSourceSkolemToMappingGenerator implements ScenarioGenerator
 		
 		if (log.isDebugEnabled()) {log.debug("Initial randomly picked number of arguments: " + numArgsForSkolem);};
 		
-		// PRG Replaced the following fragment of code as it does not guarantee convergence - Sep 21, 2012
-		// Instead we rely on method Utils.getRandomWithoutReplacementSequence() which guarantees convergence
-		/*	
-		int max_tries = 20;
-	
-		// generate the random vars to be arguments for the skolem
-		Vector<String> randomAttrs = new Vector<String>();
-		for (int i = 0; i < numArgsForSkolem; i++) 
-		{
-			// try 20 times per argument slot to find an argument
-			int tries = 0;
-	
-			while (tries < max_tries) 
-			{
-				int pos = _generator.nextInt(allAttrs.length);
-	
-				// initially check that we are not trying to add a var as an argument to its own skolem function
-				// then make sure we're not adding duplicate vars
-				if (!(allAttrs[pos].equals(rsk.getAttr())) && randomAttrs.indexOf(allAttrs[pos]) == -1) 
-				{
-					randomAttrs.add(allAttrs[pos]);
-					break;
-				}
-	
-				tries++;
-			}
-		}
-		*/
-		
 		Vector<String> allAttrsVector = new Vector<String>(Arrays.asList(allAttrs));
 		
 		// Generate a random argument set

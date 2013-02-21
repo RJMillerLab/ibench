@@ -5,7 +5,7 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
+Scenarios.COPY = 3
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
@@ -18,7 +18,7 @@ Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
 Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 6
+Scenarios.MERGEADD = 0
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -28,29 +28,30 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 10
-ConfigOptions.NumOfNewAttributes = 9
-ConfigOptions.NumofAttributestoDelete = 7
-ConfigOptions.JoinSize = 6
-ConfigOptions.NumOfParamsInFunctions = 2
-ConfigOptions.PrimaryKeySize = 3
-ConfigOptions.NumOfJoinAttributes = 3
-ConfigOptions.JoinKind = 2
-ConfigOptions.SkolemKind = 2
-ConfigOptions.SourceSkolemPerc = 38
-ConfigOptions.SourceFDPerc = 17
+ConfigOptions.NumOfSubElements = 3
+ConfigOptions.NumOfNewAttributes = 1
+ConfigOptions.NumofAttributestoDelete = 1
+ConfigOptions.JoinSize = 2
+ConfigOptions.NumOfParamsInFunctions = 1
+ConfigOptions.PrimaryKeySize = 1
+ConfigOptions.NumOfJoinAttributes = 1
+ConfigOptions.JoinKind = 0 
+# Star is 0 , chain is 1
+ConfigOptions.SkolemKind = 0
+ConfigOptions.SourceSkolemPerc = 0
+ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ParameterName.ReuseSourcePerc = 11
-ParameterName.NoReuseScenPerc = 89
+ParameterName.ReuseSourcePerc = 100
+ParameterName.NoReuseScenPerc = 50
 
 # Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 3
-ConfigOptionsDeviation.NumOfNewAttributes = 1
-ConfigOptionsDeviation.NumofAttributestoDelete = 1
-ConfigOptionsDeviation.JoinSize = 1
-ConfigOptionsDeviation.NumOfParamsInFunctions = 2
-ConfigOptionsDeviation.PrimaryKeySize = 1
-ConfigOptionsDeviation.NumOfJoinAttributes = 1
+ConfigOptionsDeviation.NumOfSubElements = 0
+ConfigOptionsDeviation.NumOfNewAttributes = 0
+ConfigOptionsDeviation.NumofAttributestoDelete = 0
+ConfigOptionsDeviation.JoinSize = 0
+ConfigOptionsDeviation.NumOfParamsInFunctions = 0
+ConfigOptionsDeviation.PrimaryKeySize = 0
+ConfigOptionsDeviation.NumOfJoinAttributes = 0
 ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
@@ -73,7 +74,7 @@ OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document
-TrampXMLOutput.Correspondences = false
+TrampXMLOutput.Correspondences = true
 TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false

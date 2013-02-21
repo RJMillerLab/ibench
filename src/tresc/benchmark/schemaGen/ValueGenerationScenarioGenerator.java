@@ -70,8 +70,8 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 	}*/
 
 	@Override
-	protected void chooseSourceRels() {
-		
+	protected boolean chooseSourceRels() {
+		return true;
 	}
 	
 	@Override
@@ -81,9 +81,11 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 	
 	
 	@Override
-	protected void chooseTargetRels() {
+	protected boolean chooseTargetRels() {
 		RelationType r = getRandomRel(false);
 		m.addTargetRel(r);
+		
+		return true;
 	}
 	
 	@Override

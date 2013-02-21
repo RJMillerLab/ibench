@@ -1,0 +1,165 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="complete_su_0_nl0_ce0">
+        <Attr>
+          <Name>count_su_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>death_su_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>shake_su_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hollow_su_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hollow_su_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>leather_su_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>count_su_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="distribution_su_0_nl0_ce0">
+        <Attr>
+          <Name>count_su_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>death_su_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>shake_su_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hollow_su_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hollow_su_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>leather_su_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>gold_su_0_nl0_ae6IDindep</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>pain_su_0_nl0_ae7IDOnFirst</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="complete_su_0_nl0_ce0">
+        <Attr>count_su_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="distribution_su_0_nl0_ce0">
+        <Attr>count_su_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="complete_su_0_nl0_ce0">
+        <Attr>death_su_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="distribution_su_0_nl0_ce0">
+        <Attr>death_su_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="complete_su_0_nl0_ce0">
+        <Attr>shake_su_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="distribution_su_0_nl0_ce0">
+        <Attr>shake_su_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="complete_su_0_nl0_ce0">
+        <Attr>hollow_su_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="distribution_su_0_nl0_ce0">
+        <Attr>hollow_su_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="complete_su_0_nl0_ce0">
+        <Attr>hollow_su_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="distribution_su_0_nl0_ce0">
+        <Attr>hollow_su_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="complete_su_0_nl0_ce0">
+        <Attr>leather_su_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="distribution_su_0_nl0_ce0">
+        <Attr>leather_su_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="complete_su_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="distribution_su_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+            <Var>b</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

@@ -2,6 +2,7 @@ package tresc.benchmark.schemaGen;
 
 import java.util.Vector;
 
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
@@ -71,192 +72,31 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			keySize = (keySize > 0) ? keySize : 1;
 	}
 
-	/**
-	 * This is the main function. It generates a table in the source, a number
-	 * of tables in the target and a respective number of queries.
-	 */
-	/*private void createSubElements(Schema source, Schema target,
-			int numOfSrcTblAttr, int numNewAttr, int typeOfSkolem,
-			int repetition, SPJQuery pquery) {
-
-		String coding = getStamp() + repetition;
-		int curTbl = repetition;
-
-		// First create the source table
-		String sourceRelName = Modules.nameFactory.getARandomName();
-		sourceRelName = sourceRelName + "_" + coding;
-		SMarkElement srcRel =
-				new SMarkElement(sourceRelName, new Set(), null, 0, 0);
-		srcRel.setHook(new String(coding));
-		source.addSubElement(srcRel);
-
-		// create the target table
-		String targetRelName = Modules.nameFactory.getARandomName();
-		targetRelName = targetRelName + "_" + coding;
-		SMarkElement tgtRel =
-				new SMarkElement(targetRelName, new Set(), null, 0, 0);
-		tgtRel.setHook(new String(coding));
-		target.addSubElement(tgtRel);
-
-		// generate random key name even though it may not be used to avoid
-		// variable may not have been initialized errors
-		String randomName = Modules.nameFactory.getARandomName();
-		String keyName = randomName + "_" + getStamp() + repetition + "KE0";
-
-		if (sk == SkolemKind.KEY) {
-			// create key for source table
-			Key srcKey = new Key();
-			srcKey.addLeftTerm(new Variable("X"), new Projection(Path.ROOT,
-					source.getSubElement(curTbl).getLabel()));
-			srcKey.setEqualElement(new Variable("X"));
-
-			// create key for target table
-			Key tgtKey = new Key();
-			tgtKey.addLeftTerm(new Variable("Y"), new Projection(Path.ROOT,
-					target.getSubElement(curTbl).getLabel()));
-			tgtKey.setEqualElement(new Variable("Y"));
-
-			// create the actual key and add it to the source schema
-			SMarkElement es =
-					new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
-			es.setHook(new String(getStamp() + repetition + "KE0"));
-			source.getSubElement(curTbl).addSubElement(es);
-			// add the key attribute to the source key
-			srcKey.addKeyAttr(new Projection(new Variable("X"), keyName));
-
-			// add the key to the target schema
-			SMarkElement et =
-					new SMarkElement(keyName, Atomic.STRING, null, 0, 0);
-			et.setHook(new String(getStamp() + repetition + "KE0"));
-			target.getSubElement(curTbl).addSubElement(et);
-			// add the key attribute to the target key
-			tgtKey.addKeyAttr(new Projection(new Variable("Y"), keyName));
-
-			// add constraints to the source and target
-			source.addConstraint(srcKey);
-			target.addConstraint(tgtKey);
-
-			// since we added a key to the table, we add one less free element
-			// to the source and target
-			numOfSrcTblAttr--;
-		}
-
-		// Populate the source with elements. The array attNames, keeps the
-		// coding of these elements
-		String[] attNames = new String[numOfSrcTblAttr];
-		for (int i = 0; i < numOfSrcTblAttr; i++) {
-			String namePrefix = Modules.nameFactory.getARandomName();
-			coding = getStamp() + repetition + "A" + i;
-			String srcAttName = namePrefix + "_" + coding;
-			SMarkElement el =
-					new SMarkElement(srcAttName, Atomic.STRING, null, 0, 0);
-			el.setHook(new String(coding));
-			srcRel.addSubElement(el);
-			attNames[i] = srcAttName;
-		}
-
-		// create the query for the target table
-		SPJQuery q = new SPJQuery();
-		q.getFrom().add(new Variable("X"),
-				new Projection(Path.ROOT, sourceRelName));
-
-		// populate this table with the same element created above for the
-		// source
-		SelectClauseList sel = q.getSelect();
-
-		// go through all the attributes put in the source table and pop them
-		// into the target
-		for (int i = 0, imax = attNames.length; i < imax; i++) {
-			String tgtAttrName = attNames[i];
-			SMarkElement tgtAtomicElt =
-					new SMarkElement(tgtAttrName, Atomic.STRING, null, 0, 0);
-			String hook = tgtAttrName.substring(tgtAttrName.indexOf("_"));
-			tgtAtomicElt.setHook(hook);
-			tgtRel.addSubElement(tgtAtomicElt);
-
-			// since we added an attr in the target, we add an entry in the
-			// respective select clause
-			Projection att = new Projection(new Variable("X"), tgtAttrName);
-			sel.add(tgtAttrName, att);
-		}
-
-		// now we need to add a fixed number of attributes to the target
-		coding = getStamp() + repetition + "NewAtt";
-
-		// by default use all elements in the table as arguments for skolem
-		// generation
-		int numArgsForSkolem = numOfSrcTblAttr;
-
-		for (int j = 0; j < numNewAttr; j++) {
-			String newAttName =
-					Modules.nameFactory.getARandomName() + "_" + coding;
-			SMarkElement newAttElement =
-					new SMarkElement(newAttName, Atomic.STRING, null, 0, 0);
-			newAttElement.setHook(new String(coding));
-
-			// here we take the correct table (a subelement which is a set) from
-			// the target relation and add a new attribute to it
-			target.getSubElement(curTbl).addSubElement(newAttElement);
-
-			// add to the first partial query a skolem function to generate
-			// the join attribute in the first target table
-			SelectClauseList sel0 = q.getSelect();
-			String skolemName = "SK" + String.valueOf(skolemCounter);
-			skolemCounter++;
-			Function f0 = new Function(skolemName);
-
-			// if we are using a key in the original relation then we base the
-			// skolem on just that key
-			if (sk == SkolemKind.KEY) {
-				Projection att = new Projection(new Variable("X"), keyName);
-				f0.addArg(att);
-			}
-
-			else {
-				// if configuration specifies that we need to randomly decide
-				// how many arguments the skolem will take, generate a random
-				// number
-				if (sk == SkolemKind.RANDOM)
-					numArgsForSkolem =
-							Utils.getRandomNumberAroundSomething(_generator,
-									numOfSrcTblAttr / 2, numOfSrcTblAttr / 2);
-
-				// ensure that we are still within the bounds of the number of
-				// source attributes
-				if (numArgsForSkolem > numOfSrcTblAttr)
-					numArgsForSkolem = numOfSrcTblAttr;
-
-				// add all the source attributes as arguments for the skolem
-				// function
-				for (int k = 0; k < numArgsForSkolem; k++) {
-					Projection att =
-							new Projection(new Variable("X"), attNames[k]);
-					f0.addArg(att);
-				}
-			}
-
-			sel0.add(newAttName, f0);
-			q.setSelect(sel0);
-		}
-
-		// add the partial queries to the parent query
-		// to form the whole transformation
-		SelectClauseList pselect = pquery.getSelect();
-		String tblTrgName = tgtRel.getLabel();
-		pselect.add(tblTrgName, q);
-
-		pquery.setSelect(pselect);
-	}*/
-
 	// override to adapt the local fields
 	/**
 	 * Also set the number of source attributes
 	 */
 	@Override
-	protected void chooseSourceRels() throws Exception {
+	protected boolean chooseSourceRels() throws Exception {
+		RelationType rel;
 		super.chooseSourceRels();
+		
+		rel = m.getSourceRels().get(0);
+		if (rel == null)
+			return false;
+		
 		// set number of src tbl attributes
-		numOfSrcTblAttr = m.getNumRelAttr(0, true);
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		
+		if (keySize > 0 && !rel.isSetPrimaryKey()) {
+			keySize = keySize > numOfSrcTblAttr ? numOfSrcTblAttr : keySize;
+			fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);
+		}
+		else if (rel.isSetPrimaryKey())
+			keySize = rel.getPrimaryKey().sizeOfAttrArray();
+		
+		return true;
 	}
 	
 	/**
@@ -272,7 +112,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	 * @throws Exception 
 	 */
 	@Override
-	protected void chooseTargetRels() throws Exception {
+	protected boolean chooseTargetRels() throws Exception {
 		RelationType cand = null;
 		int tries = 0;
 		int requiredNumAttrs = numAddAttr + 
@@ -285,7 +125,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			cand = getRandomRel(false, requiredNumAttrs);
 			// no such cand
 			if (cand == null)
-				break;
+				return false;
 				
 			relName = cand.getName();
 			freeAttrs = cand.sizeOfAttrArray() - numAddAttr;
@@ -298,23 +138,33 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 						break;
 					}
 				}
-			}	
+			}
+			
+			ok = true;
 		} 
 		
 		// did not find sufficient candidate
 		if (!ok)
-			genTargetRels();
+			return false;
 		// source should have the same attrs as target but no skolems
 		else {
 			m.addTargetRel(cand);
 			
-			numOfSrcTblAttr = cand.getAttrArray().length 
+			numOfSrcTblAttr = cand.sizeOfAttrArray() 
 					- numAddAttr;
 			
 			// add primary key if it does not have one already
 			if (sk == SkolemKind.KEY && !cand.isSetPrimaryKey())
 				fac.addPrimaryKey(relName, m.getAttrId(0, 0, false), false);
+			else if (cand.isSetPrimaryKey()) {
+				keySize = cand.getPrimaryKey().sizeOfAttrArray();
+				numOfSrcTblAttr = numOfSrcTblAttr >= (keySize + 1) ? 
+						numOfSrcTblAttr : keySize + 1;
+				numAddAttr = cand.sizeOfAttrArray() - numOfSrcTblAttr;
+			}
 		}
+		
+		return true;
 	}
 	
 	@Override

@@ -1,0 +1,175 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="snake_ad_0_nl0_ce0">
+        <Attr>
+          <Name>bucket_ad_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>jump_ad_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lift_ad_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>exchange_ad_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discover_ad_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>touch_ad_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>bucket_ad_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="settle_ad_0_nl0_ce0">
+        <Attr>
+          <Name>bucket_ad_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>jump_ad_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lift_ad_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>exchange_ad_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discover_ad_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>touch_ad_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>act_ad_0_nl0_ae6</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>winter_ad_0_nl0_ae7</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>net_ad_0_nl0_ae8</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>bucket_ad_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="snake_ad_0_nl0_ce0">
+        <Attr>bucket_ad_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="settle_ad_0_nl0_ce0">
+        <Attr>bucket_ad_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="snake_ad_0_nl0_ce0">
+        <Attr>jump_ad_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="settle_ad_0_nl0_ce0">
+        <Attr>jump_ad_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="snake_ad_0_nl0_ce0">
+        <Attr>lift_ad_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="settle_ad_0_nl0_ce0">
+        <Attr>lift_ad_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="snake_ad_0_nl0_ce0">
+        <Attr>exchange_ad_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="settle_ad_0_nl0_ce0">
+        <Attr>exchange_ad_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="snake_ad_0_nl0_ce0">
+        <Attr>discover_ad_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="settle_ad_0_nl0_ce0">
+        <Attr>discover_ad_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="snake_ad_0_nl0_ce0">
+        <Attr>touch_ad_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="settle_ad_0_nl0_ce0">
+        <Attr>touch_ad_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="snake_ad_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="settle_ad_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>a</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

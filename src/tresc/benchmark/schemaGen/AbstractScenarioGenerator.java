@@ -1,6 +1,7 @@
 package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -204,15 +205,26 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 					reuseTrg = false;
 			}
 			
-			if (reuseSrc)
-				chooseSourceRels();
-			else
-				genSourceRels();
-			
-			if (reuseTrg)
-				chooseTargetRels();
-			else
+			// first choose a source relations and then generate
+			// the target accordingly
+			if (reuseSrc) {
+				if (!chooseSourceRels())
+					genSourceRels();
 				genTargetRels();
+			}
+			// first choose a target relation and then generate
+			// the source accordingly
+			else if (reuseTrg) {
+				boolean success = chooseTargetRels();
+				genSourceRels();
+				if (!success)
+					genTargetRels();
+			}
+			// generate source then target
+			else {
+				genSourceRels();
+				genTargetRels();
+			}	
 		}
 	}
 
@@ -222,9 +234,10 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	 * 
 	 * @throws Exception
 	 */
-	protected void chooseSourceRels() throws Exception {
+	protected boolean chooseSourceRels() throws Exception {
 		RelationType rel = getRandomRel(true);
 		m.addSourceRel(rel);
+		return true;
 	}
 	
 	/**
@@ -232,9 +245,10 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	 * target schema created so far.
 	 * @throws Exception
 	 */
-	protected void chooseTargetRels() throws Exception {
+	protected boolean chooseTargetRels() throws Exception {
 		RelationType rel = getRandomRel(false);
-		m.addTargetRel(rel);		
+		m.addTargetRel(rel);
+		return true;
 	}
 	
 	protected RelationType getRandomRel (boolean source, int minAttrs) {
@@ -262,6 +276,20 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		}
 		
 		return pickRel(cand);//TODO use xpath over XBeans?
+	}
+	
+	protected RelationType getRandomRelWithNumAttr (boolean source, int numAttr, 
+			Collection<RelationType> notThese) {
+		List<RelationType> cand = new ArrayList<RelationType> ();
+		
+		for(RelationType r: model.getSchema(source).getRelationArray()) {
+			if (r.sizeOfAttrArray() == numAttr)
+				cand.add(r);
+		}
+		// remove the ones not allowed
+		cand.removeAll(notThese);
+		
+		return pickRel(cand);
 	}
 	
 	protected RelationType getRandomRelWithNumAttr (boolean source, int numAttr) {

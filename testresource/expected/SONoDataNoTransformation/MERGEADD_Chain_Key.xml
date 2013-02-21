@@ -1,0 +1,400 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="business_ma_0_nl0_ce0">
+        <Attr>
+          <Name>yellow_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>whip_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>receipt_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fish_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>wish_ma_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>burn_ma_0_nl0_ae0comp0_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>burn_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="red_ma_0_nl0_ce1">
+        <Attr>
+          <Name>thumb_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>go_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>beautiful_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>watch_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>burn_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>burn_ma_0_nl0_ae0comp1_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>burn_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="present_ma_0_nl0_ce2">
+        <Attr>
+          <Name>form_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>high_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>stamp_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>check_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>place_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>burn_ma_0_nl0_ae0comp2_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <ForeignKey>
+        <From tableref="red_ma_0_nl0_ce1">
+          <Attr>burn_ma_0_nl0_ae0comp1_joinref_0</Attr>
+        </From>
+        <To tableref="business_ma_0_nl0_ce0">
+          <Attr>burn_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="present_ma_0_nl0_ce2">
+          <Attr>burn_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </From>
+        <To tableref="red_ma_0_nl0_ce1">
+          <Attr>burn_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="language_ma_0_nl0_ce0">
+        <Attr>
+          <Name>yellow_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>whip_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>receipt_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fish_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>wish_ma_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thumb_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>go_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>beautiful_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>watch_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>form_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>high_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>stamp_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>check_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>place_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>burn_ma_0_nl0_ae0comp0_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>burn_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>side_ma_0_nl0_ae15</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>arrange_ma_0_nl0_ae16</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>compare_ma_0_nl0_ae17</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>burn_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+          <Attr>burn_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="business_ma_0_nl0_ce0">
+        <Attr>yellow_ma_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>yellow_ma_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="business_ma_0_nl0_ce0">
+        <Attr>whip_ma_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>whip_ma_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="business_ma_0_nl0_ce0">
+        <Attr>receipt_ma_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>receipt_ma_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="business_ma_0_nl0_ce0">
+        <Attr>fish_ma_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>fish_ma_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="business_ma_0_nl0_ce0">
+        <Attr>wish_ma_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>wish_ma_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="red_ma_0_nl0_ce1">
+        <Attr>thumb_ma_0_nl1_ae0</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>thumb_ma_0_nl1_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="red_ma_0_nl0_ce1">
+        <Attr>go_ma_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>go_ma_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="red_ma_0_nl0_ce1">
+        <Attr>beautiful_ma_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>beautiful_ma_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="red_ma_0_nl0_ce1">
+        <Attr>watch_ma_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>watch_ma_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="present_ma_0_nl0_ce2">
+        <Attr>form_ma_0_nl2_ae0</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>form_ma_0_nl2_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="present_ma_0_nl0_ce2">
+        <Attr>high_ma_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>high_ma_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="present_ma_0_nl0_ce2">
+        <Attr>stamp_ma_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>stamp_ma_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="present_ma_0_nl0_ce2">
+        <Attr>check_ma_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>check_ma_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="present_ma_0_nl0_ce2">
+        <Attr>place_ma_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>place_ma_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="business_ma_0_nl0_ce0">
+        <Attr>burn_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>burn_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="red_ma_0_nl0_ce1">
+        <Attr>burn_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </From>
+      <To tableref="language_ma_0_nl0_ce0">
+        <Attr>burn_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="business_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="red_ma_0_nl0_ce1">
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="present_ma_0_nl0_ce2">
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>k</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="language_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>f</Var>
+          <Var>k</Var>
+          <SKFunction skname="SK0">
+            <Var>f</Var>
+            <Var>k</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>f</Var>
+            <Var>k</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>f</Var>
+            <Var>k</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

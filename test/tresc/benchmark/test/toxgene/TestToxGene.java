@@ -15,13 +15,22 @@ import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import toxgene.core.Engine;
 import toxgene.core.ToXgeneErrorException;
 import toxgene.interfaces.ToXgeneDocumentCollection;
 import toxgene.interfaces.ToXgeneSession;
 import toxgene.util.ToXgeneReporterImpl;
 
-public class ToxGeneTest {
+public class TestToxGene {
+	
+	static Logger log = Logger.getLogger(TestToxGene.class);
+
+	private static final String outputPath = "./testout/";
 	
 	/* This is the ToXgene Engine */
 	private static Engine tgEngine;
@@ -33,98 +42,87 @@ public class ToxGeneTest {
 	 */
 	private static ToXgeneReporterImpl tgReporter;
 
-	public static void main(String argv[]) {
-		if (argv.length == 0) {
-			System.out.println("Usage: Sample <template file>\n");
-			System.exit(0);
-		}
+	@BeforeClass
+	public static void setUp () {
 		System.setProperty("ToXgene_home", "lib");
-		String template = argv[0];
-		try {
-			tgEngine = new Engine();
-			boolean verbose = true; /*
-									 * useful for debugging templates
-									 */
-			boolean showWarnings = true;
-			tgReporter = new ToXgeneReporterImpl(verbose, showWarnings);
+		
+		tgEngine = new Engine();
+		boolean verbose = true; 
+		boolean showWarnings = true;
+		tgReporter = new ToXgeneReporterImpl(verbose, showWarnings);
 
-			/*
-       */
-			if (System.getProperty("ToXgene_home") == null) {
-				System.out.println("\n***** WARNING: "
-						+ "ToXgene_home property is not set. "
-						+ "ToXgene will attempt to load\n"
-						+ "toxgene.jar/config/cdata.xml assuming"
-						+ "toxgene.jar is in the current "
-						+ "directory.\n\nUse java "
-						+ "-DToXgene_home=<path>... " + "to override this.");
-			}
-			/*
-			 * The ToXgeneSession specifies all parameters the engine needs for
-			 * generating the documents.
-			 */
-			ToXgeneSession session = new ToXgeneSession();
-			session.reporter = tgReporter;
-			session.initialSeed = 123456;
-			session.addNewLines = true;
-			session.inputPath = "./";
-			session.usePOM = false;
-			session.pomBufferPath = ".";
-			session.pomMemFracBuffer = (float) 0.5;
-			session.pomBufferSize = 8 * 1024;
-			
-			/* Initialize the engine */
-			tgEngine.startSession(session);
+		if (System.getProperty("ToXgene_home") == null) {
+			log.warn("\n***** WARNING: "
+					+ "ToXgene_home property is not set. "
+					+ "ToXgene will attempt to load\n"
+					+ "toxgene.jar/config/cdata.xml assuming"
+					+ "toxgene.jar is in the current "
+					+ "directory.\n\nUse java "
+					+ "-DToXgene_home=<path>... " + "to override this.");
+		}
+		File outfile = new File(outputPath, "outI_5_0_2_0_1_2_1_1_1.xml");
+		if (outfile.exists())
+			outfile.delete();
+	}
+	
+	@Test
+	public void testToxGeneration () throws FileNotFoundException {
+		testOneFile("testresource/tox.tsl");
+	}
+	
+	private void testOneFile(String tempName) throws FileNotFoundException {
+		/*
+		 * The ToXgeneSession specifies all parameters the engine needs for
+		 * generating the documents.
+		 */
+		ToXgeneSession session = new ToXgeneSession();
+		session.reporter = tgReporter;
+		session.initialSeed = 123456;
+		session.addNewLines = true;
+		session.inputPath = "./testresource";
+		session.usePOM = false;
+		session.pomBufferPath = ".";
+		session.pomMemFracBuffer = (float) 0.5;
+		session.pomBufferSize = 8 * 1024;
+		
+		/* Initialize the engine */
+		tgEngine.startSession(session);
+		
+		/*
+		 * The progress() method sends a progress report message to the
+		 * message handler.
+		 */
+		tgReporter.progress("Parsing template: ");
+		tgEngine.parseTemplate(new FileInputStream(tempName));
+		tgReporter.progress("Done !\n");
 
-			File temp = new File(template);
-			
-			/*
-			 * The progress() method sends a progress report message to the
-			 * message handler.
-			 */
-			tgReporter.progress("Parsing template: ");
-			tgEngine.parseTemplate(new FileInputStream(template));
-			tgReporter.progress("Done !\n");
-
-			/*
-			 * The generateLists() method tells the engine to generate all
-			 * temporary data declared in tox-list elements in the template.
-			 * Calling this method is optional, ToXgene will materialize all
-			 * temporary data if needed even if generateLists is not invoked.
-			 */
-			tgEngine.generateLists();
-			generateCollections();
-		}
-		catch (ToXgeneErrorException e1) {
-			error(e1.getMessage());
-		}
-		catch (FileNotFoundException e) {
-			tgEngine.endSession();
-			error("cannot open template file \"" + template + "\"");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		/*
+		 * The generateLists() method tells the engine to generate all
+		 * temporary data declared in tox-list elements in the template.
+		 * Calling this method is optional, ToXgene will materialize all
+		 * temporary data if needed even if generateLists is not invoked.
+		 */
+		tgEngine.generateLists();
+		generateCollections();
+		
 		tgEngine.endSession();
 
 		int nWarnings = tgReporter.warnings();
 		if (nWarnings > 0) {
-			System.out.println("There were " + nWarnings + " warning(s).");
+			log.error("There were " + nWarnings + " warning(s).");
 			tgReporter.printAllWarnings();
 		}
-		System.exit(0);
+		
+		// no warnings were generated
+		assertEquals("errors", 0, nWarnings);
 	}
 
 	/**
 	 * Scans the collections declared in the template and generates the XML
 	 * documents they specify on files.
 	 */
-	private static void generateCollections() {
+	private void generateCollections() {
 		Vector collections = tgEngine.getToXgeneDocumentCollections();
-		String outputPath = "./"; /*
-								 * Path where to put the documents
-								 */
 
 		if (collections.size() == 0) {
 			tgReporter.warning("no document genes found");
@@ -206,7 +204,7 @@ public class ToxGeneTest {
 	/**
 	 * Prints an error message and aborts.
 	 */
-	public static void error(String msg) {
+	public void error(String msg) {
 		tgReporter.printAllWarnings();
 		System.out.println("\n***** ERROR: " + msg);
 		System.exit(1);

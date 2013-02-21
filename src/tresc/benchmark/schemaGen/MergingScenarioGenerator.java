@@ -83,7 +83,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
      * @throws Exception 
      */
     @Override
-	protected void chooseSourceRels() throws Exception {
+	protected boolean chooseSourceRels() throws Exception {
 		List<RelationType> rels = new ArrayList<RelationType> ();
 		int numTries = 0;
 		int created = 0;
@@ -185,6 +185,8 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		}
 		
 		createConstraints(attrs);
+		
+		return true;
 	}
 
 
@@ -394,7 +396,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	 * @throws Exception 
 	 */
 	@Override
-	protected void chooseTargetRels() throws Exception { //TODO more flexible to adapt numOfJoinAttributes
+	protected boolean chooseTargetRels() throws Exception { //TODO more flexible to adapt numOfJoinAttributes
 		RelationType r = null;
 		int tries = 0;
 		int minAttrs = numOfTables * (numOfJoinAttributes + 1);
@@ -428,24 +430,24 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		
 		// didn't find suiting rel? Create it
 		if (!ok)
-			genTargetRels();
+			return false;
 		// add keys and distribute the normal attributes of rel
-		else {
-			m.addTargetRel(r);
-			
-			if (!r.isSetPrimaryKey())
-				fac.addPrimaryKey(r.getName(), joinAttPos, false);
-			
-			// adapt number of normal attributes used (copied to target) per source rel
-			int numPerSrcRel = numNormalAttr / numOfTables;
-			int usedAttrs = 0;
-			for(int i = 0; i < numOfTables; i++) {
-				numOfUseAttrs[i] = (numPerSrcRel > getNumNormalAttrs(i)) 
-						? getNumNormalAttrs(i) : numPerSrcRel;
-				usedAttrs += numOfUseAttrs[i];
-			}
-			numOfUseAttrs[numOfTables - 1] += numNormalAttr - usedAttrs;
+		m.addTargetRel(r);
+
+		if (!r.isSetPrimaryKey())
+			fac.addPrimaryKey(r.getName(), joinAttPos, false);
+
+		// adapt number of normal attributes used (copied to target) per source rel
+		int numPerSrcRel = numNormalAttr / numOfTables;
+		int usedAttrs = 0;
+		for(int i = 0; i < numOfTables; i++) {
+			numOfUseAttrs[i] = (numPerSrcRel > getNumNormalAttrs(i)) 
+					? getNumNormalAttrs(i) : numPerSrcRel;
+					usedAttrs += numOfUseAttrs[i];
 		}
+		numOfUseAttrs[numOfTables - 1] += numNormalAttr - usedAttrs;
+		
+		return true;
 	}
 	
 	@Override

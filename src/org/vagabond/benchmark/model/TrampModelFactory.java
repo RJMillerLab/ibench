@@ -70,6 +70,10 @@ public class TrampModelFactory {
 		this.doc = stScen.getDoc();
 		initIdGen();
 	}
+	
+	public TrampModelFactory(TrampXMLModel doc) {
+		this.doc = doc;
+	}
 
 	public void setPartialMapping (PartialMapping p) {
 		this.p = p;
@@ -102,6 +106,7 @@ public class TrampModelFactory {
 		idGen.createIdType("FK", "FK");
 		idGen.createIdType("SK", "SK");
 		idGen.createIdType("FD", "FD");
+		idGen.createIdType("R", "");
 	}
 
 	public String getNextId(String idType) {
@@ -565,18 +570,21 @@ public class TrampModelFactory {
 		Map<String, ArrayList<MappingType>> relToMap = doc.getMapsForSourceRel();
 		
 		for(MappingType m: maps) {
-			if(m.getForeach() == null)
-				if (log.isDebugEnabled()) {log.debug("ERROR: Scenario has no Foreach clause!");};
-			
-			for (RelAtomType a: m.getForeach().getAtomArray()) {
-				String tabName = a.getTableref();
-				ArrayList<MappingType> relMaps = relToMap.get(tabName);
-				if (relMaps == null) {
-					relMaps = new ArrayList<MappingType> ();
-					relToMap.put(tabName, relMaps);
+			if(m.getForeach() == null) {
+				if (log.isDebugEnabled()) 
+					log.debug("ERROR: Scenario has no Foreach clause!");
+			}
+			else {
+				for (RelAtomType a: m.getForeach().getAtomArray()) {
+					String tabName = a.getTableref();
+					ArrayList<MappingType> relMaps = relToMap.get(tabName);
+					if (relMaps == null) {
+						relMaps = new ArrayList<MappingType> ();
+						relToMap.put(tabName, relMaps);
+					}
+					if (!relMaps.contains(m)) // use set?
+						relMaps.add(m);
 				}
-				if (!relMaps.contains(m)) // use set?
-					relMaps.add(m);
 			}
 		}
 	}

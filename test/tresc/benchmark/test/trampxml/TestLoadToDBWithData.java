@@ -56,6 +56,7 @@ public class TestLoadToDBWithData extends AbstractAllScenarioTester {
 	public void testToxtSizeProblem () throws Exception {
 		conf.setParam(ParameterName.NumOfSubElements, 127);
 		conf.setScenarioRepetitions(ScenarioName.COPY, 1);
+		conf.resetRandomGenerator();
 		b.runConfig(conf);
 		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
 		log.info(doc.getScenario().toString());
@@ -69,6 +70,7 @@ public class TestLoadToDBWithData extends AbstractAllScenarioTester {
 			throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);
+		conf.resetRandomGenerator();
 		b.runConfig(conf);
 		testLoad(n);
 		conf.setScenarioRepetitions(n, 0);

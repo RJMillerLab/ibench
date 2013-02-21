@@ -58,10 +58,12 @@ public class TestLoadingToDBWithDataReusingSchema extends AbstractAllScenarioTes
 		log.info(n);
 		conf.setScenarioRepetitions(n, 2);
 		// reuse source
+		conf.resetRandomGenerator();
 		setReuse(100,0,conf);
 		b.runConfig(conf);
 		testLoad(n);
 		// reuse target
+		conf.resetRandomGenerator();
 		setReuse(0,100,conf);
 		b.runConfig(conf);
 		testLoad(n);

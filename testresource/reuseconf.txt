@@ -5,7 +5,7 @@ SchemaPathPrefix=testout
 InstancePathPrefix=testout
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0 
+Scenarios.COPY = 2 
 Scenarios.VALUEGEN = 0 
 Scenarios.HORIZPARTITION = 0 
 Scenarios.SURROGATEKEY = 0 
@@ -47,7 +47,7 @@ ConfigOptionsDerivation.NumofAttributestoDelete = 0
 ConfigOptionsDerivation.SkolemKind = 0
 
 # Random number generator and max values and DataGenerator
-RandomSeed = 0
+RandomSeed = 1
 RepElementCount = 5
 MaxStringLength = 5
 MaxNumValue = 1000

@@ -2,7 +2,9 @@ package tresc.benchmark.schemaGen;
 
 import java.util.Vector;
 
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
 import tresc.benchmark.Constants.MappingLanguageType;
@@ -65,6 +67,37 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	}
 	
 	@Override
+	protected boolean chooseSourceRels () throws Exception {
+		int minAttrs = keySize + numDelAttr;
+		RelationType rel;
+		
+		// get a random relation
+		rel = getRandomRel(true, minAttrs);
+		
+		if (rel == null) 
+			return false;
+		
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		
+		// create primary key if necessary
+		if (!rel.isSetPrimaryKey() && keySize > 0) {
+			fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);
+		}
+		// adapt keySize
+		else if (rel.isSetPrimaryKey()) {
+			keySize = rel.getPrimaryKey().sizeOfAttrArray();
+			if (rel.sizeOfAttrArray() - keySize < numDelAttr)
+				numDelAttr = rel.sizeOfAttrArray() - keySize; 
+		}
+		
+		m.addSourceRel(rel);
+		
+		return true;
+
+	}
+	
+	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
@@ -95,6 +128,31 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 
 	}
 
+	@Override
+	protected boolean chooseTargetRels () throws Exception {
+		RelationType rel;
+		int minAttr = keySize + numAddAttr;
+		
+		rel = getRandomRel(false, minAttr);
+		if (rel == null)
+			return false;
+			
+		if (keySize > 0 && !rel.isSetPrimaryKey()) {
+			fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), false);
+		}
+		else if (rel.isSetPrimaryKey()) {
+			keySize = rel.getPrimaryKey().sizeOfAttrArray();
+		}
+		if (rel.sizeOfAttrArray() + numDelAttr - numAddAttr <= keySize)
+			numDelAttr = numAddAttr;
+		numOfSrcTblAttr = rel.sizeOfAttrArray() + numDelAttr - numAddAttr;
+		
+		m.addTargetRel(rel);
+		
+		return true;
+	}
+	
 	@Override
 	protected void genTargetRels() throws Exception {
 		String trgName = randomRelName(0);

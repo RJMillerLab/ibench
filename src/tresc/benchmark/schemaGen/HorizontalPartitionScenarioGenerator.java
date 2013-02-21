@@ -153,7 +153,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
      * @throws Exception 
      */
     @Override
-    protected void chooseSourceRels() throws Exception {
+    protected boolean chooseSourceRels() throws Exception {
     	RelationType r = null;
     	boolean ok = false;
     	int tries = 0;
@@ -177,7 +177,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
     	
     	// did not find suitable relation
     	if (r == null)
-    		genSourceRels();
+    		return false;
     	// adapt fields
     	else {
     		m.addSourceRel(r);
@@ -185,6 +185,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
     		if (!r.isSetPrimaryKey())
     			fac.addPrimaryKey(r.getName(), 0, true);
     		randomElements = r.sizeOfAttrArray() - 1;
+    		return true;
     	}
     }
     
@@ -217,7 +218,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	 * @throws Exception 
 	 */
 	@Override
-	protected void chooseTargetRels() throws Exception {
+	protected boolean chooseTargetRels() throws Exception {
 		RelationType cand = null;
 		int tries = 0;
 		int numAttrs = 0;
@@ -233,10 +234,8 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		}
 		
 		// didn't find one? generate target relations
-		if (rels.size() == 0) {
-			genTargetRels();
-			return;
-		}
+		if (rels.size() == 0)
+			return false;
 		
 		numAttrs = cand.sizeOfAttrArray();
 
@@ -265,6 +264,8 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		
 		// adapt local parameters
 		randomElements = numAttrs;
+		
+		return true;
 	}
 	
 	private boolean relOk (RelationType r) throws Exception {

@@ -14,6 +14,7 @@ import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
+import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 
@@ -28,6 +29,7 @@ public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
 		conf.readFromProperties(prop);
 		conf.setInstancePathPrefix(OUT_DIR);
 		conf.setSchemaPathPrefix(OUT_DIR);
+		conf.setMapType(MappingLanguageType.FOtgds);
 	}
 	
 	@Override
@@ -36,13 +38,16 @@ public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
 		conf.setScenarioRepetitions(n, 2); // 2 so we can reuse
 		// reuse source
 		setReuse(100,0,conf);
+		conf.resetRandomGenerator();
 		b.runConfig(conf);
-		testLoad(n, false, false);
+		testLoad(n, "source");
 		// reuse target
 		setReuse(0,100,conf);
+		conf.resetRandomGenerator();
 		b.runConfig(conf);
-		testLoad(n, false, false);
-		conf.setScenarioRepetitions(n, 0);
+		testLoad(n, "target");
+		if (!n.equals(ScenarioName.COPY))
+			conf.setScenarioRepetitions(n, 0);
 	}
 
 	private void setReuse(int src, int target, Configuration conf) {
@@ -51,15 +56,15 @@ public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
 	}
 	
 	
-	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
+	private void testLoad(ScenarioName n, String reuse) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
 			if (log.isDebugEnabled()) {log.debug(doc.getScenario().toString());};
 		}
 		catch (Exception e) {
-			log.error(n + "\n\n" + loadToString());
+			log.error(n + " " + reuse + "\n\n" + loadToString());
 			LoggerUtil.logException(e, log);
-			throw e;	
+			throw new Exception (n + " " + reuse, e);	
 		}
 	}
 	

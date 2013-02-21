@@ -451,6 +451,10 @@ public class Configuration {
 	public Random getRandomGenerator() {
 		return randomGenerator;
 	}
+	
+	public void resetRandomGenerator() {
+		randomGenerator = new Random(_seed);
+	}
 
 	public String getSourceSchemaFile() {
 		return sourceSchemaFile;
@@ -689,6 +693,10 @@ public class Configuration {
 	
 	public int paramMax(ParameterName p) {
 		return _configurations[p.ordinal()][0] + _configurations[p.ordinal()][1]; 
+	}
+
+	public void setSchemaFile(String schemaFile) {
+		this.schemaFile = schemaFile;
 	}
 
 }

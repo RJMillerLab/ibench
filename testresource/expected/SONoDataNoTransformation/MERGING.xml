@@ -1,0 +1,380 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="place_me_0_nl0_ce0">
+        <Attr>
+          <Name>expansion_me_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>pipe_me_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>indicate_me_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thank_me_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rest_me_0_nl0_ae0comp1_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rest_me_0_nl0_ae0comp2_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>rest_me_0_nl0_ae0comp1_joinref_0</Attr>
+          <Attr>rest_me_0_nl0_ae0comp2_joinref_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="stick_me_0_nl0_ce1">
+        <Attr>
+          <Name>order_me_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>twist_me_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>account_me_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>future_me_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>chin_me_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rest_me_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>rest_me_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="mixed_me_0_nl0_ce2">
+        <Attr>
+          <Name>small_me_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>broken_me_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>brain_me_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>branch_me_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>swim_me_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rest_me_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>rest_me_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="place_me_0_nl0_ce0">
+          <Attr>rest_me_0_nl0_ae0comp1_joinref_0</Attr>
+        </From>
+        <To tableref="stick_me_0_nl0_ce1">
+          <Attr>rest_me_0_nl0_ae0comp1_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="place_me_0_nl0_ce0">
+          <Attr>rest_me_0_nl0_ae0comp2_joinref_0</Attr>
+        </From>
+        <To tableref="mixed_me_0_nl0_ce2">
+          <Attr>rest_me_0_nl0_ae0comp2_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="place_me_0_nl0_ce0m">
+        <Attr>
+          <Name>expansion_me_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>pipe_me_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>indicate_me_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thank_me_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>order_me_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>twist_me_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>account_me_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>future_me_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>chin_me_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>small_me_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>broken_me_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>brain_me_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>branch_me_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>swim_me_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rest_me_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rest_me_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>rest_me_0_nl0_ae0comp1_joinattr_0</Attr>
+          <Attr>rest_me_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="place_me_0_nl0_ce0">
+        <Attr>expansion_me_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>expansion_me_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="place_me_0_nl0_ce0">
+        <Attr>pipe_me_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>pipe_me_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="place_me_0_nl0_ce0">
+        <Attr>indicate_me_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>indicate_me_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="place_me_0_nl0_ce0">
+        <Attr>thank_me_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>thank_me_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="stick_me_0_nl0_ce1">
+        <Attr>order_me_0_nl1_ae0</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>order_me_0_nl1_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="stick_me_0_nl0_ce1">
+        <Attr>twist_me_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>twist_me_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="stick_me_0_nl0_ce1">
+        <Attr>account_me_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>account_me_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="stick_me_0_nl0_ce1">
+        <Attr>future_me_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>future_me_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="stick_me_0_nl0_ce1">
+        <Attr>chin_me_0_nl1_ae4</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>chin_me_0_nl1_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="mixed_me_0_nl0_ce2">
+        <Attr>small_me_0_nl2_ae0</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>small_me_0_nl2_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="mixed_me_0_nl0_ce2">
+        <Attr>broken_me_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>broken_me_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="mixed_me_0_nl0_ce2">
+        <Attr>brain_me_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>brain_me_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="mixed_me_0_nl0_ce2">
+        <Attr>branch_me_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>branch_me_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="mixed_me_0_nl0_ce2">
+        <Attr>swim_me_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>swim_me_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="stick_me_0_nl0_ce1">
+        <Attr>rest_me_0_nl0_ae0comp1_joinattr_0</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>rest_me_0_nl0_ae0comp1_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="mixed_me_0_nl0_ce2">
+        <Attr>rest_me_0_nl0_ae0comp2_joinattr_0</Attr>
+      </From>
+      <To tableref="place_me_0_nl0_ce0m">
+        <Attr>rest_me_0_nl0_ae0comp2_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="place_me_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="stick_me_0_nl0_ce1">
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>e</Var>
+        </Atom>
+        <Atom tableref="mixed_me_0_nl0_ce2">
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="place_me_0_nl0_ce0m">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

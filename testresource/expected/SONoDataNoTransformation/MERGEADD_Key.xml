@@ -1,0 +1,404 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="blow_ma_0_nl0_ce0">
+        <Attr>
+          <Name>division_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ready_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>property_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>gun_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>approval_ma_0_nl0_ae0comp1_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>approval_ma_0_nl0_ae0comp2_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>approval_ma_0_nl0_ae0comp1_joinref_0</Attr>
+          <Attr>approval_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="winter_ma_0_nl0_ce1">
+        <Attr>
+          <Name>powder_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>work_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discuss_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>involve_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>use_ma_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>approval_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>approval_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="paint_ma_0_nl0_ce2">
+        <Attr>
+          <Name>dead_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>draw_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>send_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>regular_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>knee_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>approval_ma_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>approval_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="blow_ma_0_nl0_ce0">
+          <Attr>approval_ma_0_nl0_ae0comp1_joinref_0</Attr>
+        </From>
+        <To tableref="winter_ma_0_nl0_ce1">
+          <Attr>approval_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="blow_ma_0_nl0_ce0">
+          <Attr>approval_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </From>
+        <To tableref="paint_ma_0_nl0_ce2">
+          <Attr>approval_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="leave_ma_0_nl0_ce0">
+        <Attr>
+          <Name>division_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ready_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>property_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>gun_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>powder_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>work_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discuss_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>involve_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>use_ma_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>dead_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>draw_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>send_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>regular_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>knee_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>approval_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>approval_ma_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>parallel_ma_0_nl0_ae15</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>collection_ma_0_nl0_ae16</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>handle_ma_0_nl0_ae17</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>approval_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+          <Attr>approval_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="blow_ma_0_nl0_ce0">
+        <Attr>division_ma_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>division_ma_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="blow_ma_0_nl0_ce0">
+        <Attr>ready_ma_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>ready_ma_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="blow_ma_0_nl0_ce0">
+        <Attr>property_ma_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>property_ma_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="blow_ma_0_nl0_ce0">
+        <Attr>gun_ma_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>gun_ma_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="winter_ma_0_nl0_ce1">
+        <Attr>powder_ma_0_nl1_ae0</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>powder_ma_0_nl1_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="winter_ma_0_nl0_ce1">
+        <Attr>work_ma_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>work_ma_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="winter_ma_0_nl0_ce1">
+        <Attr>discuss_ma_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>discuss_ma_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="winter_ma_0_nl0_ce1">
+        <Attr>involve_ma_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>involve_ma_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="winter_ma_0_nl0_ce1">
+        <Attr>use_ma_0_nl1_ae4</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>use_ma_0_nl1_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="paint_ma_0_nl0_ce2">
+        <Attr>dead_ma_0_nl2_ae0</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>dead_ma_0_nl2_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="paint_ma_0_nl0_ce2">
+        <Attr>draw_ma_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>draw_ma_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="paint_ma_0_nl0_ce2">
+        <Attr>send_ma_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>send_ma_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="paint_ma_0_nl0_ce2">
+        <Attr>regular_ma_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>regular_ma_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="paint_ma_0_nl0_ce2">
+        <Attr>knee_ma_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>knee_ma_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="winter_ma_0_nl0_ce1">
+        <Attr>approval_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>approval_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="paint_ma_0_nl0_ce2">
+        <Attr>approval_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+      </From>
+      <To tableref="leave_ma_0_nl0_ce0">
+        <Attr>approval_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="blow_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="winter_ma_0_nl0_ce1">
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>e</Var>
+        </Atom>
+        <Atom tableref="paint_ma_0_nl0_ce2">
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="leave_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

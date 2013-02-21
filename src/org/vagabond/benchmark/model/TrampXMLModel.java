@@ -38,6 +38,29 @@ public class TrampXMLModel extends MapScenarioHolder {
 		initIndex();
 	}
 	
+	public TrampXMLModel (MappingScenarioDocument doc) {
+		TrampModelFactory fac;
+		
+		this.doc = doc;
+		initIndex();
+		fillIndex();
+		fac = new TrampModelFactory (this);
+		fac.indexMappings();
+	}
+	
+	private void fillIndex() {
+		for(RelationType r: doc.getMappingScenario().getSchemas().getSourceSchema().getRelationArray()) {
+			sourceRels.put(r.getName(), r);
+			relPos.put("");
+		}
+			
+		for(RelationType r: doc.getMappingScenario().getSchemas().getTargetSchema().getRelationArray()) {
+			targetRels.put(r.getName(), r);
+			relPos.put("");
+		}
+		
+	}
+	
 
 	private void initIndex() {
 		sourceRels = new  HashMap<String, RelationType> ();

@@ -43,6 +43,7 @@ public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
 	public void testSingleBasicScenario (ScenarioName n) throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);
+		conf.resetRandomGenerator();
 		b.runConfig(conf);
 		testLoad(n, false, false);
 		conf.setScenarioRepetitions(n, 0);

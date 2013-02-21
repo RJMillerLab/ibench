@@ -53,7 +53,7 @@ ConfigOptionsDeviation.NumofAttributestoDelete = 0
 ConfigOptionsDeviation.SkolemKind = 2
 
 # Random number generator and max values and DataGenerator
-RandomSeed = 0
+RandomSeed = 1
 RepElementCount = 5
 MaxStringLength = 5
 MaxNumValue = 1000
