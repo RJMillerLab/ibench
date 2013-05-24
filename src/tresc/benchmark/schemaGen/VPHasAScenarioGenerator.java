@@ -26,7 +26,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	private int attsPerTargetRel;
 	private int attrRemainder;
 	private SkolemKind sk = SkolemKind.ALL;
-	private String skId;
+//	private String skId;
     
     public VPHasAScenarioGenerator()
     {
@@ -196,6 +196,8 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		        		case CHAIN:
 		        			fkVar = new String[] {keyVars[i - 1]};
 		        			break;
+						default:
+							throw new Exception("should never see VARIABLE join kind here");
 		        		}
 		        	}
 		        	
@@ -229,7 +231,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	
 	//TODO does not seem to make a lot of sense, using the same skolem function, but with different number of arguments is wrong
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, String[] skIds) {
-		int numArgsForSkolem;
+//		int numArgsForSkolem;
 
 //		// generate random number arguments for skolem function
 //		if (sk == SkolemKind.RANDOM)
@@ -352,7 +354,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 					numArgs = sk.sizeOfVarArray();
 				}
 				else {
-					int offset = i * attsPerTargetRel;
+//					int offset = i * attsPerTargetRel;
 		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
 		    				attsPerTargetRel + attrRemainder;
 		        	
@@ -366,10 +368,10 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		    		numArgs = (numArgs > numOfSrcTblAttr) ? numOfSrcTblAttr : numArgs;
 
 		    		// check if we are only using the exchanged attributes in the skolem and change the starting point appropriately
-		    		int start = 0;
+//		    		int start = 0;
 		    		if(sk == SkolemKind.EXCHANGED)
 		    		{
-		    			start = offset;
+//		    			start = offset;
 		    			numArgs = numAtts;
 		    		}
 		        	

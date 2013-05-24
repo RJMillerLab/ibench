@@ -1,8 +1,6 @@
 package vtools.xml;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,18 +9,14 @@ import java.util.Map;
 
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
-import sun.reflect.generics.tree.FieldTypeSignature;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import vtools.dataModel.expression.BooleanExpression;
-import vtools.dataModel.expression.ForeignKey;
 import vtools.dataModel.expression.FromClauseList;
-import vtools.dataModel.expression.Key;
 import vtools.dataModel.expression.Rule;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Int;
-import vtools.dataModel.types.NameTypePair;
 import vtools.dataModel.types.Rcd;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Str;
@@ -439,7 +433,7 @@ public class XMLWriter {
 	private void printPrimaryKey(StringBuffer buf, String relName,
 			Rule constraint, int ident) {
 		printIdents(buf, ident);
-		String id = relName + "_" + "PrimaryKey";
+//		String id = relName + "_" + "PrimaryKey";
 		buf.append("<PrimaryKey>\n"); // id=\"" + id + "\">\n");
 		printIdents(buf, ident);
 		buf.append(_tab + "<Attr>"

@@ -8,7 +8,6 @@ import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
-import org.vagabond.xmlmodel.SKFunction;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;

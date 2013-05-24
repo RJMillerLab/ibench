@@ -7,6 +7,8 @@ package tresc.benchmark.test.toxgene;
  * @date February 2005
  */
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +20,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import toxgene.core.Engine;
 import toxgene.core.ToXgeneErrorException;
@@ -122,7 +123,7 @@ public class TestToxGene {
 	 * documents they specify on files.
 	 */
 	private void generateCollections() {
-		Vector collections = tgEngine.getToXgeneDocumentCollections();
+		Vector<?> collections = tgEngine.getToXgeneDocumentCollections();
 
 		if (collections.size() == 0) {
 			tgReporter.warning("no document genes found");
@@ -145,7 +146,7 @@ public class TestToxGene {
 						+ tgColl.getName());
 
 				String current;
-				int count = 0, sum = 0;
+//				int count = 0, sum = 0;
 
 				for (int j = start; j < start + documents; j++) {
 					current =

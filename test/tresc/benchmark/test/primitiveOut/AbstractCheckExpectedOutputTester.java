@@ -1,5 +1,7 @@
 package tresc.benchmark.test.primitiveOut;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,14 +21,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import org.vagabond.util.PropertyWrapper;
 import org.w3c.dom.Document;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.DOMWriter;
-import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
 import tresc.benchmark.Configuration;

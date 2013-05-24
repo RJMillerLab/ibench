@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
-import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper;
 import vtools.dataModel.schema.Schema;

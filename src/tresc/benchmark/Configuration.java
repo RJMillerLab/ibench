@@ -16,6 +16,7 @@ import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
+import tresc.benchmark.data.NamingPolicy;
 
 public class Configuration {
 	private int[] _repetitions;
@@ -385,7 +386,7 @@ public class Configuration {
 		sourceDocumentName = "I.xml";
 		schemaPathPrefix = ".";
 		instancePathPrefix = ".";
-		namingPolicy = Modules.namingPolicy.LowerUpper;
+		namingPolicy = NamingPolicy.LowerUpper;
 
 		mappingFile = "M.html";
 		schemaFile = "Schemas.xml";
@@ -669,9 +670,9 @@ public class Configuration {
 		_configurations[p.ordinal()][1] = pDev;
 	}
 	
-	private void checkParameterRange(ParameterName p, int min) {
-		checkParameterRange(p, min, 1.0);
-	}
+//	private void checkParameterRange(ParameterName p, int min) {
+//		checkParameterRange(p, min, 1.0);
+//	}
 	
 	private void checkParameterRange(ParameterName p, int min, double dev) {
 		int pValue = _configurations[p.ordinal()][0];

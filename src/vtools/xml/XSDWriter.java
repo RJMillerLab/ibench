@@ -1,10 +1,8 @@
 package vtools.xml;
 
-import sun.reflect.generics.tree.FieldTypeSignature;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Int;
-import vtools.dataModel.types.NameTypePair;
 import vtools.dataModel.types.Rcd;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Str;

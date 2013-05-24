@@ -8,11 +8,7 @@ import java.io.IOException;
 import java.sql.Connection;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.mapping.model.ModelLoader;
 import org.vagabond.mapping.scenarioToDB.DatabaseScenarioLoader;
@@ -21,9 +17,7 @@ import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.STBenchmark;
 
 public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
 
@@ -78,6 +72,8 @@ public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
 		while(in.ready()) {
 			result.append(in.readLine() + "\n");
 		}
+		
+		in.close();
 		
 		return result.toString();
 	}

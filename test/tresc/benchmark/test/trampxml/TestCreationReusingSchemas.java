@@ -76,6 +76,8 @@ public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
 			result.append(in.readLine() + "\n");
 		}
 		
+		in.close();
+		
 		return result.toString();
 	}
 

@@ -22,7 +22,6 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.schema.Schema;
 import vtools.xml.XSDWriter;
-import vtools.xml.XMLWriter;
 
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated
@@ -128,7 +127,7 @@ public class STBenchmark {
 		if (log.isDebugEnabled()) {log.debug("schema path: " + schemDir.toString());};
 		
 		XSDWriter schemaPrinter = new XSDWriter();
-		XMLWriter schemaWriter = new XMLWriter();
+//		XMLWriter schemaWriter = new XMLWriter();
 
 		// print scenario on the screen if required
 		StringBuffer buf = new StringBuffer();
@@ -258,7 +257,7 @@ public class STBenchmark {
 	}
 	
 	public void runConfig (Configuration conf) throws Exception {
-		this._configuration = conf;
+		STBenchmark._configuration = conf;
 		_configuration.sanityCheck();
 		runConfig();
 	}

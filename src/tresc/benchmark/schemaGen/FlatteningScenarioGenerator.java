@@ -4,7 +4,6 @@ import smark.support.SMarkElement;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import tresc.benchmark.utils.Utils;
-
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;

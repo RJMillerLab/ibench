@@ -5,7 +5,7 @@ import java.util.Random;
 public class NameFactory
 {
 private Random _generator;
-private static int _counter = 0;
+//private static int _counter = 0;
 public NameFactory()
 {
     _generator = new Random(16011978);    

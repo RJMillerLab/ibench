@@ -9,10 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.STBenchmark;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.STBenchmark;
 
 public abstract class AbstractAllScenarioTester {
 

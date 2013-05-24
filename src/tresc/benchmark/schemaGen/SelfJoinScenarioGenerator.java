@@ -31,7 +31,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 	private String[] fks;
     private int[] keyPos;
     private int[] fkPos;
-    private int[] normalPos;
+//    private int[] normalPos;
     
     public SelfJoinScenarioGenerator()
     {
@@ -70,7 +70,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     		return false;
     	
     	F = rel.sizeOfAttrArray() - 2 * K;
-    	normalPos = new int[F];
+//    	normalPos = new int[F];
     	m.addSourceRel(rel);
     	srcName = rel.getName();
 
@@ -98,7 +98,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     			keys[i] = rel.getAttrArray(i).getName();
     			fks[i] = rel.getAttrArray(K + i).getName();
     		}
-    		normalPos = CollectionUtils.createSequence(2 * K, F);
+//    		normalPos = CollectionUtils.createSequence(2 * K, F);
 
     		fac.addPrimaryKey(srcName, CollectionUtils.createSequence(0, K), true);
     		fac.addForeignKey(srcName, fks, srcName, keys, true);
@@ -115,7 +115,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		fks = new String[K];
 		keyPos = new int[K];
 		fkPos = new int[K];
-		normalPos = new int[F];
+//		normalPos = new int[F];
 		
 		String hook = getRelHook(0);
 		
@@ -132,7 +132,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		// create free attrs
 		for(int i = 2 * K; i < E; i++)
 			attrs[i] = randomAttrName(0, i);
-		normalPos = CollectionUtils.createSequence(2 * K, F);
+//		normalPos = CollectionUtils.createSequence(2 * K, F);
 		
 		fac.addRelation(hook, srcName, attrs, true);
 		fac.addPrimaryKey(srcName, keys, true);

@@ -3,13 +3,13 @@ package tresc.benchmark;
 import java.lang.reflect.Constructor;
 
 import org.apache.log4j.Logger;
-import org.vagabond.benchmark.explgen.ExplanationGenerator;
 import org.vagabond.util.LoggerUtil;
 
 import smark.support.MappingScenario;
-import tresc.benchmark.Constants.DESErrorType;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.ParameterName;
+import tresc.benchmark.dataGen.DataGenerator;
+import tresc.benchmark.schemaGen.AbstractScenarioGenerator;
 import tresc.benchmark.schemaGen.AddAttributeScenarioGenerator;
 import tresc.benchmark.schemaGen.AddDeleteScenarioGenerator;
 import tresc.benchmark.schemaGen.CopyScenarioGenerator;
@@ -21,7 +21,6 @@ import tresc.benchmark.schemaGen.HorizontalPartitionScenarioGenerator;
 import tresc.benchmark.schemaGen.MergeAddScenarioGenerator;
 import tresc.benchmark.schemaGen.MergingScenarioGenerator;
 import tresc.benchmark.schemaGen.NestingScenarioGenerator;
-import tresc.benchmark.schemaGen.AbstractScenarioGenerator;
 import tresc.benchmark.schemaGen.RandomSourceSkolemToMappingGenerator;
 import tresc.benchmark.schemaGen.ScenarioGenerator;
 import tresc.benchmark.schemaGen.SelfJoinScenarioGenerator;
@@ -33,10 +32,6 @@ import tresc.benchmark.schemaGen.VPNtoMScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueGenerationScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueManagementScenarioGenerator;
 import tresc.benchmark.schemaGen.VerticalPartitionScenarioGenerator;
-import tresc.benchmark.dataGen.DataGenerator;
-import tresc.benchmark.dataGen.ToXDataGenerator;
-import tresc.benchmark.dataGen.TrampCSVGen;
-import vtools.dataModel.schema.Schema;
 
 public class Generator {
 	static Logger log = Logger.getLogger(Generator.class);

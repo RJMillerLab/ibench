@@ -5,7 +5,6 @@ import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;

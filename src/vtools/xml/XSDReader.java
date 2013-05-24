@@ -1,14 +1,14 @@
 package vtools.xml;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Element; 
+
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
-import vtools.dataModel.types.Complex;
 import vtools.dataModel.types.Rcd;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Structured;
@@ -215,48 +215,48 @@ public class XSDReader
 		return value;
 	}
 
-		private void printDOC(Node node, String indent){
-		switch (node.getNodeType()){
-		  case Node.DOCUMENT_NODE :
-			if (log.isDebugEnabled()) {log.debug("<xml version = \"1.0\">\n");};
-			NodeList nodes = node.getChildNodes();
-			int nrNodes= nodes.getLength();
-			if (nodes != null){
-				for(int i=0; i<nrNodes; i++)
-					printDOC(nodes.item(i),"");
-			}
-			
-		case Node.ELEMENT_NODE:
-			String name = node.getNodeName();
-			if (log.isDebugEnabled()) {log.debug(indent+ "<"+name);};
-			
-			NamedNodeMap attributes = node.getAttributes();
-			if (attributes != null){
-				int nrAttr= attributes.getLength();
-				//if (log.isDebugEnabled()) {log.debug(" nr attr = "+nrAttr);};
-				for(int i=0; i<nrAttr; i++ ){
-					Node current = attributes.item(i);
-					if (log.isDebugEnabled()) {log.debug(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");};
-				}	
-			}
-			if (log.isDebugEnabled()) {log.debug(">");};
-			
-			NodeList children = node.getChildNodes();
-			if (children != null){
-				int nrChild= children.getLength();
-				//if (log.isDebugEnabled()) {log.debug(" nr children = "+nrChild);};
-				for(int i=0; i<nrChild; i++)
-					printDOC(children.item(i),indent+" ");
-			}
-			
-			if (log.isDebugEnabled()) {log.debug("</"+name+">");};
-			break;
-			
-		case Node.TEXT_NODE:
-			if (log.isDebugEnabled()) {log.debug(node.getNodeValue());};
-			break;
-		}
-	}
+//		private void printDOC(Node node, String indent){
+//		switch (node.getNodeType()){
+//		  case Node.DOCUMENT_NODE :
+//			if (log.isDebugEnabled()) {log.debug("<xml version = \"1.0\">\n");};
+//			NodeList nodes = node.getChildNodes();
+//			int nrNodes= nodes.getLength();
+//			if (nodes != null){
+//				for(int i=0; i<nrNodes; i++)
+//					printDOC(nodes.item(i),"");
+//			}
+//			
+//		case Node.ELEMENT_NODE:
+//			String name = node.getNodeName();
+//			if (log.isDebugEnabled()) {log.debug(indent+ "<"+name);};
+//			
+//			NamedNodeMap attributes = node.getAttributes();
+//			if (attributes != null){
+//				int nrAttr= attributes.getLength();
+//				//if (log.isDebugEnabled()) {log.debug(" nr attr = "+nrAttr);};
+//				for(int i=0; i<nrAttr; i++ ){
+//					Node current = attributes.item(i);
+//					if (log.isDebugEnabled()) {log.debug(" "+current.getNodeName()+"=\""+current.getNodeValue()+"\"");};
+//				}	
+//			}
+//			if (log.isDebugEnabled()) {log.debug(">");};
+//			
+//			NodeList children = node.getChildNodes();
+//			if (children != null){
+//				int nrChild= children.getLength();
+//				//if (log.isDebugEnabled()) {log.debug(" nr children = "+nrChild);};
+//				for(int i=0; i<nrChild; i++)
+//					printDOC(children.item(i),indent+" ");
+//			}
+//			
+//			if (log.isDebugEnabled()) {log.debug("</"+name+">");};
+//			break;
+//			
+//		case Node.TEXT_NODE:
+//			if (log.isDebugEnabled()) {log.debug(node.getNodeValue());};
+//			break;
+//		}
+//	}
 	
 	
 	private void removeWhiteSpaceNodes(Element parent){

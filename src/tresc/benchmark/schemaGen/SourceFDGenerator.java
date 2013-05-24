@@ -11,7 +11,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.vagabond.util.CollectionUtils;
-import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
