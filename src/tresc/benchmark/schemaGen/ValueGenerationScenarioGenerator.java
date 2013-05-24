@@ -17,58 +17,6 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 		;
 	}
 
-	//
-	// Algorithm: Schema generated is the following
-	// Target
-	// _DataSetVGCE0
-	// _____AttributeVGCE0AE0
-	// _____AttributeVGCE0AE1
-	// _____AttributeVGCE0AE2
-	// ... ...
-	// _DataSetVGCE1
-	// _____AttributeVGCE1AE0
-	// _____AttributeVGCE1AE1
-	// _____AttributeVGCE1AE2
-	// .....
-	/*private void createSubElements(Element sourceParent, Element targetParent,
-			int numOfElements, int numOfElementsDeviation, int repetition,
-			SPJQuery pquery, SPJQuery generatedQuery) {
-		String randomName = Modules.nameFactory.getARandomName();
-		String nameT = randomName + "_" + getStamp() + "CE" + repetition;
-		SMarkElement ce = new SMarkElement(nameT, new Set(), null, 0, 0);
-		ce.setHook(new String(getStamp() + "CE" + repetition));
-		targetParent.addSubElement(ce);
-
-		// decide randomly how many elements to create
-		String name = null;
-		SPJQuery query = new SPJQuery();
-		SelectClauseList select = query.getSelect();
-
-		int ranNumOfEl =
-				Utils.getRandomNumberAroundSomething(_generator, numOfElements,
-						numOfElementsDeviation);
-		for (int i = 0, imax = ranNumOfEl; i < imax; i++) {
-			randomName = Modules.nameFactory.getARandomName();
-			name = randomName + "_" + getStamp() + "CE" + repetition + "AE" + i;
-			SMarkElement et = new SMarkElement(name, Atomic.STRING, null, 0, 0);
-			et.setHook(new String(getStamp() + "CE" + repetition + "AE" + i));
-			ce.addSubElement(et);
-
-			// add the constants value to the select clause
-			select.add(name, new ConstantAtomicValue(
-					new StringValue(randomName)));
-		}
-
-		// add everything to the final query
-		query.setSelect(select);
-		SelectClauseList pselect = pquery.getSelect();
-		SelectClauseList gselect = generatedQuery.getSelect();
-		pselect.add(nameT, query);
-		gselect.add(nameT, query);
-		pquery.setSelect(pselect);
-		generatedQuery.setSelect(gselect);
-	}*/
-
 	@Override
 	protected boolean chooseSourceRels() {
 		return true;
@@ -81,11 +29,8 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 	
 	
 	@Override
-	protected boolean chooseTargetRels() {
-		RelationType r = getRandomRel(false);
-		m.addTargetRel(r);
-		
-		return true;
+	protected boolean chooseTargetRels() throws Exception {
+		return super.chooseTargetRels();
 	}
 	
 	@Override

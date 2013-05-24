@@ -69,7 +69,7 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
             int tmpInt = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
                 numOfElementsDeviation);
             // make sure that we have enough attribute for the join + at least on free one
-            tmpInt = (tmpInt <= getNumJoinAttrs(k)) ? getNumJoinAttrs(k) + 1 : tmpInt; 
+            tmpInt = (tmpInt < getNumJoinAttrs(k) + 1) ? getNumJoinAttrs(k) + 1 : tmpInt; 
             numOfAttributes[k] = tmpInt;
             numOfUseAttrs[k] = tmpInt - getNumJoinAttrs(k);
         }

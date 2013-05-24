@@ -55,6 +55,32 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	}
 
 	@Override
+	protected boolean chooseSourceRels() throws Exception {
+		RelationType rel = getRandomRel(true);
+		if (rel == null)
+			return false;
+		
+		m.addSourceRel(rel);
+		A = rel.sizeOfAttrArray();
+		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		
+		return true;
+	}
+	
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+		RelationType rel = getRandomRel(false);
+		if (rel == null)
+			return false;
+		
+		m.addTargetRel(rel);
+		A = rel.sizeOfAttrArray();
+		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		
+		return true;
+	}
+	
+	@Override
 	protected void genCorrespondences () {
 		RelationType source = m.getSourceRels().get(0);
 		RelationType target = m.getTargetRels().get(0);

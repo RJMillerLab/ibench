@@ -63,7 +63,6 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// PRG Added the following code to always force key generation when SkolemKind.KEY 
 		if (sk == SkolemKind.KEY)
 			keySize = (keySize > 0) ? keySize : 1;
-			
 	}
 	
 	@Override
