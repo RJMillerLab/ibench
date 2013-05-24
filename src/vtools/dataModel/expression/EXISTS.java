@@ -1,7 +1,6 @@
 package vtools.dataModel.expression;
 
 
-import vtools.dataModel.expression.BooleanExpression;
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 

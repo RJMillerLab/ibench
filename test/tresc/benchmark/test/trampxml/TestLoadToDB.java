@@ -65,6 +65,8 @@ public class TestLoadToDB extends AbstractAllScenarioTester {
 			result.append(in.readLine() + "\n");
 		}
 		
+		in.close();
+		
 		return result.toString();
 	}
 	

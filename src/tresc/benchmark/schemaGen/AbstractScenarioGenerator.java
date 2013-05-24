@@ -2,18 +2,15 @@ package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.benchmark.model.TrampXMLModel;
 import org.vagabond.xmlmodel.AttrDefType;
-import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
 import smark.support.MappingScenario;
@@ -23,7 +20,6 @@ import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
-import tresc.benchmark.utils.Utils;
 import tresc.benchmark.Modules;
 import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;

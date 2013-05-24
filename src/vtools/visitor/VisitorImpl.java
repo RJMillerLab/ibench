@@ -2,8 +2,6 @@ package vtools.visitor;
 
 import java.lang.reflect.Method;
 
-import vtools.dataModel.expression.Union;
-
 public class VisitorImpl implements Visitor
 {
 
@@ -42,9 +40,9 @@ public class VisitorImpl implements Visitor
             }
         }
 
-        if (m == null)
-            throw new RuntimeException("This is impossible to happen "
-                + "given the existence of the visit for the Object");
+//        if (m == null)
+//            throw new RuntimeException("This is impossible to happen "
+//                + "given the existence of the visit for the Object");
 
         // Now we try to invoke the method we found above.
         try

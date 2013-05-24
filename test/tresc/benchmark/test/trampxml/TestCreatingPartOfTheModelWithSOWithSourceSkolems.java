@@ -7,20 +7,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.mapping.model.ModelLoader;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.STBenchmark;
 
 
 public class TestCreatingPartOfTheModelWithSOWithSourceSkolems extends AbstractAllScenarioTester {

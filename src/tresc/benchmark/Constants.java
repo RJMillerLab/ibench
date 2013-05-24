@@ -10,7 +10,6 @@ import org.vagabond.benchmark.explgen.SourceJoinGen;
 import org.vagabond.benchmark.explgen.SourceSkeletonGen;
 import org.vagabond.benchmark.explgen.SuperfluousMappingGen;
 import org.vagabond.benchmark.explgen.TargetSkeletonGen;
-import org.vagabond.explanation.model.basic.SuperflousMappingError;
 
 import tresc.benchmark.dataGen.DataGenerator;
 import tresc.benchmark.dataGen.ToXDataGenerator;

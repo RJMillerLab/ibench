@@ -1,25 +1,21 @@
 package org.vagabond.benchmark.explgen;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.vagabond.explanation.marker.MarkerSetFlattenedView;
 import org.vagabond.mapping.scenarioToDB.DatabaseScenarioLoader;
 import org.vagabond.util.ConnectionManager;
-import org.vagabond.util.LogProviderHolder;
-import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.xmlbeans.ExplanationAndErrorXMLLoader;
 import org.vagabond.xmlmodel.explanderror.ExplanationAndErrorsDocument;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
-import tresc.benchmark.Constants.OutputOption;
 
 public class GlobalExplGen {
 
+	static Logger log = Logger.getLogger(GlobalExplGen.class);
+	
 	// private ArrayList<ExplanationGenerator> explGens;
 
 	public GlobalExplGen() {

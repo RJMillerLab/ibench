@@ -3,8 +3,6 @@ package tresc.benchmark.schemaGen;
 import java.util.Arrays;
 import java.util.Vector;
 
-//import net.sf.saxon.functions.Concat;
-
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
@@ -20,6 +18,7 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
+//import net.sf.saxon.functions.Concat;
 
 // PRG Enhanced VERTICAL PARTITION to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
 // PRG REMOVED HardCoded Skolemization Mode (SkolemKind.ALL) and ADDED dynamic Skolemization Modes (i.e. KEY, ALL and RANDOM) - Sep 18, 2012

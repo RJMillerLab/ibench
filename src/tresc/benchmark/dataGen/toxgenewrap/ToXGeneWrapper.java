@@ -30,14 +30,14 @@ public class ToXGeneWrapper {
 	 * notification of errors, or simply progress report messages.
 	 */
 	private ToXgeneReporterImpl tgReporter;
-	private String toxGenPath;
+//	private String toxGenPath;
 
 	public ToXGeneWrapper(String toxGenePath) {
 		setToXGenePath(toxGenePath);
 	}
 	
 	public void setToXGenePath (String toxGenePath) {
-		this.toxGenPath = toxGenePath;
+//		this.toxGenPath = toxGenePath;
 		System.setProperty("ToXgene_home", toxGenePath);
 	}
 
@@ -121,7 +121,7 @@ public class ToXGeneWrapper {
 	 * documents they specify on files.
 	 */
 	private String generateCollections(String outputPath) {
-		Vector collections = tgEngine.getToXgeneDocumentCollections();
+		Vector<?> collections = tgEngine.getToXgeneDocumentCollections();
 		String lastName = null;
 		
 		if (collections.size() == 0) {
@@ -145,7 +145,7 @@ public class ToXGeneWrapper {
 						+ tgColl.getName());
 
 				File current;
-				int count = 0, sum = 0;
+//				int count = 0, sum = 0;
 
 				for (int j = start; j < start + documents; j++) {
 					lastName = tgColl.getName() +  nf.format(j) + ".xml";

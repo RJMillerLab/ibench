@@ -1,6 +1,5 @@
 package vtools.dbms;
 
-import java.awt.image.ComponentSampleModel;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

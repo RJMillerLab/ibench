@@ -3,15 +3,11 @@ package tresc.benchmark.dataGen;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-
-import org.apache.commons.collections.primitives.IntList;
 import org.apache.log4j.Logger;
-import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.util.DirectedGraph;
 import org.vagabond.util.IdMap;
@@ -20,12 +16,8 @@ import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.RelationType;
 
-import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import vtools.dataModel.expression.EQ;
-import vtools.dataModel.expression.Key;
-import vtools.dataModel.expression.Path;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
@@ -223,7 +215,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		String label = schemaElement.getLabel();
 		String listName = label + LIST_NAME_SUFFIX;
-		Type type = schemaElement.getType();
+//		Type type = schemaElement.getType();
 		
 		if (!hasSelfFK(schemaElement)) {
 			String unique = generateUnique(schemaElement);

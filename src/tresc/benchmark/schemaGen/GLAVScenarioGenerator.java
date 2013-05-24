@@ -1,6 +1,5 @@
 package tresc.benchmark.schemaGen;
 
-import java.util.Random;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -8,7 +7,6 @@ import org.apache.log4j.Logger;
 import smark.support.MappingScenario;
 import smark.support.SMarkElement;
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Modules;
 import vtools.dataModel.expression.Expression;
@@ -24,9 +22,9 @@ public class GLAVScenarioGenerator extends AbstractScenarioGenerator
 {
 	static Logger log = Logger.getLogger(GLAVScenarioGenerator.class);
 	
-    private final int FROM = 0;
+//    private final int FROM = 0;
 
-    private final int TO = 1;
+//    private final int TO = 1;
 
     // This is the module that generates the src schema.
     private final GLAVScenarioSrcGenerator srcGenerator = new GLAVScenarioSrcGenerator();

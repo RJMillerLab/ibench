@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
@@ -19,7 +18,6 @@ import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
 import tresc.benchmark.STBenchmark;
-import tresc.benchmark.Constants.ScenarioName;
 
 public class TestFormerCrashConfigurations {
 
@@ -97,6 +95,8 @@ public class TestFormerCrashConfigurations {
 		while(in.ready()) {
 			result.append(in.readLine() + "\n");
 		}
+		
+		in.close();
 		
 		return result.toString();
 	}

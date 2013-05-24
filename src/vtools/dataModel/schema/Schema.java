@@ -3,7 +3,9 @@ package vtools.dataModel.schema;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import vtools.dataModel.expression.*;
+import vtools.dataModel.expression.ForeignKey;
+import vtools.dataModel.expression.Key;
+import vtools.dataModel.expression.Rule;
 import vtools.dataModel.types.Rcd;
 import vtools.visitor.Visitor;
 
