@@ -1,0 +1,29 @@
+viewer="org.shiftone.jrat.ui.viewer.SimpleTextOutputViewBuilder"
+JRat:INFO (Nov/16 18:17:54,761) (main) RuntimeContextImpl - logfile created
+JRat:INFO (Nov/16 18:17:54,762) (main) RuntimeContextImpl - Running JRat version 1-alpha2 - built on July 31 2006
+JRat:INFO (Nov/16 18:17:54,763) (main) Settings - string 'jrat.factory' = 'org.shiftone.jrat.provider.tree.TreeMethodHandlerFactory'
+JRat:INFO (Nov/16 18:17:54,763) (main) RootFactory - JRat creating root handler factory...
+JRat:INFO (Nov/16 18:17:54,928) (main) ShutdownRegistry - registerShutdownListener Tree Handler Factory
+JRat:INFO (Nov/16 18:18:08,797) (JRat-Shutdown) ShutdownRegistry - shutting down...[Transformer[AsmInjectorStrategy(uses http://asm.objectweb.org)], FileOutputRegistry[PrintWriter[001_JRat-LOG.jrat]], Tree Handler Factory]
+JRat:INFO (Nov/16 18:18:08,797) (JRat-Shutdown) ShutdownRegistry - shutting down Tree Handler Factory...
+JRat:INFO (Nov/16 18:18:08,797) (JRat-Shutdown) TreeMethodHandlerFactory - shutdown...
+JRat:INFO (Nov/16 18:18:08,797) (JRat-Shutdown) TreeMethodHandlerFactory - writeOutputFile...
+JRat:INFO (Nov/16 18:18:08,797) (JRat-Shutdown) FileOutputFactory - createPrintWriter /Users/lord_pretzel/Documents/workspace/STBenchmark/JRatOutput/2012-11-16_PM-06-17-54/002_TreeMethodHandler.xrat
+JRat:INFO (Nov/16 18:18:08,797) (JRat-Shutdown) FileOutputFactory - createOutputStream /Users/lord_pretzel/Documents/workspace/STBenchmark/JRatOutput/2012-11-16_PM-06-17-54/002_TreeMethodHandler.xrat
+JRat:INFO (Nov/16 18:18:08,937) (JRat-Shutdown) FileOutputRegistry - add PrintWriter[002_TreeMethodHandler.xrat]
+JRat:INFO (Nov/16 18:18:08,937) (JRat-Shutdown) StackNode - printXML...
+JRat:INFO (Nov/16 18:18:08,937) (JRat-Shutdown) StackNode - printRoot...
+JRat:INFO (Nov/16 18:18:09,129) (JRat-Shutdown) StackNode - printRoot complete.
+JRat:INFO (Nov/16 18:18:09,129) (JRat-Shutdown) StackNode - printXML complete.
+JRat:INFO (Nov/16 18:18:09,129) (JRat-Shutdown) StackNode - checkError = false
+JRat:INFO (Nov/16 18:18:09,129) (JRat-Shutdown) TreeMethodHandlerFactory - printWriter.flush PrintWriter[002_TreeMethodHandler.xrat]
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) FileOutputPrintWriter - closing
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) FileOutputRegistry - remove PrintWriter[002_TreeMethodHandler.xrat]
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) TreeMethodHandlerFactory - writeOutputFile(TreeMethodHandler.xrat) complete
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) TreeMethodHandlerFactory - shutdown complete
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) ShutdownRegistry - shutdown Tree Handler Factory complete.
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) ShutdownRegistry - shutting down FileOutputRegistry[PrintWriter[001_JRat-LOG.jrat]]...
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) FileOutputRegistry - closeFileOutputs [PrintWriter[001_JRat-LOG.jrat]]
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) FileOutputRegistry - closing : PrintWriter[001_JRat-LOG.jrat]
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) FileOutputPrintWriter - closing
+JRat:INFO (Nov/16 18:18:09,130) (JRat-Shutdown) FileOutputRegistry - remove PrintWriter[001_JRat-LOG.jrat]

@@ -1,0 +1,84 @@
+# Configuration File for STBenchmark
+
+
+# Output Path Prefixes
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 10
+Scenarios.HORIZPARTITION = 10
+Scenarios.SURROGATEKEY = 10
+Scenarios.MERGING = 10
+Scenarios.FUSION = 10
+Scenarios.SELFJOINS = 10
+Scenarios.VERTPARTITION = 10
+Scenarios.ADDATTRIBUTE = 10
+Scenarios.DELATTRIBUTE = 10
+Scenarios.ADDDELATTRIBUTE = 10
+Scenarios.VERTPARTITIONISA = 10
+Scenarios.VERTPARTITIONHASA = 10
+Scenarios.VERTPARTITIONNTOM = 10
+Scenarios.MERGEADD = 10
+
+# These should always be zero
+Scenarios.FLATTENING = 0
+Scenarios.GLAV = 0
+Scenarios.NESTING = 0
+Scenarios.VALUEGEN = 0
+Scenarios.VALUEMANAGEMENT = 0
+
+# Parameters that define the shape of the schema and basic scenarios
+ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfNewAttributes = 3
+ConfigOptions.NumofAttributestoDelete = 3
+ConfigOptions.JoinSize = 3
+ConfigOptions.NumOfParamsInFunctions = 3
+ConfigOptions.PrimaryKeySize = 2
+ConfigOptions.NumOfJoinAttributes = 1
+ConfigOptions.JoinKind = 2
+ConfigOptions.SkolemKind = 4
+ConfigOptions.SourceSkolemPerc = 50
+ConfigOptions.SourceFDPerc = 50
+ConfigOptions.NestingDepth = 0
+ConfigOptions.PrimaryKeyFDs = 1 
+ParameterName.ReuseSourcePerc = 0
+ParameterName.NoReuseScenPerc = 100
+
+
+# Deviations for each of the parameters
+ConfigOptionsDeviation.NumOfSubElements = 5
+ConfigOptionsDeviation.NumOfNewAttributes = 1
+ConfigOptionsDeviation.NumofAttributestoDelete = 1
+ConfigOptionsDeviation.JoinSize = 1
+ConfigOptionsDeviation.NumOfParamsInFunctions = 1
+ConfigOptionsDeviation.PrimaryKeySize = 1
+ConfigOptionsDeviation.NumOfJoinAttributes = 1
+ConfigOptionsDeviation.JoinKind = 0
+ConfigOptionsDeviation.SkolemKind = 0
+ConfigOptionsDeviation.SourceSkolemPerc = 0
+ConfigOptionsDeviation.SourceFDPerc = 0
+ConfigOptionsDeviation.PrimaryKeyFDs = 0
+
+
+# Random number generator and max values, DataGenerator and MappingLang
+RepElementCount = 5
+MaxStringLength = 5
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+MappingLanguage = SOtgds
+
+# Optional activation/deactivation of output options
+OutputOption.HTMLSchemas = false
+OutputOption.Data = false
+OutputOption.XMLSchemas = false
+OutputOption.HTMLMapping = false
+OutputOption.TrampXML = false
+OutputOption.ErrorsAndExplanations = false
+
+# Optional activation/deactivation of output parts of the Tramp XML document
+TrampXMLOutput.Correspondences = false
+TrampXMLOutput.Transformations = false
+TrampXMLOutput.Data = false
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true
