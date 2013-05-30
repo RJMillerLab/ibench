@@ -106,7 +106,11 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	
     	return true;
     }
-    
+
+    @Override
+    protected boolean chooseTargetRels() throws Exception {
+    	
+    }
 	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);

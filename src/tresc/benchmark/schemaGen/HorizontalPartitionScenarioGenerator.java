@@ -102,7 +102,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	@Override
 	protected void genSourceRels() {	
 	    String srcName = randomRelName(0);
-	    String[] attrs = new String[randomElements + 1];
+	    String[] attrs = new String[randomElements + 1];//Isn't supppose to be in genTgtRels()?
 	    String[] dTypes = new String[randomElements + 1];
 	    String nameSelector = "selectorhp" + curRep;
 	    

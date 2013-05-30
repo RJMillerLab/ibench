@@ -30,8 +30,8 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		if (log.isDebugEnabled()) {log.debug("Atomic Elements: " + A);};
 		if (log.isDebugEnabled()) {log.debug("Key Size: " + keySize);};
 		
-		A = (A > 1) ? A : 2;
-		keySize = (keySize >= A) ? A - 1 : keySize;
+		A = (A > 1) ? A : 2;//At least have 2 attr
+		keySize = (keySize >= A) ? A - 1 : keySize;//There is at least one attr other than PK 
 		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
 		// keySize = (keySize > 0) ? keySize : 1;
 		

@@ -80,7 +80,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             if (tmp < 0)
                 jk = JoinKind.STAR;
             else jk = JoinKind.CHAIN;
-        }
+        }//decide which join kind to implement
         
 		// PRG ENHANCED VERTICAL PARTITION according to Configuration Options - Sep 18, 2012
 		// Reading ConfigOptions.PrimaryKeySize and ConfigOptions.SkolemKind
@@ -323,7 +323,32 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         generatedQuery.setSelect(gselect);
         return srcRel;
     }*/
-
+    @Override
+	protected boolean chooseSourceRels() throws Exception {
+		RelationType rel = getRandomRel(true);
+		if (rel == null)
+			return false;
+		
+		m.addSourceRel(rel);
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		
+		return true;
+	}
+    
+    @Override
+    protected boolean chooseTargetRels() throws Exception {
+    	RelationType rel = getRandomRel(false);
+    	if (rel == null)
+    		return false;
+    	
+    	m.addSourceRel(rel);
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		
+		return true;
+    }
+    
 	@Override
 	protected void genSourceRels() throws Exception {
 		String sourceRelName = randomRelName(0);
@@ -335,7 +360,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		
 		// PRG ADDED Generation of Source Key Elements when keySize > 0
 		String[] keys = new String[keySize];
-		for (int j = 0; j < keySize; j++)
+/*		for (int j = 0; j < keySize; j++)
 			keys[j] = randomAttrName(0, 0) + "ke" + j;
 		
 		int keyCount = 0;
@@ -348,8 +373,15 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			keyCount++;
 			
 			attNames[i] = attrName;
+		}*/
+		for (int i = 0; i < numOfSrcTblAttr; i++) {
+			String attrName = randomAttrName(0,i);
+			if (i < keySize) {
+				attrName = attrName + "ke" + i;
+				keys[i] = attrName;
+			}
+			attNames[i] = attrName;
 		}
-		
 		
 		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
 		
