@@ -67,7 +67,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
     	boolean ok = false;
     	int tries = 0;
     	
-    	while(!ok && tries < MAX_NUM_TRIES) {
+    	while(!ok && tries++ < MAX_NUM_TRIES) {
     		r = getRandomRel(true, 2);
     		if (r == null)
     			break;
@@ -134,7 +134,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		List<RelationType> rels = new ArrayList<RelationType> (randomFragments);
 		
 		// first one
-		while (tries < MAX_NUM_TRIES && rels.size() == 0) {
+		while (tries++ < MAX_NUM_TRIES && rels.size() == 0) {
 			cand = getRandomRel(false, 2);
 			if (relOk(cand)) {//set PK
 				rels.add(cand);
@@ -150,7 +150,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 
 		// find additional relations with the same number of attributes 
 		// and no key or the first attr as key
-		while (tries < MAX_NUM_TRIES * randomFragments && cand != null 
+		while (tries++ < MAX_NUM_TRIES * randomFragments && cand != null 
 				&& rels.size() < randomFragments) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);
 			if (relOk(cand))

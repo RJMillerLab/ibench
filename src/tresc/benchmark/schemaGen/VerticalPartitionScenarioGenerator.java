@@ -331,7 +331,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     	boolean ok = false;
     	int tries = 0;
     	
-    	while(!ok && tries < MAX_NUM_TRIES) {
+    	while(!ok && tries++ < MAX_NUM_TRIES) {
     		r = getRandomRel(true, 2);
     		if (r == null)
     			break;
@@ -360,6 +360,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     		numOfSrcTblAttr = r.sizeOfAttrArray();
     		return true;
     	}
+    	
+    	// adapt attrsPerTargetRel attrRemainder keySize
 	}
     
     
@@ -416,7 +418,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		List<RelationType> rels = new ArrayList<RelationType> (numOfTgtTables);
 		
 		// first one
-		while (tries < MAX_NUM_TRIES && rels.size() == 0) {
+		while (tries++ < MAX_NUM_TRIES && rels.size() == 0) {
 			cand = getRandomRel(false, 2);
 			if (relOk(cand)) {
 				rels.add(cand);
@@ -432,7 +434,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 
 		// find additional relations with the same number of attributes 
 		// and no key or the first attr as key
-		while (tries < MAX_NUM_TRIES * numOfTgtTables && cand != null 
+		while (tries++ < MAX_NUM_TRIES * numOfTgtTables && cand != null 
 				&& rels.size() < numOfTgtTables) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);//Why we don't use getRandomRel again here? What's the difference of them.
 			if (relOk(cand))
@@ -454,8 +456,10 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				fac.addPrimaryKey(r.getName(), 0, false);
 		
 		// adapt local parameters
-		//randomElements = numAttrs;
-		
+//		randomElements = numAttrs;
+    	// adapt attrsPerTargetRel attrRemainder
+		// adapt numOfSrcTblAttrs
+		// adapt keySize
 		return true;
 	}
 	
