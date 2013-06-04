@@ -24,9 +24,9 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 	public static final int MAX_NUM_TRIES = 10;
 	
 	private int JN;
-	private int K;
-	private int E;
-	private int F;
+	private int K;//keysize.  number of attr in a pk
+	private int E;//number of attr in each table
+	private int F;//number of non-foreign key attr
 	private String[] keys;
 	private String[] fks;
     private int[] keyPos;
@@ -107,10 +107,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	return true;
     }
 
-    @Override
-    protected boolean chooseTargetRels() throws Exception {
-    	
-    }
+ 
 	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);

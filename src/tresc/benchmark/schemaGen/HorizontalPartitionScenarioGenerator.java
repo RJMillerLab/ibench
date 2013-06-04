@@ -46,7 +46,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
         // This enforcement is because HP's chosen selector attribute (always source attribute 0) is never copied into the target relation.
         // Thus generating a source relation of size 1, for example, would mean getting an empty target relation.
-        randomElements = (randomElements > 2 ? randomElements : 2);
+        randomElements = (randomElements > 2 ? randomElements : 2);//the number of normal attr
         
         randomFragments = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         randomFragments = (randomFragments > 1) ? randomFragments : 2;
@@ -136,7 +136,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		// first one
 		while (tries < MAX_NUM_TRIES && rels.size() == 0) {
 			cand = getRandomRel(false, 2);
-			if (relOk(cand)) {
+			if (relOk(cand)) {//set PK
 				rels.add(cand);
 				break;
 			}
@@ -146,7 +146,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		if (rels.size() == 0)
 			return false;
 		
-		numAttrs = cand.sizeOfAttrArray();
+		numAttrs = cand.sizeOfAttrArray();//num of attrs in the first table
 
 		// find additional relations with the same number of attributes 
 		// and no key or the first attr as key
@@ -154,11 +154,11 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 				&& rels.size() < randomFragments) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);
 			if (relOk(cand))
-				rels.add(cand);
+				rels.add(cand);//So far we have two tables in rels
 		}
 		
 		// create additional target relations
-		for (int i = 0; i < rels.size(); i++)
+		for (int i = 0; i < rels.size(); i++)//What is this?
 			m.addTargetRel(rels.get(i));
 		for (int i = rels.size(); i < randomFragments; i++) {
 			RelationType r = createFreeRandomRel(i, numAttrs);
@@ -189,7 +189,7 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		else
 			return true;
 		
-		return false;
+		return false;//Do we return false eventually no matter what?
 	}
 	
 	@Override

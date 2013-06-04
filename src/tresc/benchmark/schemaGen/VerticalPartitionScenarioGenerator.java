@@ -1,6 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import org.vagabond.util.CollectionUtils;
@@ -31,7 +33,7 @@ import vtools.dataModel.expression.Variable;
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
-
+	private static final int MAX_NUM_TRIES = 10;
 	private JoinKind jk;
 	private int numOfSrcTblAttr;
 	private int numOfTgtTables;
@@ -53,7 +55,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     {
         ;
     }
-
+    
     
     protected void initPartialMapping() {
     	super.initPartialMapping();
@@ -325,29 +327,42 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     }*/
     @Override
 	protected boolean chooseSourceRels() throws Exception {
-		RelationType rel = getRandomRel(true);
-		if (rel == null)
-			return false;
-		
-		m.addSourceRel(rel);
-		numOfSrcTblAttr = rel.sizeOfAttrArray();
-		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
-		
-		return true;
+    	RelationType r = null;
+    	boolean ok = false;
+    	int tries = 0;
+    	
+    	while(!ok && tries < MAX_NUM_TRIES) {
+    		r = getRandomRel(true, 2);
+    		if (r == null)
+    			break;
+    		if (r.isSetPrimaryKey()) {	
+    			int[] keyPos = model.getPKPos(r.getName(), true);
+    			if (keyPos.length == 1 && keyPos[0] == 0) {
+    				ok = true;
+    				break;
+    			}
+    		}
+    		else {
+    			ok = true;
+    			break;
+    		}
+    	}
+    	
+    	// did not find suitable relation
+    	if (r == null)
+    		return false;
+    	// adapt fields
+    	else {
+    		m.addSourceRel(r);
+    		// create PK if necessary
+    		if (!r.isSetPrimaryKey())
+    			fac.addPrimaryKey(r.getName(), 0, true);
+    		numOfSrcTblAttr = r.sizeOfAttrArray();
+    		return true;
+    	}
 	}
     
-    @Override
-    protected boolean chooseTargetRels() throws Exception {
-    	RelationType rel = getRandomRel(false);
-    	if (rel == null)
-    		return false;
-    	
-    	m.addSourceRel(rel);
-		numOfSrcTblAttr = rel.sizeOfAttrArray();
-		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
-		
-		return true;
-    }
+    
     
 	@Override
 	protected void genSourceRels() throws Exception {
@@ -393,6 +408,72 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		
 	}
 
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+		RelationType cand = null;
+		int tries = 0;
+		int numAttrs = 0;
+		List<RelationType> rels = new ArrayList<RelationType> (numOfTgtTables);
+		
+		// first one
+		while (tries < MAX_NUM_TRIES && rels.size() == 0) {
+			cand = getRandomRel(false, 2);
+			if (relOk(cand)) {
+				rels.add(cand);
+				break;
+			}
+		}
+		
+		// didn't find one? generate target relations
+		if (rels.size() == 0)
+			return false;
+		
+		numAttrs = cand.sizeOfAttrArray();
+
+		// find additional relations with the same number of attributes 
+		// and no key or the first attr as key
+		while (tries < MAX_NUM_TRIES * numOfTgtTables && cand != null 
+				&& rels.size() < numOfTgtTables) {
+			cand = getRandomRelWithNumAttr(false, numAttrs);//Why we don't use getRandomRel again here? What's the difference of them.
+			if (relOk(cand))
+				rels.add(cand);
+		}
+		
+		// create additional target relations
+		for (int i = 0; i < rels.size(); i++)
+			m.addTargetRel(rels.get(i));
+		for (int i = rels.size(); i < numOfTgtTables; i++) {
+			RelationType r = createFreeRandomRel(i, numAttrs);
+			rels.add(r);
+			fac.addRelation(getRelHook(i), r, false);
+		}
+		
+		// create primary keys
+		for (RelationType r: rels)
+			if (!r.isSetPrimaryKey())
+				fac.addPrimaryKey(r.getName(), 0, false);
+		
+		// adapt local parameters
+		//randomElements = numAttrs;
+		
+		return true;
+	}
+	
+	private boolean relOk (RelationType r) throws Exception {
+		if (r == null)
+			return false;
+		if (r.isSetPrimaryKey()) {
+			int[] pkPos = model.getPKPos(r.getName(), false);
+			if (pkPos.length == 1 & pkPos[0] == 0)
+				return true;
+		}
+		// no PK? we are fine
+		else
+			return true;
+		
+		return false;//Do we return false eventually no matter what?
+	}
+	
 	@Override
 	protected void genTargetRels() throws Exception {
         String[] attrs;
