@@ -70,8 +70,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             numOfSetElementsDeviation);
     	
         numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
-
-        attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+        attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;
+        //attsPerTargetRel = (int) Math.floor(numOfSrcTblAttr / numOfTgtTables);//What if the result is not an integer?
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
         
         
@@ -337,12 +337,14 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     			break;
     		if (r.isSetPrimaryKey()) {	
     			int[] keyPos = model.getPKPos(r.getName(), true);
+    			keySize = r.sizeOfAttrArray() - 1;
     			if (keyPos.length == 1 && keyPos[0] == 0) {
     				ok = true;
     				break;
     			}
     		}
     		else {
+    			keySize = r.sizeOfAttrArray();
     			ok = true;
     			break;
     		}
@@ -358,10 +360,17 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     		if (!r.isSetPrimaryKey())
     			fac.addPrimaryKey(r.getName(), 0, true);
     		numOfSrcTblAttr = r.sizeOfAttrArray();
+    		attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;
+    		attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;
+    		//attsPerTargetRel = (int) Math.floor(numOfSrcTblAttr/numOfTgtTables);//Do we need to round down the integer?
+    		attrRemainder = numOfSrcTblAttr % numOfTgtTables;
+    		
     		return true;
     	}
     	
     	// adapt attrsPerTargetRel attrRemainder keySize
+
+    	
 	}
     
     
@@ -415,11 +424,16 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		RelationType cand = null;
 		int tries = 0;
 		int numAttrs = 0;
+		keySize = 0;
 		List<RelationType> rels = new ArrayList<RelationType> (numOfTgtTables);
 		
 		// first one
 		while (tries++ < MAX_NUM_TRIES && rels.size() == 0) {
 			cand = getRandomRel(false, 2);
+			if (cand.isSetPrimaryKey())
+				keySize+= cand.sizeOfAttrArray()- 1;
+			else
+				keySize+= cand.sizeOfAttrArray();
 			if (relOk(cand)) {
 				rels.add(cand);
 				break;
@@ -458,7 +472,10 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		// adapt local parameters
 //		randomElements = numAttrs;
     	// adapt attrsPerTargetRel attrRemainder
+		attsPerTargetRel = numAttrs;
+		attrRemainder = 0;
 		// adapt numOfSrcTblAttrs
+		numOfSrcTblAttr = attsPerTargetRel * numOfTgtTables + 1;
 		// adapt keySize
 		return true;
 	}
