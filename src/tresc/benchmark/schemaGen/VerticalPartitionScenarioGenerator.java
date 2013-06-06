@@ -20,7 +20,6 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
-//import net.sf.saxon.functions.Concat;
 
 // PRG Enhanced VERTICAL PARTITION to handle Optional Source Keys based on ConfigOptions.PrimaryKeySize - Sep 18, 2012
 // PRG REMOVED HardCoded Skolemization Mode (SkolemKind.ALL) and ADDED dynamic Skolemization Modes (i.e. KEY, ALL and RANDOM) - Sep 18, 2012
@@ -32,6 +31,43 @@ import vtools.dataModel.expression.Variable;
 
 
 // very similar to merging scenario generator, with source and target schemas swapped
+/**
+ * 
+ * @author lord_pretzel
+ * 
+ * DESCRIPTION OF SCENARIO:
+ *******************************
+ *
+ * Vertically partition a single source relation into multiple target relations. 
+ * Each target relation gets a subset of the attributes of the source. The 
+ * attributes are split evenly between the target relations (the last target 
+ * relation gets the remainder). Target relations are connected through their 
+ * primary key which is added as an additional last attribute. 
+ * 
+ * ASSUMPTIONS:
+ *******************************
+ *
+ *	1) Each target tables primary key is the last attribute
+ *  2) Source attributes are split evenly amongst the target tables. The last
+ *     target table gets the remaining attribute that cannot be split evenly.
+ * 
+ * DESCRIPTION OF PARAMETERS:
+ *******************************
+ * 
+ * numOfSrcTblAttr: number of total attributes in the single source relation for this scenario.
+ * 
+ * 
+ * EXAMPLE SCENARIO:
+ *******************************
+ * numOfSrcTblAttr = 3, keySize = 0, numOfTgtTables = 2, attsPerTargetRel = 1, attrRemainder = 1
+ * 
+ * Source Schema: R(A,B,C) no primary key
+ * Target Schema: S(A,D) and T(B,C,E) with primary keys (D) and (E)
+ * Correspondences: C1: R.A -> S.A, C2: R.B -> T.B, C3: R.C -> T.C
+ * Mapping: R(a,b,c) -> S(a,d) and T(b,c,d)
+ *  
+ * 
+ */
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
 	private static final int MAX_NUM_TRIES = 10;
 	private JoinKind jk;
@@ -56,24 +92,17 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         ;
     }
     
-    
+    /**
+     * 
+     */
     protected void initPartialMapping() {
     	super.initPartialMapping();
     	
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
             numOfElementsDeviation);
         
-        // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
+        // PRG ADD - Generate at least a source relation of 3 elements - Sep 19, 2012
         numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
-
-        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
-            numOfSetElementsDeviation);
-    	
-        numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
-        attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;
-        //attsPerTargetRel = (int) Math.floor(numOfSrcTblAttr / numOfTgtTables);//What if the result is not an integer?
-        attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
-        
         
         jk = JoinKind.values()[joinKind];
         if (jk == JoinKind.VARIABLE)
@@ -90,241 +119,20 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		sk = SkolemKind.values()[typeOfSkolem];
 		// adjust keySize as necessary with respect to number of source table attributes
 		// NOTE: we are not strictly enforcing a source key for VERTICAL PARTITION, unless SkolemKind.KEY explicitly requested
-		keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
+		keySize = (keySize > numOfSrcTblAttr - 2) ? numOfSrcTblAttr - 2 : keySize;
 		if (sk == SkolemKind.KEY)
 			keySize = (keySize > 0) ? keySize : 1;
 		
+        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+                numOfSetElementsDeviation);    	
+        numOfTgtTables = (numOfTgtTables <= numOfSrcTblAttr) ? numOfTgtTables : numOfSrcTblAttr;
+        
+        attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+        attrRemainder = numOfSrcTblAttr % numOfTgtTables;        
     }
 
 	
-
-    /**
-     * This is the main function. It generates a table in the source, a number
-     * of tables in the target and a respective number of queries.
-     * @throws Exception 
-     */
-    /*private SMarkElement createSubElements(Schema source, Schema target, int numOfSrcTblAttr, int numOfTgtTables,
-            JoinKind jk, int repetition, SPJQuery pquery, SPJQuery generatedQuery)
-    {
-        // First create the source table
-        String sourceRelName = Modules.nameFactory.getARandomName();
-        String coding = getStamp() + repetition;
-        sourceRelName = sourceRelName + "_" + coding;
-        SMarkElement srcRel = new SMarkElement(sourceRelName, new Set(), null, 0, 0);
-        srcRel.setHook(new String(coding));
-        source.addSubElement(srcRel);
-        // and populate that table with elements. The array attNames, keeps the
-        // coding of these elements
-        String[] attNames = new String[numOfSrcTblAttr];
-        for (int i = 0; i < numOfSrcTblAttr; i++)
-        {
-            String namePrefix = Modules.nameFactory.getARandomName();
-            coding = getStamp() + repetition + "A" + i;
-            String srcAttName = namePrefix + "_" + coding;
-            SMarkElement el = new SMarkElement(srcAttName, Atomic.STRING, null, 0, 0);
-            el.setHook(new String(coding));
-            srcRel.addSubElement(el);
-            attNames[i] = srcAttName;
-        }
-
-
-
-        // create the set of the partial (intermediate) queries
-        // each query populates a target table. We also create the target tables
-        SMarkElement[] trgTables = new SMarkElement[numOfTgtTables];
-        SPJQuery[] queries = new SPJQuery[numOfTgtTables];
-        for (int i = 0; i < numOfTgtTables; i++)
-        {
-            SPJQuery q = new SPJQuery();
-            q.getFrom().add(new Variable("X"), new Projection(Path.ROOT, sourceRelName));
-            queries[i] = q;
-
-            String targetRelNamePrefix = Modules.nameFactory.getARandomName();
-            coding = getStamp() + repetition + "TT" + i;
-            String targetRelName = targetRelNamePrefix + "_" + coding;
-            SMarkElement tgtRel = new SMarkElement(targetRelName, new Set(), null, 0, 0);
-            tgtRel.setHook(new String(coding));
-            target.addSubElement(tgtRel);
-            trgTables[i] = tgtRel;
-            generatedQuery.addTarget(tgtRel.getLabel());
-        }
-
-        // we distribute the source atomic elements among the target relations
-        // we add all the atomic elements in the partial queries
-        // int attsPerTargetRel = (int) Math.ceil((float) numOfSrcTblAttr /
-        // numOfTgtTables);
-        int attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
-        int attrPos = 0;
-        for (int ti = 0; ti < numOfTgtTables; ti++)
-        {
-            SelectClauseList sel = queries[ti].getSelect();
-            SMarkElement tgtRel = trgTables[ti];
-            for (int i = 0, imax = attsPerTargetRel; i < imax; i++)
-            {
-                String trgAttrName = attNames[attrPos];
-                attrPos++;
-                SMarkElement tgtAtomicElt = new SMarkElement(trgAttrName, Atomic.STRING, null, 0, 0);
-                String hook = trgAttrName.substring(trgAttrName.indexOf("_"));
-                tgtAtomicElt.setHook(hook);
-                tgtRel.addSubElement(tgtAtomicElt);
-
-                // since we added an attr in the target, we add an entry in the
-                // respective select clause
-                Projection att = new Projection(new Variable("X"), trgAttrName);
-                sel.add(trgAttrName, att);
-            }
-        }
-
-        // it may be the case that some elements are left over due to not
-        // perfect division between integers. We add them all in the last
-        // fragment
-        for (int i = attrPos, imax = attNames.length; i < imax; i++)
-        {
-            String trgAttrName = attNames[i];
-            SMarkElement tgtAtomicElt = new SMarkElement(trgAttrName, Atomic.STRING, null, 0, 0);
-            String hook = trgAttrName.substring(trgAttrName.indexOf("_"));
-            tgtAtomicElt.setHook(hook);
-            trgTables[numOfTgtTables - 1].addSubElement(tgtAtomicElt);
-
-            // since we added an attr in the target, we add an entry in the
-            // respective select clause
-            Projection att = new Projection(new Variable("X"), trgAttrName);
-            queries[numOfTgtTables - 1].getSelect().add(trgAttrName, att);
-        }
-
-
-
-        // now we generate the join attributes in the target tables
-        if (jk == JoinKind.STAR)
-        {
-            coding = getStamp() + repetition + "JoinAtt";
-            String joinAttName = Modules.nameFactory.getARandomName() + "_" + coding;
-            String joinAttNameRef = joinAttName + "Ref";
-
-            SMarkElement joinAttElement = new SMarkElement(joinAttName, Atomic.STRING, null, 0, 0);
-            joinAttElement.setHook(new String(coding));
-            target.getSubElement(0).addSubElement(joinAttElement);
-            
-            // add to the first partial query a skolem function to generate
-            // the join attribute in the first target table
-            SelectClauseList sel0 = queries[0].getSelect();
-            SKFunction f0 = new SKFunction("SK");
-            for (int k = 0; k < numOfSrcTblAttr; k++)
-            {
-                Projection att = new Projection(new Variable("X"), attNames[k]);
-                f0.addArg(att);
-            }
-            sel0.add(joinAttName, f0);
-            queries[0].setSelect(sel0);
-
-            for (int i = 1; i < numOfTgtTables; i++)
-            {
-                SMarkElement joinAttRefElement = new SMarkElement(joinAttNameRef, Atomic.STRING, null, 0, 0);
-                joinAttRefElement.setHook(new String(coding + "Ref"));
-                target.getSubElement(i).addSubElement(joinAttRefElement);
-                // we create the target constraint(i.e. foreign key both ways )
-                Variable varKey1 = new Variable("F");
-                Variable varKey2 = new Variable("K");
-                ForeignKey fKeySrc1 = new ForeignKey();
-                fKeySrc1.addLeftTerm(varKey1.clone(),
-                    new Projection(Path.ROOT, target.getSubElement(0).getLabel()));
-                fKeySrc1.addRightTerm(varKey2.clone(), new Projection(Path.ROOT,
-                    target.getSubElement(i).getLabel()));
-                fKeySrc1.addFKeyAttr(new Projection(varKey2.clone(), joinAttNameRef), new Projection(
-                    varKey1.clone(), joinAttName));
-                target.addConstraint(fKeySrc1);
-                ForeignKey fKeySrc2 = new ForeignKey();
-                fKeySrc2.addLeftTerm(varKey1.clone(),
-                    new Projection(Path.ROOT, target.getSubElement(i).getLabel()));
-                fKeySrc2.addRightTerm(varKey2.clone(), new Projection(Path.ROOT,
-                    target.getSubElement(0).getLabel()));
-                fKeySrc2.addFKeyAttr(new Projection(varKey2.clone(), joinAttName), new Projection(varKey1.clone(),
-                    joinAttNameRef));
-                target.addConstraint(fKeySrc2);
-                // add to the each partial query a skolem function to generate
-                // the join
-                // reference attribute in all the other target tables
-                SelectClauseList seli = queries[i].getSelect();
-                Function fi = (Function) f0.clone();
-                seli.add(joinAttNameRef, fi);
-                queries[i].setSelect(seli);
-            }
-        }
-
-        if (jk == JoinKind.CHAIN)
-        {
-            // create a skolem function which has all the
-            // source attributes as arguments
-            Function f = new Function("SK");
-            for (int k = 0; k < numOfSrcTblAttr; k++)
-            {
-                Projection att = new Projection(new Variable("X"), attNames[k]);
-                f.addArg(att);
-            }
-
-            for (int i = 0; i < numOfTgtTables - 1; i++)
-            {
-            	int tgtPos = repetition * numOfTgtTables + i;
-                coding = getStamp() + repetition + "JoinAtt";
-                String joinAttName = Modules.nameFactory.getARandomName() + "_" + coding;
-                String joinAttNameRef = joinAttName + "Ref";
-
-                SMarkElement joinAttElement = new SMarkElement(joinAttName, Atomic.STRING, null, 0, 0);
-                joinAttElement.setHook(new String(coding));
-                SMarkElement joinAttRefElement = new SMarkElement(joinAttNameRef, Atomic.STRING, null, 0, 0);
-                joinAttRefElement.setHook(new String(coding + "Ref"));
-
-                target.getSubElement(tgtPos).addSubElement(joinAttElement);
-                target.getSubElement(tgtPos + 1).addSubElement(joinAttRefElement);
-                // we create the target constraint(i.e. foreign key both ways )
-                Variable varKey1 = new Variable("F");
-                Variable varKey2 = new Variable("K");
-                
-                ForeignKey fKeySrc1 = new ForeignKey();
-                fKeySrc1.addLeftTerm(varKey1.clone(),
-                    new Projection(Path.ROOT, target.getSubElement(tgtPos).getLabel()));
-                fKeySrc1.addRightTerm(varKey2.clone(), new Projection(Path.ROOT,
-                    target.getSubElement(tgtPos + 1).getLabel()));
-                fKeySrc1.addFKeyAttr(new Projection(varKey2.clone(), joinAttNameRef), new Projection(
-                    varKey1.clone(), joinAttName));
-                target.addConstraint(fKeySrc1);
-                
-                ForeignKey fKeySrc2 = new ForeignKey();
-                fKeySrc2.addLeftTerm(varKey1.clone(), new Projection(Path.ROOT,
-                    target.getSubElement(tgtPos + 1).getLabel()));
-                fKeySrc2.addRightTerm(varKey2.clone(), new Projection(Path.ROOT,
-                    target.getSubElement(tgtPos).getLabel()));
-                fKeySrc2.addFKeyAttr(new Projection(varKey2.clone(), joinAttName), new Projection(varKey1.clone(),
-                    joinAttNameRef));
-                target.addConstraint(fKeySrc2);
-                // add to each partial query the skolem function that generates
-                // the join attribute
-                // and the join reference attribute in each target table
-                SelectClauseList sel1 = queries[i].getSelect();
-                Function f1 = (Function) f.clone();
-                sel1.add(joinAttName, f1);
-                queries[i].setSelect(sel1);
-                SelectClauseList sel2 = queries[i + 1].getSelect();
-                Function f2 = (Function) f.clone();
-                sel2.add(joinAttNameRef, f2);
-                queries[i + 1].setSelect(sel2);
-            }
-        }
-
-        // add the partial queries to the parent query
-        // to form the whole transformation
-        SelectClauseList pselect = pquery.getSelect();
-        SelectClauseList gselect = generatedQuery.getSelect();
-        for (int i = 0; i < numOfTgtTables; i++)
-        {
-            String tblTrgName = trgTables[i].getLabel();
-            pselect.add(tblTrgName, queries[i]);
-            gselect.add(tblTrgName, queries[i]);
-        }
-        pquery.setSelect(pselect);
-        generatedQuery.setSelect(gselect);
-        return srcRel;
-    }*/
+    
     @Override
 	protected boolean chooseSourceRels() throws Exception {
     	RelationType r = null;
@@ -335,18 +143,13 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     		r = getRandomRel(true, 2);
     		if (r == null)
     			break;
+    		ok = true;
     		if (r.isSetPrimaryKey()) {	
     			int[] keyPos = model.getPKPos(r.getName(), true);
-    			keySize = r.sizeOfAttrArray() - 1;
-    			if (keyPos.length == 1 && keyPos[0] == 0) {
-    				ok = true;
-    				break;
-    			}
+    			keySize = keyPos.length;
     		}
     		else {
-    			keySize = r.sizeOfAttrArray();
-    			ok = true;
-    			break;
+    			keySize = 0;
     		}
     	}
     	
@@ -356,21 +159,18 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
     	// adapt fields
     	else {
     		m.addSourceRel(r);
-    		// create PK if necessary
-    		if (!r.isSetPrimaryKey())
-    			fac.addPrimaryKey(r.getName(), 0, true);
-    		numOfSrcTblAttr = r.sizeOfAttrArray();
-    		attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;
-    		attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;
-    		//attsPerTargetRel = (int) Math.floor(numOfSrcTblAttr/numOfTgtTables);//Do we need to round down the integer?
-    		attrRemainder = numOfSrcTblAttr % numOfTgtTables;
     		
+//    		// create PK if necessary
+//    		if (!r.isSetPrimaryKey())
+//    			fac.addPrimaryKey(r.getName(), 0, true);
+    		
+    		numOfSrcTblAttr = r.sizeOfAttrArray();
+    		
+    		attsPerTargetRel = numOfSrcTblAttr/numOfTgtTables;    	
+    		attrRemainder = numOfSrcTblAttr % numOfTgtTables; 		
+   		
     		return true;
     	}
-    	
-    	// adapt attrsPerTargetRel attrRemainder keySize
-
-    	
 	}
     
     
@@ -386,20 +186,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		
 		// PRG ADDED Generation of Source Key Elements when keySize > 0
 		String[] keys = new String[keySize];
-/*		for (int j = 0; j < keySize; j++)
-			keys[j] = randomAttrName(0, 0) + "ke" + j;
-		
-		int keyCount = 0;
-		for (int i = 0; i < numOfSrcTblAttr; i++) {
-			String attrName = randomAttrName(0, i);
 
-			if (keyCount < keySize)
-				attrName = keys[keyCount];
-			
-			keyCount++;
-			
-			attNames[i] = attrName;
-		}*/
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
 			String attrName = randomAttrName(0,i);
 			if (i < keySize) {
@@ -430,10 +217,6 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		// first one
 		while (tries++ < MAX_NUM_TRIES && rels.size() == 0) {
 			cand = getRandomRel(false, 2);
-			if (cand.isSetPrimaryKey())
-				keySize+= cand.sizeOfAttrArray()- 1;
-			else
-				keySize+= cand.sizeOfAttrArray();
 			if (relOk(cand)) {
 				rels.add(cand);
 				break;
@@ -449,11 +232,14 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		// find additional relations with the same number of attributes 
 		// and no key or the first attr as key
 		while (tries++ < MAX_NUM_TRIES * numOfTgtTables && cand != null 
-				&& rels.size() < numOfTgtTables) {
+				&& rels.size() < numOfTgtTables - 1) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);//Why we don't use getRandomRel again here? What's the difference of them.
 			if (relOk(cand))
 				rels.add(cand);
 		}
+		
+		//TODO code that finds the last one
+		// check that we have numOfTgdTables - 1
 		
 		// create additional target relations
 		for (int i = 0; i < rels.size(); i++)
@@ -467,16 +253,15 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		// create primary keys
 		for (RelationType r: rels)
 			if (!r.isSetPrimaryKey())
-				fac.addPrimaryKey(r.getName(), 0, false);
+				fac.addPrimaryKey(r.getName(), r.sizeOfAttrArray() - 1, false);
 		
 		// adapt local parameters
-//		randomElements = numAttrs;
-    	// adapt attrsPerTargetRel attrRemainder
-		attsPerTargetRel = numAttrs;
-		attrRemainder = 0;
+		attsPerTargetRel = numAttrs - 1;
+		attrRemainder = 0; //TODO
+
 		// adapt numOfSrcTblAttrs
-		numOfSrcTblAttr = attsPerTargetRel * numOfTgtTables + 1;
-		// adapt keySize
+		numOfSrcTblAttr = attsPerTargetRel * numOfTgtTables + attrRemainder;
+
 		return true;
 	}
 	
@@ -485,14 +270,13 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			return false;
 		if (r.isSetPrimaryKey()) {
 			int[] pkPos = model.getPKPos(r.getName(), false);
-			if (pkPos.length == 1 & pkPos[0] == 0)
+			if (pkPos.length == 1 & pkPos[0] == r.sizeOfAttrArray() - 1)
 				return true;
+			return false;
 		}
 		// no PK? we are fine
 		else
 			return true;
-		
-		return false;//Do we return false eventually no matter what?
 	}
 	
 	@Override
