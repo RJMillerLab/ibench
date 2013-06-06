@@ -54,7 +54,8 @@ import vtools.dataModel.expression.Variable;
  * DESCRIPTION OF PARAMETERS:
  *******************************
  * 
- * numOfSrcTblAttr: number of total attributes in the single source relation for this scenario.
+ * numOfSrcTblAttr: Number of total attributes in the single source relation for this scenario. 
+ * 					At least 2 (to be able to create two target relations)
  * 
  * 
  * EXAMPLE SCENARIO:
@@ -65,7 +66,7 @@ import vtools.dataModel.expression.Variable;
  * Target Schema: S(A,D) and T(B,C,E) with primary keys (D) and (E)
  * Correspondences: C1: R.A -> S.A, C2: R.B -> T.B, C3: R.C -> T.C
  * Mapping: R(a,b,c) -> S(a,d) and T(b,c,d)
- *  
+ * Transformation:  
  * 
  */
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
