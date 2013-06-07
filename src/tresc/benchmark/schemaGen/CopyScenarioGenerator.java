@@ -130,23 +130,33 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		String[] attrs = new String[A];
 		String relName = randomRelName(0);
 		String hook = getRelHook(0);
+		String[] keys = new String[keySize];
 		
 		// generate the appropriate number of keys
-		String[] keys = new String[keySize];
-		for (int j = 0; j < keySize; j++)
-			keys[j] = randomAttrName(0, 0) + "ke" + j;
-		
-		int keyCount = 0;
 		for (int i = 0; i < A; i++) {
-			String attrName = randomAttrName(0, i);
-
-			if (keyCount < keySize)
-				attrName = keys[keyCount];
-			
-			keyCount++;
-			
+			String attrName = randomAttrName(0,i);
+			if (i < keySize) {
+				attrName = attrName + "ke" + i;
+				keys[i] = attrName;
+			}
 			attrs[i] = attrName;
 		}
+		
+		
+//		for (int j = 0; j < keySize; j++)
+//			keys[j] = randomAttrName(0, 0) + "ke" + j;
+//		
+//		int keyCount = 0;
+//		for (int i = 0; i < A; i++) {
+//			String attrName = randomAttrName(0, i);
+//
+//			if (keyCount < keySize)
+//				attrName = keys[keyCount];
+//			
+//			keyCount++;
+//			
+//			attrs[i] = attrName;
+//		}
 		
 		RelationType rel = fac.addRelation(hook, relName, attrs, true);
 		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
@@ -157,12 +167,12 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genTargetRels() throws Exception {
 		RelationType s = m.getSourceRels().get(0);
-		String[] attrs = new String[s.getAttrArray().length];
+		String[] attrs = new String[A];
 		String relName = s.getName() + "copy" + curRep + "_" + fac.getNextId("R");
 		String hook = getRelHook(0);
 		
 		for(int i = 0; i < s.getAttrArray().length; i++)
-			attrs[i] = s.getAttrArray()[i].getName();
+			attrs[i] = s.getAttrArray(i).getName();
 		fac.addRelation(hook, relName, attrs, false);
 		
 		String[] keys = new String[keySize];
