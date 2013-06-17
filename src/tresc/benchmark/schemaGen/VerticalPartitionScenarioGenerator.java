@@ -56,7 +56,11 @@ import vtools.dataModel.expression.Variable;
  * 
  * numOfSrcTblAttr: Number of total attributes in the single source relation for this scenario. 
  * 					At least 2 (to be able to create two target relations)
- * 
+ * numOfTgtTables: Number of target tables in the target schema for this scenario. At least 2.
+ * attsPerTargetRel: Number of attributes in each target table. The last one could be larger than
+ * 					number since it contains the remainders.
+ * attrRemainder: Number of remainders of the division of numOfSrcTblAttr and numOfTgtTables. They
+ *  				will be added into the last table.
  * 
  * EXAMPLE SCENARIO:
  *******************************
@@ -210,6 +214,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	@Override
 	protected boolean chooseTargetRels() throws Exception {
 		RelationType cand = null;
+		RelationType lastrel = null;
 		int tries = 0;
 		int numAttrs = 0;
 		keySize = 0;
@@ -235,11 +240,17 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		while (tries++ < MAX_NUM_TRIES * numOfTgtTables && cand != null 
 				&& rels.size() < numOfTgtTables - 1) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);//Why we don't use getRandomRel again here? What's the difference of them.
+			//Because we require exact number of attr.
 			if (relOk(cand))
 				rels.add(cand);
 		}
 		
 		//TODO code that finds the last one
+		for (int j = 0; j < rels.size(); j++)
+			if (rels.get(j).sizeOfAttrArray() != numAttrs)
+				lastrel = rels.get(j);
+			
+			
 		// check that we have numOfTgdTables - 1
 		
 		// create additional target relations
@@ -257,7 +268,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				fac.addPrimaryKey(r.getName(), r.sizeOfAttrArray() - 1, false);
 		
 		// adapt local parameters
-		attsPerTargetRel = numAttrs - 1;
+		attsPerTargetRel = numAttrs - 1;//Why minus one?
 		attrRemainder = 0; //TODO
 
 		// adapt numOfSrcTblAttrs

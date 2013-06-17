@@ -1,3 +1,36 @@
+/**
+ *  DESCRIPTION OF SCENARIO:
+ *******************************
+ *
+ * Randomly choosing a table from source tables, if they exist, and copy it to the chosen target 
+ * table. If we can't find an existed source or target table or we choose not to reuse any tables,
+ * then we have to generate them by ourselves. In case there are attributes contained in a target
+ * table, the copied attributes will merge with the existed attributes in target table.
+ * 
+ * ASSUMPTIONS:
+ *******************************
+ *
+ *	1) at least one attribute other than the Primary Key in the source table.
+ *  
+ * 
+ * DESCRIPTION OF PARAMETERS:
+ *******************************
+ * 
+ * A: Number of attributes in one source table. At least 2 because we require there is at least
+ * 		one attribute other than the Primary Key. Also there is a relation between A and keySize.
+ * keySize: Number of attributes in one Primary Key. Could be larger than one, but it has to be 
+ * 			smaller than A.
+ * 
+ * 
+ * EXAMPLE SCENARIO:
+ *******************************
+ * A = 3, keySize = 1
+ * Source Schema: R(A,B,C), A is a Primary Key.
+ * Target Schema: S(A,B,C), A is a Primary Key.
+ * Correspondences: C1: R.A -> S.A, C2: R.B -> S.B, C3: R.C -> S.C
+ * Mapping: R(a,b,c) -> S(a,b,c)
+ * Transformation:  
+ */
 package tresc.benchmark.schemaGen;
 
 import org.apache.log4j.Logger;
