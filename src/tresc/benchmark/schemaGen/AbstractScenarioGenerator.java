@@ -33,7 +33,42 @@ import vtools.dataModel.schema.Schema;
 
 // PRG RESTORED Reading Deviation Parameter (numOfElementsDeviation) from config file - August 28, 2012
 // PRG MOVED method getRandomSourceVars(int numArgsForSkolem, MappingType m1) to tresc.benchmark.utils.Utils.java to facilitate code reuse - Sep 21, 2012
-
+/**
+ * Abstract superclass of all scenario generators. A call to create
+ * generateNextScenario will create a new instance of the scenario type (e.g., COPY(). 
+ * Creating an instance consists of the following steps:
+ *  1) Create source and target relations for the primitive
+ *  2) Create correspondences between source and target
+ *  3) Create mappings
+ *  4) Create transformations implementing the mapping
+ *  
+ *  Generated instances (relations, correspondences, ...) are stored in a TrampXMLModel (field model) object.
+ *  Each instance has a local working area (class PartialMapping) that only stores scenario elements
+ *  related to the instance. Usually, a TrampModelFactory (field fac) is used to create new
+ *  scenario elements and add them to the partial mapping (field m). 
+ *
+ ***************************************
+ *  Creating the schemas:
+ ***************************************
+ * In STBenchmark 2.0 the user can select whether source and target relations should
+ * be reused between scenario instances. E.g., two instances of a copy scenario may
+ * have the same target relation to copy to. When creating the schemas the algorithm
+ * roles a dice to determine whether to create source/target relations from scratch or
+ * to reuse existing source/target relations. The user sets srcReusePerc, trgReusePerc 
+ * to set the probability of reuse (see configuration file). We either reuse source, 
+ * or target, or none, but never both source and target. Dependening on the choice the
+ * following 3 cases occur:
+ * 
+ *  1) no reuse: call genSourceRels() and genTargetRels of the scenario generator to
+ *     create new relations from scratch
+ *   
+ *  2) source reuse: ...
+ * 
+ *
+ *  
+ * @author lord_pretzel
+ *
+ */
 public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	static Logger log = Logger.getLogger(AbstractScenarioGenerator.class);
@@ -85,6 +120,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected Schema source;
 	protected Schema target;
 	protected SPJQuery pquery;
+	
+	protected Set<RelationType> usedRels; 
 	
 	protected TrampModelFactory fac;
 	protected TrampXMLModel model;
@@ -151,6 +188,7 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 
 	private void createOneInstanceOfScenario(MappingScenario scenario,
 			Configuration configuration) throws Exception {
+		usedRels = new HashSet<RelationType> ();
 		initPartialMapping();
 		genSchemas();
 		if (log.isDebugEnabled()) {log.debug("Repetition <" + curRep +">");};
@@ -300,20 +338,27 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	}
 	
 	private RelationType pickRel (List<RelationType> rels) {
+		RelationType r;
+		List<RelationType> okCand = new ArrayList<RelationType> ();
 		int numRels = rels.size();
 		if (numRels == 0)
 			return null;
-		int pos = _generator.nextInt(numRels);
-		return rels.get(pos);
+		for(RelationType cand: rels) {
+			if (!usedRels.contains(cand))
+				okCand.add(cand);
+		}
+		int pos = _generator.nextInt(okCand.size());
+		r = okCand.get(pos);
+		usedRels.add(r);
+		return r; 
 	}
 	
 	protected RelationType getRandomRel (boolean source) {
-		int numRels = model.getNumRels(source);
-		if (numRels == 0)
-			return null;
-		int pos = _generator.nextInt(numRels);
-		RelationType rel = model.getRel(pos, source);
-		return rel;
+		List<RelationType> cand = new ArrayList<RelationType> ();
+		for(RelationType r: model.getSchema(source).getRelationArray()) {
+			cand.add(r);
+		}
+		return pickRel(cand);
 	}
 	
 	protected abstract void genSourceRels() throws Exception;

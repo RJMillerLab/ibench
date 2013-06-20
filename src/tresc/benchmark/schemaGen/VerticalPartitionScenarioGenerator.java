@@ -214,7 +214,6 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	@Override
 	protected boolean chooseTargetRels() throws Exception {
 		RelationType cand = null;
-		RelationType lastrel = null;
 		int tries = 0;
 		int numAttrs = 0;
 		keySize = 0;
@@ -246,10 +245,15 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		}
 		
 		//TODO code that finds the last one
-		for (int j = 0; j < rels.size(); j++)
-			if (rels.get(j).sizeOfAttrArray() != numAttrs)
-				lastrel = rels.get(j);
-			
+		if (rels.size() == numOfTgtTables - 1) {
+			while (tries++ < MAX_NUM_TRIES * numOfTgtTables && cand != null 
+					&& rels.size() < numOfTgtTables) {
+				cand = getRandomRelWithNumAttr(false, numAttrs);//Why we don't use getRandomRel again here? What's the difference of them.
+				//Because we require exact number of attr.
+				if (relOk(cand))
+					rels.add(cand);
+			}
+		}
 			
 		// check that we have numOfTgdTables - 1
 		

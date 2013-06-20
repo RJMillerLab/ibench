@@ -2,10 +2,14 @@
  *  DESCRIPTION OF SCENARIO:
  *******************************
  *
- * Randomly choosing a table from source tables, if they exist, and copy it to the chosen target 
- * table. If we can't find an existed source or target table or we choose not to reuse any tables,
- * then we have to generate them by ourselves. In case there are attributes contained in a target
- * table, the copied attributes will merge with the existed attributes in target table.
+ * Creates a exact copy of a source relation in the target, i.e., each attribute of the source table
+ *  is copied to a corresponding attribute in the target. 
+ * 
+ * CHOOSE SOURCE RELS: Randomly choosing a table from source tables  and create a one-to-one copy as a target 
+ * table. 
+ * 
+ * CHOOSE TARGET RELS:  Randomly choose a  target
+ * table. If successful create a one-to-one copy as the source relation.
  * 
  * ASSUMPTIONS:
  *******************************
