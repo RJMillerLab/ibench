@@ -1,0 +1,221 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="opinion_vp_0_nl0_ce0">
+        <Attr>
+          <Name>receive_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>taste_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>steel_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>skin_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>believe_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>receive_vp_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="sky_vp_0_nl0_ce0">
+        <Attr>
+          <Name>receive_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>adjustment_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="eye_vp_0_nl0_ce1">
+        <Attr>
+          <Name>taste_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>steel_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>adjustment_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="lead_vp_0_nl0_ce2">
+        <Attr>
+          <Name>skin_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>believe_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>adjustment_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="sky_vp_0_nl0_ce0">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="eye_vp_0_nl0_ce1">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="eye_vp_0_nl0_ce1">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="sky_vp_0_nl0_ce0">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="eye_vp_0_nl0_ce1">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="lead_vp_0_nl0_ce2">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="lead_vp_0_nl0_ce2">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="eye_vp_0_nl0_ce1">
+          <Attr>adjustment_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="opinion_vp_0_nl0_ce0">
+        <Attr>receive_vp_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="sky_vp_0_nl0_ce0">
+        <Attr>receive_vp_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="opinion_vp_0_nl0_ce0">
+        <Attr>open_vp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="sky_vp_0_nl0_ce0">
+        <Attr>open_vp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="opinion_vp_0_nl0_ce0">
+        <Attr>taste_vp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="eye_vp_0_nl0_ce1">
+        <Attr>taste_vp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="opinion_vp_0_nl0_ce0">
+        <Attr>steel_vp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="eye_vp_0_nl0_ce1">
+        <Attr>steel_vp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="opinion_vp_0_nl0_ce0">
+        <Attr>skin_vp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="lead_vp_0_nl0_ce2">
+        <Attr>skin_vp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="opinion_vp_0_nl0_ce0">
+        <Attr>believe_vp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="lead_vp_0_nl0_ce2">
+        <Attr>believe_vp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="opinion_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="sky_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="eye_vp_0_nl0_ce1">
+          <Var>c</Var>
+          <Var>d</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="lead_vp_0_nl0_ce2">
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

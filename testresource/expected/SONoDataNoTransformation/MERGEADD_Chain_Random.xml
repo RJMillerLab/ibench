@@ -1,0 +1,424 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="silk_ma_0_nl0_ce0">
+        <Attr>
+          <Name>could_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>error_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>bell_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>trousers_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>try_ma_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_ma_0_nl0_ae0comp0_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>open_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="complex_ma_0_nl0_ce1">
+        <Attr>
+          <Name>hat_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>driving_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>orange_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mountain_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_ma_0_nl0_ae0comp1_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>open_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="powder_ma_0_nl0_ce2">
+        <Attr>
+          <Name>tax_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>dependent_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>desire_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sleep_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>measure_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_ma_0_nl0_ae0comp2_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <ForeignKey>
+        <From tableref="complex_ma_0_nl0_ce1">
+          <Attr>open_ma_0_nl0_ae0comp1_joinref_0</Attr>
+        </From>
+        <To tableref="silk_ma_0_nl0_ce0">
+          <Attr>open_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="powder_ma_0_nl0_ce2">
+          <Attr>open_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </From>
+        <To tableref="complex_ma_0_nl0_ce1">
+          <Attr>open_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="engine_ma_0_nl0_ce0">
+        <Attr>
+          <Name>could_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>error_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>bell_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>trousers_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>try_ma_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hat_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>driving_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>orange_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mountain_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>tax_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>dependent_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>desire_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sleep_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>measure_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_ma_0_nl0_ae0comp0_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>open_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>laugh_ma_0_nl0_ae15</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>use_ma_0_nl0_ae16</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>science_ma_0_nl0_ae17</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>open_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+          <Attr>open_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="silk_ma_0_nl0_ce0">
+        <Attr>could_ma_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>could_ma_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="silk_ma_0_nl0_ce0">
+        <Attr>error_ma_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>error_ma_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="silk_ma_0_nl0_ce0">
+        <Attr>bell_ma_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>bell_ma_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="silk_ma_0_nl0_ce0">
+        <Attr>trousers_ma_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>trousers_ma_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="silk_ma_0_nl0_ce0">
+        <Attr>try_ma_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>try_ma_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="complex_ma_0_nl0_ce1">
+        <Attr>hat_ma_0_nl1_ae0</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>hat_ma_0_nl1_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="complex_ma_0_nl0_ce1">
+        <Attr>driving_ma_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>driving_ma_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="complex_ma_0_nl0_ce1">
+        <Attr>orange_ma_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>orange_ma_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="complex_ma_0_nl0_ce1">
+        <Attr>mountain_ma_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>mountain_ma_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="powder_ma_0_nl0_ce2">
+        <Attr>tax_ma_0_nl2_ae0</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>tax_ma_0_nl2_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="powder_ma_0_nl0_ce2">
+        <Attr>dependent_ma_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>dependent_ma_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="powder_ma_0_nl0_ce2">
+        <Attr>desire_ma_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>desire_ma_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="powder_ma_0_nl0_ce2">
+        <Attr>sleep_ma_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>sleep_ma_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="powder_ma_0_nl0_ce2">
+        <Attr>measure_ma_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>measure_ma_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="silk_ma_0_nl0_ce0">
+        <Attr>open_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>open_ma_0_nl0_ae0comp0_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="complex_ma_0_nl0_ce1">
+        <Attr>open_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </From>
+      <To tableref="engine_ma_0_nl0_ce0">
+        <Attr>open_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="silk_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="complex_ma_0_nl0_ce1">
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="powder_ma_0_nl0_ce2">
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>k</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="engine_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>f</Var>
+          <Var>k</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+            <Var>g</Var>
+            <Var>i</Var>
+            <Var>k</Var>
+            <Var>m</Var>
+            <Var>n</Var>
+            <Var>o</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+            <Var>e</Var>
+            <Var>g</Var>
+            <Var>j</Var>
+            <Var>k</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+            <Var>g</Var>
+            <Var>h</Var>
+            <Var>i</Var>
+            <Var>k</Var>
+            <Var>l</Var>
+            <Var>m</Var>
+            <Var>n</Var>
+            <Var>p</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

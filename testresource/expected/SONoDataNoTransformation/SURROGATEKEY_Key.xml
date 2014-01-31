@@ -1,0 +1,160 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="clean_su_0_nl0_ce0">
+        <Attr>
+          <Name>flower_su_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mention_su_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>pencil_su_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>grip_su_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>complex_su_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>claim_su_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>flower_su_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="state_su_0_nl0_ce0">
+        <Attr>
+          <Name>flower_su_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mention_su_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>pencil_su_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>grip_su_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>complex_su_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>claim_su_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>egg_su_0_nl0_ae6IDindep</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>agency_su_0_nl0_ae7IDOnFirst</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="clean_su_0_nl0_ce0">
+        <Attr>flower_su_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="state_su_0_nl0_ce0">
+        <Attr>flower_su_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="clean_su_0_nl0_ce0">
+        <Attr>mention_su_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="state_su_0_nl0_ce0">
+        <Attr>mention_su_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="clean_su_0_nl0_ce0">
+        <Attr>pencil_su_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="state_su_0_nl0_ce0">
+        <Attr>pencil_su_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="clean_su_0_nl0_ce0">
+        <Attr>grip_su_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="state_su_0_nl0_ce0">
+        <Attr>grip_su_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="clean_su_0_nl0_ce0">
+        <Attr>complex_su_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="state_su_0_nl0_ce0">
+        <Attr>complex_su_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="clean_su_0_nl0_ce0">
+        <Attr>claim_su_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="state_su_0_nl0_ce0">
+        <Attr>claim_su_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="clean_su_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="state_su_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+            <Var>b</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

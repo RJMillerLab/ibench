@@ -1,0 +1,10 @@
+bin/*
+testout/*
+<<<<<<< HEAD
+<<<<<<< HEAD
+build/*
+=======
+>>>>>>> cleanup resolving warnings
+=======
+build/*
+>>>>>>> changed git ignore

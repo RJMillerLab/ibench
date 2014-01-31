@@ -1,0 +1,311 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE tox-template SYSTEM 'http://www.cs.toronto.edu/tox/toxgene/ToXgene2.dtd'>
+<tox-template>
+<simpleType name="bench_string">
+<restriction base="string">
+<tox-string type="word" maxLength="5"/>
+</restriction>
+</simpleType>
+<simpleType name="bench_int">
+<restriction base="positiveInteger">
+<minInclusive value="1"/>
+<maxInclusive value="1000"/>
+</restriction>
+</simpleType>
+<tox-list name="test_cp0nl0ce0_List" unique="test_cp0nl0ce0/nut_cp0nl0ae0" >
+<element name="test_cp0nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="nut_cp0nl0ae0" type="bench_string"/>
+<element name="art_cp0nl0ae1" type="bench_string"/>
+<element name="slope_cp0nl0ae2" type="bench_string"/>
+<element name="measure_cp0nl0ae3" type="bench_string"/>
+<element name="touch_cp0nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="cheese_cp1nl0ce0_List" unique="cheese_cp1nl0ce0/society_cp1nl0ae0" >
+<element name="cheese_cp1nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="society_cp1nl0ae0" type="bench_string"/>
+<element name="compare_cp1nl0ae1" type="bench_string"/>
+<element name="branch_cp1nl0ae2" type="bench_string"/>
+<element name="demand_cp1nl0ae3" type="bench_string"/>
+<element name="great_cp1nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="board_cp2nl0ce0_List" unique="board_cp2nl0ce0/affect_cp2nl0ae0" >
+<element name="board_cp2nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="affect_cp2nl0ae0" type="bench_string"/>
+<element name="different_cp2nl0ae1" type="bench_string"/>
+<element name="society_cp2nl0ae2" type="bench_string"/>
+<element name="warn_cp2nl0ae3" type="bench_string"/>
+<element name="tail_cp2nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="branch_hp0nl0ce0_List">
+<element name="branch_hp0nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="selectorHP0" type="bench_int"/>
+<element name="swim_hp0nl0ae0" type="bench_string"/>
+<element name="place_hp0nl0ae1" type="bench_string"/>
+<element name="approval_hp0nl0ae2" type="bench_string"/>
+<element name="blow_hp0nl0ae3" type="bench_string"/>
+<element name="division_hp0nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="ready_hp1nl0ce0_List">
+<element name="ready_hp1nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="selectorHP1" type="bench_int"/>
+<element name="property_hp1nl0ae0" type="bench_string"/>
+<element name="gun_hp1nl0ae1" type="bench_string"/>
+<element name="winter_hp1nl0ae2" type="bench_string"/>
+<element name="powder_hp1nl0ae3" type="bench_string"/>
+<element name="work_hp1nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="discuss_hp2nl0ce0_List">
+<element name="discuss_hp2nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="selectorHP2" type="bench_int"/>
+<element name="involve_hp2nl0ae0" type="bench_string"/>
+<element name="use_hp2nl0ae1" type="bench_string"/>
+<element name="paint_hp2nl0ae2" type="bench_string"/>
+<element name="dead_hp2nl0ae3" type="bench_string"/>
+<element name="draw_hp2nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="send_sk0nl0ce0_List">
+<element name="send_sk0nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="regular_sk0nl0ae0" type="bench_string"/>
+<element name="knee_sk0nl0ae1" type="bench_string"/>
+<element name="leave_sk0nl0ae2" type="bench_string"/>
+<element name="parallel_sk0nl0ae3" type="bench_string"/>
+<element name="collection_sk0nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="worry_sk1nl0ce0_List">
+<element name="worry_sk1nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="brown_sk1nl0ae0" type="bench_string"/>
+<element name="hit_sk1nl0ae1" type="bench_string"/>
+<element name="paint_sk1nl0ae2" type="bench_string"/>
+<element name="decision_sk1nl0ae3" type="bench_string"/>
+<element name="mind_sk1nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="stick_sk2nl0ce0_List">
+<element name="stick_sk2nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="effect_sk2nl0ae0" type="bench_string"/>
+<element name="slow_sk2nl0ae1" type="bench_string"/>
+<element name="word_sk2nl0ae2" type="bench_string"/>
+<element name="kind_sk2nl0ae3" type="bench_string"/>
+<element name="prove_sk2nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="certain_de0nl0ce1_List" unique="certain_de0nl0ce1/chalk_de0nl0ae0comp1_joinattr_0" >
+<element name="certain_de0nl0ce1" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="sugar_de0nl1ae0" type="bench_string"/>
+<element name="collection_de0nl1ae1" type="bench_string"/>
+<element name="bent_de0nl1ae2" type="bench_string"/>
+<element name="sweet_de0nl1ae3" type="bench_string"/>
+<element name="chalk_de0nl0ae0comp1_joinattr_0" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="chalk_de1nl0ce1_List" unique="chalk_de1nl0ce1/crush_de1nl0ae0comp1_joinattr_0" >
+<element name="chalk_de1nl0ce1" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="regular_de1nl1ae0" type="bench_string"/>
+<element name="degree_de1nl1ae1" type="bench_string"/>
+<element name="start_de1nl1ae2" type="bench_string"/>
+<element name="fruit_de1nl1ae3" type="bench_string"/>
+<element name="crush_de1nl0ae0comp1_joinattr_0" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="involve_de2nl0ce1_List" unique="involve_de2nl0ce1/last_de2nl0ae0comp1_joinattr_0" >
+<element name="involve_de2nl0ce1" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="mention_de2nl1ae0" type="bench_string"/>
+<element name="pencil_de2nl1ae1" type="bench_string"/>
+<element name="grip_de2nl1ae2" type="bench_string"/>
+<element name="complex_de2nl1ae3" type="bench_string"/>
+<element name="last_de2nl0ae0comp1_joinattr_0" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="egg_av0nl0ce0_List">
+<element name="egg_av0nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="agency_av0nl0ae0" type="bench_string"/>
+<element name="complete_av0nl0ae1" type="bench_string"/>
+<element name="count_av0nl0ae2" type="bench_string"/>
+<element name="amount_av0nl0ae3" type="bench_string"/>
+<element name="death_av0nl0ae4" type="bench_string"/>
+<element name="shake_av0nl0ae5" type="bench_string"/>
+<element name="hollow_av0nl0ae6" type="bench_string"/>
+<element name="hollow_av0nl0ae7" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="accept_av1nl0ce0_List">
+<element name="accept_av1nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="make_av1nl0ae0" type="bench_string"/>
+<element name="prevent_av1nl0ae1" type="bench_string"/>
+<element name="probable_av1nl0ae2" type="bench_string"/>
+<element name="low_av1nl0ae3" type="bench_string"/>
+<element name="bath_av1nl0ae4" type="bench_string"/>
+<element name="butter_av1nl0ae5" type="bench_string"/>
+<element name="copy_av1nl0ae6" type="bench_string"/>
+<element name="thick_av1nl0ae7" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="disease_av2nl0ce0_List">
+<element name="disease_av2nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="attraction_av2nl0ae0" type="bench_string"/>
+<element name="sad_av2nl0ae1" type="bench_string"/>
+<element name="root_av2nl0ae2" type="bench_string"/>
+<element name="pain_av2nl0ae3" type="bench_string"/>
+<element name="straight_av2nl0ae4" type="bench_string"/>
+<element name="complain_av2nl0ae5" type="bench_string"/>
+<element name="question_av2nl0ae6" type="bench_string"/>
+<element name="walk_av2nl0ae7" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="record_of0nl0ce0_List" unique="record_of0nl0ce0/settles_of0nl0ae0_of0ke0" >
+<element name="record_of0nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="settles_of0nl0ae0_of0ke0" type="bench_string"/>
+<element name="probable_of0nl0ae1" type="bench_string"/>
+<element name="poor_of0nl0ae2" type="bench_string"/>
+<element name="goat_of0nl0ae3" type="bench_string"/>
+<element name="pick_of0nl0ae4" type="bench_string"/>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="regular_de0nl0ce0_List">
+<element name="regular_de0nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="love_de0nl0ae0" type="bench_string"/>
+<element name="mind_de0nl0ae1" type="bench_string"/>
+<element name="door_de0nl0ae2" type="bench_string"/>
+<element name="charge_de0nl0ae3" type="bench_string"/>
+<tox-sample path="[certain_de0nl0ce1_List/certain_de0nl0ce1]">
+<element name="chalk_de0nl0ae0comp1_joinref_0">
+<tox-expr value="[chalk_de0nl0ae0comp1_joinattr_0]"/>
+</element>
+</tox-sample>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="treat_de1nl0ce0_List">
+<element name="treat_de1nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="farm_de1nl0ae0" type="bench_string"/>
+<element name="political_de1nl0ae1" type="bench_string"/>
+<element name="language_de1nl0ae2" type="bench_string"/>
+<element name="worry_de1nl0ae3" type="bench_string"/>
+<tox-sample path="[chalk_de1nl0ce1_List/chalk_de1nl0ce1]">
+<element name="crush_de1nl0ae0comp1_joinref_0">
+<tox-expr value="[crush_de1nl0ae0comp1_joinattr_0]"/>
+</element>
+</tox-sample>
+</complexType>
+</element>
+</tox-list>
+<tox-list name="found_de2nl0ce0_List">
+<element name="found_de2nl0ce0" minOccurs="5" maxOccurs="5">
+<complexType>
+<element name="found_de2nl0ae0" type="bench_string"/>
+<element name="sleep_de2nl0ae1" type="bench_string"/>
+<element name="clean_de2nl0ae2" type="bench_string"/>
+<element name="flower_de2nl0ae3" type="bench_string"/>
+<tox-sample path="[involve_de2nl0ce1_List/involve_de2nl0ce1]">
+<element name="last_de2nl0ae0comp1_joinref_0">
+<tox-expr value="[last_de2nl0ae0comp1_joinattr_0]"/>
+</element>
+</tox-sample>
+</complexType>
+</element>
+</tox-list>
+<tox-document name="I_5_0_2_0_1_2_1_1_1">
+<element name="Source">
+<complexType>
+<tox-foreach path="[test_cp0nl0ce0_List/test_cp0nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[cheese_cp1nl0ce0_List/cheese_cp1nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[board_cp2nl0ce0_List/board_cp2nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[branch_hp0nl0ce0_List/branch_hp0nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[ready_hp1nl0ce0_List/ready_hp1nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[discuss_hp2nl0ce0_List/discuss_hp2nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[send_sk0nl0ce0_List/send_sk0nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[worry_sk1nl0ce0_List/worry_sk1nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[stick_sk2nl0ce0_List/stick_sk2nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[regular_de0nl0ce0_List/regular_de0nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[certain_de0nl0ce1_List/certain_de0nl0ce1]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[treat_de1nl0ce0_List/treat_de1nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[chalk_de1nl0ce1_List/chalk_de1nl0ce1]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[found_de2nl0ce0_List/found_de2nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[involve_de2nl0ce1_List/involve_de2nl0ce1]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[egg_av0nl0ce0_List/egg_av0nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[accept_av1nl0ce0_List/accept_av1nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[disease_av2nl0ce0_List/disease_av2nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+<tox-foreach path="[record_of0nl0ce0_List/record_of0nl0ce0]">
+<tox-expr value="[!]"/>
+</tox-foreach>
+</complexType>
+</element>
+</tox-document>
+</tox-template>

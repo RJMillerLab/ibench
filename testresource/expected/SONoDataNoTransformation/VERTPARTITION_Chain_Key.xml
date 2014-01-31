@@ -1,0 +1,215 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="regret_vp_0_nl0_ce0">
+        <Attr>
+          <Name>tin_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>insurance_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>eye_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>cork_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lead_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>wound_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>tin_vp_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="prefer_vp_0_nl0_ce0">
+        <Attr>
+          <Name>tin_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>insurance_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>happy_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="describe_vp_0_nl0_ce1">
+        <Attr>
+          <Name>eye_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>cork_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>happy_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="advertisement_vp_0_nl0_ce2">
+        <Attr>
+          <Name>lead_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>wound_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>happy_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="prefer_vp_0_nl0_ce0">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="describe_vp_0_nl0_ce1">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="describe_vp_0_nl0_ce1">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="prefer_vp_0_nl0_ce0">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="describe_vp_0_nl0_ce1">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="advertisement_vp_0_nl0_ce2">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="advertisement_vp_0_nl0_ce2">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="describe_vp_0_nl0_ce1">
+          <Attr>happy_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="regret_vp_0_nl0_ce0">
+        <Attr>tin_vp_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="prefer_vp_0_nl0_ce0">
+        <Attr>tin_vp_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="regret_vp_0_nl0_ce0">
+        <Attr>insurance_vp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="prefer_vp_0_nl0_ce0">
+        <Attr>insurance_vp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="regret_vp_0_nl0_ce0">
+        <Attr>eye_vp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="describe_vp_0_nl0_ce1">
+        <Attr>eye_vp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="regret_vp_0_nl0_ce0">
+        <Attr>cork_vp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="describe_vp_0_nl0_ce1">
+        <Attr>cork_vp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="regret_vp_0_nl0_ce0">
+        <Attr>lead_vp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="advertisement_vp_0_nl0_ce2">
+        <Attr>lead_vp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="regret_vp_0_nl0_ce0">
+        <Attr>wound_vp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="advertisement_vp_0_nl0_ce2">
+        <Attr>wound_vp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="regret_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="prefer_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="describe_vp_0_nl0_ce1">
+          <Var>c</Var>
+          <Var>d</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="advertisement_vp_0_nl0_ce2">
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

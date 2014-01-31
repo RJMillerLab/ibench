@@ -1,0 +1,23 @@
+# NUM SCENARIOS ### COPY VALUGEN HORIPARITION SURROGATEKEY VERTPARTITION FLATTENING NESTING SELF_JOINS MERGING FUSION VALUEMAANGEMENT GLAV
+# NUMBER_OF_SUB_ELEMENTS NESTING_DEPTH JOIN_SIZE JOIN_KIND NUM_OF_JOIN_ATTRS NUM_OF_PARAM_IN_FUNC
+# DERIVATION: NUMBER_OF_SUB_ELEMENTS NESTING_DEPTH JOIN_SIZE JOIN_KIND NUM_OF_JOIN_ATTRS NUM_OF_PARAM_IN_FUNC
+# RANDOM_SEED REP_ELEM_COUNT MAX_STRING_LEN MAX_NUM_VALUE
+#  optional parameters SOURCE_SCHEMA_NAME TARGET_SCHEMA_NAME INSTANCE_FILE SOURCE_DOC_NAME MAPPING_FILE_NAME
+#
+##################################
+# Basic configuration with one copy basic scenarios
+# 1 0 0 0 0 0 0 0 0 0 0 0  
+# 2 0 1 1 1 2
+# 0 0 0 0 0 0 
+# 0 1 5 1000
+#                       #           #           #
+# 1 0 0 0 0 0 0 0 0 0 0 0 2 0 1 1 1 2 0 0 0 0 0 0 0 1 5 1000   
+##################################
+# Basic configuration with one copy basic scenarios
+# 0 0 0 0 0 0 0 0 0 0 0 1  
+# 4 0 2 1 1 2
+# 0 0 0 0 0 0 
+# 0 1 5 1000
+#0 0 0 0 3 0 0 0 0 0 0 0 4 0 2 1 1 2 0 0 0 0 0 0 0 1 5 1000
+#                       #           #           #
+1 1 2 0 0 0 0 0 0 0 0 0 4 0 2 1 1 2 0 0 0 0 0 0 0 1 5 1000 

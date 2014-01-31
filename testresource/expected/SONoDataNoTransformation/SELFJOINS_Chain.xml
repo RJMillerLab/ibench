@@ -1,0 +1,198 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="hard_sj_0_nl0_ce0">
+        <Attr>
+          <Name>touch_sj_0_nl0_ae0ke</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>touch_sj_0_nl0_ae0fk</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hard_sj_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>set_sj_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>remain_sj_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ice_sj_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>touch_sj_0_nl0_ae0ke</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="hard_sj_0_nl0_ce0">
+          <Attr>touch_sj_0_nl0_ae0fk</Attr>
+        </From>
+        <To tableref="hard_sj_0_nl0_ce0">
+          <Attr>touch_sj_0_nl0_ae0ke</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="hard_sj_0_nl0_ce0_b">
+        <Attr>
+          <Name>touch_sj_0_nl0_ae0ke</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hard_sj_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>set_sj_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>remain_sj_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ice_sj_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>touch_sj_0_nl0_ae0ke</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="hard_sj_0_nl0_ce0_fk">
+        <Attr>
+          <Name>touch_sj_0_nl0_ae0ke</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>touch_sj_0_nl0_ae0fk</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>touch_sj_0_nl0_ae0ke</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="hard_sj_0_nl0_ce0_fk">
+          <Attr>touch_sj_0_nl0_ae0fk</Attr>
+        </From>
+        <To tableref="hard_sj_0_nl0_ce0_b">
+          <Attr>touch_sj_0_nl0_ae0ke</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>touch_sj_0_nl0_ae0ke</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_b">
+        <Attr>touch_sj_0_nl0_ae0ke</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>touch_sj_0_nl0_ae0ke</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_fk">
+        <Attr>touch_sj_0_nl0_ae0ke</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>touch_sj_0_nl0_ae0fk</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_fk">
+        <Attr>touch_sj_0_nl0_ae0fk</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>hard_sj_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_b">
+        <Attr>hard_sj_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>set_sj_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_b">
+        <Attr>set_sj_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>remain_sj_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_b">
+        <Attr>remain_sj_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="hard_sj_0_nl0_ce0">
+        <Attr>ice_sj_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="hard_sj_0_nl0_ce0_b">
+        <Attr>ice_sj_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Foreach>
+        <Atom tableref="hard_sj_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="hard_sj_0_nl0_ce0_b">
+          <Var>a</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M1">
+      <Foreach>
+        <Atom tableref="hard_sj_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+        <Atom tableref="hard_sj_0_nl0_ce0">
+          <Var>b</Var>
+          <Var>a</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="hard_sj_0_nl0_ce0_fk">
+          <Var>a</Var>
+          <Var>b</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

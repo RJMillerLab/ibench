@@ -1,0 +1,357 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="family_hp_0_nl0_ce0">
+        <Attr>
+          <Name>selectorhp0</Name>
+          <DataType>INT8</DataType>
+        </Attr>
+        <Attr>
+          <Name>learn_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>plane_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>parallel_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>grain_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lift_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thin_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>
+          <Name>learn_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>plane_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>parallel_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>grain_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lift_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thin_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <Relation name="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>
+          <Name>learn_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>plane_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>parallel_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>grain_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lift_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thin_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <Relation name="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>
+          <Name>learn_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>plane_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>parallel_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>grain_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lift_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thin_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>learn_hp_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>learn_hp_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>plane_hp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>plane_hp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>parallel_hp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>parallel_hp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>grain_hp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>grain_hp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>lift_hp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>lift_hp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>thin_hp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>thin_hp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>learn_hp_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>learn_hp_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>plane_hp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>plane_hp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>parallel_hp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>parallel_hp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>grain_hp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>grain_hp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>lift_hp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>lift_hp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>thin_hp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>thin_hp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>learn_hp_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>learn_hp_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>plane_hp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>plane_hp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>parallel_hp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>parallel_hp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>grain_hp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>grain_hp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C16">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>lift_hp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>lift_hp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C17">
+      <From tableref="family_hp_0_nl0_ce0">
+        <Attr>thin_hp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>thin_hp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="family_hp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="family_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M1">
+      <Uses>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="family_hp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="family_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M2">
+      <Uses>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+        <Correspondence ref="C16"/>
+        <Correspondence ref="C17"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="family_hp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="family_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

@@ -1,0 +1,230 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="smoke_vp_0_nl0_ce0">
+        <Attr>
+          <Name>wing_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>obtain_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>receive_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mark_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>year_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>coat_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>wing_vp_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="sticky_vp_0_nl0_ce0">
+        <Attr>
+          <Name>wing_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>obtain_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>father_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="touch_vp_0_nl0_ce1">
+        <Attr>
+          <Name>receive_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mark_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>father_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="mother_vp_0_nl0_ce2">
+        <Attr>
+          <Name>year_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>coat_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>father_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="sticky_vp_0_nl0_ce0">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="touch_vp_0_nl0_ce1">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="touch_vp_0_nl0_ce1">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="sticky_vp_0_nl0_ce0">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="touch_vp_0_nl0_ce1">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="mother_vp_0_nl0_ce2">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="mother_vp_0_nl0_ce2">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="touch_vp_0_nl0_ce1">
+          <Attr>father_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="smoke_vp_0_nl0_ce0">
+        <Attr>wing_vp_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="sticky_vp_0_nl0_ce0">
+        <Attr>wing_vp_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="smoke_vp_0_nl0_ce0">
+        <Attr>obtain_vp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="sticky_vp_0_nl0_ce0">
+        <Attr>obtain_vp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="smoke_vp_0_nl0_ce0">
+        <Attr>receive_vp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="touch_vp_0_nl0_ce1">
+        <Attr>receive_vp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="smoke_vp_0_nl0_ce0">
+        <Attr>mark_vp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="touch_vp_0_nl0_ce1">
+        <Attr>mark_vp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="smoke_vp_0_nl0_ce0">
+        <Attr>year_vp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="mother_vp_0_nl0_ce2">
+        <Attr>year_vp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="smoke_vp_0_nl0_ce0">
+        <Attr>coat_vp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="mother_vp_0_nl0_ce2">
+        <Attr>coat_vp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="smoke_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="sticky_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="touch_vp_0_nl0_ce1">
+          <Var>c</Var>
+          <Var>d</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="mother_vp_0_nl0_ce2">
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

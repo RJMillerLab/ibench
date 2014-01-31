@@ -1,0 +1,148 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="voice_cp_0_nl0_ce0">
+        <Attr>
+          <Name>room_cp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>get_cp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>produce_cp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>full_cp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>complex_cp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fork_cp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>room_cp_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="voice_cp_0_nl0_ce0copy0">
+        <Attr>
+          <Name>room_cp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>get_cp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>produce_cp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>full_cp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>complex_cp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fork_cp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>room_cp_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="voice_cp_0_nl0_ce0">
+        <Attr>room_cp_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="voice_cp_0_nl0_ce0copy0">
+        <Attr>room_cp_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="voice_cp_0_nl0_ce0">
+        <Attr>get_cp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="voice_cp_0_nl0_ce0copy0">
+        <Attr>get_cp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="voice_cp_0_nl0_ce0">
+        <Attr>produce_cp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="voice_cp_0_nl0_ce0copy0">
+        <Attr>produce_cp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="voice_cp_0_nl0_ce0">
+        <Attr>full_cp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="voice_cp_0_nl0_ce0copy0">
+        <Attr>full_cp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="voice_cp_0_nl0_ce0">
+        <Attr>complex_cp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="voice_cp_0_nl0_ce0copy0">
+        <Attr>complex_cp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="voice_cp_0_nl0_ce0">
+        <Attr>fork_cp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="voice_cp_0_nl0_ce0copy0">
+        <Attr>fork_cp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="voice_cp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="voice_cp_0_nl0_ce0copy0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

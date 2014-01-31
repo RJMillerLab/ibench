@@ -1,0 +1,752 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="line_of_0_nl0_ce0">
+        <Attr>
+          <Name>stop_of_0_nl0_ae0__of0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sail_of_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>choose_of_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ink_of_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>conscious_of_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lead_of_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="basin_of_0_nl0_ce1">
+        <Attr>
+          <Name>stop_of_0_nl0_ae0__of0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>come_of_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>long_of_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>drink_of_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>destruction_of_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>insurance_of_0_nl1_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="rhythm_of_0_nl0_ce2">
+        <Attr>
+          <Name>stop_of_0_nl0_ae0__of0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fiction_of_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>cook_of_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thin_of_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>reply_of_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>require_of_0_nl2_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="keep_of_0_nl0_ce0T">
+        <Attr>
+          <Name>stop_of_0_nl0_ae0__of0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sail_of_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>choose_of_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ink_of_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>conscious_of_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>lead_of_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>come_of_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>long_of_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>drink_of_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>destruction_of_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>insurance_of_0_nl1_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fiction_of_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>cook_of_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>thin_of_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>reply_of_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>require_of_0_nl2_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="line_of_0_nl0_ce0">
+        <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="basin_of_0_nl0_ce1">
+        <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="rhythm_of_0_nl0_ce2">
+        <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>stop_of_0_nl0_ae0__of0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="line_of_0_nl0_ce0">
+        <Attr>sail_of_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>sail_of_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="line_of_0_nl0_ce0">
+        <Attr>choose_of_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>choose_of_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="line_of_0_nl0_ce0">
+        <Attr>ink_of_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>ink_of_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="line_of_0_nl0_ce0">
+        <Attr>conscious_of_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>conscious_of_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="line_of_0_nl0_ce0">
+        <Attr>lead_of_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>lead_of_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="basin_of_0_nl0_ce1">
+        <Attr>come_of_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>come_of_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="basin_of_0_nl0_ce1">
+        <Attr>long_of_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>long_of_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="basin_of_0_nl0_ce1">
+        <Attr>drink_of_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>drink_of_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="basin_of_0_nl0_ce1">
+        <Attr>destruction_of_0_nl1_ae4</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>destruction_of_0_nl1_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="basin_of_0_nl0_ce1">
+        <Attr>insurance_of_0_nl1_ae5</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>insurance_of_0_nl1_ae5</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="rhythm_of_0_nl0_ce2">
+        <Attr>fiction_of_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>fiction_of_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="rhythm_of_0_nl0_ce2">
+        <Attr>cook_of_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>cook_of_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="rhythm_of_0_nl0_ce2">
+        <Attr>thin_of_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>thin_of_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C16">
+      <From tableref="rhythm_of_0_nl0_ce2">
+        <Attr>reply_of_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>reply_of_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C17">
+      <From tableref="rhythm_of_0_nl0_ce2">
+        <Attr>require_of_0_nl2_ae5</Attr>
+      </From>
+      <To tableref="keep_of_0_nl0_ce0T">
+        <Attr>require_of_0_nl2_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+        <Correspondence ref="C16"/>
+        <Correspondence ref="C17"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="rhythm_of_0_nl0_ce2">
+          <Var>a</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK3">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK4">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK5">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK6">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK7">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK8">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK9">
+            <Var>a</Var>
+          </SKFunction>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M1">
+      <Uses>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="basin_of_0_nl0_ce1">
+          <Var>a</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <SKFunction skname="SK15">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK16">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK17">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK18">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK19">
+            <Var>a</Var>
+          </SKFunction>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <SKFunction skname="SK25">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK26">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK27">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK28">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK29">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M2">
+      <Uses>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+        <Correspondence ref="C16"/>
+        <Correspondence ref="C17"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="basin_of_0_nl0_ce1">
+          <Var>a</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+        </Atom>
+        <Atom tableref="rhythm_of_0_nl0_ce2">
+          <Var>a</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <SKFunction skname="SK30">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK31">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK32">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK33">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK34">
+            <Var>a</Var>
+          </SKFunction>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M3">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="line_of_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK50">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK51">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK52">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK53">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK54">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK55">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK56">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK57">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK58">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK59">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M4">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+        <Correspondence ref="C16"/>
+        <Correspondence ref="C17"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="line_of_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="rhythm_of_0_nl0_ce2">
+          <Var>a</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK65">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK66">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK67">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK68">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK69">
+            <Var>a</Var>
+          </SKFunction>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M5">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="line_of_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="basin_of_0_nl0_ce1">
+          <Var>a</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <SKFunction skname="SK85">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK86">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK87">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK88">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK89">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M6">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+        <Correspondence ref="C16"/>
+        <Correspondence ref="C17"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="line_of_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="basin_of_0_nl0_ce1">
+          <Var>a</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+        </Atom>
+        <Atom tableref="rhythm_of_0_nl0_ce2">
+          <Var>a</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="keep_of_0_nl0_ce0T">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>
