@@ -18,5 +18,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/toxgene.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TrampExGen"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="trunk/bin"/>
 </classpath>
