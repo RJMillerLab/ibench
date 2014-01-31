@@ -1,0 +1,173 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="tree_vi_0_nl0_ce0">
+        <Attr>
+          <Name>industry_vi_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hold_vi_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>birth_vi_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>nerve_vi_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>strong_vi_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ticket_vi_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>industry_vi_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="warn_vi_0_nl0_ce0">
+        <Attr>
+          <Name>industry_vi_0_nl0_ae0ke0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hold_vi_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>industry_vi_0_nl0_ae0ke0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="jewel_vi_0_nl0_ce1">
+        <Attr>
+          <Name>industry_vi_0_nl0_ae0ke0Ref</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>birth_vi_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <Relation name="change_vi_0_nl0_ce2">
+        <Attr>
+          <Name>industry_vi_0_nl0_ae0ke0Ref</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>nerve_vi_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>strong_vi_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ticket_vi_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <ForeignKey>
+        <From tableref="jewel_vi_0_nl0_ce1">
+          <Attr>industry_vi_0_nl0_ae0ke0Ref</Attr>
+        </From>
+        <To tableref="warn_vi_0_nl0_ce0">
+          <Attr>industry_vi_0_nl0_ae0ke0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="change_vi_0_nl0_ce2">
+          <Attr>industry_vi_0_nl0_ae0ke0Ref</Attr>
+        </From>
+        <To tableref="warn_vi_0_nl0_ce0">
+          <Attr>industry_vi_0_nl0_ae0ke0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="tree_vi_0_nl0_ce0">
+        <Attr>industry_vi_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="warn_vi_0_nl0_ce0">
+        <Attr>industry_vi_0_nl0_ae0ke0JoinAttr</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="tree_vi_0_nl0_ce0">
+        <Attr>hold_vi_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="jewel_vi_0_nl0_ce1">
+        <Attr>industry_vi_0_nl0_ae0ke0Ref</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="tree_vi_0_nl0_ce0">
+        <Attr>birth_vi_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="change_vi_0_nl0_ce2">
+        <Attr>industry_vi_0_nl0_ae0ke0Ref</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="tree_vi_0_nl0_ce0">
+        <Attr>nerve_vi_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="change_vi_0_nl0_ce2">
+        <Attr>nerve_vi_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="tree_vi_0_nl0_ce0">
+        <Attr>strong_vi_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="change_vi_0_nl0_ce2">
+        <Attr>strong_vi_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="tree_vi_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="warn_vi_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+        </Atom>
+        <Atom tableref="jewel_vi_0_nl0_ce1">
+          <Var>a</Var>
+          <Var>c</Var>
+        </Atom>
+        <Atom tableref="change_vi_0_nl0_ce2">
+          <Var>a</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

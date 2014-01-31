@@ -1,0 +1,221 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="oven_vp_0_nl0_ce0">
+        <Attr>
+          <Name>give_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>window_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>belong_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>increase_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>female_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>animal_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>give_vp_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="ready_vp_0_nl0_ce0">
+        <Attr>
+          <Name>give_vp_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>window_vp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hate_vp_0_nl0_ae0JoinAttr</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>hate_vp_0_nl0_ae0JoinAttr</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="round_vp_0_nl0_ce1">
+        <Attr>
+          <Name>belong_vp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>increase_vp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hate_vp_0_nl0_ae0JoinAttrRef</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>hate_vp_0_nl0_ae0JoinAttrRef</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="win_vp_0_nl0_ce2">
+        <Attr>
+          <Name>female_vp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>animal_vp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hate_vp_0_nl0_ae0JoinAttrRef</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>hate_vp_0_nl0_ae0JoinAttrRef</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="round_vp_0_nl0_ce1">
+          <Attr>hate_vp_0_nl0_ae0JoinAttrRef</Attr>
+        </From>
+        <To tableref="ready_vp_0_nl0_ce0">
+          <Attr>hate_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="ready_vp_0_nl0_ce0">
+          <Attr>hate_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="round_vp_0_nl0_ce1">
+          <Attr>hate_vp_0_nl0_ae0JoinAttrRef</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="win_vp_0_nl0_ce2">
+          <Attr>hate_vp_0_nl0_ae0JoinAttrRef</Attr>
+        </From>
+        <To tableref="ready_vp_0_nl0_ce0">
+          <Attr>hate_vp_0_nl0_ae0JoinAttr</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="ready_vp_0_nl0_ce0">
+          <Attr>hate_vp_0_nl0_ae0JoinAttr</Attr>
+        </From>
+        <To tableref="win_vp_0_nl0_ce2">
+          <Attr>hate_vp_0_nl0_ae0JoinAttrRef</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="oven_vp_0_nl0_ce0">
+        <Attr>give_vp_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="ready_vp_0_nl0_ce0">
+        <Attr>give_vp_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="oven_vp_0_nl0_ce0">
+        <Attr>window_vp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="ready_vp_0_nl0_ce0">
+        <Attr>window_vp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="oven_vp_0_nl0_ce0">
+        <Attr>belong_vp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="round_vp_0_nl0_ce1">
+        <Attr>belong_vp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="oven_vp_0_nl0_ce0">
+        <Attr>increase_vp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="round_vp_0_nl0_ce1">
+        <Attr>increase_vp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="oven_vp_0_nl0_ce0">
+        <Attr>female_vp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="win_vp_0_nl0_ce2">
+        <Attr>female_vp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="oven_vp_0_nl0_ce0">
+        <Attr>animal_vp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="win_vp_0_nl0_ce2">
+        <Attr>animal_vp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="oven_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="ready_vp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="round_vp_0_nl0_ce1">
+          <Var>c</Var>
+          <Var>d</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="win_vp_0_nl0_ce2">
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>e</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

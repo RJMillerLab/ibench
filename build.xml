@@ -1,0 +1,138 @@
+<project name="STBenchmarkPlus" default="Deploy" basedir=".">
+	<description>
+
+	</description>
+
+	<!-- Internal Taskdefs -->
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${basedir}/lib/ant-contrib.jar"/>
+		</classpath>
+	</taskdef>
+
+	<!-- Properties -->
+
+	<property name="binarydir" location="${basedir}/bin" />
+	<property name="builddir" location="${basedir}/build" />
+	<property name="buildresdir" location="${basedir}/buildResources" />
+	<property name="docdir" location="${basedir}/doc" />
+	<property name="librarydir" location="${basedir}/lib" />
+	<property name="resourcedir" location="${basedir}/resource" />
+	<property name="sourcedir" location="${basedir}/src" />
+	<property name="binmacdir" location="${builddir}/mac" />
+	<property name="binwindir" location="${builddir}/win"/>
+
+	<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />
+	<property name="mainClass" value="tresc.benchmark.STBenchmark" />
+
+	<!-- ClassPath Setup -->
+
+	<path id="libraries">
+		<fileset dir="${librarydir}"/>
+	</path>
+
+	<pathconvert property="jarClasspath" pathsep="    ">
+		<path>
+			<fileset dir="${librarydir}">
+				<exclude name="ant*.jar" />
+			</fileset>
+		</path>
+		<mapper>
+			<chainedmapper>
+				<flattenmapper/>
+				<globmapper from="*.jar" to="lib/*.jar" casesensitive="no"/>
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
+	<property name="fullJarClasspath" value="${jarClasspath}   resource/    lib/" />
+
+	<!-- targets -->
+
+	<target name="Compile" depends="Clean">
+		<javac srcdir="${sourcedir}" destdir="${binarydir}" 
+			classpathref="libraries" debug="on" includeantruntime="false">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+
+	<target name="Clean">
+		<delete includeemptydirs="true">
+			<fileset dir="${binarydir}" includes="**/*"/>
+		</delete>
+		<mkdir dir="${binarydir}" />
+		<mkdir dir="${builddir}" />
+		<echo message="${jarClasspath}"/>
+	</target>
+
+	<target name="Deploy" depends="Jar">
+		<var name="deployto" value="${binmacdir}" />
+		<antcall target="DeployOne" />
+		<copy todir="${binmacdir}" file="${buildresdir}/stBenchmark.sh" />
+
+		<var name="deployto" value="${binwindir}" />
+		<antcall target="DeployOne" />
+		<copy todir="${binwindir}" file="${buildresdir}/stBenchmark.bat" />
+	</target>
+
+	<target name="DeployOne">
+		<mkdir dir="${deployto}/lib"/>
+		<copy todir="${deployto}/lib">
+			<fileset dir="${librarydir}">
+				<exclude name=".svn"/>
+			</fileset>
+		</copy>
+		<copy tofile="${deployto}/toxgene.jar" file="${librarydir}/toxgene.jar" />
+		<mkdir dir="${deployto}/resource"/>
+		<copy todir="${deployto}/resource">
+			<fileset dir="${resourcedir}">
+				<exclude name=".svn"/>
+				<exclude name="test/**"/>
+				<exclude name="log4jproperties.txt"/>
+			</fileset>
+		</copy>
+		<copy todir="${deployto}/resource" 
+			file="${buildresdir}/log4jproperties.txt"/>
+	</target>
+
+	<target name="Jar" depends="Compile">
+		<mkdir dir="${binmacdir}"/>
+		<mkdir dir="${binwindir}"/>
+		<jar destfile="${binmacdir}/stbenchmark.jar" basedir="${binarydir}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Created-By" value="University of Toronto" />
+				<attribute name="Class-Path" value="${fullJarClasspath}" />
+			</manifest>
+		</jar>
+		<copy todir="${builddir}" file="${binmacdir}/stbenchmark.jar" />
+		<jar destfile="${binwindir}/stbenchmark.jar" basedir="${binarydir}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Created-By" value="University of Toronto" />
+				<attribute name="Class-Path" value="${fullJarClasspath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="GenerateJavaDoc">
+		<javadoc access="private" 
+			author="true" 
+			classpathref="libraries" 
+			destdir="${docdir}" 
+			nodeprecated="false" 
+			nodeprecatedlist="false"
+			noindex="false" 
+			nonavbar="false" 
+			notree="false" 
+			packagenames="tresc" 
+			source="1.5" 
+			sourcepath="${sourcedir}" 
+			splitindex="true" 
+			use="true" 
+			version="true">
+		</javadoc>
+	</target>
+
+</project>

@@ -1,0 +1,446 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="die_ma_0_nl0_ce0">
+        <Attr>
+          <Name>worry_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>brown_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hit_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>paint_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>library_ma_0_nl0_ae0comp1_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>library_ma_0_nl0_ae0comp2_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>library_ma_0_nl0_ae0comp1_joinref_0</Attr>
+          <Attr>library_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="decision_ma_0_nl0_ce1">
+        <Attr>
+          <Name>mind_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>garden_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>necessary_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>organization_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>stick_ma_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>library_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>library_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="effect_ma_0_nl0_ce2">
+        <Attr>
+          <Name>slow_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>word_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>kind_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>prove_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ring_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>library_ma_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>library_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="die_ma_0_nl0_ce0">
+          <Attr>library_ma_0_nl0_ae0comp1_joinref_0</Attr>
+        </From>
+        <To tableref="decision_ma_0_nl0_ce1">
+          <Attr>library_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="die_ma_0_nl0_ce0">
+          <Attr>library_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </From>
+        <To tableref="effect_ma_0_nl0_ce2">
+          <Attr>library_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="early_ma_0_nl0_ce0">
+        <Attr>
+          <Name>worry_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>brown_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>hit_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>paint_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>mind_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>garden_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>necessary_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>organization_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>stick_ma_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>slow_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>word_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>kind_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>prove_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ring_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>library_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>library_ma_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>violent_ma_0_nl0_ae15</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>chalk_ma_0_nl0_ae16</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>regular_ma_0_nl0_ae17</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>library_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+          <Attr>library_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="die_ma_0_nl0_ce0">
+        <Attr>worry_ma_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>worry_ma_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="die_ma_0_nl0_ce0">
+        <Attr>brown_ma_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>brown_ma_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="die_ma_0_nl0_ce0">
+        <Attr>hit_ma_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>hit_ma_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="die_ma_0_nl0_ce0">
+        <Attr>paint_ma_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>paint_ma_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="decision_ma_0_nl0_ce1">
+        <Attr>mind_ma_0_nl1_ae0</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>mind_ma_0_nl1_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="decision_ma_0_nl0_ce1">
+        <Attr>garden_ma_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>garden_ma_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="decision_ma_0_nl0_ce1">
+        <Attr>necessary_ma_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>necessary_ma_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="decision_ma_0_nl0_ce1">
+        <Attr>organization_ma_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>organization_ma_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="decision_ma_0_nl0_ce1">
+        <Attr>stick_ma_0_nl1_ae4</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>stick_ma_0_nl1_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="effect_ma_0_nl0_ce2">
+        <Attr>slow_ma_0_nl2_ae0</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>slow_ma_0_nl2_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="effect_ma_0_nl0_ce2">
+        <Attr>word_ma_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>word_ma_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="effect_ma_0_nl0_ce2">
+        <Attr>kind_ma_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>kind_ma_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="effect_ma_0_nl0_ce2">
+        <Attr>prove_ma_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>prove_ma_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="effect_ma_0_nl0_ce2">
+        <Attr>ring_ma_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>ring_ma_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="decision_ma_0_nl0_ce1">
+        <Attr>library_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>library_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="effect_ma_0_nl0_ce2">
+        <Attr>library_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+      </From>
+      <To tableref="early_ma_0_nl0_ce0">
+        <Attr>library_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="die_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="decision_ma_0_nl0_ce1">
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>e</Var>
+        </Atom>
+        <Atom tableref="effect_ma_0_nl0_ce2">
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="early_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>g</Var>
+            <Var>h</Var>
+            <Var>i</Var>
+            <Var>j</Var>
+            <Var>k</Var>
+            <Var>l</Var>
+            <Var>m</Var>
+            <Var>n</Var>
+            <Var>o</Var>
+            <Var>p</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>g</Var>
+            <Var>h</Var>
+            <Var>i</Var>
+            <Var>j</Var>
+            <Var>k</Var>
+            <Var>l</Var>
+            <Var>m</Var>
+            <Var>n</Var>
+            <Var>o</Var>
+            <Var>p</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>g</Var>
+            <Var>h</Var>
+            <Var>i</Var>
+            <Var>j</Var>
+            <Var>k</Var>
+            <Var>l</Var>
+            <Var>m</Var>
+            <Var>n</Var>
+            <Var>o</Var>
+            <Var>p</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

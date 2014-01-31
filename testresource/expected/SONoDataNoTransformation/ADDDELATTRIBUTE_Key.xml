@@ -1,0 +1,155 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="hollow_adl_0_nl0_ce0">
+        <Attr>
+          <Name>sign_adl_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>observation_adl_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>like_adl_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>trick_adl_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>green_adl_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>jump_adl_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>sign_adl_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="enable_adl_0_nl0_ce0">
+        <Attr>
+          <Name>sign_adl_0_nl0_ae0ke0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>observation_adl_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>like_adl_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>trick_adl_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>green_adl_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>soap_adl_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>ring_adl_0_nl0_ae6</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fruit_adl_0_nl0_ae7</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>sign_adl_0_nl0_ae0ke0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="hollow_adl_0_nl0_ce0">
+        <Attr>sign_adl_0_nl0_ae0ke0</Attr>
+      </From>
+      <To tableref="enable_adl_0_nl0_ce0">
+        <Attr>sign_adl_0_nl0_ae0ke0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="hollow_adl_0_nl0_ce0">
+        <Attr>observation_adl_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="enable_adl_0_nl0_ce0">
+        <Attr>observation_adl_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="hollow_adl_0_nl0_ce0">
+        <Attr>like_adl_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="enable_adl_0_nl0_ce0">
+        <Attr>like_adl_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="hollow_adl_0_nl0_ce0">
+        <Attr>trick_adl_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="enable_adl_0_nl0_ce0">
+        <Attr>trick_adl_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="hollow_adl_0_nl0_ce0">
+        <Attr>green_adl_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="enable_adl_0_nl0_ce0">
+        <Attr>green_adl_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="hollow_adl_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="enable_adl_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>a</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

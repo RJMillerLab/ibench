@@ -1,0 +1,357 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="find_hp_0_nl0_ce0">
+        <Attr>
+          <Name>selectorhp0</Name>
+          <DataType>INT8</DataType>
+        </Attr>
+        <Attr>
+          <Name>attention_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discover_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>different_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>reveal_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>oven_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>narrow_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>
+          <Name>attention_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discover_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>different_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>reveal_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>oven_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>narrow_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <Relation name="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>
+          <Name>attention_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discover_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>different_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>reveal_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>oven_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>narrow_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+      <Relation name="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>
+          <Name>attention_hp_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>discover_hp_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>different_hp_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>reveal_hp_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>oven_hp_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>narrow_hp_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>attention_hp_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>attention_hp_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>discover_hp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>discover_hp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>different_hp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>different_hp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>reveal_hp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>reveal_hp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>oven_hp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>oven_hp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>narrow_hp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+        <Attr>narrow_hp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>attention_hp_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>attention_hp_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>discover_hp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>discover_hp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>different_hp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>different_hp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>reveal_hp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>reveal_hp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>oven_hp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>oven_hp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>narrow_hp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+        <Attr>narrow_hp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>attention_hp_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>attention_hp_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>discover_hp_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>discover_hp_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>different_hp_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>different_hp_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>reveal_hp_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>reveal_hp_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C16">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>oven_hp_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>oven_hp_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C17">
+      <From tableref="find_hp_0_nl0_ce0">
+        <Attr>narrow_hp_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+        <Attr>narrow_hp_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="find_hp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="find_hp_0_nl0_ce0__HP0FR0_from_0_to_3332">
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M1">
+      <Uses>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="find_hp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="find_hp_0_nl0_ce0__HP0FR1_from_3333_to_6665">
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M2">
+      <Uses>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+        <Correspondence ref="C16"/>
+        <Correspondence ref="C17"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="find_hp_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="find_hp_0_nl0_ce0__HP0FR2_from_6666_to_9998">
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

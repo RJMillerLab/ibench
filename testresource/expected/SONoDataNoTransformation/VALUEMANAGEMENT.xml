@@ -1,0 +1,148 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="straight_av_0_nl0_ce0">
+        <Attr>
+          <Name>complain_av_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>question_av_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>walk_av_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>count_av_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>involve_av_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>explain_av_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>theory_av_0_nl0_ae6</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>settle_av_0_nl0_ae7</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>record_av_0_nl0_ae8</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="probable_av_0_nl0_ce0">
+        <Attr>
+          <Name>complain_av_0_nl0_ae0_part_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>complain_av_0_nl0_ae0_part_1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>question_av_0_nl0_ae1_part_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>question_av_0_nl0_ae1_part_1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>walk_av_0_nl0_ae2_part_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>walk_av_0_nl0_ae2_part_1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>poor_av_0_nl0_ae7</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>goat_av_0_nl0_ae8</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>pick_av_0_nl0_ae9</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences/>
+  <Mappings>
+    <Mapping id="M0">
+      <Foreach>
+        <Atom tableref="straight_av_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="probable_av_0_nl0_ce0">
+          <Function fname="extract">
+            <Var>a</Var>
+            <Constant>0</Constant>
+            <Constant>2</Constant>
+          </Function>
+          <Function fname="extract">
+            <Var>b</Var>
+            <Constant>2</Constant>
+            <Constant>2</Constant>
+          </Function>
+          <Function fname="extract">
+            <Var>c</Var>
+            <Constant>0</Constant>
+            <Constant>2</Constant>
+          </Function>
+          <Function fname="extract">
+            <Var>d</Var>
+            <Constant>2</Constant>
+            <Constant>2</Constant>
+          </Function>
+          <Function fname="extract">
+            <Var>e</Var>
+            <Constant>0</Constant>
+            <Constant>2</Constant>
+          </Function>
+          <Function fname="extract">
+            <Var>f</Var>
+            <Constant>2</Constant>
+            <Constant>2</Constant>
+          </Function>
+          <Function fname="concat">
+            <Var>g</Var>
+            <Var>h</Var>
+          </Function>
+          <Function fname="concat">
+            <Var>i</Var>
+            <Var>j</Var>
+          </Function>
+          <Function fname="concat">
+            <Var>k</Var>
+            <Var>l</Var>
+          </Function>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

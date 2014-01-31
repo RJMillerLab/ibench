@@ -1,0 +1,198 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="science_sj_0_nl0_ce0">
+        <Attr>
+          <Name>desire_sj_0_nl0_ae0ke</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>desire_sj_0_nl0_ae0fk</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>last_sj_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>found_sj_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>found_sj_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sleep_sj_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>desire_sj_0_nl0_ae0ke</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="science_sj_0_nl0_ce0">
+          <Attr>desire_sj_0_nl0_ae0fk</Attr>
+        </From>
+        <To tableref="science_sj_0_nl0_ce0">
+          <Attr>desire_sj_0_nl0_ae0ke</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="science_sj_0_nl0_ce0_b">
+        <Attr>
+          <Name>desire_sj_0_nl0_ae0ke</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>last_sj_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>found_sj_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>found_sj_0_nl0_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sleep_sj_0_nl0_ae5</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>desire_sj_0_nl0_ae0ke</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="science_sj_0_nl0_ce0_fk">
+        <Attr>
+          <Name>desire_sj_0_nl0_ae0ke</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>desire_sj_0_nl0_ae0fk</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>desire_sj_0_nl0_ae0ke</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="science_sj_0_nl0_ce0_fk">
+          <Attr>desire_sj_0_nl0_ae0fk</Attr>
+        </From>
+        <To tableref="science_sj_0_nl0_ce0_b">
+          <Attr>desire_sj_0_nl0_ae0ke</Attr>
+        </To>
+      </ForeignKey>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>desire_sj_0_nl0_ae0ke</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_b">
+        <Attr>desire_sj_0_nl0_ae0ke</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>desire_sj_0_nl0_ae0ke</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_fk">
+        <Attr>desire_sj_0_nl0_ae0ke</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>desire_sj_0_nl0_ae0fk</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_fk">
+        <Attr>desire_sj_0_nl0_ae0fk</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>last_sj_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_b">
+        <Attr>last_sj_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>found_sj_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_b">
+        <Attr>found_sj_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>found_sj_0_nl0_ae4</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_b">
+        <Attr>found_sj_0_nl0_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="science_sj_0_nl0_ce0">
+        <Attr>sleep_sj_0_nl0_ae5</Attr>
+      </From>
+      <To tableref="science_sj_0_nl0_ce0_b">
+        <Attr>sleep_sj_0_nl0_ae5</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Foreach>
+        <Atom tableref="science_sj_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="science_sj_0_nl0_ce0_b">
+          <Var>a</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+    <Mapping id="M1">
+      <Foreach>
+        <Atom tableref="science_sj_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <Var>g</Var>
+        </Atom>
+        <Atom tableref="science_sj_0_nl0_ce0">
+          <Var>b</Var>
+          <Var>a</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="science_sj_0_nl0_ce0_fk">
+          <Var>a</Var>
+          <Var>b</Var>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>

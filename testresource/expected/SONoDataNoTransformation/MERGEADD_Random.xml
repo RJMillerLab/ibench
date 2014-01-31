@@ -1,0 +1,428 @@
+<xm:MappingScenario xmlns:xm="org/vagabond/xmlmodel">
+  <Schemas>
+    <SourceSchema>
+      <Relation name="mind_ma_0_nl0_ce0">
+        <Attr>
+          <Name>door_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>charge_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>certain_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sugar_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>love_ma_0_nl0_ae0comp1_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>love_ma_0_nl0_ae0comp2_joinref_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>love_ma_0_nl0_ae0comp1_joinref_0</Attr>
+          <Attr>love_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="collection_ma_0_nl0_ce1">
+        <Attr>
+          <Name>bent_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sweet_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rod_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>silk_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>crush_ma_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>love_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>love_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <Relation name="treat_ma_0_nl0_ce2">
+        <Attr>
+          <Name>farm_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>political_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>language_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>worry_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>chalk_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>love_ma_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>love_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+      <ForeignKey>
+        <From tableref="mind_ma_0_nl0_ce0">
+          <Attr>love_ma_0_nl0_ae0comp1_joinref_0</Attr>
+        </From>
+        <To tableref="collection_ma_0_nl0_ce1">
+          <Attr>love_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+      <ForeignKey>
+        <From tableref="mind_ma_0_nl0_ce0">
+          <Attr>love_ma_0_nl0_ae0comp2_joinref_0</Attr>
+        </From>
+        <To tableref="treat_ma_0_nl0_ce2">
+          <Attr>love_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </To>
+      </ForeignKey>
+    </SourceSchema>
+    <TargetSchema>
+      <Relation name="regular_ma_0_nl0_ce0">
+        <Attr>
+          <Name>door_ma_0_nl0_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>charge_ma_0_nl0_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>certain_ma_0_nl0_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sugar_ma_0_nl0_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>bent_ma_0_nl1_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>sweet_ma_0_nl1_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>rod_ma_0_nl1_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>silk_ma_0_nl1_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>crush_ma_0_nl1_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>farm_ma_0_nl2_ae0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>political_ma_0_nl2_ae1</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>language_ma_0_nl2_ae2</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>worry_ma_0_nl2_ae3</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>chalk_ma_0_nl2_ae4</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>love_ma_0_nl0_ae0comp1_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>love_ma_0_nl0_ae0comp2_joinattr_0</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>degree_ma_0_nl0_ae15</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>start_ma_0_nl0_ae16</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <Attr>
+          <Name>fruit_ma_0_nl0_ae17</Name>
+          <DataType>TEXT</DataType>
+        </Attr>
+        <PrimaryKey>
+          <Attr>love_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+          <Attr>love_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+        </PrimaryKey>
+      </Relation>
+    </TargetSchema>
+  </Schemas>
+  <Correspondences>
+    <Correspondence id="C0">
+      <From tableref="mind_ma_0_nl0_ce0">
+        <Attr>door_ma_0_nl0_ae0</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>door_ma_0_nl0_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C1">
+      <From tableref="mind_ma_0_nl0_ce0">
+        <Attr>charge_ma_0_nl0_ae1</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>charge_ma_0_nl0_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C2">
+      <From tableref="mind_ma_0_nl0_ce0">
+        <Attr>certain_ma_0_nl0_ae2</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>certain_ma_0_nl0_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C3">
+      <From tableref="mind_ma_0_nl0_ce0">
+        <Attr>sugar_ma_0_nl0_ae3</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>sugar_ma_0_nl0_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C4">
+      <From tableref="collection_ma_0_nl0_ce1">
+        <Attr>bent_ma_0_nl1_ae0</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>bent_ma_0_nl1_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C5">
+      <From tableref="collection_ma_0_nl0_ce1">
+        <Attr>sweet_ma_0_nl1_ae1</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>sweet_ma_0_nl1_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C6">
+      <From tableref="collection_ma_0_nl0_ce1">
+        <Attr>rod_ma_0_nl1_ae2</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>rod_ma_0_nl1_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C7">
+      <From tableref="collection_ma_0_nl0_ce1">
+        <Attr>silk_ma_0_nl1_ae3</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>silk_ma_0_nl1_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C8">
+      <From tableref="collection_ma_0_nl0_ce1">
+        <Attr>crush_ma_0_nl1_ae4</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>crush_ma_0_nl1_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C9">
+      <From tableref="treat_ma_0_nl0_ce2">
+        <Attr>farm_ma_0_nl2_ae0</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>farm_ma_0_nl2_ae0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C10">
+      <From tableref="treat_ma_0_nl0_ce2">
+        <Attr>political_ma_0_nl2_ae1</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>political_ma_0_nl2_ae1</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C11">
+      <From tableref="treat_ma_0_nl0_ce2">
+        <Attr>language_ma_0_nl2_ae2</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>language_ma_0_nl2_ae2</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C12">
+      <From tableref="treat_ma_0_nl0_ce2">
+        <Attr>worry_ma_0_nl2_ae3</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>worry_ma_0_nl2_ae3</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C13">
+      <From tableref="treat_ma_0_nl0_ce2">
+        <Attr>chalk_ma_0_nl2_ae4</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>chalk_ma_0_nl2_ae4</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C14">
+      <From tableref="collection_ma_0_nl0_ce1">
+        <Attr>love_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>love_ma_0_nl0_ae0comp1_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+    <Correspondence id="C15">
+      <From tableref="treat_ma_0_nl0_ce2">
+        <Attr>love_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+      </From>
+      <To tableref="regular_ma_0_nl0_ce0">
+        <Attr>love_ma_0_nl0_ae0comp2_joinattr_0</Attr>
+      </To>
+    </Correspondence>
+  </Correspondences>
+  <Mappings>
+    <Mapping id="M0">
+      <Uses>
+        <Correspondence ref="C0"/>
+        <Correspondence ref="C1"/>
+        <Correspondence ref="C2"/>
+        <Correspondence ref="C3"/>
+        <Correspondence ref="C4"/>
+        <Correspondence ref="C5"/>
+        <Correspondence ref="C6"/>
+        <Correspondence ref="C7"/>
+        <Correspondence ref="C8"/>
+        <Correspondence ref="C9"/>
+        <Correspondence ref="C10"/>
+        <Correspondence ref="C11"/>
+        <Correspondence ref="C12"/>
+        <Correspondence ref="C13"/>
+        <Correspondence ref="C14"/>
+        <Correspondence ref="C15"/>
+      </Uses>
+      <Foreach>
+        <Atom tableref="mind_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="collection_ma_0_nl0_ce1">
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>e</Var>
+        </Atom>
+        <Atom tableref="treat_ma_0_nl0_ce2">
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>f</Var>
+        </Atom>
+      </Foreach>
+      <Exists>
+        <Atom tableref="regular_ma_0_nl0_ce0">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>m</Var>
+          <Var>n</Var>
+          <Var>o</Var>
+          <Var>p</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+          <SKFunction skname="SK0">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>g</Var>
+            <Var>i</Var>
+            <Var>k</Var>
+            <Var>n</Var>
+            <Var>o</Var>
+            <Var>p</Var>
+          </SKFunction>
+          <SKFunction skname="SK1">
+            <Var>a</Var>
+            <Var>c</Var>
+            <Var>i</Var>
+            <Var>j</Var>
+            <Var>k</Var>
+          </SKFunction>
+          <SKFunction skname="SK2">
+            <Var>a</Var>
+            <Var>b</Var>
+            <Var>c</Var>
+            <Var>d</Var>
+            <Var>e</Var>
+            <Var>f</Var>
+            <Var>g</Var>
+            <Var>h</Var>
+            <Var>i</Var>
+            <Var>k</Var>
+            <Var>l</Var>
+            <Var>m</Var>
+            <Var>n</Var>
+            <Var>p</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+    </Mapping>
+  </Mappings>
+</xm:MappingScenario>
