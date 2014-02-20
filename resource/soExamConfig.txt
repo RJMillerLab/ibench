@@ -29,7 +29,7 @@ ConfigOptions.JoinKind = 1
 ConfigOptions.NumOfJoinAttributes = 1 
 ConfigOptions.NumOfParamsInFunctions = 2 
 ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumofAttributestoDelete = 1
+ConfigOptions.NumOfAttributesToDelete = 1
 ConfigOptions.SkolemKind = 1
 
 # Derivations for each of the parameters
@@ -40,7 +40,7 @@ ConfigOptionsDerivation.JoinKind = 0
 ConfigOptionsDerivation.NumOfJoinAttributes = 0 
 ConfigOptionsDerivation.NumOfParamsInFunctions = 0 
 ConfigOptionsDerivation.NumOfNewAttributes = 0
-ConfigOptionsDerivation.NumofAttributestoDelete = 0
+ConfigOptionsDerivation.NumOfAttributesToDelete = 0
 ConfigOptionsDerivation.SkolemKind = 0
 
 # Random number generator and max values and DataGenerator
