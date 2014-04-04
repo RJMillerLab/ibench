@@ -25,7 +25,9 @@ import tresc.benchmark.schemaGen.RandomSourceSkolemToMappingGenerator;
 import tresc.benchmark.schemaGen.ScenarioGenerator;
 import tresc.benchmark.schemaGen.SelfJoinScenarioGenerator;
 import tresc.benchmark.schemaGen.SourceFDGenerator;
+import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
 import tresc.benchmark.schemaGen.SurrogateKeysScenarioGenerator;
+import tresc.benchmark.schemaGen.TargetInclusionDependencyGenerator;
 import tresc.benchmark.schemaGen.VPHasAScenarioGenerator;
 import tresc.benchmark.schemaGen.VPIsAScenarioGenerator;
 import tresc.benchmark.schemaGen.VPNtoMScenarioGenerator;
@@ -136,6 +138,14 @@ public class Generator {
 					scenarioGenerators[i].generateNextScenario(scenario, configuration);				
 			}
 		}
+		
+		//MN generates Random Source Inclusion Dependencies
+		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
+		srcIDGen.generateScenario(scenario, configuration);
+				
+		//MN generates Random Target Inclusion Dependencies
+		TargetInclusionDependencyGenerator trgIDGen = new TargetInclusionDependencyGenerator();
+		trgIDGen.generateScenario(scenario, configuration);
 		
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))

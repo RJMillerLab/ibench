@@ -37,7 +37,17 @@ public class Constants
         SourceFDPerc,	// associate FDs with source
         PrimaryKeyFDs,
         SourceSkolemNumAttr,		// attributes and use them in mappings
-        PrimaryKeySize
+        PrimaryKeySize,
+        //mehrnaz: I've added six parameters in order to implement random inclusion dependency generation
+        SourceInclusionDependencyPerc,
+        SourceInclusionDependencyFKPerc,
+        TargetInclusionDependencyPerc,
+        TargetInclusionDependencyFKPerc,
+        SourceCircularInclusionDependency,
+        SourceCircularFK,
+        TargetCircularInclusionDependency,
+        TargetCircularFK
+        
     };
 
     public static final Map<ParameterName, Integer> defaultParameterValues
@@ -61,6 +71,16 @@ public class Constants
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
     	defaultParameterValues.put(ParameterName.PrimaryKeySize, 2);
+    	
+    	defaultParameterValues.put(ParameterName.SourceInclusionDependencyPerc, 0);
+    	defaultParameterValues.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
+    	defaultParameterValues.put(ParameterName.TargetInclusionDependencyPerc, 0);
+    	defaultParameterValues.put(ParameterName.TargetInclusionDependencyFKPerc, 0);
+    	
+    	defaultParameterValues.put(ParameterName.SourceCircularInclusionDependency, 1);
+    	defaultParameterValues.put(ParameterName.SourceCircularFK, 1);
+    	defaultParameterValues.put(ParameterName.TargetCircularInclusionDependency, 1);
+    	defaultParameterValues.put(ParameterName.TargetCircularFK, 1);
     }
     
     public static final Map<ParameterName, Integer> defaultParameterDeviation
@@ -84,6 +104,16 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeySize, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeyFDs, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.SourceInclusionDependencyPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetInclusionDependencyPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetInclusionDependencyFKPerc, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.SourceCircularInclusionDependency, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceCircularFK, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetCircularInclusionDependency, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetCircularFK, 0);
     }
     
     public enum JoinKind {

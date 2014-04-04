@@ -16,13 +16,17 @@ import org.vagabond.util.PropertyWrapper;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
+import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
+import tresc.benchmark.schemaGen.TargetInclusionDependencyGenerator;
 import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.HTMLPresenter;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.schema.Schema;
 import vtools.xml.XSDWriter;
+import vtools.xml.XSMLWriter;
 
+// MN  ADD two methods to generate random source and target inclusion dependencies, print results as mapjob, xsml and xsd files - 3 April 2014
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated
 // PRG ADD STBenchmark's to-be generated schema mapping is called "Mapping Scenario"
@@ -113,6 +117,89 @@ public class STBenchmark {
 		benchmark.run(args);
 	}
 
+	//MN prints results as mapjob, xsml and xsd files
+	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
+			String M, String S1) throws Exception {
+		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
+		
+		File xsmlDir = new File("./mapmerge");
+		if (!xsmlDir.exists())
+			xsmlDir.mkdirs();
+		
+		if (log.isDebugEnabled()) {log.debug("mapjob, xsml and xsd schema path: " + xsmlDir.toString());};
+		
+		String mapjob = S.substring(0, S.length()-8);
+		//prints as map job file
+		try{
+		    
+		    StringBuffer bufMapjob = new StringBuffer ();
+		    bufMapjob.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
+		    bufMapjob.append("<job:Job xmlns:job=\"http://com.ibm.clio.model/job/1.0\">\n");
+		    bufMapjob.append("<mapping>"+mapjob+".xsml#/</mapping>\n");
+		    bufMapjob.append("</job:Job>");
+		    
+			BufferedWriter bufWriterMapjob =
+					new BufferedWriter(new FileWriter(new File(
+							"./mapmerge", mapjob + ".mapjob")));
+			bufWriterMapjob.write(bufMapjob.toString());
+			bufWriterMapjob.close();
+		}
+		catch (Exception e) {
+			LoggerUtil.logException(e, log);
+			throw e;
+		}
+		
+		//prints as XSML file
+		XSMLWriter xsmlPrinter = new XSMLWriter();
+		
+		StringBuffer bufXSML = new StringBuffer();
+		//////print schemas
+		xsmlPrinter.print(bufXSML, mapjob);
+		/////print correspondences
+		xsmlPrinter.print(bufXSML, mapjob, scenario);
+		////print logical mappings (I have not considered the option that we do not output any logical mappings)
+		xsmlPrinter.print(bufXSML, scenario, mapjob);
+		try {
+			BufferedWriter bufWriterXSML =
+					new BufferedWriter(new FileWriter(new File(
+							"./mapmerge", mapjob + ".xsml")));
+			bufWriterXSML.write(bufXSML.toString());
+			bufWriterXSML.close();
+		}
+		catch (Exception e) {
+			LoggerUtil.logException(e, log);
+			throw e;
+		}
+		
+		//prints as XSD file
+		XSDWriter xsdPrinter = new XSDWriter();
+		
+		StringBuffer bufSourceXSD = new StringBuffer();
+		///print source schema (schema.getLabel())
+		xsdPrinter.printSource(bufSourceXSD, scenario, mapjob + "_Src", 0);
+		
+		StringBuffer bufTargetXSD = new StringBuffer();
+		///print target schema (schema.getLabel())
+		xsdPrinter.printTarget(bufTargetXSD, scenario, mapjob + "_Trg", 0);
+		try {
+			BufferedWriter bufWriterXSD =
+					new BufferedWriter(new FileWriter(new File(
+							"./mapmerge", S)));
+			bufWriterXSD.write(bufSourceXSD.toString());
+			bufWriterXSD.close();
+
+			bufWriterXSD =
+					new BufferedWriter(new FileWriter(new File(
+							"./mapmerge", T.substring(0, T.length()-7) + "Trg.xsd")));
+			bufWriterXSD.write(bufTargetXSD.toString());
+			bufWriterXSD.close();
+		}
+		catch (Exception e) {
+			LoggerUtil.logException(e, log);
+			throw e;
+		}
+	}
+	
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
 		if (log.isDebugEnabled()) {log.debug("Printing results !");};
@@ -280,7 +367,15 @@ public class STBenchmark {
 				     _configuration.getMappingFileName(),
 				     _configuration.getSchemaFile());
 		
-
+		//MN prints results in Mapjob, XSML and XSD formats for the purpose of evaluating MapMerge
+		printResultsMapjobAndXSMLAndXSD(_scenario, 
+			     _configuration.getSourceSchemaFile(), 
+			     _configuration.getTargetSchemaFile(),
+			     _configuration.getMappingFileName(),
+			     _configuration.getSchemaFile());
+		
+		
+		
 		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(_scenario);
 		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))

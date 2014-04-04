@@ -5,13 +5,13 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 3
-Scenarios.HORIZPARTITION = 0
+Scenarios.COPY = 1
+Scenarios.HORIZPARTITION = 1
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
+Scenarios.VERTPARTITION = 1
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
@@ -28,21 +28,31 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3
+ConfigOptions.NumOfSubElements = 11
 ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumOfAttributesToDelete = 1
-ConfigOptions.JoinSize = 2
+ConfigOptions.NumOfAttributesToDelete = 0
+ConfigOptions.JoinSize = 0
 ConfigOptions.NumOfParamsInFunctions = 1
 ConfigOptions.PrimaryKeySize = 1
 ConfigOptions.NumOfJoinAttributes = 1
 ConfigOptions.JoinKind = 0 
 # Star is 0 , chain is 1
-ConfigOptions.SkolemKind = 0
+ConfigOptions.SkolemKind = 2
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 100
+ConfigOptions.ReuseSourcePerc = 50
+ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 50
+ConfigOptions.SourceInclusionDependencyPerc = 80
+ConfigOptions.SourceInclusionDependencyFKPerc = 70
+ConfigOptions.TargetInclusionDependencyPerc = 35
+ConfigOptions.TargetInclusionDependencyFKPerc = 40
+# exists is 1 and not exists is 0
+ConfigOptions.SourceCircularInclusionDependency = 1
+ConfigOptions.SourceCircularFK = 1
+ConfigOptions.TargetCircularInclusionDependency = 1
+ConfigOptions.TargetCircularFK = 1
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 0
