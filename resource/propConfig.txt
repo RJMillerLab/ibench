@@ -7,18 +7,18 @@ InstancePathPrefix=out0
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 1
 Scenarios.HORIZPARTITION = 1
-Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
-Scenarios.FUSION = 0
+Scenarios.SURROGATEKEY = 1
+Scenarios.MERGING = 1
+Scenarios.FUSION = 1
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 1
-Scenarios.ADDATTRIBUTE = 0
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 0
+Scenarios.ADDATTRIBUTE = 1
+Scenarios.DELATTRIBUTE = 1
+Scenarios.ADDDELATTRIBUTE = 1
+Scenarios.VERTPARTITIONISA = 1
+Scenarios.VERTPARTITIONHASA = 1
+Scenarios.VERTPARTITIONNTOM = 1
+Scenarios.MERGEADD = 1
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -28,7 +28,7 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 11
+ConfigOptions.NumOfSubElements = 3
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 0
 ConfigOptions.JoinSize = 0
@@ -41,7 +41,7 @@ ConfigOptions.SkolemKind = 2
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 50
+ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 50
 ConfigOptions.SourceInclusionDependencyPerc = 80

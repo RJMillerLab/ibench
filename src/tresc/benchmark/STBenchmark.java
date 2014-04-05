@@ -157,7 +157,7 @@ public class STBenchmark {
 		xsmlPrinter.print(bufXSML, mapjob);
 		/////print correspondences
 		xsmlPrinter.print(bufXSML, mapjob, scenario);
-		////print logical mappings (I have not considered the option that we do not output any logical mappings)
+		////print logical mappings (I have not considered the option that we do not output any logical mappings) (removed skolem parts)
 		xsmlPrinter.print(bufXSML, scenario, mapjob);
 		try {
 			BufferedWriter bufWriterXSML =
