@@ -1,6 +1,7 @@
 package tresc.benchmark;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.vagabond.util.LoggerUtil;
@@ -42,6 +43,10 @@ public class Generator {
 	private ScenarioGenerator fdGen;
 	private DataGenerator dataGenerator;
 	private RandomSourceSkolemToMappingGenerator skGen;
+	
+	//MN two attributes for random source and target 
+	private List<String> randomSourceInclusionDependencies;
+	private List<String> randomTargetInclusionDependencies;
 	
 	public Generator(Configuration config) {
 		int numOfScenarios = Constants.ScenarioName.values().length;
@@ -115,6 +120,16 @@ public class Generator {
 		}
 		return null; // keep compiler quiet
 	}
+	
+	//MN this method returns random source inclusion dependencies (only regular ones) - 14 April 2014
+	public List<String> getRandomSourceInlcusionDependencies (){
+		return randomSourceInclusionDependencies;
+	}
+	
+	//MN this method returns random target inclusion dependencies (only regular ones) - 14 April 2014
+	public List<String> getRandomTargetInclusionDependencies(){
+		return randomTargetInclusionDependencies;
+	}
 
 	public MappingScenario generateScenario(Configuration configuration) throws Exception {
 		/*
@@ -142,10 +157,14 @@ public class Generator {
 		//MN generates Random Source Inclusion Dependencies
 		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
 		srcIDGen.generateScenario(scenario, configuration);
+		//MN to inject random source inclusion dependencies into mappings - 14 April 2014
+		randomSourceInclusionDependencies = srcIDGen.getRandomSourceIDs();
 				
 		//MN generates Random Target Inclusion Dependencies
 		TargetInclusionDependencyGenerator trgIDGen = new TargetInclusionDependencyGenerator();
 		trgIDGen.generateScenario(scenario, configuration);
+		//MN to inject random target inclusion dependencies into mappings - 14 April 2014
+		randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
 		
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))

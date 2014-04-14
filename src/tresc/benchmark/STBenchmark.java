@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -157,7 +158,7 @@ public class STBenchmark {
 		xsmlPrinter.print(bufXSML, mapjob);
 		/////print correspondences
 		xsmlPrinter.print(bufXSML, mapjob, scenario);
-		////print logical mappings (I have not considered the option that we do not output any logical mappings) (removed skolem parts)
+		////print logical mappings (for first experiment)
 		xsmlPrinter.print(bufXSML, scenario, mapjob);
 		try {
 			BufferedWriter bufWriterXSML =
@@ -357,6 +358,10 @@ public class STBenchmark {
 		// MappingScenario scenario =
 		_scenario = 
 				Modules.scenarioGenerator.generateScenario(_configuration);
+		
+		//MN returns random source and target inclusion dependencies - 14 April 2014
+		List<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
+		List<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
 		
 		// log.debug("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 

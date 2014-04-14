@@ -1,0 +1,567 @@
+package vtools.xml;
+
+//MN This class prints the output of iBench as XSML file - 3 April 2014
+//MN I changed the expressions in "where" clause so that it prints the skolems in left-side of the expression - 11 April 2014
+//MN if error in craeting .xsml refer to skolem parts of the mappings - 12 April 2014
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+import org.vagabond.xmlmodel.CorrespondenceType;
+import org.vagabond.xmlmodel.MappingType;
+
+import smark.support.MappingScenario;
+import vtools.dataModel.schema.Element;
+import vtools.dataModel.schema.Schema;
+
+public class XSMLWriter {
+
+	private final String _tab = "	";
+	
+	private static final Comparator<String> ID_COMP = new Comparator<String>() {
+
+		@Override
+		public int compare(String l, String r) {
+			char[] lChars = l.toCharArray();
+			char[] rChars = r.toCharArray();
+			int pos = 0;
+
+			if (l.length() != r.length())
+				return l.length() < r.length() ? -1 : 1;
+
+			// skip same char
+			while (lChars[pos] == rChars[pos++] && pos < l.length())
+				;
+			pos--;
+
+			// both have number
+			if (Character.isDigit(lChars[pos])
+					&& Character.isDigit(rChars[pos])) {
+				// assume the rest is a number
+				int lId = Integer.parseInt(l.substring(pos));
+				int rId = Integer.parseInt(r.substring(pos));
+				if (lId == rId)
+					return 0;
+				return lId < rId ? -1 : 1;
+			}
+			// no order one that is digit first
+			else
+				return Character.isDigit(lChars[pos]) ? -1 : 1;
+		}
+
+	};
+
+	
+	//MN prints the schemas (source and target)
+	public void print (StringBuffer buf, String name){
+		buf.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
+		buf.append("<xsml:schemaMapping xmlns:xsml=\"http://com.ibm.clio.model/xsml/2.0\">\n");
+		
+		buf.append("  <schemas>\n");
+		
+		buf.append("    <source name=\"" + name + "_Src0\"" + " rootName=\"" + name + "_Src\"" + " schemaLocation=\"" + name + "_Src.xsd\"" + "/>\n");
+		
+		buf.append("    <target name=\"" + name + "_Trg0\"" + " rootName=\"" + name + "_Trg\"" + " schemaLocation=\"" + name + "_Trg.xsd\"" + "/>\n");
+		
+		buf.append("  </schemas>\n");
+	}
+	
+	//MN prints the correspondences (from source to target)
+	public void print (StringBuffer buf, String name, MappingScenario scenario) throws Exception{
+		buf.append("  <componentMappings>\n");
+		
+		String sScenario = scenario.getDoc().getDocument().toString();
+		int corrsIndexBegin = sScenario.indexOf("<Correspondences");
+		int corrsIndexEnd = sScenario.indexOf("</Correspondences");
+		String correspondences = sScenario.substring(corrsIndexBegin+28, corrsIndexEnd-3);
+		
+
+		while (!correspondences.equals("")){
+			String nameCorr = correspondences.split("=")[1].split(">")[0];
+			buf.append("    <valueMapping" + " name=\"$" + (nameCorr.substring(1)) + ">\n");
+			
+			int corrIndexEnd = correspondences.indexOf("</Correspondence>");
+			String correspondence = correspondences.substring(0, corrIndexEnd+17);
+			String fromRel = ((correspondence.split("="))[2].split(">"))[0];
+			String fromRelAttr = (((correspondence.split("="))[2].split("<Attr>"))[1].split("</Attr>"))[0];
+			String toRel = ((correspondence.split("="))[3].split(">"))[0];
+			String toRelAttr = (((correspondence.split("="))[3].split("<Attr>"))[1].split("</Attr>"))[0];
+			
+			fromRel = fromRel.substring(1, fromRel.length()-1);
+			//fromRelAttr = fromRelAttr.substring(0, fromRelAttr.length()-1);
+			toRel = toRel.substring(1, toRel.length()-1);
+			//toRelAttr = toRelAttr.substring(0, toRelAttr.length()-1);
+			
+			buf.append("      <source value=\"" + "$" + name + "_Src0" + "/" + fromRel + "/" + fromRelAttr + "\"/>\n");
+			buf.append("      <target value=\"" + "$" + name + "_Trg0" + "/" + toRel   + "/" + toRelAttr   + "\"/>\n");
+			
+			if(correspondences.length()>corrIndexEnd+17)
+			    correspondences = correspondences.substring(corrIndexEnd+18);
+			else
+				break;
+			
+			buf.append("    </valueMapping>\n");
+		}
+		
+		buf.append("    </valueMapping>\n");
+		buf.append("  </componentMappings>\n");
+		//just for testing only correspondences
+		////buf.append("</xsml:schemaMapping>");
+	
+	}
+	
+	//MN checks to see whether both from and to relations of the source FK exist in the mapping
+	public boolean existsSourceFKFromTo (String mapping, String sourceFK){
+		String fromRelFK = (sourceFK.split("//")[2]).substring(11).substring(0, (sourceFK.split("//")[2]).substring(11).indexOf("."));
+		String fromRelFKAttr = sourceFK.substring(sourceFK.indexOf(".") + 1, sourceFK.indexOf(" --> "));
+		String toRelFK = (sourceFK.split(" --> ")[1]).substring(0, (sourceFK.split(" --> ")[1]).indexOf("."));
+		String toRelFKAttr = (sourceFK.split("-->")[1]).substring(sourceFK.split("-->")[1].indexOf(".")+1, sourceFK.split("-->")[1].indexOf("\n"));
+	
+		boolean e1 = false;
+		boolean e2 = false;
+		//existence of fromRelFK in mapping
+		String sourceE1 = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
+		while (true){
+			String fromRel = ((sourceE1.split("="))[1].split(">"))[0];
+		
+			if(fromRelFK.equals(fromRel.substring(1, fromRel.length()-1))){
+				e1 = true;
+				break;
+			}
+
+			if (!(sourceE1.lastIndexOf("</Atom>") == sourceE1.indexOf("</Atom>")))
+				sourceE1 = sourceE1.substring(sourceE1.indexOf("</Atom>")+8);
+			else
+				break;
+		}
+		//existence of toRelFK in mapping
+		String sourceE2 = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
+		while (true){
+			String toRel = ((sourceE2.split("="))[1].split(">"))[0];
+		
+			if(toRelFK.equals(toRel.substring(1, toRel.length()-1))){
+				e2 = true;
+				break;
+			}
+
+			if (!(sourceE2.lastIndexOf("</Atom>") == sourceE2.indexOf("</Atom>")))
+				sourceE2 = sourceE2.substring(sourceE2.indexOf("</Atom>")+8);
+			else
+				break;
+		}
+		
+		if(e1 & e2)
+			return true;
+		return false;
+	}
+	
+	//MN checks to see whether both from and to relations of the target FK are in the mapping
+	public boolean existsTargetFKFromTo(String mapping, String targetFK){
+		String fromRelFK = (targetFK.split("//")[2]).substring(11).substring(0, (targetFK.split("//")[2]).substring(11).indexOf("."));
+		String fromRelFKAttr = targetFK.substring(targetFK.indexOf(".") + 1, targetFK.indexOf(" --> "));
+		String toRelFK = (targetFK.split(" --> ")[1]).substring(0, (targetFK.split(" --> ")[1]).indexOf("."));
+		String toRelFKAttr = (targetFK.split("-->")[1]).substring(targetFK.split("-->")[1].indexOf(".")+1, targetFK.split("-->")[1].indexOf("\n"));
+	
+		boolean e1 = false;
+		boolean e2 = false;
+		//existence of fromRelFK in mapping
+		String targetE1 = mapping.substring(mapping.indexOf("<Exists>"), mapping.indexOf("</Exists>")+9);
+		while (true){
+			String fromRel = ((targetE1.split("="))[1].split(">"))[0];
+		
+			if(fromRelFK.equals(fromRel.substring(1, fromRel.length()-1))){
+				e1 = true;
+				break;
+			}
+
+			if (!(targetE1.lastIndexOf("</Atom>") == targetE1.indexOf("</Atom>")))
+				targetE1 = targetE1.substring(targetE1.indexOf("</Atom>")+8);
+			else
+				break;
+		}
+	
+		//existence of toRelFK in mapping
+		String targetE2 = mapping.substring(mapping.indexOf("<Exists>"), mapping.indexOf("</Exists>")+9);
+		while (true){
+			String toRel = ((targetE2.split("="))[1].split(">"))[0];
+		
+			if(toRelFK.equals(toRel.substring(1, toRel.length()-1))){
+				e2 = true;
+				break;
+			}
+
+			if (!(targetE2.lastIndexOf("</Atom>") == targetE2.indexOf("</Atom>")))
+				targetE2 = targetE2.substring(targetE2.indexOf("</Atom>")+8);
+			else
+				break;
+		}
+		
+		if(e1 & e2)
+			return true;
+		return false;
+	}
+	
+	//MN prints the logical mappings (from source to target)
+	public void print (StringBuffer buf, MappingScenario scenario, String name){
+		buf.append("  <logicalMappings>\n");
+		
+		String sScenario = scenario.getDoc().getDocument().toString();
+		int mapsIndexBegin = sScenario.indexOf("<Mappings");
+		int mapsIndexEnd = sScenario.indexOf("</Mappings");
+		String mappings = sScenario.substring(mapsIndexBegin+20, mapsIndexEnd-3);
+		
+		while (!mappings.equals("")){
+			String nameMap = mappings.split("=")[1].split(">")[0];
+			buf.append("    <logicalMapping "+ "name=" + nameMap + ">\n");
+			
+			int mapIndexEnd = mappings.indexOf("</Mapping>");
+			String mapping = mappings.substring(0, mapIndexEnd+10);
+			
+			//source entities
+			buf.append("      <source>\n");
+			String source = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
+			while (true){
+				String fromRel = ((source.split("="))[1].split(">"))[0];
+				buf.append("        <entity " + "value=\"$" + name + "_Src0/" +  (fromRel.substring(1, fromRel.length()-1)) + "\" " + "name=\"sm" + (fromRel.substring(1, fromRel.length()-1)) + "\"/>\n");
+				
+				if (!(source.lastIndexOf("</Atom>") == source.indexOf("</Atom>")))
+				   source = source.substring(source.indexOf("</Atom>")+8);
+				else
+					break;
+			}
+			//source FK
+			
+			boolean andSrcFK = false;
+			String source1 = scenario.getSource().toString();
+			
+			//perhaps the source relation does not have any foreign keys
+			String sourceFK = null;
+			if(source1.indexOf("// FKey:")!=-1){
+				sourceFK = source1.substring(source1.indexOf("// FKey:"));
+				
+				//for each source FK
+				while (!sourceFK.isEmpty()){
+					String fromRelFK = (sourceFK.split("//")[2]).substring(11).substring(0, (sourceFK.split("//")[2]).substring(11).indexOf("."));
+					String fromRelFKAttr = sourceFK.substring(sourceFK.indexOf(".") + 1, sourceFK.indexOf(" --> "));
+					String toRelFK = (sourceFK.split(" --> ")[1]).substring(0, (sourceFK.split(" --> ")[1]).indexOf("."));
+					String toRelFKAttr = (sourceFK.split("-->")[1]).substring(sourceFK.split("-->")[1].indexOf(".")+1, sourceFK.split("-->")[1].indexOf("\n"));
+					
+					if(existsSourceFKFromTo(mapping, sourceFK)){
+						if(andSrcFK)
+							buf.append(" AND ");
+						else
+							buf.append("      <predicate>");
+					
+						buf.append("$sm" + fromRelFK + "/" + fromRelFKAttr + " = " + "$sm" + toRelFK + "/" + toRelFKAttr);
+						andSrcFK = true;
+					}
+					if(sourceFK.indexOf("// FKey:") == sourceFK.lastIndexOf("// FKey:"))
+						break;
+					else{
+						sourceFK = sourceFK.substring(sourceFK.indexOf(";")+2);
+						sourceFK = sourceFK.substring(sourceFK.indexOf("// FKey:"));
+					}
+			  }
+			}
+			if(andSrcFK)
+				buf.append("</predicate>\n");
+			buf.append("      </source>\n");
+			//end source entities
+			
+			//target entities
+			buf.append("      <target>\n");
+			String target = mapping.substring(mapping.indexOf("<Exists>"), mapping.indexOf("</Exists>")+9);
+			while (true){
+				String toRel = ((target.split("="))[1].split(">"))[0];
+				buf.append("        <entity " + "value=\"$" + name + "_Trg0/" +  (toRel.substring(1, toRel.length()-1)) + "\" " + "name=\"tm" + (toRel.substring(1, toRel.length()-1)) + "\"/>\n");
+				
+				if (!(target.lastIndexOf("</Atom>") == target.indexOf("</Atom>")))
+				   target = target.substring(target.indexOf("</Atom>")+8);
+				else
+					break;
+			}
+			//target FK
+			
+			boolean andTrgFK = false;
+			String target1 = scenario.getTarget().toString();
+			String targetFK = null;
+			
+			if(target1.indexOf("// FKey:") != -1){
+				targetFK = target1.substring(target1.indexOf("// FKey:"));
+			
+				//for each target FK
+				while (!targetFK.isEmpty()){
+					String fromRelFK = (targetFK.split("//")[2]).substring(11).substring(0, (targetFK.split("//")[2]).substring(11).indexOf("."));
+					String fromRelFKAttr = targetFK.substring(targetFK.indexOf(".") + 1, targetFK.indexOf(" --> "));
+					String toRelFK = (targetFK.split(" --> ")[1]).substring(0, (targetFK.split(" --> ")[1]).indexOf("."));
+					String toRelFKAttr = (targetFK.split("-->")[1]).substring(targetFK.split("-->")[1].indexOf(".")+1, targetFK.split("-->")[1].indexOf("\n"));
+				
+					if(existsTargetFKFromTo(mapping, targetFK)){
+						if(andTrgFK)
+							buf.append(" AND ");
+						else
+							buf.append("      <predicate>");
+					
+						buf.append("$tm" + fromRelFK + "/" + fromRelFKAttr + " = " + "$tm" + toRelFK + "/" + toRelFKAttr);
+						andTrgFK = true;
+					}
+					if(targetFK.indexOf("// FKey:") == targetFK.lastIndexOf("// FKey:"))
+						break;
+					else{
+						targetFK = targetFK.substring(targetFK.indexOf(";")+2);
+						targetFK = targetFK.substring(targetFK.indexOf("// FKey:"));
+					}
+				  }
+				}
+			
+			if(andTrgFK)
+				buf.append("</predicate>\n");
+			//end target FK
+			buf.append("      </target>\n");
+			//end target entities
+			
+			buf.append("      <mapping>");
+			
+			boolean and = false;
+			
+			///SK and Target Variables
+			String targetMapping = mapping.substring(mapping.indexOf("<Exists>"), mapping.indexOf("</Exists>")+9);
+			//for each target atom
+			while(true){
+				String toRel = ((targetMapping.split("="))[1].split(">"))[0];
+				int trgVarIndex=-1;
+				
+				//target vars and skolem terms
+				while (true){
+					//for each target var
+					if((targetMapping.indexOf("<Var>")<targetMapping.indexOf("<SKFunction")) || (targetMapping.indexOf("<SKFunction") == -1))
+					{
+						while(true){
+							String trgVar = targetMapping.split("<Var>")[1].split("</")[0];
+							trgVarIndex++;
+							boolean found = false;
+							String sourceMapping = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
+							//for each source atom
+							while (true){
+								String fromRel = ((sourceMapping.split("="))[1].split(">"))[0];
+								int index = -1;
+								//for each source variable
+								while (true){
+									String[] splitSourceVar = sourceMapping.split("<Var>");
+									String srcVar = splitSourceVar[1].split("<")[0];
+									index++;
+									if(trgVar.equals(srcVar)){
+										//MN I added this method to modularize the code - 12 April 2014
+										boolean[] b = printMapExpr(scenario, fromRel, toRel, buf, index, trgVarIndex, found, and); 
+										found = b[0];
+										and = b[1];
+									}
+									String checkSourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Var>")+7);
+									if (!(sourceMapping.indexOf("</Var>") == sourceMapping.lastIndexOf("</Var>")) && (checkSourceMapping.indexOf("</Atom>") >= checkSourceMapping.indexOf("<Var>")))
+										sourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Var>")+7);
+									else
+										break;
+								}
+								//for each source variable	 
+								if (!(sourceMapping.indexOf("</Atom>") == sourceMapping.lastIndexOf("</Atom>")))
+									sourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Atom>")+8);
+								else
+									break;
+							}
+							//for each source atom
+							//MN change in if condition to handle OF - 12 April 2014
+							String checkTargetMapping = targetMapping.substring(targetMapping.indexOf("</Var>")+7);
+							if((targetMapping.indexOf("<Var>") == targetMapping.lastIndexOf("<Var>")) || (checkTargetMapping.indexOf("<Var>") >= checkTargetMapping.indexOf("</Atom>"))
+									|| ((checkTargetMapping.indexOf("<SKFunction") != -1) && (checkTargetMapping.indexOf("<Var>")>checkTargetMapping.indexOf("<SKFunction"))))
+								{ targetMapping = targetMapping.substring(targetMapping.indexOf("</Var>")+7);	
+								  break;}
+							else
+								targetMapping = targetMapping.substring(targetMapping.indexOf("</Var>")+7);
+						}
+					}
+					//for each target var
+					
+					//for each skolem term
+					while(true){
+						int skIndex = targetMapping.indexOf("<SKFunction");
+						int nextVarIndex = targetMapping.indexOf("<Var>");
+				
+						if((skIndex != -1) && (nextVarIndex != -1) && (nextVarIndex>skIndex)){
+							//MN I added this method to modularize the code - 12 April 2014
+							trgVarIndex++;
+							targetMapping = dealSK(scenario, buf, mapping, targetMapping, toRel, trgVarIndex, skIndex, and);
+							and = true;
+						}
+						//MN modification to support OF - 12 April 2014
+						targetMapping = targetMapping.substring(2);
+						if(!(targetMapping.indexOf("</SKFunction>") == targetMapping.lastIndexOf("</SKFunction>")) && (targetMapping.indexOf("<SKFunction") < targetMapping.indexOf("</Atom>")))
+							{targetMapping = targetMapping.substring(targetMapping.indexOf("<SKFunction"));}
+						else
+							break;
+					}
+					//for each skolem term
+					
+					//MN modification to support Object Fusion - 12 April 2014 - needs to be checked more
+					if((targetMapping.indexOf("</SKFunction>") == targetMapping.lastIndexOf("</SKFunction>")) && 
+						(targetMapping.indexOf("<Var>")!= -1) && (targetMapping.indexOf("<Var>")<targetMapping.indexOf("</Atom>")))
+						{targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));}
+					else
+						break;
+				}
+				//for each target vars and skolem terms
+				
+				//MN modification to support OF - 12 April 2014
+				if (!(targetMapping.lastIndexOf("</Atom>") == targetMapping.indexOf("</Atom>")))
+	    			{targetMapping = targetMapping.substring(targetMapping.indexOf("</Atom>")+8);}
+				else{
+					buf.append("</mapping>\n");
+					buf.append("      </logicalMapping>\n");
+					break;
+				}
+			}
+			//for each target atom
+			if(mappings.length()>mapIndexEnd+10)
+			    mappings = mappings.substring(mapIndexEnd+11);
+			else{
+			    break;}
+		}
+		buf.append("  </logicalMappings>\n");
+		buf.append("</xsml:schemaMapping>");
+		//System.out.print(buf.toString());
+	}
+	
+	//MN this method deals with skolem terms - 12 April 2014
+	private String dealSK(MappingScenario scenario, StringBuffer buf, String mapping, String targetMapping, 
+			String toRel, int trgVarIndex, int skIndex, boolean and){
+		targetMapping = targetMapping.substring(skIndex);
+		//trgVarIndex++;
+		
+		String targetVar = (scenario.getTarget().getSubElement(toRel.substring(1, toRel.length()-1))).getSubElement(trgVarIndex).toString();
+		String targetVarName = targetVar.split(":")[0];
+		
+		String srcSkolem = targetMapping.split("=")[1].split(">")[0].substring(1 , targetMapping.split("=")[1].split(">")[0].length()-1);
+		
+		if(and)
+			buf.append(" AND ");
+		//MN skolem function should be printed in the left-side -11 April 2014
+		buf.append(srcSkolem + "(");
+		
+		boolean moreThanOneSkVar = false;
+		//for each skolem term var
+		while(true){
+			targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));
+			String skVar = targetMapping.split("<Var>")[1].split("</")[0];
+			
+			String sourceMapping = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
+		    //for each source atom
+			while (true){
+				String fromRel = ((sourceMapping.split("="))[1].split(">"))[0];
+				int index = -1;
+				
+				//for each source variable
+				while (true){
+					String[] splitSourceVar = sourceMapping.split("<Var>");
+					String srcVar = splitSourceVar[1].split("<")[0];
+					
+					index++;
+					
+					if(skVar.equals(srcVar)){
+						//MN I added this method to modularize the code - 12 April 2014
+			    		printMapExprSK(scenario, fromRel, buf, index, moreThanOneSkVar);
+			    		moreThanOneSkVar = true;
+			    		and = true;
+					}
+					
+					String checkSourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Var>")+7);
+					if (!(sourceMapping.indexOf("</Var>") == sourceMapping.lastIndexOf("</Var>")) && (checkSourceMapping.indexOf("</Atom>") >= checkSourceMapping.indexOf("<Var>")))
+						sourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Var>")+7);
+					else
+						break;
+				}
+				//for each source variable	 
+				if (!(sourceMapping.indexOf("</Atom>") == sourceMapping.lastIndexOf("</Atom>")))
+					sourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Atom>")+8);
+				else
+					break;	
+				}
+			//for each source atom
+			
+			targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>") +2);
+			
+			//**MN perhaps we need to add something for other special cases
+			int indexNextVar = targetMapping.indexOf("<Var>");
+			int indexNextSKFunc = targetMapping.indexOf("<SKFunction");
+			int indexNextAtom = targetMapping.indexOf("<Atom>");
+			int indexNextEndAtom = targetMapping.indexOf("</Atom>");
+			
+			if(indexNextVar == -1)
+				break;
+			
+			if((indexNextSKFunc == -1) && (indexNextVar != -1) && (indexNextVar > targetMapping.indexOf("</SKFunction>")))
+				break;
+			
+			if((indexNextSKFunc != -1) && (indexNextVar != -1) && (indexNextVar > targetMapping.indexOf("<SKFunction") ))
+				break;
+			
+			if((indexNextVar != -1) && (indexNextVar>indexNextAtom) && (indexNextVar>indexNextEndAtom))
+				break;
+			
+			targetMapping = targetMapping.substring(targetMapping.indexOf("</Var>") +2);
+			targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));
+			
+		}
+		//for each skolem term var
+		//MN skolem should be printed left-side of the expression - 11 April 2014
+		buf.append(")" + " = " + "$tm" + toRel.substring(1, toRel.length()-1) + "/" + targetVarName);	
+		return targetMapping;
+	}
+	
+	//MN prints the mapping expression in the form of rel.attr = rel.attr - 12 April 2014
+	private boolean[] printMapExpr (MappingScenario scenario, String fromRel, String toRel, StringBuffer buf, int index, int trgVarIndex, boolean found, boolean and){
+		///String sourceVar = (scenario.getSource().getSubElement(fromRel.substring(1, fromRel.length()-1))).getSubElement(srcVarIndex).toString();
+		String sourceVar = (scenario.getSource().getSubElement(fromRel.substring(1, fromRel.length()-1))).getSubElement(index).toString();
+		String sourceVarName = sourceVar.split(":")[0];
+		boolean[] b = new boolean [2];
+		
+		String targetVar = (scenario.getTarget().getSubElement(toRel.substring(1, toRel.length()-1))).getSubElement(trgVarIndex).toString();
+		String targetVarName = targetVar.split(":")[0];
+		if (!found){
+			if(and)
+				buf.append(" AND ");
+			buf.append("$tm" + toRel.substring(1, toRel.length()-1) + "/" + targetVarName + " = " + "$sm" + fromRel.substring(1, fromRel.length()-1) + "/" + sourceVarName);
+			found = true;
+		}
+		else{
+			//MN should be modified - 12 April 2014
+			int deleteIndex = buf.toString().lastIndexOf("$tm" + toRel.substring(1, toRel.length()-1) + "/" + targetVarName + " = ");
+			buf.delete(deleteIndex, buf.length());
+			if(and)
+				buf.append(" AND ");
+			buf.append("$tm" + toRel.substring(1, toRel.length()-1) + "/" + targetVarName + " = " + "$sm" + fromRel.substring(1, fromRel.length()-1) + "/" + sourceVarName);
+			found = true;
+		}
+		
+		and=true;
+		b[0] = found;
+		b[1] = and;
+		return b;
+	}
+	
+	//MN prints the mapping expression in the form of sk = rel.attr - 12 April 2014
+	private void printMapExprSK (MappingScenario scenario, String fromRel, StringBuffer buf, int index, boolean moreThanOneSkVar){
+		///String sourceVar = (scenario.getSource().getSubElement(fromRel.substring(1, fromRel.length()-1))).getSubElement(srcVarIndex).toString();
+		String sourceVar = (scenario.getSource().getSubElement(fromRel.substring(1, fromRel.length()-1))).getSubElement(index).toString();
+		String sourceVarName = sourceVar.split(":")[0];
+		
+		if(moreThanOneSkVar)
+			buf.append(", ");
+		buf.append("$sm" + fromRel.substring(1, fromRel.length()-1) + "/" + sourceVarName);
+		
+		//and=true;
+		moreThanOneSkVar = true;
+	}
+	
+}
