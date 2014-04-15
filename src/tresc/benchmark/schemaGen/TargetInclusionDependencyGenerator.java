@@ -1,5 +1,6 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 	
 	//MN this attribute has been considered so that we could inject random target inclusion dependencies into mappings - 14 April 2014
 	//MN do I need to new the List? - 14 April 2014
-	List<String> tids;
+	ArrayList<String> tids;
 	
 	private class InclusionDependency{
 		public String fromRelName;
@@ -61,6 +62,9 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 		
 		if (log.isDebugEnabled()) {log.debug("Attempting to Generate Random Target Inclusion Dependencies");};
 
+		//MN new ArrayList<String> - 14 April 2014
+		tids = new ArrayList<String> ();
+		
 		if (configuration.getParam(ParameterName.TargetInclusionDependencyPerc) >0) {
 			generateRandomIDs(scenario, configuration, _generator, ids);
 		}
@@ -68,7 +72,7 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 	}
 	
 	//MN this method returns random target inclusion dependencies - 14 April 2014
-	public List<String> getRandomTargetIDs(){
+	public ArrayList<String> getRandomTargetIDs(){
 		return tids;
 	}
 	

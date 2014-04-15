@@ -1,6 +1,7 @@
 package tresc.benchmark;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -45,8 +46,8 @@ public class Generator {
 	private RandomSourceSkolemToMappingGenerator skGen;
 	
 	//MN two attributes for random source and target 
-	private List<String> randomSourceInclusionDependencies;
-	private List<String> randomTargetInclusionDependencies;
+	private ArrayList<String> randomSourceInclusionDependencies;
+	private ArrayList<String> randomTargetInclusionDependencies;
 	
 	public Generator(Configuration config) {
 		int numOfScenarios = Constants.ScenarioName.values().length;
@@ -122,12 +123,12 @@ public class Generator {
 	}
 	
 	//MN this method returns random source inclusion dependencies (only regular ones) - 14 April 2014
-	public List<String> getRandomSourceInlcusionDependencies (){
+	public ArrayList<String> getRandomSourceInlcusionDependencies (){
 		return randomSourceInclusionDependencies;
 	}
 	
 	//MN this method returns random target inclusion dependencies (only regular ones) - 14 April 2014
-	public List<String> getRandomTargetInclusionDependencies(){
+	public ArrayList<String> getRandomTargetInclusionDependencies(){
 		return randomTargetInclusionDependencies;
 	}
 

@@ -3,6 +3,7 @@ package vtools.xml;
 //MN This class prints the output of iBench as XSML file - 3 April 2014
 //MN I changed the expressions in "where" clause so that it prints the skolems in left-side of the expression - 11 April 2014
 //MN if error in craeting .xsml refer to skolem parts of the mappings - 12 April 2014
+//MN modifying the code to support injection of random regular source and target inclusion dependencies into mappings - 14 April 2014
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -205,7 +206,9 @@ public class XSMLWriter {
 	}
 	
 	//MN prints the logical mappings (from source to target)
-	public void print (StringBuffer buf, MappingScenario scenario, String name){
+	//MN modifying the method to support injection of random source and target inclusion dependencies into mappings - 14 April 2014
+	public void print (StringBuffer buf, MappingScenario scenario, String name,
+			ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies){
 		buf.append("  <logicalMappings>\n");
 		
 		String sScenario = scenario.getDoc().getDocument().toString();
@@ -220,12 +223,48 @@ public class XSMLWriter {
 			int mapIndexEnd = mappings.indexOf("</Mapping>");
 			String mapping = mappings.substring(0, mapIndexEnd+10);
 			
+			//MN we need to consider a boolean data structure to determine which regular inclusion dependencies can be injected into mapping - 14 April 2014
+			int sourceIDsSize = randomSourceInclusionDependencies.size();
+			boolean[] sourceFromIDs = new boolean[sourceIDsSize];
+			boolean[] sourceToIDs = new boolean[sourceIDsSize];
+			//initialization
+			for(int i=0; i<sourceIDsSize; i++){
+				sourceFromIDs[i] = false;
+				sourceToIDs[i] = false;
+ 			}
+			
+			int targetIDsSize = randomTargetInclusionDependencies.size();
+			boolean[] targetFromIDs = new boolean[targetIDsSize];
+			boolean[] targetToIDs = new boolean [targetIDsSize];
+			//initialization
+			for(int i=0; i<targetIDsSize; i++){
+				targetFromIDs[i] = false;
+				targetToIDs[i] = false;
+ 			}
+			//MN
+			
 			//source entities
 			buf.append("      <source>\n");
 			String source = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
 			while (true){
 				String fromRel = ((source.split("="))[1].split(">"))[0];
 				buf.append("        <entity " + "value=\"$" + name + "_Src0/" +  (fromRel.substring(1, fromRel.length()-1)) + "\" " + "name=\"sm" + (fromRel.substring(1, fromRel.length()-1)) + "\"/>\n");
+				
+				//MN checks for source regular inclusion dependencies - 14 April 2014
+				for(int i=0; i<randomSourceInclusionDependencies.size(); i++){
+					String id = randomSourceInclusionDependencies.get(i);
+					String fromRel1 = id.substring(0, id.indexOf("|"));
+					
+					id = id.substring(id.indexOf("|"));
+					id = id.substring(id.indexOf("|")+1);
+					String fromRel2 = id.substring(id.indexOf("|")+1, id.lastIndexOf("|"));
+					//from equals to fromRel
+					if(fromRel1.equals(fromRel.substring(1, fromRel.length()-1)))
+						sourceFromIDs[i] = true;
+					//to equals to fromRel
+					if(fromRel2.equals(fromRel.substring(1, fromRel.length()-1)))
+						sourceToIDs[i] = true;
+				}
 				
 				if (!(source.lastIndexOf("</Atom>") == source.indexOf("</Atom>")))
 				   source = source.substring(source.indexOf("</Atom>")+8);
@@ -277,6 +316,22 @@ public class XSMLWriter {
 			while (true){
 				String toRel = ((target.split("="))[1].split(">"))[0];
 				buf.append("        <entity " + "value=\"$" + name + "_Trg0/" +  (toRel.substring(1, toRel.length()-1)) + "\" " + "name=\"tm" + (toRel.substring(1, toRel.length()-1)) + "\"/>\n");
+				
+				//MN checks for target regular inclusion dependencies - 14 April 2014
+				for(int i=0; i<randomTargetInclusionDependencies.size(); i++){
+					String id = randomTargetInclusionDependencies.get(i);
+					String toRel1 = id.substring(0, id.indexOf("|"));
+					
+					id = id.substring(id.indexOf("|"));
+					id = id.substring(id.indexOf("|")+1);
+					String toRel2 = id.substring(id.indexOf("|")+1, id.lastIndexOf("|"));
+					//from equals to toRel
+					if(toRel1.equals(toRel.substring(1, toRel.length()-1)))
+						targetFromIDs[i] = true;
+					//to equals to fromRel
+					if(toRel2.equals(toRel.substring(1, toRel.length()-1)))
+						targetToIDs[i] = true;
+				}
 				
 				if (!(target.lastIndexOf("</Atom>") == target.indexOf("</Atom>")))
 				   target = target.substring(target.indexOf("</Atom>")+8);
@@ -417,6 +472,16 @@ public class XSMLWriter {
 				if (!(targetMapping.lastIndexOf("</Atom>") == targetMapping.indexOf("</Atom>")))
 	    			{targetMapping = targetMapping.substring(targetMapping.indexOf("</Atom>")+8);}
 				else{
+					//MN inject related target regular inclusion dependencies into mappings - 14 April 2014
+					//MN if we inject them as predicates into mappings, they will be treated as foreign keys - 14 April 2014
+					printTargetRegularInclusionDependencies(buf, targetFromIDs, targetToIDs, randomTargetInclusionDependencies, and);
+					
+					and = true;
+					
+					//MN inject related source regular inclusion dependencies into mappings - 14 April 2014
+					//MN if we inject them as predicates into mappings, they will be treated as foreign keys - 14 April 2014
+					printSourceRegularInclusionDependencies(buf, sourceFromIDs, sourceToIDs, randomSourceInclusionDependencies, and);
+					
 					buf.append("</mapping>\n");
 					buf.append("      </logicalMapping>\n");
 					break;
@@ -431,6 +496,55 @@ public class XSMLWriter {
 		buf.append("  </logicalMappings>\n");
 		buf.append("</xsml:schemaMapping>");
 		//System.out.print(buf.toString());
+	}
+	
+	//MN prints random source regular inclusion dependencies - 14 April 2014
+	private void printSourceRegularInclusionDependencies(StringBuffer buf, boolean[] sourceFromIDs, boolean[] sourceToIDs, ArrayList<String> sourceIDs,
+			boolean and){
+		for(int i=0; i<sourceIDs.size(); i++)
+			if((sourceFromIDs[i]== true) && (sourceToIDs[i]==true)){
+				String id = sourceIDs.get(i);
+				String fromRel = id.substring(0, id.indexOf("|"));
+				
+				id = id.substring(id.indexOf("|")+1);
+				String fromRelAttr = id.substring(0, id.indexOf("|"));
+				
+				id = id.substring(id.indexOf("|")+1);
+				String toRel = id.substring(0, id.indexOf("|"));
+				
+				id = id.substring(id.indexOf("|")+1);
+				String toRelAttr = id.substring(0, id.length());
+				
+				if(and)
+					buf.append(" AND ");
+				
+				buf.append("$sm" + fromRel + "/" + fromRelAttr + " = " + "$sm" + toRel + "/" + toRelAttr);
+			}
+	}
+	
+	//MN prints random target regular inclusion dependencies - 14 April 2014
+	private void printTargetRegularInclusionDependencies(StringBuffer buf, boolean[] targetFromIDs, boolean[] targetToIDs, ArrayList<String> targetIDs,
+			boolean and){
+		for(int i=0; i<targetIDs.size(); i++)
+			if((targetFromIDs[i]== true) && (targetToIDs[i]==true)){
+				String id = targetIDs.get(i);
+				
+				String fromRel = id.substring(0, id.indexOf("|"));
+				
+				id = id.substring(id.indexOf("|")+1);
+				String fromRelAttr = id.substring(0, id.indexOf("|"));
+				
+				id = id.substring(id.indexOf("|")+1);
+				String toRel = id.substring(0, id.indexOf("|"));
+				
+				id = id.substring(id.indexOf("|")+1);
+				String toRelAttr = id.substring(0, id.length());
+				
+				if(and)
+					buf.append(" AND ");
+				
+				buf.append("$tm" + fromRel + "/" + fromRelAttr + " = " + "$tm" + toRel + "/" + toRelAttr);
+			}
 	}
 	
 	//MN this method deals with skolem terms - 12 April 2014

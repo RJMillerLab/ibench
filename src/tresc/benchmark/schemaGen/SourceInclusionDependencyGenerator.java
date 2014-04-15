@@ -1,5 +1,6 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +25,7 @@ import tresc.benchmark.Constants.ParameterName;
 public class SourceInclusionDependencyGenerator implements ScenarioGenerator {
 	
 	//MN this attribute has been considered so that we could inject random source inclusion dependencies into mappings - 14 April 2014
-	//MN do I need to new the List? - 14 April 2014
-    List<String> sids;
+	ArrayList<String> sids;
 	
 	private class InclusionDependency{
 		public String fromRelName;
@@ -63,6 +63,9 @@ public class SourceInclusionDependencyGenerator implements ScenarioGenerator {
 		
 		if (log.isDebugEnabled()) {log.debug("Attempting to Generate Random Source Inclusion Dependencies");};
 
+		//MN new ArrayList<String> - 14 April 2014
+		sids = new ArrayList<String> ();
+		
 		if (configuration.getParam(ParameterName.SourceInclusionDependencyPerc) >0) {
 			generateRandomIDs(scenario, configuration, _generator, ids);
 		}
@@ -70,7 +73,7 @@ public class SourceInclusionDependencyGenerator implements ScenarioGenerator {
 	}
 	
 	//MN this method returns random source inclusion dependencies - 14 April 2014
-	public List<String> getRandomSourceIDs(){
+	public ArrayList<String> getRandomSourceIDs(){
 		return sids;
 	}
 	

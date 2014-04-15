@@ -18,7 +18,7 @@ Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
 Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 1
+Scenarios.MERGEADD = 5
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -44,8 +44,8 @@ ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 80
-ConfigOptions.SourceInclusionDependencyFKPerc = 100
+ConfigOptions.SourceInclusionDependencyPerc = 70
+ConfigOptions.SourceInclusionDependencyFKPerc = 10
 ConfigOptions.TargetInclusionDependencyPerc = 35
 ConfigOptions.TargetInclusionDependencyFKPerc = 40
 # exists is 1 and not exists is 0

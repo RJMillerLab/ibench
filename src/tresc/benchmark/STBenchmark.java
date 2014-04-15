@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -119,8 +120,9 @@ public class STBenchmark {
 	}
 
 	//MN prints results as mapjob, xsml and xsd files
+	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
 	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
-			String M, String S1) throws Exception {
+			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
 		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
 		
 		File xsmlDir = new File("./mapmerge");
@@ -159,7 +161,7 @@ public class STBenchmark {
 		/////print correspondences
 		xsmlPrinter.print(bufXSML, mapjob, scenario);
 		////print logical mappings (for first experiment)
-		xsmlPrinter.print(bufXSML, scenario, mapjob);
+		xsmlPrinter.print(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
 		try {
 			BufferedWriter bufWriterXSML =
 					new BufferedWriter(new FileWriter(new File(
@@ -360,8 +362,8 @@ public class STBenchmark {
 				Modules.scenarioGenerator.generateScenario(_configuration);
 		
 		//MN returns random source and target inclusion dependencies - 14 April 2014
-		List<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
-		List<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
+		ArrayList<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
+		ArrayList<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
 		
 		// log.debug("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 
@@ -377,7 +379,7 @@ public class STBenchmark {
 			     _configuration.getSourceSchemaFile(), 
 			     _configuration.getTargetSchemaFile(),
 			     _configuration.getMappingFileName(),
-			     _configuration.getSchemaFile());
+			     _configuration.getSchemaFile(), randomSourceInclusionDependencies, randomTargetInclusionDependencies);
 		
 		
 		
