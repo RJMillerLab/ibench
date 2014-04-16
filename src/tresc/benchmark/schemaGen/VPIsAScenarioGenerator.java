@@ -11,6 +11,7 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+//MN I've applied some modifications to correct correspondences of this mapping primitive - 16 April 2014
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -30,6 +31,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
     	super.initPartialMapping();
     	
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+        //MN number of set elements refers to join size - 16 April 2014
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
         
@@ -470,16 +472,23 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	}
 	
 	@Override
+	//MN I've applied some modifications to correct value correspondences in this mapping scenarios - 16 April 2014
 	protected void genCorrespondences() 
 	{
 		for (int i = 0; i < numOfTgtTables; i++)
         {
         	int offset = i * attsPerTargetRel;
-        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
-    				attsPerTargetRel + attrRemainder;
+        	int numAtts = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) :
+    				(attsPerTargetRel + attrRemainder + keySize);
         	
+        	int keyIndex =0;
             for (int j = 0; j < numAtts; j++)
-            	addCorr(0, offset + j, i, j);         
+            	if((j>=keySize) || ((j<keySize) && (i==0))){
+            		addCorr(0, offset + j, i, j);}
+            	else{
+            		addCorr(0, 0 + keyIndex, i, j);
+            		keyIndex++;
+            	}
         }
 	}
 
