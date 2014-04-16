@@ -652,8 +652,8 @@ public class XSMLWriter {
 			//MN should be modified - 12 April 2014
 			int deleteIndex = buf.toString().lastIndexOf("$tm" + toRel.substring(1, toRel.length()-1) + "/" + targetVarName + " = ");
 			buf.delete(deleteIndex, buf.length());
-			if(and)
-				buf.append(" AND ");
+			//if(and)
+				//buf.append(" AND ");
 			buf.append("$tm" + toRel.substring(1, toRel.length()-1) + "/" + targetVarName + " = " + "$sm" + fromRel.substring(1, fromRel.length()-1) + "/" + sourceVarName);
 			found = true;
 		}
