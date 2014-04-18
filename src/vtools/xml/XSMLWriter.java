@@ -1,9 +1,11 @@
 package vtools.xml;
 
 //MN This class prints the output of iBench as XSML file - 3 April 2014
+
 //MN I changed the expressions in "where" clause so that it prints the skolems in left-side of the expression - 11 April 2014
 //MN if error in craeting .xsml refer to skolem parts of the mappings - 12 April 2014
 //MN modifying the code to support injection of random regular source and target inclusion dependencies into mappings - 14 April 2014
+//MN assumption of two "a", only the second a is considered - what about skolem terms? - 16 April 2014
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -439,6 +441,7 @@ public class XSMLWriter {
 					}
 					//for each target var
 					
+					
 					//for each skolem term
 					while(true){
 						int skIndex = targetMapping.indexOf("<SKFunction");
@@ -450,8 +453,33 @@ public class XSMLWriter {
 							targetMapping = dealSK(scenario, buf, mapping, targetMapping, toRel, trgVarIndex, skIndex, and);
 							and = true;
 						}
-						//MN modification to support OF - 12 April 2014
-						targetMapping = targetMapping.substring(2);
+						else
+							break;
+						//MN added to support OF - 16 April 2014
+						
+						//**MN perhaps we need to add something for other special cases
+						int indexNextVar = targetMapping.indexOf("<Var>");
+						int indexNextSKFunc = targetMapping.indexOf("<SKFunction");
+						int indexNextAtom = targetMapping.indexOf("<Atom>");
+						int indexNextEndAtom = targetMapping.indexOf("</Atom>");
+						
+						
+						if((indexNextSKFunc == -1) && (indexNextVar != -1) && (indexNextVar > targetMapping.indexOf("</SKFunction>"))){
+							targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));
+							break;
+						}
+						//MN next Atom -17 April 2014
+						if((indexNextVar != -1) && (indexNextVar>indexNextAtom) && (indexNextVar>indexNextEndAtom)){
+							//targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));
+							break;
+						}
+						
+						if((indexNextSKFunc != -1) && (indexNextVar != -1) && (indexNextVar>targetMapping.indexOf("</SKFunction>"))
+								&& (indexNextVar< indexNextSKFunc)){
+							targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));
+							break;
+						}
+						
 						if(!(targetMapping.indexOf("</SKFunction>") == targetMapping.lastIndexOf("</SKFunction>")) && (targetMapping.indexOf("<SKFunction") < targetMapping.indexOf("</Atom>")))
 							{targetMapping = targetMapping.substring(targetMapping.indexOf("<SKFunction"));}
 						else
@@ -459,14 +487,15 @@ public class XSMLWriter {
 					}
 					//for each skolem term
 					
-					//MN modification to support Object Fusion - 12 April 2014 - needs to be checked more
-					if((targetMapping.indexOf("</SKFunction>") == targetMapping.lastIndexOf("</SKFunction>")) && 
-						(targetMapping.indexOf("<Var>")!= -1) && (targetMapping.indexOf("<Var>")<targetMapping.indexOf("</Atom>")))
-						{targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));}
-					else
+					//MN modification to support Object Fusion and Vertical Partitioning ISA - 16 April 2014
+					int indexNextAtom = targetMapping.indexOf("<Atom");
+					int indexNextVar = targetMapping.indexOf("<Var>");
+					
+					if((indexNextVar == -1) || ((indexNextAtom != -1) && (indexNextVar != -1) && (indexNextVar>indexNextAtom)))
 						break;
 				}
 				//for each target vars and skolem terms
+				
 				
 				//MN modification to support OF - 12 April 2014
 				if (!(targetMapping.lastIndexOf("</Atom>") == targetMapping.indexOf("</Atom>")))
@@ -568,6 +597,8 @@ public class XSMLWriter {
 		while(true){
 			targetMapping = targetMapping.substring(targetMapping.indexOf("<Var>"));
 			String skVar = targetMapping.split("<Var>")[1].split("</")[0];
+			//MN added one variable to support not to print more than one a at the same time - 16 April 2014
+			boolean foundSkVar = false;
 			
 			String sourceMapping = mapping.substring(mapping.indexOf("<Foreach>"), mapping.indexOf("</Foreach>")+10);
 		    //for each source atom
@@ -582,11 +613,13 @@ public class XSMLWriter {
 					
 					index++;
 					
-					if(skVar.equals(srcVar)){
+					if((!foundSkVar) && skVar.equals(srcVar)){
 						//MN I added this method to modularize the code - 12 April 2014
 			    		printMapExprSK(scenario, fromRel, buf, index, moreThanOneSkVar);
 			    		moreThanOneSkVar = true;
 			    		and = true;
+			    		//MN added equality for foundSkVar - 16 April 2014
+			    		foundSkVar = true;
 					}
 					
 					String checkSourceMapping = sourceMapping.substring(sourceMapping.indexOf("</Var>")+7);
@@ -621,6 +654,11 @@ public class XSMLWriter {
 				break;
 			
 			if((indexNextVar != -1) && (indexNextVar>indexNextAtom) && (indexNextVar>indexNextEndAtom))
+				break;
+			
+			//MN added to support OF - 16 April 2014
+			if((indexNextSKFunc != -1) && (indexNextVar != -1) && (indexNextVar>targetMapping.indexOf("</SKFunction>"))
+					&& (indexNextVar< indexNextSKFunc))
 				break;
 			
 			targetMapping = targetMapping.substring(targetMapping.indexOf("</Var>") +2);
