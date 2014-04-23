@@ -10,8 +10,6 @@ import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.RelationType;
 
-import com.sun.tools.javac.util.List;
-
 import smark.support.MappingScenario;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants;
