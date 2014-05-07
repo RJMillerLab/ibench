@@ -14,6 +14,7 @@
 	<classpathentry kind="lib" path="lib/saxon9he.jar"/>
 	<classpathentry kind="lib" path="lib/commons-primitives-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/args4j-2.0.17.jar"/>
+	<classpathentry kind="lib" path="lib/trampexgen.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/toxgene.jar"/>
