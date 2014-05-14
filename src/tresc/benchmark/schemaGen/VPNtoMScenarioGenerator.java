@@ -1,5 +1,9 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
@@ -18,8 +22,13 @@ import vtools.dataModel.expression.Variable;
 // PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
 
 // very similar to merging scenario generator, with source and target schemas swapped
+//MN IMPLEMENTED chooseSourceRels and chooseTargeteRels - 2 May 2014
+//MN ENHANCED genTargetRels to pass types of attributes of target relations as argument to addRelation - 4 May 2014
+
 public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 
+	public static final int MAX_NUM_TRIES = 10;
+	
 	private JoinKind jk;
 	private int numOfSrcTblAttr;
 	private int numOfTgtTables = 2;
@@ -100,9 +109,52 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		m.addSourceRel(sRel);
 	}
 
+	//MN implemented chooseSourceRels method to support source reusability - 2 May 2014
+	@Override
+	protected boolean chooseSourceRels() throws Exception {
+		//MN I think that numOfTgtTables is always equals to 2 - 2 May 2014 
+		int minAttrs = numOfTgtTables;
+		//MN I am not sure if the following is needed - 2 May 2014
+		if(keySize>numOfTgtTables)
+			minAttrs = keySize;
+			
+		RelationType rel;
+			
+		//MN get a random relation - 26 April 2014
+		rel = getRandomRel(true, minAttrs);
+			
+		if (rel == null) 
+			return false;
+			
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		//MN reevaluate the following fields (tried to preserve initial value of numOfTgtTables not keySize) - 26 April 2014
+		attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+	    attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
+			
+		//MN I think key elements are first elements of the rel attrs (am I right?) - 26 April 2014
+		// create primary key if necessary
+		if (!rel.isSetPrimaryKey() && keySize > 0) {
+			fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);
+		}
+		// adapt keySize - MN I believe keySize is not really important for VP (Am I right?) - 26 April 2014
+		else if (rel.isSetPrimaryKey()) {
+			keySize = rel.getPrimaryKey().sizeOfAttrArray(); 
+		}
+			
+		m.addSourceRel(rel);
+		
+		//MN what about jk? - 2 May 2014
+		return true;
+	}
+		
+	//MN ENHANCED to support source attr types - 3 May 2014
 	@Override
 	protected void genTargetRels() throws Exception {
         String[] attrs;
+        //MN BEGIN - 3 May 2014
+        String[] attrsType;
+        //MN END
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
 		String joinAtt1 = randomAttrName(0, 0);
@@ -122,17 +174,36 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         	int fkAttrs = ((jk == JoinKind.CHAIN && (i != 0 && i != numOfTgtTables - 1)) ? 2 : 1);
         	int attWithFK = attrNum + fkAttrs;
         	attrs = new String[attWithFK];
+        	//MN BEGIN
+        	attrsType = new String[attWithFK];
+        	//MN END
         
         	// create normal attributes for table (copy from source)
-            for (int j = 0; j < attrNum; j++)
+            for (int j = 0; j < attrNum; j++){
             	attrs[j] = srcAttrs[offset + j];
+            	//MN BEGIN - 8 May 2014
+            	attrsType[j] = m.getSourceRels().get(0).getAttrArray(j + offset).getDataType();
+            	//MN END
+            }
 
-            if (i == 0)
+            if (i == 0){
             	attrs[attrs.length - 1] = joinAtt1;
-            else
+            	//MN BEGIN - 8 May 2014
+            	attrsType[attrs.length - 1] = "TEXT";
+            	//MN END
+            }
+            else{
             	attrs[attrs.length - 1] = joinAtt2;
+            	//MN BEGIN - 8 May 2014
+            	attrsType[attrs.length - 1] = "TEXT";
+            	//MN END
+            }
             
-            fac.addRelation(hook, trgName, attrs, false);
+            //MN changed - 4 May 2014
+            String[] attrsCopy = new String[attrs.length];
+            for(int h=0; h<attrs.length; h++)
+            	attrsCopy[h] = attrsType[h];
+            fac.addRelation(hook, trgName, attrs, attrsCopy, false);
             
             // add the primary key for each relation
             if (i == 0)
@@ -144,11 +215,172 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         // create the third table which only has the join attributes
         String trgName = randomRelName(2);
     	String hook = getRelHook(2);
-    	fac.addRelation(hook, trgName, new String[] {joinAtt1Ref, joinAtt2Ref}, false);
+    	
+    	//MN BEGIN - 4 May 2014
+    	String[] attrsTypeLast = new String [2];
+    	for(int i=0; i<2; i++)
+    		attrsTypeLast[i] = m.getSourceRels().get(m.getSourceRels().size()-1).getAttrArray(i).getDataType();
+    	fac.addRelation(hook, trgName, new String[] {joinAtt1Ref, joinAtt2Ref}, 
+    			attrsTypeLast, false);
+    	//MN END
     	
         addFKs();
 	}
 
+	//MN added chooseTargetRels method to support target reusability - 26 April 2014
+	//MN assumptions - (1): attrRemainder =0 - 26 April 2014
+	//MN note that key size is always 1 - 2 May 2014
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+		List<RelationType> rels = new ArrayList<RelationType> ();
+		int numTries = 0;
+		int created = 0;
+		boolean found = false;
+		RelationType rel;
+		//MN wanted to preserve the initial values of numOfTgtTables and attsPerTargetRel - 26 April 2014
+		//MN here, we are dealing with target relations
+		//MN that have attributes with correspondences to source relation attributes - 2 May 2014
+		String[][] attrs = new String[numOfTgtTables+1][];
+			
+		// first choose one that has attsPerTargetRel
+		while(created < numOfTgtTables) {
+			found = true;
+				
+			//MN check the following again (it is really tricky) - 26 April 2014
+			if(created == 0){
+				rel = getRandomRel(false, attsPerTargetRel+1);
+			}
+			else{
+				rel = getRandomRel(false, attsPerTargetRel+1, attsPerTargetRel+1);
+				
+				if(rel != null){
+					for(int j=0; j<rels.size(); j++)
+						if(rels.get(j).getName().equals(rel.getName()))
+							found = false;
+				}
+				else
+					found = false;
+			}
+				
+			//MN VPNToM cares about primary key - 2 May 2014
+			if(found && !rel.isSetPrimaryKey()) {
+				//MN set to false because this is target relation (Am I right?) - 26 April 2014
+				//MN primary key size should be 1 - 26 April 2014
+				int [] primaryKeyPos = new int [1];
+				primaryKeyPos[0] = rel.sizeOfAttrArray()-1;
+				fac.addPrimaryKey(rel.getName(), primaryKeyPos[0], false);
+			}
+				
+			if(found && rel.isSetPrimaryKey()){
+				//MN keySize should be 1 and key attr should be the last attr- 26 April 2014
+				int[] pkPos = model.getPKPos(rel.getName(), false);
+				if(pkPos.length != 1)
+					found = false;
+				if(found)
+					if((pkPos[0] != (rel.getAttrArray().length-1)))
+						found = false;
+			}
+				
+			// found a fitting relation
+			if (found) {
+				rels.add(rel);
+				m.addTargetRel(rel);
+
+				attrs[created] = new String[rel.sizeOfAttrArray()];
+				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
+					attrs[created][i] = rel.getAttrArray(i).getName();
+					
+				//MN attsPerTargetRel should be set (check that) (it is really tricky) - 26 April 2014
+				if(created == 0)
+					attsPerTargetRel = rel.getAttrArray().length-1;
+					
+				created++;
+				numTries = 0;
+			}
+			// not found, have exhausted number of tries? then create new one - path tested 1 May 2014
+			else {
+				numTries++;
+				if (numTries >= MAX_NUM_TRIES)
+				{
+					numTries = 0;
+					attrs[created] = new String[attsPerTargetRel+1];
+					for(int j = 0; j < attsPerTargetRel+1; j++)
+						attrs[created][j] = randomAttrName(created, j);
+						
+					// create the relation
+					String relName = randomRelName(created);
+					rels.add(fac.addRelation(getRelHook(created), relName, attrs[created], false));
+						
+					// primary key should be set and its size should be 1- 26 April 2014
+					int [] primaryKeyPos = new int [1];
+					primaryKeyPos [0] = attsPerTargetRel;
+					fac.addPrimaryKey(relName, primaryKeyPos[0], false);
+						
+					//MN should I add it to TargetRel? - 26 April 2014
+					//m.addTargetRel(rels.get(rels.size()-1));
+						
+					created++;
+					numTries = 0;
+				}
+			}
+		}
+		
+		//MN the last target relation should be created - 2 May 2014
+		//MN code for creating the last relation - 2 May 2014
+		numTries=0;
+		found = false;
+		RelationType lastRel;
+		while((numTries<MAX_NUM_TRIES) && (!found)){
+			//For the last relation, 
+			lastRel = getRandomRel(false, 2, 2);
+			
+			//MN check if this relation is the same as one of the target relations have been found so far - 2 May 2014
+			if(lastRel != null){
+				boolean found2 = true;
+				for(int j=0; j<rels.size(); j++)
+					if(rels.get(j).getName().equals(lastRel.getName()))
+						found2 = false;
+				if(found2)
+					found=true;
+			}
+			
+			if(found){
+				rels.add(lastRel);
+				m.addTargetRel(lastRel);
+
+				attrs[created] = new String[lastRel.sizeOfAttrArray()];
+				for(int i = 0; i < lastRel.sizeOfAttrArray(); i++)
+					attrs[created][i] = lastRel.getAttrArray(i).getName();
+				created++;
+			}
+			
+			numTries++;
+		}
+		//MN if suitable relation for the last relation
+		//MN has not found, create one ! - 2 May 2014
+		if(!found){
+			attrs[created] = new String[2];
+			for(int j = 0; j < 2; j++)
+				attrs[created][j] = randomAttrName(created, j);
+				
+			// create the relation
+			String relName = randomRelName(created);
+			rels.add(fac.addRelation(getRelHook(created), relName, attrs[created], false));
+			created++;
+		}
+		
+		//MN set attrRemainder and numOfSrcTables - 26 April 2014
+		numOfSrcTblAttr= numOfTgtTables * attsPerTargetRel; 
+		//MN considering only these two cases - 26 April 2014
+		attrRemainder =0;
+		//MN I need to discuss the following with Patricia - 2 May 2014
+		keySize=1;
+			
+		//MN foreign key should be set - 26 April 2014
+		addFKs();
+		return true;
+	}
+		
 	private void addFKs() 
 	{
 		// the first attribute of the "link" relation is a reference to the last attribute of the first relation

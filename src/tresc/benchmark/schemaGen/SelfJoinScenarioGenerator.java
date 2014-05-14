@@ -1,6 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.vagabond.util.CollectionUtils;
@@ -16,6 +18,9 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
+
+//MN FIXED "K"; it had not been set correctly - 6 May 2014
+//MN ENHANCINED source reusability - 6 May 2014
 
 public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -41,7 +46,10 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     protected void initPartialMapping () {
     	super.initPartialMapping();
         E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-        K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
+        
+        //MN modified the code so that K works correctly - 6 May 2014
+        K = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+        
         E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
         JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         
@@ -49,6 +57,9 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
         F = E - (2 * K);
     }
 
+    //MN modified chooseSoruceRels - 6 May 2014
+    //MN Question: I don't get some parts of the code - 6 May 2014
+    //MN the goal is to preserve value of Key - 6 May 2014
     @Override
     protected boolean chooseSourceRels() throws Exception {
     	int numTries = 0;
@@ -56,8 +67,10 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	String srcName;
     	
     	// fetch random rel with enough attrs
-    	while(numTries < MAX_NUM_TRIES && rel == null)
+    	while(numTries < MAX_NUM_TRIES && rel == null){
     		rel = getRandomRel(true, K + K + 1);
+    		numTries++;
+    	}
     	
     	//TODO try to reduce number of keys and foreign keys?
     	
@@ -68,6 +81,10 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	
     	if (rel == null)
     		return false;
+    	
+    	//MN BEGIN
+    	E = rel.sizeOfAttrArray();
+    	//MN END
     	
     	F = rel.sizeOfAttrArray() - 2 * K;
 //    	normalPos = new int[F];
@@ -81,6 +98,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 
     		// find attributes to use as fk
     		int fkDone = 0, pos = 0;
+    		//MN I have trouble in understanding the following piece of code - 6 May 2014
     		while(fkDone < K) {
     			// is pk position?
     			if (Arrays.binarySearch(keyPos, pos) < 0) {
@@ -107,6 +125,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	return true;
     }
     
+	
 	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
@@ -145,20 +164,42 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		String fkRelName = m.getRelName(0, true) + "_fk";
 		String[] bAttrs = new String[K + F];
 		String[] fkAttrs = new String[2 * K];
-
+		//MN ADDED support for types of attributes - 4 May 2014 (perhaps we do this for all mapping primitives)!
+		List<String> attrsType1 = new ArrayList<String> ();
+		List<String> attrsType2 = new ArrayList<String> ();
+		
 		// add keys to basic table and keys and fks to fk table
 		for(int i = 0; i < K; i++) {
+			//MN BEGIN - 6 May 2014
+			//bAttrs
+			attrsType1.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//fkAttrs
+			attrsType2.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//MN END
 			bAttrs[i] = m.getAttrId(0, i, true);
 			fkAttrs[i] = m.getAttrId(0, i, true);
 			fkAttrs[i + K] = m.getAttrId(0, i + K, true);
 		}
+		
+		//MN BEGIN - 6 May 2014
+		//fkAttrs
+		for(int i=0; i<K; i++)
+			attrsType2.add(m.getSourceRels().get(0).getAttrArray(i + K).getDataType());
+		//MN END
+		
 		// add free attrs to basic table
-		for(int i = 2 * K; i < E; i++)
+		for(int i = 2 * K; i < E; i++){
 			bAttrs[i - K] = m.getAttrId(0, i, true);
+			//MN BEGIN - 6 May 2014
+			//bAttrs
+			attrsType1.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//MN END
+		}
 		
 		// create relations and foreign keys
-		fac.addRelation(getRelHook(0), bRelName, bAttrs, false);
-		fac.addRelation(getRelHook(1), fkRelName, fkAttrs, false);
+		//MN modified the method to support type checking - 6 May 2014
+		fac.addRelation(getRelHook(0), bRelName, bAttrs, attrsType1.toArray(new String[] {}), false);
+		fac.addRelation(getRelHook(1), fkRelName, fkAttrs, attrsType2.toArray(new String[] {}), false);
 		
 		fac.addPrimaryKey(bRelName, keys, false);
 		fac.addPrimaryKey(fkRelName, keys, false);

@@ -1,5 +1,7 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.vagabond.util.CollectionUtils;
@@ -33,6 +35,10 @@ import vtools.dataModel.expression.Variable;
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 21, 2012
 
+// MN ENHANCED genTargetRel to pass types of attributes as argument to addRelation (genTargetRel) - 3 May 2014
+
+// MN ENHANCED genSourceRel to pass types of attributes as argument to addRelation (genSourceRel) (added new attribute targetReuse) - 11 May 2014
+
 public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 
 	private static final int MAX_TRIES = 20;
@@ -41,7 +47,12 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	private int numAddAttr;
 	private int keySize;
 	private SkolemKind sk;
-
+	//MN ADDED boolean attribute; if it is true, it means the instance of mapping primitive is reusing
+	//target relation - 11 May 2014
+	//MN BEGIN
+	private boolean targetReuse;
+	//MN END
+	
 	public AddAttributeScenarioGenerator() {
 		;
 	}
@@ -70,6 +81,10 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		// PRG Added the following code to always force key generation when SkolemKind.KEY 
 		if (sk == SkolemKind.KEY)
 			keySize = (keySize > 0) ? keySize : 1;
+		
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	// override to adapt the local fields
@@ -82,6 +97,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		super.chooseSourceRels();
 		
 		rel = m.getSourceRels().get(0);
+		//MN we can consider Max_Num_Tries to add more flexibility - 11 May 2014
+		//MN To do: we need to relax minimum required number of attributes - 11 May 2014
 		if (rel == null)
 			return false;
 		
@@ -148,6 +165,11 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			return false;
 		// source should have the same attrs as target but no skolems
 		else {
+			
+			//MN BEGIN - 11 May 2014
+			targetReuse = true;
+			//MN END
+			
 			m.addTargetRel(cand);
 			
 			numOfSrcTblAttr = cand.sizeOfAttrArray() 
@@ -171,11 +193,15 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
+		//MN BEGIN - considerd an array to store types of attributes of source relation - 11 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
+		//MN END
 		
 		// generate the appropriate number of keys
 		String[] keys = new String[keySize];
-		for (int j = 0; j < keySize; j++)
+		for (int j = 0; j < keySize; j++){
 			keys[j] = randomAttrName(0, 0) + "ke" + j;
+		}
 
 		int keyCount = 0;
 		for (int i = 0; i < numOfSrcTblAttr; i++) {
@@ -189,14 +215,28 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 			keyCount++;
 			
 			attrs[i] = attrName;
+			
+			//MN BEGIN - 11 May 2014
+			if(targetReuse)
+				attrsType[i] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+			//MN END
 		}
 
-		fac.addRelation(getRelHook(0), srcName, attrs, true);
+		//MN BEGIN - 11 May 2014
+		if(!targetReuse)
+			fac.addRelation(getRelHook(0), srcName, attrs, true);
+		else
+			fac.addRelation(getRelHook(0), srcName, attrs, attrsType, true);
+		//MN END
 
 		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
 		// if (sk == SkolemKind.KEY)
 		if (keySize > 0 || sk == SkolemKind.KEY)
 			fac.addPrimaryKey(srcName, keys, true);
+		
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	@Override
@@ -204,15 +244,29 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		String trgName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr + numAddAttr];
 		String[] srcAttrs = m.getAttrIds(0, true);
-
+		//MN considered an array to store types of attributes of target relation - 3 May 2014
+		//MN BEGIN
+		List<String> attrsType = new ArrayList<String> ();
+		//MN END
+		
 		// copy src attrs
 		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr);
 
+		//MN BEGIN - 4 May 2014
+		for(int i=0; i<numOfSrcTblAttr; i++)
+			attrsType.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+		//MN END
+		
 		// create random names for the added attrs
-		for (int i = numOfSrcTblAttr; i < numOfSrcTblAttr + numAddAttr; i++)
+		for (int i = numOfSrcTblAttr; i < numOfSrcTblAttr + numAddAttr; i++){
 			attrs[i] = randomAttrName(0, i);
+			//MN BEGIN - 8 May 2014
+			attrsType.add("TEXT");
+			//MN END
+		}
 
-		fac.addRelation(getRelHook(0), trgName, attrs, false);
+		//MN modified the following line - 4 May 2014
+		fac.addRelation(getRelHook(0), trgName, attrs, attrsType.toArray(new String[] {}), false);
 	
 		String[] keys = new String[keySize];
 		for (int j = 0; j < keySize; j++)

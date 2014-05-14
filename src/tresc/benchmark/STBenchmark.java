@@ -16,6 +16,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
+import randomConfigGenerator.ConfigGenerator;
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
@@ -115,6 +116,14 @@ public class STBenchmark {
 		PropertyConfigurator.configure("resource/log4jproperties.txt");
 
 		STBenchmark benchmark = new STBenchmark();
+		//MN added lines to make connection with random config file generator - 21 April 2014
+		//MN the following lines should be enabled - 26 April 2014
+		ConfigGenerator cg = new ConfigGenerator();
+		//cg.setConfigPath("config/");
+		String configFileName = cg.generateConfigFile(false);
+		configFileName = "config/" + configFileName;
+		//_configuration.configurationFile = configFileName;
+		//MN end of adding some lines - 21 April 2014
 		benchmark.parseArgs(args);
 		benchmark.run(args);
 	}
@@ -168,6 +177,7 @@ public class STBenchmark {
 							"./mapmerge", mapjob + ".xsml")));
 			bufWriterXSML.write(bufXSML.toString());
 			bufWriterXSML.close();
+			System.out.print(".xsml file done!\n");
 		}
 		catch (Exception e) {
 			LoggerUtil.logException(e, log);
@@ -190,12 +200,14 @@ public class STBenchmark {
 							"./mapmerge", S)));
 			bufWriterXSD.write(bufSourceXSD.toString());
 			bufWriterXSD.close();
+			System.out.print("source .xsd file done!\n");
 
 			bufWriterXSD =
 					new BufferedWriter(new FileWriter(new File(
 							"./mapmerge", T.substring(0, T.length()-7) + "Trg.xsd")));
 			bufWriterXSD.write(bufTargetXSD.toString());
 			bufWriterXSD.close();
+			System.out.print("target .xsd file done!\n");
 		}
 		catch (Exception e) {
 			LoggerUtil.logException(e, log);
@@ -331,9 +343,18 @@ public class STBenchmark {
 	public void run(String[] args) throws Exception {
 		
 		if (_configuration.configurationFile != null) {
-			parseConfigFile(_configuration.configurationFile);
+			//parseConfigFile(_configuration.configurationFile);
+			//MN changed the code - 21 April 2014
+			System.out.print(_configuration.configurationFile);
+			PropertyWrapper props = new PropertyWrapper(_configuration.configurationFile);
+			if (log.isDebugEnabled()) {log.debug(props.toString());};
+			_configuration.readFromProperties(props);
+			parseArgs(args);
+			if (log.isDebugEnabled()) {log.debug(_configuration.toString());};
+			runConfig();
 		}
 		else if (_configuration.propertyFileName != null) {
+			System.out.print(_configuration.propertyFileName);
 			PropertyWrapper props = new PropertyWrapper(_configuration.propertyFileName);
 			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);

@@ -1,6 +1,10 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
@@ -14,11 +18,19 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+//MN ENHANCED genTargetRel to pass types of attributes as argument to addRelation - 11 May 2014
+//MN ENHANCED genSourceRel to pass types of attributes as argument to addRelation -11 May 2014
+//MN FIXED keySize in chooseSourceRels - 11 May 2014
+
 public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 
 	private int keySize;
 	private int A;
 	static Logger log = Logger.getLogger(CopyScenarioGenerator.class);
+	
+	//MN - added new attribute to check whether we are reusing target relation or not - 11 May 2014
+	private boolean targetReuse;
+	//MN
 	
 	@Override
 	protected void initPartialMapping() {
@@ -38,6 +50,10 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		if (log.isDebugEnabled()) {log.debug("-----AFTER-----");};
 		if (log.isDebugEnabled()) {log.debug("Atomic Elements: " + A);};
 		if (log.isDebugEnabled()) {log.debug("Key Size: " + keySize);};
+		
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	public CopyScenarioGenerator() {
@@ -62,7 +78,17 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		
 		m.addSourceRel(rel);
 		A = rel.sizeOfAttrArray();
-		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		////keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		
+		//MN BEGIN - 11 May 2014
+		if (keySize > 0 && !rel.isSetPrimaryKey()) {
+			keySize = keySize > rel.sizeOfAttrArray() ? rel.sizeOfAttrArray() : keySize;
+			fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);
+		}
+		else if (rel.isSetPrimaryKey())
+			keySize = rel.getPrimaryKey().sizeOfAttrArray();
+		//MN END
 		
 		return true;
 	}
@@ -75,7 +101,11 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		
 		m.addTargetRel(rel);
 		A = rel.sizeOfAttrArray();
+		//MN discuss it with Patricia - 11 May 2014
 		keySize = rel.isSetPrimaryKey() ? rel.getPrimaryKey().sizeOfAttrArray() : 0; 
+		//MN BEGIN - 11 May 2014
+		targetReuse = true;
+		//MN END
 		
 		return true;
 	}
@@ -132,6 +162,10 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		String hook = getRelHook(0);
 		String[] keys = new String[keySize];
 		
+		//MN BEGIN - 11 May 2014
+		String[] attrsType = new String[A];
+		//MN END
+		
 		// generate the appropriate number of keys
 		for (int i = 0; i < A; i++) {
 			String attrName = randomAttrName(0,i);
@@ -140,6 +174,11 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 				keys[i] = attrName;
 			}
 			attrs[i] = attrName;
+			
+			//MN BEGIN - 11 May 2014
+			if(targetReuse)
+				attrsType[i] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+			//MN END
 		}
 		
 		
@@ -158,10 +197,22 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 //			attrs[i] = attrName;
 //		}
 		
-		RelationType rel = fac.addRelation(hook, relName, attrs, true);
+		RelationType rel = null;
+		
+		//MN BEGIN - 11 May 2014
+		if(!targetReuse)
+			rel = fac.addRelation(hook, relName, attrs, true);
+		else
+			rel = fac.addRelation(hook, relName, attrs, attrsType, true);
+		//MN END
+		
 		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 16, 2012
 		if (keySize > 0)
 			fac.addPrimaryKey(rel.getName(), keys, true);
+		
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	@Override
@@ -170,10 +221,20 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		String[] attrs = new String[A];
 		String relName = s.getName() + "copy" + curRep + "_" + fac.getNextId("R");
 		String hook = getRelHook(0);
+		//MN considered an array to pass types of attributes as argument to addRelation - 4 May 2014
+		List<String> attrsType = new ArrayList<String> ();
+		//MN
 		
-		for(int i = 0; i < s.getAttrArray().length; i++)
+		for(int i = 0; i < s.getAttrArray().length; i++){
 			attrs[i] = s.getAttrArray(i).getName();
-		fac.addRelation(hook, relName, attrs, false);
+			//MN BEGIN - 4 May 2014
+			attrsType.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//MN END
+		}
+		
+		//MN modified - 4 May 2014
+		fac.addRelation(hook, relName, attrs, attrsType.toArray(new String[] {}), false);
+		//MN
 		
 		String[] keys = new String[keySize];
 		for (int j = 0; j < keySize; j++)

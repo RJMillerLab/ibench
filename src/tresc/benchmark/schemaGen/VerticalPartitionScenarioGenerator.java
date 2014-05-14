@@ -1,6 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import org.vagabond.util.CollectionUtils;
@@ -28,10 +30,16 @@ import vtools.dataModel.expression.Variable;
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 21, 2012
 
+// MN IMPLEMENTED source and target reusability (methods chooseSourceRels and chooseTargetRels) - April 26, 2014
+// MN ENHANCED genTargetRels to pass types of attributes of target relation as argument to addRelation - 3 May 2014
+// MN MODIFIED chooseSourceRels to check primaryKey positions - 13 May 2014
+// MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 13 May 2014
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
 
+	public static final int MAX_NUM_TRIES = 10;
+	
 	private JoinKind jk;
 	private int numOfSrcTblAttr;
 	private int numOfTgtTables;
@@ -49,6 +57,10 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	// PRG ADDED to Support Optional Source Keys - Sep 18, 2012
 	private int keySize;
 	
+	// MN considered an attribute to check whether we are reusing target relation - 13 May 2014
+	private boolean targetReuse;
+	// MN
+	
     public VerticalPartitionScenarioGenerator()
     {
         ;
@@ -63,7 +75,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         
         // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
         numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
-
+        //MN numOfSetElement is JoinSize - 26 April 2014
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
             numOfSetElementsDeviation);
     	
@@ -92,6 +104,9 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		if (sk == SkolemKind.KEY)
 			keySize = (keySize > 0) ? keySize : 1;
 		
+		//MN -13 May 2014
+		targetReuse = false;
+		//MN
     }
 
 	
@@ -330,6 +345,10 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
 		
+		//MN considered an array to store types of attributes of source relation - 13 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
+		//MN
+		
 		// for (int i = 0; i < numOfSrcTblAttr; i++)
 		// 	attNames[i] = randomAttrName(0, i);
 		
@@ -350,8 +369,34 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 			attNames[i] = attrName;
 		}
 		
-		
-		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		//MN - 13 May 2014
+		if(targetReuse){
+			int count =0;
+			for(int i=0; i<numOfTgtTables; i++){
+				if(i != numOfTgtTables -1){
+					for(int j=0; j<attsPerTargetRel -1; j++){
+						attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+						count++;
+					}
+				}
+				else{
+					for(int j=0; j<attsPerTargetRel + attrRemainder -1; j++){
+						attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+						count++;
+					}
+				}
+			}
+			
+			for(int i=0; i<numOfSrcTblAttr; i++)
+				if(attrsType[i] == null)
+					attrsType[i] = "TEXT";
+		}
+		//MN
+		RelationType sRel = null;
+		if(!targetReuse)
+			 sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		else
+			 sRel = fac.addRelation(hook, sourceRelName, attNames, attrsType, true);
 		
 		// PRG ADDED - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 18, 2012
 		if (keySize > 0 )
@@ -359,11 +404,187 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 		
 		m.addSourceRel(sRel);
 		
+		//MN - 13 May 2014
+		targetReuse = false;
+		//MN
 	}
 
+	//MN implemented chooseSourceRels (source reusability) - 26 April 2014
+	@Override
+	protected boolean chooseSourceRels() throws Exception {
+		int minAttrs = numOfTgtTables;
+		//MN I am not sure if the following is necessary - 26 April 2014
+		if(keySize>numOfTgtTables)
+			minAttrs = keySize;
+		//MN
+		
+		//MN -13 May 2014
+		boolean ok = true;
+		//MN
+		
+		RelationType rel = null;
+		
+		//MN - 13 May 2014
+		int numTries =-1;
+		
+		while(numTries++<MAX_NUM_TRIES){
+			//MN get a random relation - 26 April 2014
+			rel = getRandomRel(true, minAttrs);
+		
+			if (rel == null) 
+				return false;
+		
+			numOfSrcTblAttr = rel.sizeOfAttrArray();
+			//MN reevaluate the following fields (tried to preserve initial value of numOfTgtTables not keySize) - 26 April 2014
+			attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+			attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
+		
+			//MN I think key elements are first elements of the rel attrs (am I right?) YES - 26 April 2014
+			// create primary key if necessary
+			if (!rel.isSetPrimaryKey() && keySize > 0) {
+				fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);
+				ok = true;
+			}
+			// adapt keySize - MN I believe keySize is not really important for VP (Am I right?) - 26 April 2014
+			else if (rel.isSetPrimaryKey()) {
+				//MN BEGIN - 13 May 2014
+				int[] pkPos = model.getPKPos(rel.getName(), true);
+				for(int i=0; i<pkPos.length; i++)
+					if(pkPos[i] != i)
+						ok = false;
+				if(ok)
+					keySize = rel.getPrimaryKey().sizeOfAttrArray(); 
+				//MN END
+			}
+			
+			if(ok)
+				break;
+		}
+		
+		m.addSourceRel(rel);
+		
+		return true;
+	}
+	
+	//MN implemented chooseTargetRels method to support target reusability - 26 April 2014
+	//MN assumptions - (1): attrRemainder =0 (2): keySize =1 - 26 April 2014
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+		List<RelationType> rels = new ArrayList<RelationType> ();
+		int numTries = 0;
+		int created = 0;
+		boolean found = false;
+		RelationType rel;
+		//MN wanted to preserve the initial values of numOfTgtTables and attsPerTargetRel - 26 April 2014
+		String[][] attrs = new String[numOfTgtTables][];
+		
+		// first choose one that has attsPerTargetRel
+		while(created < numOfTgtTables) {
+			found = true;
+			
+			//MN check the following again (it is really tricky) - 26 April 2014
+			if(created == 0){
+				rel = getRandomRel(false, attsPerTargetRel+1);
+			}
+			else{
+				rel = getRandomRel(false, attsPerTargetRel+1, attsPerTargetRel+1);
+				
+				if(rel != null){
+					for(int j=0; j<rels.size(); j++)
+						if(rels.get(j).getName().equals(rel.getName()))
+							found = false;
+				}else{
+					found = false;
+				}
+			}
+			
+			//MN VP cares about primary key - 26 April 2014
+			if(found && !rel.isSetPrimaryKey()) {
+				//MN set to false because this is target relation (Am I right?) - 26 April 2014
+				//MN primary key size should be 1 - 26 April 2014
+				int [] primaryKeyPos = new int [1];
+				primaryKeyPos[0] = rel.sizeOfAttrArray()-1;
+				fac.addPrimaryKey(rel.getName(), primaryKeyPos[0], false);
+			}
+			
+			if(found && rel.isSetPrimaryKey()){
+				//MN keySize should be 1 and key attr should be the last attr- 26 April 2014
+				int[] pkPos = model.getPKPos(rel.getName(), false);
+				if(pkPos.length != 1)
+					found = false;
+				if(found)
+					if((pkPos[0] != (rel.getAttrArray().length-1)))
+						found = false;
+			}
+			
+			// found a fitting relation
+			if (found) {
+				rels.add(rel);
+				m.addTargetRel(rel);
+
+				attrs[created] = new String[rel.sizeOfAttrArray()];
+				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
+					attrs[created][i] = rel.getAttrArray(i).getName();
+				
+				//MN attsPerTargetRel should be set (check that) (it is really tricky) - 26 April 2014
+				if(created == 0)
+					attsPerTargetRel = rel.getAttrArray().length-1;
+				
+				created++;
+				numTries = 0;
+			}
+			// not found, have exhausted number of tries? then create new one - path tested 1 May 2014
+			else {
+				numTries++;
+				if (numTries >= MAX_NUM_TRIES)
+				{
+					numTries = 0;
+					attrs[created] = new String[attsPerTargetRel+1];
+					for(int j = 0; j < attsPerTargetRel+1; j++)
+						attrs[created][j] = randomAttrName(created, j);
+					
+					// create the relation
+					String relName = randomRelName(created);
+					rels.add(fac.addRelation(getRelHook(created), relName, attrs[created], false));
+					
+					// primary key should be set and its size should be 1- 26 April 2014
+					int [] primaryKeyPos = new int [1];
+					primaryKeyPos [0] = attsPerTargetRel;
+					fac.addPrimaryKey(relName, primaryKeyPos[0], false);
+					
+					//MN should I add it to TargetRel? - 26 April 2014
+					//m.addTargetRel(rels.get(rels.size()-1));
+					
+					created++;
+					numTries = 0;
+				}
+			}
+		}
+		
+		//MN set attrRemainder and numOfSrcTables - 26 April 2014
+		numOfSrcTblAttr= numOfTgtTables * attsPerTargetRel; 
+		//MN considering only these two cases - 26 April 2014
+		attrRemainder =0;
+		keySize=1;
+		
+		//MN foreign key should be set - 26 April 2014
+		addFKs();
+		
+		//MN - 13 May 2014
+		targetReuse = true;
+		//MN
+		
+		return true;
+	}
+	
+	//MN ENHANCED to support types of src attributes - 3 May 2014
 	@Override
 	protected void genTargetRels() throws Exception {
         String[] attrs;
+        //MN BEGIN
+        String[] attrsType;
+        //MN END
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
 		String joinAttName = randomAttrName(0, 0) + "JoinAttr";
@@ -385,25 +606,44 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
         	int fkAttrs = 1;
         	int attWithFK = attrNum + fkAttrs;
         	attrs = new String[attWithFK];
+        	//MN BEGIN
+        	attrsType = new String[attWithFK];
+        	//MN END
         
         	// create normal attributes for table (copy from source)
-            for (int j = 0; j < attrNum; j++)
+            for (int j = 0; j < attrNum; j++){
             	attrs[j] = srcAttrs[offset + j];
+            	//MN BEGIN - 8 May 2014
+            	attrsType[j] = m.getSourceRels().get(0).getAttrArray(offset + j).getDataType();
+            	//MN END
+            }
             
             // create the join attributes
             // for star join the first one has the join attribute and the following ones 
             // have the join reference (FK)
             if (jk == JoinKind.STAR) {
             	if (i == 0)//TODO check
+            	{
             		attrs[attrs.length - 1] = joinAttName;
-            	else
+            		//MN BEGIN
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
+            	}
+            	else{
             		attrs[attrs.length - 1] = joinAttNameRef;
+            		//MN BEGIN
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
+            	}
             // for chain join each one has one join attribute             	
 //            OLD	has a join and join ref to the previous
 //             thus, the first does not have a ref and the last one does not have a join attr
             } else { // chain
 //            	if (i == 0)
             		attrs[attrs.length - 1] = joinAttName;
+            		//MN BEGIN
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
 //            	else if (i == numOfTgtTables - 1)
 //            		attrs[attrs.length - 1] = joinAttNameRef;
 //            	else {
@@ -412,8 +652,11 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 //            	}
             }
             
-            fac.addRelation(hook, trgName, attrs, false);
-            
+            //MN changed the following line - 4 May 2014 and 8 May 2014
+            String[] attrsCopy = new String [attrs.length];
+            for(int h=0; h<attrs.length; h++)
+            	attrsCopy[h] = attrsType[h];
+            fac.addRelation(hook, trgName, attrs, attrsCopy, false);
             if (jk == JoinKind.STAR) 
             {
             	if (i == 0)//TODO check
@@ -763,7 +1006,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 
 	@Override
 	protected void genCorrespondences() {
-        for (int i = 0; i < numOfTgtTables; i++)
+		for (int i = 0; i < numOfTgtTables; i++)
         {
         	int offset = i * attsPerTargetRel;
         	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
