@@ -22,7 +22,7 @@ import vtools.dataModel.expression.Variable;
 // PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
 
 // very similar to merging scenario generator, with source and target schemas swapped
-//MN IMPLEMENTED chooseSourceRels and chooseTargeteRels - 2 May 2014
+//MN IMPLEMENTED chooseSourceRels and chooseTargeteRels (source and target reusability) - 2 May 2014
 //MN ENHANCED genTargetRels to pass types of attributes of target relations as argument to addRelation - 4 May 2014
 
 public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
@@ -120,14 +120,14 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			
 		RelationType rel;
 			
-		//MN get a random relation - 26 April 2014
+		//MN get a random relation - 27 April 2014
 		rel = getRandomRel(true, minAttrs);
 			
 		if (rel == null) 
 			return false;
 			
 		numOfSrcTblAttr = rel.sizeOfAttrArray();
-		//MN reevaluate the following fields (tried to preserve initial value of numOfTgtTables not keySize) - 26 April 2014
+		//MN reevaluate the following fields (tries to preserve initial value of numOfTgtTables not keySize) - 26 April 2014
 		attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
 	    attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
 			
@@ -227,7 +227,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         addFKs();
 	}
 
-	//MN added chooseTargetRels method to support target reusability - 26 April 2014
+	//MN implemented chooseTargetRels method to support target reusability - 26 April 2014
 	//MN assumptions - (1): attrRemainder =0 - 26 April 2014
 	//MN note that key size is always 1 - 2 May 2014
 	@Override
@@ -373,7 +373,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		numOfSrcTblAttr= numOfTgtTables * attsPerTargetRel; 
 		//MN considering only these two cases - 26 April 2014
 		attrRemainder =0;
-		//MN I need to discuss the following with Patricia - 2 May 2014
+		//MN I need to discuss about the following line with Patricia - 2 May 2014
 		keySize=1;
 			
 		//MN foreign key should be set - 26 April 2014

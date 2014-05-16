@@ -5,8 +5,8 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
-Scenarios.HORIZPARTITION = 0
+Scenarios.COPY = 4
+Scenarios.HORIZPARTITION = 3
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
@@ -17,7 +17,7 @@ Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 1
+Scenarios.VERTPARTITIONNTOM = 3
 Scenarios.MERGEADD = 0
 
 # These should always be zero
@@ -31,7 +31,7 @@ Scenarios.VALUEMANAGEMENT = 0
 ConfigOptions.NumOfSubElements = 4
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 2
-ConfigOptions.JoinSize = 3
+ConfigOptions.JoinSize = 4
 ConfigOptions.NumOfParamsInFunctions = 1
 ConfigOptions.PrimaryKeySize = 1
 ConfigOptions.NumOfJoinAttributes = 1
