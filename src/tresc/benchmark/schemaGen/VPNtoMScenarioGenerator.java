@@ -22,8 +22,11 @@ import vtools.dataModel.expression.Variable;
 // PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
 
 // very similar to merging scenario generator, with source and target schemas swapped
+
 //MN IMPLEMENTED chooseSourceRels and chooseTargeteRels (source and target reusability) - 2 May 2014
 //MN ENHANCED genTargetRels to pass types of attributes of target relations as argument to addRelation - 4 May 2014
+//MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 16 May 2014
+//MN FIXED attrsTypeLast in genTargetRels - 16 May 2014
 
 public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 
@@ -31,6 +34,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 	
 	private JoinKind jk;
 	private int numOfSrcTblAttr;
+	//MN note that the number of target relations will be 2 + 1 - 16 May 2014
 	private int numOfTgtTables = 2;
 	private int attsPerTargetRel;
 	private int attrRemainder;
@@ -39,6 +43,9 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
     
 	// PRG ADDED to Support Optional Source Keys - Sep 18, 2012
 	private int keySize;
+	
+	//MN added attribute to check whether we are reusing the target relation - 16 May 2014
+	private boolean targetReuse;
 	
     public VPNtoMScenarioGenerator()
     {
@@ -71,6 +78,9 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
      	// NOTE: we are not strictly enforcing a source key for VERTICAL PARTITION
      	keySize = (keySize >= numOfSrcTblAttr) ? numOfSrcTblAttr - 1 : keySize;
      	
+     	//MN BEGIN - 16 May 2014
+     	targetReuse = false;
+     	//MN END
     }
 
 	@Override
@@ -78,6 +88,8 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		String sourceRelName = randomRelName(0);
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
+		//MN considered an array to store types of attributes of source relation - 16 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
 		
 		//for (int i = 0; i < numOfSrcTblAttr; i++)
 		//	attNames[i] = randomAttrName(0, i);
@@ -97,22 +109,41 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			keyCount++;
 			
 			attNames[i] = attrName;
+			
+			//MN 16 May 2014
+			if(targetReuse){
+				int count =0;
+				for(int i1=0; i1<numOfTgtTables; i1++)
+					for(int j=0; j<m.getTargetRels().get(i1).sizeOfAttrArray()-1; j++){
+						attrsType[count] = m.getTargetRels().get(i1).getAttrArray(j).getDataType();
+						count++;
+					}
+			}
+			//MN
 		}
 		
-		
-		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		//MN - 16 May 2014
+		RelationType sRel = null;
+		if(!targetReuse)
+			fac.addRelation(hook, sourceRelName, attNames, true);
+		else
+			fac.addRelation(hook, sourceRelName, attNames, attrsType, true);
+		//MN
 		
 		// PRG ADDED - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 18, 2012
 		if (keySize > 0 )
 			fac.addPrimaryKey(sourceRelName, keys, true);
 	
 		m.addSourceRel(sRel);
+		
+		//MN - 16 May 2014
+		targetReuse = false;
+		//MN
 	}
 
 	//MN implemented chooseSourceRels method to support source reusability - 2 May 2014
 	@Override
 	protected boolean chooseSourceRels() throws Exception {
-		//MN I think that numOfTgtTables is always equals to 2 - 2 May 2014 
 		int minAttrs = numOfTgtTables;
 		//MN I am not sure if the following is needed - 2 May 2014
 		if(keySize>numOfTgtTables)
@@ -131,20 +162,18 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
 	    attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
 			
-		//MN I think key elements are first elements of the rel attrs (am I right?) - 26 April 2014
 		// create primary key if necessary
 		if (!rel.isSetPrimaryKey() && keySize > 0) {
 			fac.addPrimaryKey(rel.getName(), 
 					CollectionUtils.createSequence(0, keySize), true);
 		}
-		// adapt keySize - MN I believe keySize is not really important for VP (Am I right?) - 26 April 2014
+		// adapt keySize - MN I believe keySize is not really important for VNToM (Am I right?) - 26 April 2014
 		else if (rel.isSetPrimaryKey()) {
 			keySize = rel.getPrimaryKey().sizeOfAttrArray(); 
 		}
 			
 		m.addSourceRel(rel);
 		
-		//MN what about jk? - 2 May 2014
 		return true;
 	}
 		
@@ -219,7 +248,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
     	//MN BEGIN - 4 May 2014
     	String[] attrsTypeLast = new String [2];
     	for(int i=0; i<2; i++)
-    		attrsTypeLast[i] = m.getSourceRels().get(m.getSourceRels().size()-1).getAttrArray(i).getDataType();
+    		attrsTypeLast[i] = "TEXT";
     	fac.addRelation(hook, trgName, new String[] {joinAtt1Ref, joinAtt2Ref}, 
     			attrsTypeLast, false);
     	//MN END
@@ -238,15 +267,13 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		boolean found = false;
 		RelationType rel;
 		//MN wanted to preserve the initial values of numOfTgtTables and attsPerTargetRel - 26 April 2014
-		//MN here, we are dealing with target relations
-		//MN that have attributes with correspondences to source relation attributes - 2 May 2014
 		String[][] attrs = new String[numOfTgtTables+1][];
 			
+		//MN here, we are dealing with target relations that have attributes which correspond to source relation attributes - 16 May 2014
 		// first choose one that has attsPerTargetRel
 		while(created < numOfTgtTables) {
 			found = true;
 				
-			//MN check the following again (it is really tricky) - 26 April 2014
 			if(created == 0){
 				rel = getRandomRel(false, attsPerTargetRel+1);
 			}
@@ -262,10 +289,8 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 					found = false;
 			}
 				
-			//MN VPNToM cares about primary key - 2 May 2014
 			if(found && !rel.isSetPrimaryKey()) {
-				//MN set to false because this is target relation (Am I right?) - 26 April 2014
-				//MN primary key size should be 1 - 26 April 2014
+				//MN primary key size is 1 - 26 April 2014
 				int [] primaryKeyPos = new int [1];
 				primaryKeyPos[0] = rel.sizeOfAttrArray()-1;
 				fac.addPrimaryKey(rel.getName(), primaryKeyPos[0], false);
@@ -290,7 +315,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
 					attrs[created][i] = rel.getAttrArray(i).getName();
 					
-				//MN attsPerTargetRel should be set (check that) (it is really tricky) - 26 April 2014
+				//MN attsPerTargetRel should be set - 26 April 2014
 				if(created == 0)
 					attsPerTargetRel = rel.getAttrArray().length-1;
 					
@@ -325,7 +350,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			}
 		}
 		
-		//MN the last target relation should be created - 2 May 2014
+		//MN the last target relation will be created here- 2 May 2014
 		//MN code for creating the last relation - 2 May 2014
 		numTries=0;
 		found = false;
@@ -357,7 +382,7 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			numTries++;
 		}
 		//MN if suitable relation for the last relation
-		//MN has not found, create one ! - 2 May 2014
+		//MN has not been found, create one ! - 2 May 2014
 		if(!found){
 			attrs[created] = new String[2];
 			for(int j = 0; j < 2; j++)
@@ -376,6 +401,10 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		//MN I need to discuss about the following line with Patricia - 2 May 2014
 		keySize=1;
 			
+		//MN - 16 May 2014
+		targetReuse = true;
+		//MN
+		
 		//MN foreign key should be set - 26 April 2014
 		addFKs();
 		return true;
