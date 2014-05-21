@@ -79,9 +79,6 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		
 		// create primary key if necessary
 		if (!rel.isSetPrimaryKey() && keySize > 0) {
-			//MN BEGIN - 11 May 2014 (discuss it with Patricia)
-			keySize = (keySize<numOfSrcTblAttr)?keySize:numOfSrcTblAttr-numDelAttr;
-			//MN END
 			fac.addPrimaryKey(rel.getName(), 
 					CollectionUtils.createSequence(0, keySize), true);
 		}
@@ -161,9 +158,6 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 			return false;
 			
 		if (keySize > 0 && !rel.isSetPrimaryKey()) {
-			//MN BEGIN - 11 May 2014 (discuss it with Patricia)
-			keySize = (keySize<rel.sizeOfAttrArray())? keySize: (rel.sizeOfAttrArray());
-			//MN END
 			fac.addPrimaryKey(rel.getName(), 
 					CollectionUtils.createSequence(0, keySize), false);
 		}

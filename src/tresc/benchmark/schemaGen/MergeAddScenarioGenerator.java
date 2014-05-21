@@ -42,6 +42,7 @@ import vtools.dataModel.expression.Variable;
 // MN ENHANCED genTargetRels to pass types of attributes of target relations as argument to addRelation - 8 May 2014
 // MN MODIFIED chooseSourceTargetRels - 13 May 2014
 // MN ENHANCED genSourceRels to pass types of attributes of source relations as argument to addRelation - 13 May 2014
+// MN FIXED chooseSourceRels - 17 May 2014
 
 public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
@@ -219,7 +220,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 			}
 			//MN END
 			
-			//MN the following line has not been tested yet - 5 May 2014 - 13 May 2014
+			//MN the following line has not been tested yet - 5 May 2014 - 13 May 2014 - 17 May 2014
 			numNormalAttr = r.sizeOfAttrArray() - numTJoinAttrs - numNewAttr;
 			
 			joinAttPos = CollectionUtils.createSequence(numNormalAttr, 
@@ -372,16 +373,18 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 					if (pkPos.length != numOfJoinAttributes)
 						found = false;
 					//MN BEGIN has not tested yet - 11 May 2014
-					if(created ==0 )
-						for(int i = 0; i < numOfJoinAttributes; i++) {
-							if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
-								found = false;
-						}
-					if(created>0 && created<numOfTables-1)
-						for(int i = 0; i < numOfJoinAttributes; i++) {
-							if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i -1)
-								found = false;
-						}
+					if(found){
+						if(created ==0 )
+							for(int i = 0; i < numOfJoinAttributes; i++) {
+								if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
+									found = false;
+							}
+						if(created>0 && created<numOfTables-1)
+							for(int i = 0; i < numOfJoinAttributes; i++) {
+								if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i - numOfJoinAttributes)
+									found = false;
+							}
+					}
 					//MN END
 				}
 			}

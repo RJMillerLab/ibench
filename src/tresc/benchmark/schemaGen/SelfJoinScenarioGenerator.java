@@ -23,6 +23,8 @@ import vtools.dataModel.expression.Variable;
 //MN Enhanced genTargetRels to pass types of attributes of target relations as argument to addRelation - 6 May 2014
 //MN Implemented chooseTargetRels - 17 May 2014
 //MN Enhanced genSourceRels to pass types of attributes of source relation as argument to addRelation - 17 May 2014
+//MN FIXED chooseTargetRels - 20 May 2014
+//MN FIXED target relation names in genTargetRels - 20 May 2014
 
 public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -91,28 +93,31 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     		
     		//find the first one - relation S
     		int minAttrs1 = K + 1;
-    		rel1 = getRandomRel(false, minAttrs1);
-    		if((rel1 == null) || (rel1.sizeOfAttrArray() == K + 1) || (rel1.getName()==rel2.getName()))
+    		rel1 = getRandomRel(false, minAttrs1, minAttrs1);
+    		if(rel1 == null)
     			found1 = false;
     		else{
-    			if(rel1.isSetPrimaryKey()){
-    				int[] pkPos = model.getPKPos(rel1.getName(), false);
-    				if(pkPos[0] != 0)
-    					found1 = false;
-    				else
+    			//MN FIXED - 18 May 2014
+    			if ((rel1.sizeOfAttrArray() != K + 1))
+    				found1 = false;
+    			if(found1){
+    				if(rel1.isSetPrimaryKey()){
+    					int[] pkPos = model.getPKPos(rel1.getName(), false);
     					if(pkPos.length != K)
-    						found1=false;
+    						found1 = false;
     					else
-    						found1=true;
+    						for(int h=0; h<K; h++)
+    							if(pkPos[h] != h)
+    								found1=false;
+    				}
+    				else{
+    					int [] primaryKeyPos = new int [K];
+    					for(int i=0; i<K; i++)
+    						primaryKeyPos [i] = i;
+    					fac.addPrimaryKey(rel1.getName(), primaryKeyPos, false);
+    					found1=true;
+    				}
     			}
-    			else{
-    				int [] primaryKeyPos = new int [K];
-    				for(int i=0; i<K; i++)
-    					primaryKeyPos [i] = i;
-    				fac.addPrimaryKey(rel1.getName(), primaryKeyPos, false);
-    				found1=true;
-    			}
-    			
     			if(found1)
     				m.addTargetRel(rel1);
     		
@@ -120,26 +125,33 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	
     		//find the second one - relation T
     		int minAttrs2 = K + K;
-    		rel2 = getRandomRel(false, minAttrs2);
-    		if((rel2 == null) || (rel2.sizeOfAttrArray()/K != 2))
+    		rel2 = getRandomRel(false, minAttrs2, minAttrs2);
+    		if(rel2 == null)
     			found2 = false;
     		else{
-    			if(rel2.isSetPrimaryKey()){
-    				int[] pkPos = model.getPKPos(rel2.getName(), false);
-    				if(pkPos[0] != 0)
-    					found2 = false;
-    				else
+    			//MN 18 May 2014
+    			if(rel2.sizeOfAttrArray()/K != 2)
+    				found2=false;
+    			if((rel1 != null) && (rel1.getName()==rel2.getName()))
+    				found2 = false;
+    			
+    			if(found2){
+    				if(rel2.isSetPrimaryKey()){
+    					int[] pkPos = model.getPKPos(rel2.getName(), false);
     					if(pkPos.length != K)
-    						found2=false;
+    						found2 = false;
     					else
-    						found2=true;
-    			}
-    			else{
-    				int [] primaryKeyPos = new int [K];
-    				for(int i=0; i<K; i++)
-    					primaryKeyPos [i] = i;
-    				fac.addPrimaryKey(rel2.getName(), primaryKeyPos, false);
-    				found2=true;
+    						for(int h=0; h<K; h++)
+    							if(pkPos[h] != h)
+    								found2=false;
+    				}
+    				else{
+    					int [] primaryKeyPos = new int [K];
+    					for(int i=0; i<K; i++)
+    						primaryKeyPos [i] = i;
+    					fac.addPrimaryKey(rel2.getName(), primaryKeyPos, false);
+    					found2=true;
+    				}
     			}
     		}
     		
@@ -201,9 +213,9 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	//set keys
     	for(int i=0; i<K; i++){
     		keys[i] = rel1.getAttrArray(i).getName().toString();
-    		fks[i] = rel2.getAttrArray(i).getName().toString();
+    		fks[i] = rel2.getAttrArray(i+K).getName().toString();
     		keyPos[i]=i;
-    		fkPos[i]=i;
+    		fkPos[i]=i+K;
     	}
     	
     	//set FKs
@@ -344,8 +356,10 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 
 	@Override
 	protected void genTargetRels() throws Exception {
-		String bRelName = m.getRelName(0, true) + "_b";
-		String fkRelName = m.getRelName(0, true) + "_fk";
+		//MN modified the way that iBench generates names for target relations by adding curRep
+		//MN in order to be able to support reusability - 20 May 2014
+		String bRelName = m.getRelName(0, true) + curRep + "_b";
+		String fkRelName = m.getRelName(0, true) + curRep + "_fk";
 		String[] bAttrs = new String[K + F];
 		String[] fkAttrs = new String[2 * K];
 		//MN considered arrays to store types of attributes - 4 May 2014

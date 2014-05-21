@@ -33,6 +33,7 @@ import vtools.dataModel.expression.Variable;
 // MN  ENHANCED genSourcRels to pass types of attributes of source relations as argument to addRelation - 11 May 2014
 // MN  FIXED primaryKeys in chooseSourceRels - 11 May 2014
 // MN  FIXED numOfUseAttrs in chooseSourceRels - 12 May 2014
+// MN  FIXED chooseSourceRels - 17 May 2014
 
 public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
@@ -124,17 +125,19 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 					int[] pkPos = model.getPKPos(rel.getName(), true);
 					if (pkPos.length != numOfJoinAttributes)
 						found = false;
-					//MN BEGIN has not tested yet - 11 May 2014
-					if(created ==0 )
-						for(int i = 0; i < numOfJoinAttributes; i++) {
-							if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
-								found = false;
-						}
-					if(created>0 && created<numOfTables-1)
-						for(int i = 0; i < numOfJoinAttributes; i++) {
-							if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i -1)
-								found = false;
-						}
+					//MN BEGIN tested - 17 May 2014
+					if(found){
+						if(created ==0 )
+							for(int i = 0; i < numOfJoinAttributes; i++) {
+								if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
+									found = false;
+							}
+						if(created>0 && created<numOfTables-1)
+							for(int i = 0; i < numOfJoinAttributes; i++) {
+								if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i - numOfJoinAttributes)
+									found = false;
+							}
+					}
 					//MN END
 				}
 			}

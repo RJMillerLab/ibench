@@ -106,6 +106,7 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		numOfSrcTblAttr = rel.sizeOfAttrArray();
 		
 		if (keySize > 0 && !rel.isSetPrimaryKey()) {
+			//MN keySize can be set to 1 to increase chance of reusability - 19 May 2014
 			keySize = keySize > numOfSrcTblAttr ? numOfSrcTblAttr : keySize;
 			fac.addPrimaryKey(rel.getName(), 
 					CollectionUtils.createSequence(0, keySize), true);

@@ -36,6 +36,7 @@ import vtools.dataModel.expression.Variable;
 // MN ENHANCED genSourceRel to pass types of attributes as argument to addRelation in genSourceRels - 11 May 2014
 // MN ADDED checking whether value of keySize is greater than number of source relation attributes or not - 11 May 2014
 
+
 public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator 
 {
 	private int numOfSrcTblAttr;
@@ -96,9 +97,6 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		
 		// create primary key if necessary
 		if (!rel.isSetPrimaryKey() && keySize > 0) {
-			//MN BEGIN - 11 May 2014
-			keySize = keySize > numOfSrcTblAttr ? numOfSrcTblAttr : keySize;
-			//MN END
 			fac.addPrimaryKey(rel.getName(), 
 					CollectionUtils.createSequence(0, keySize), true);
 		}
@@ -174,10 +172,6 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 			return false;
 			
 		if (keySize > 0 && !rel.isSetPrimaryKey()) {
-			//MN BEGIN - 11 May 2014 - discuss it with Patricia
-			keySize = (keySize<(rel.sizeOfAttrArray() + numDelAttr - numAddAttr))?
-					  keySize: rel.sizeOfAttrArray() + numDelAttr - numAddAttr;
-			//MN END
 			fac.addPrimaryKey(rel.getName(), 
 					CollectionUtils.createSequence(0, keySize), false);
 		}
