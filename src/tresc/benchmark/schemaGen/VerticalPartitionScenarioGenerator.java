@@ -34,6 +34,7 @@ import vtools.dataModel.expression.Variable;
 // MN ENHANCED genTargetRels to pass types of attributes of target relation as argument to addRelation - 3 May 2014
 // MN MODIFIED chooseSourceRels to check primaryKey positions - 13 May 2014
 // MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 13 May 2014
+// MN MODIFIED addFks to be able to evaluate MapMerge (Notice that this modification should be undone later) - 26 May 2014
 
 // very similar to merging scenario generator, with source and target schemas swapped
 public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerator {
@@ -686,7 +687,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				int toA = m.getNumRelAttr(0, false) - 1;
 				int fromA = m.getNumRelAttr(i, false) - 1;
 				addFK(i, fromA, 0, toA, false);
-				addFK(0, toA, i, fromA, false);
+				//MN removed the following line to be able to evaluate MapMerge - it should be undone later - 26 May 2014
+				//addFK(0, toA, i, fromA, false);
 			}
 		} else { // chain
 //			int toA = m.getNumRelAttr(1, false) - 1;
@@ -697,7 +699,8 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 				int toA = m.getNumRelAttr(i + 1, false) - 1;
 				int fromA = m.getNumRelAttr(i, false) - 1;
 				addFK(i, fromA, i+1, toA, false);
-				addFK(i+1, toA, i, fromA, false);
+				//MN removed the following line to be able to evaluate MapMerge - it should be undone later - 26 May 2014
+				//addFK(i+1, toA, i, fromA, false);
 			}
 		}
 	}

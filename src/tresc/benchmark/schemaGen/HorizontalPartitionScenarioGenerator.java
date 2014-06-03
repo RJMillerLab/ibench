@@ -28,7 +28,7 @@ import vtools.dataModel.values.IntegerValue;
 //MN  ENHANCED genTargetRels to pass types of attributes as argument to addRelation - 5 May 2014
 //MN  ENHANCED genSourceRels to pass types of attributes as argument to addRelation - 11 May 2014
 //MN  FIXED tries++ in chooseTargetRels() - 11 May 2014
-
+//MN  FIXED chooseTargetRels() - 29 May 2014
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
 	private static final int MAX_NUM_TRIES = 10;
@@ -195,7 +195,15 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		while (tries < MAX_NUM_TRIES * randomFragments && cand != null 
 				&& rels.size() < randomFragments) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);
-			if (relOk(cand)){
+			
+			//MN BEGIN - 29 May 2014
+			boolean ok = true;
+			for(int i=0; i<rels.size(); i++)
+				if(rels.get(i).getName().equals(cand.getName()))
+					ok = false;
+			//MN END
+			//MN - 29 May 2014
+			if (ok && relOk(cand)){
 				rels.add(cand);
 				//MN BEGIN - 11 May 2014
 				targetReuse[count] = true;

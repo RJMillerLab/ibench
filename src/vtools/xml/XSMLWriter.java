@@ -2,10 +2,13 @@ package vtools.xml;
 
 //MN This class prints the output of iBench as XSML file - 3 April 2014
 
+
 //MN I changed the expressions in "where" clause so that it prints the skolems in left-side of the expression - 11 April 2014
 //MN if error in craeting .xsml refer to skolem parts of the mappings - 12 April 2014
 //MN modifying the code to support injection of random regular source and target inclusion dependencies into mappings - 14 April 2014
 //MN assumption of two "a", only the second a is considered - what about skolem terms? - 16 April 2014
+
+//MN Fixed Foreign keys in print logical mappings - 1 June 2014
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.vagabond.xmlmodel.CorrespondenceType;
+import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.MappingType;
 
 import smark.support.MappingScenario;
@@ -117,12 +121,11 @@ public class XSMLWriter {
 	}
 	
 	//MN checks to see whether both from and to relations of the source FK exist in the mapping
-	public boolean existsSourceFKFromTo (String mapping, String sourceFK){
-		String fromRelFK = (sourceFK.split("//")[2]).substring(11).substring(0, (sourceFK.split("//")[2]).substring(11).indexOf("."));
-		String fromRelFKAttr = sourceFK.substring(sourceFK.indexOf(".") + 1, sourceFK.indexOf(" --> "));
-		String toRelFK = (sourceFK.split(" --> ")[1]).substring(0, (sourceFK.split(" --> ")[1]).indexOf("."));
-		String toRelFKAttr = (sourceFK.split("-->")[1]).substring(sourceFK.split("-->")[1].indexOf(".")+1, sourceFK.split("-->")[1].indexOf("\n"));
-	
+	//MN modified - 1 June 2014
+	public boolean existsSourceFKFromTo (String mapping, ForeignKeyType sourceFK){
+		String fromRelFK = sourceFK.getFrom().getTableref().toString();
+		String toRelFK = sourceFK.getTo().getTableref().toString();
+		
 		boolean e1 = false;
 		boolean e2 = false;
 		//existence of fromRelFK in mapping
@@ -162,12 +165,11 @@ public class XSMLWriter {
 	}
 	
 	//MN checks to see whether both from and to relations of the target FK are in the mapping
-	public boolean existsTargetFKFromTo(String mapping, String targetFK){
-		String fromRelFK = (targetFK.split("//")[2]).substring(11).substring(0, (targetFK.split("//")[2]).substring(11).indexOf("."));
-		String fromRelFKAttr = targetFK.substring(targetFK.indexOf(".") + 1, targetFK.indexOf(" --> "));
-		String toRelFK = (targetFK.split(" --> ")[1]).substring(0, (targetFK.split(" --> ")[1]).indexOf("."));
-		String toRelFKAttr = (targetFK.split("-->")[1]).substring(targetFK.split("-->")[1].indexOf(".")+1, targetFK.split("-->")[1].indexOf("\n"));
-	
+	//MN modified - 1 June 2014
+	public boolean existsTargetFKFromTo(String mapping, ForeignKeyType targetFK){
+		String fromRelFK = targetFK.getFrom().getTableref().toString();
+		String toRelFK = targetFK.getTo().getTableref().toString();
+				
 		boolean e1 = false;
 		boolean e2 = false;
 		//existence of fromRelFK in mapping
@@ -261,11 +263,12 @@ public class XSMLWriter {
 					id = id.substring(id.indexOf("|")+1);
 					String fromRel2 = id.substring(id.indexOf("|")+1, id.lastIndexOf("|"));
 					//from equals to fromRel
-					if(fromRel1.equals(fromRel.substring(1, fromRel.length()-1)))
-						sourceFromIDs[i] = true;
+					//MN 28 May 2014
+					////if(fromRel1.equals(fromRel.substring(1, fromRel.length()-1)))
+						////sourceFromIDs[i] = true;
 					//to equals to fromRel
-					if(fromRel2.equals(fromRel.substring(1, fromRel.length()-1)))
-						sourceToIDs[i] = true;
+					////if(fromRel2.equals(fromRel.substring(1, fromRel.length()-1)))
+						////sourceToIDs[i] = true;
 				}
 				
 				if (!(source.lastIndexOf("</Atom>") == source.indexOf("</Atom>")))
@@ -276,34 +279,28 @@ public class XSMLWriter {
 			//source FK
 			
 			boolean andSrcFK = false;
-			String source1 = scenario.getSource().toString();
+			ForeignKeyType[] srcfkAttrs = scenario.getDoc().getSchema(true).getForeignKeyArray();
 			
 			//perhaps the source relation does not have any foreign keys
 			String sourceFK = null;
-			if(source1.indexOf("// FKey:")!=-1){
-				sourceFK = source1.substring(source1.indexOf("// FKey:"));
-				
+			if(srcfkAttrs.length >0){
 				//for each source FK
-				while (!sourceFK.isEmpty()){
-					String fromRelFK = (sourceFK.split("//")[2]).substring(11).substring(0, (sourceFK.split("//")[2]).substring(11).indexOf("."));
-					String fromRelFKAttr = sourceFK.substring(sourceFK.indexOf(".") + 1, sourceFK.indexOf(" --> "));
-					String toRelFK = (sourceFK.split(" --> ")[1]).substring(0, (sourceFK.split(" --> ")[1]).indexOf("."));
-					String toRelFKAttr = (sourceFK.split("-->")[1]).substring(sourceFK.split("-->")[1].indexOf(".")+1, sourceFK.split("-->")[1].indexOf("\n"));
+				for (int ii=0; ii<srcfkAttrs.length; ii++){
+					String fromRelFK = srcfkAttrs[ii].getFrom().getTableref().toString();
+					String toRelFK = srcfkAttrs[ii].getTo().getTableref().toString();
 					
-					if(existsSourceFKFromTo(mapping, sourceFK)){
-						if(andSrcFK)
-							buf.append(" AND ");
-						else
-							buf.append("      <predicate>");
-					
-						buf.append("$sm" + fromRelFK + "/" + fromRelFKAttr + " = " + "$sm" + toRelFK + "/" + toRelFKAttr);
-						andSrcFK = true;
-					}
-					if(sourceFK.indexOf("// FKey:") == sourceFK.lastIndexOf("// FKey:"))
-						break;
-					else{
-						sourceFK = sourceFK.substring(sourceFK.indexOf(";")+2);
-						sourceFK = sourceFK.substring(sourceFK.indexOf("// FKey:"));
+					if(existsSourceFKFromTo(mapping, srcfkAttrs[ii])){
+						for(int iii=0; iii<srcfkAttrs[ii].getFrom().getAttrArray().length; iii++){
+							if(andSrcFK)
+								buf.append(" AND ");
+							else
+								buf.append("      <predicate>");
+							
+							buf.append("$sm" + fromRelFK + "/" + srcfkAttrs[ii].getFrom().getAttrArray(iii) + 
+									" = " + "$sm" + toRelFK + "/" + srcfkAttrs[ii].getTo().getAttrArray(iii));
+							
+							andSrcFK = true;
+						}
 					}
 			  }
 			}
@@ -328,11 +325,12 @@ public class XSMLWriter {
 					id = id.substring(id.indexOf("|")+1);
 					String toRel2 = id.substring(id.indexOf("|")+1, id.lastIndexOf("|"));
 					//from equals to toRel
-					if(toRel1.equals(toRel.substring(1, toRel.length()-1)))
-						targetFromIDs[i] = true;
+					//MN 28 May 2014
+					////if(toRel1.equals(toRel.substring(1, toRel.length()-1)))
+						////targetFromIDs[i] = true;
 					//to equals to fromRel
-					if(toRel2.equals(toRel.substring(1, toRel.length()-1)))
-						targetToIDs[i] = true;
+					////if(toRel2.equals(toRel.substring(1, toRel.length()-1)))
+						////targetToIDs[i] = true;
 				}
 				
 				if (!(target.lastIndexOf("</Atom>") == target.indexOf("</Atom>")))
@@ -343,36 +341,30 @@ public class XSMLWriter {
 			//target FK
 			
 			boolean andTrgFK = false;
-			String target1 = scenario.getTarget().toString();
+			ForeignKeyType[] trgfkAttrs = scenario.getDoc().getSchema(false).getForeignKeyArray();
 			String targetFK = null;
 			
-			if(target1.indexOf("// FKey:") != -1){
-				targetFK = target1.substring(target1.indexOf("// FKey:"));
-			
-				//for each target FK
-				while (!targetFK.isEmpty()){
-					String fromRelFK = (targetFK.split("//")[2]).substring(11).substring(0, (targetFK.split("//")[2]).substring(11).indexOf("."));
-					String fromRelFKAttr = targetFK.substring(targetFK.indexOf(".") + 1, targetFK.indexOf(" --> "));
-					String toRelFK = (targetFK.split(" --> ")[1]).substring(0, (targetFK.split(" --> ")[1]).indexOf("."));
-					String toRelFKAttr = (targetFK.split("-->")[1]).substring(targetFK.split("-->")[1].indexOf(".")+1, targetFK.split("-->")[1].indexOf("\n"));
-				
-					if(existsTargetFKFromTo(mapping, targetFK)){
-						if(andTrgFK)
-							buf.append(" AND ");
-						else
-							buf.append("      <predicate>");
+			if(trgfkAttrs.length >0){
+				//for each source FK
+				for (int ii=0; ii<trgfkAttrs.length; ii++){
+					String fromRelFK = trgfkAttrs[ii].getFrom().getTableref().toString();
+					String toRelFK = trgfkAttrs[ii].getTo().getTableref().toString();
 					
-						buf.append("$tm" + fromRelFK + "/" + fromRelFKAttr + " = " + "$tm" + toRelFK + "/" + toRelFKAttr);
-						andTrgFK = true;
+					if(existsTargetFKFromTo(mapping, trgfkAttrs[ii])){	
+						for(int iii=0; iii<trgfkAttrs[ii].getFrom().getAttrArray().length; iii++){
+							if(andTrgFK)
+								buf.append(" AND ");
+							else
+								buf.append("      <predicate>");
+							
+							buf.append("$tm" + fromRelFK + "/" + trgfkAttrs[ii].getFrom().getAttrArray(iii) + 
+									" = " + "$tm" + toRelFK + "/" + trgfkAttrs[ii].getTo().getAttrArray(iii));
+							
+							andTrgFK = true;
+						}
 					}
-					if(targetFK.indexOf("// FKey:") == targetFK.lastIndexOf("// FKey:"))
-						break;
-					else{
-						targetFK = targetFK.substring(targetFK.indexOf(";")+2);
-						targetFK = targetFK.substring(targetFK.indexOf("// FKey:"));
-					}
-				  }
-				}
+			  }
+			}
 			
 			if(andTrgFK)
 				buf.append("</predicate>\n");

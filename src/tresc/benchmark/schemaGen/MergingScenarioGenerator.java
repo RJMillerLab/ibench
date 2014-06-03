@@ -34,6 +34,7 @@ import vtools.dataModel.expression.Variable;
 // MN  FIXED primaryKeys in chooseSourceRels - 11 May 2014
 // MN  FIXED numOfUseAttrs in chooseSourceRels - 12 May 2014
 // MN  FIXED chooseSourceRels - 17 May 2014
+// MN  MODIFIED chooseTargetRels - 28 May 2014
 
 public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
@@ -529,7 +530,8 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 				break;
 			
 			//MN BEGIN - ME cannot handle source relations that do not have equal number of attributes - 11 May 2014
-			if((r.sizeOfAttrArray() + numTJoinAttrs) % numOfTables != 0){
+			//MN modified the criterion for reusing target relation - 28 May 2014
+			if((r.sizeOfAttrArray() + numTJoinAttrs) != (numOfTables * numOfAttributes[0])){
 				ok= false;
 				break;
 			}

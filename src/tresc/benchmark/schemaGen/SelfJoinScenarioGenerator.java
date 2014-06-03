@@ -25,6 +25,9 @@ import vtools.dataModel.expression.Variable;
 //MN Enhanced genSourceRels to pass types of attributes of source relation as argument to addRelation - 17 May 2014
 //MN FIXED chooseTargetRels - 20 May 2014
 //MN FIXED target relation names in genTargetRels - 20 May 2014
+//MN MODIFIED genSourceRels to be able to evaluate MapMegre (Notice that this modification should be undone later) - 26 May 2014
+//MN FIXED chooseTargetRels (F) - 2 June 2014
+//MN ToDo FIX chooseSourceRels for circular FK - 2 June 2014
 
 public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -86,6 +89,8 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	
     	if(K==0)
     		K=1;
+    	//MN 2 June 2014
+    	F =1 ;
     	
     	int numTries =0;
     	
@@ -237,9 +242,13 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	
     	// fetch random rel with enough attrs
     	//MN do we need numTries here? - 17 May 2014
-    	while(numTries < MAX_NUM_TRIES && rel == null){
+    	while(numTries < MAX_NUM_TRIES){
     		//MN two keys (one key set is referring to the other) + 1 (to be reasonable)
     		rel = getRandomRel(true, K + K + 1);
+    		
+    		if(rel == null)
+    			break;
+  
     		numTries++;
     	}
     	
@@ -260,39 +269,43 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	F = rel.sizeOfAttrArray() - 2 * K;
 //    	normalPos = new int[F];
     	m.addSourceRel(rel);
-    	srcName = rel.getName();
-
-    	// already has PK, get positions of PK attrs
-    	if (rel.isSetPrimaryKey()) {
-    		keyPos = model.getPKPos(srcName, true);
-    		keys = model.getPK(srcName, true);
-
-    		// find attributes to use as fk
-    		int fkDone = 0, pos = 0;
-    		//MN I have trouble in understanding the following piece of code - 6 May 2014
-    		while(fkDone < K) {
-    			// is pk position?
-    			if (Arrays.binarySearch(keyPos, pos) < 0) {
-    				fkPos[fkDone] = pos;
-    				fks[fkDone] = m.getAttrId(0, pos, true); 
-    				fkDone++;
-    			}
-    			pos++;
-    		}
-    	}
-    	else {
-    		keyPos = CollectionUtils.createSequence(0, K);
-    		fkPos = CollectionUtils.createSequence(K, K);
-    		for(int i = 0; i < K; i++) {
-    			keys[i] = rel.getAttrArray(i).getName();
-    			fks[i] = rel.getAttrArray(K + i).getName();
-    		}
-//    		normalPos = CollectionUtils.createSequence(2 * K, F);
-
-    		fac.addPrimaryKey(srcName, CollectionUtils.createSequence(0, K), true);
-    		fac.addForeignKey(srcName, fks, srcName, keys, true);
-    	}
     	
+	    srcName = rel.getName();
+
+	    // already has PK, get positions of PK attrs
+	    if (rel.isSetPrimaryKey()) {
+	    		keyPos = model.getPKPos(srcName, true);
+	    		keys = model.getPK(srcName, true);
+
+	    		// find attributes to use as fk
+	    		int fkDone = 0, pos = 0;
+	    		//MN I have trouble in understanding the following piece of code - 6 May 2014
+	    		while(fkDone < K) {
+	    			// is pk position?
+	    			if (Arrays.binarySearch(keyPos, pos) < 0) {
+	    				fkPos[fkDone] = pos;
+	    				fks[fkDone] = m.getAttrId(0, pos, true); 
+	    				fkDone++;
+	    			}
+	    			pos++;
+	    		}
+	    		
+	    		//MN addForeignKey or check types of foreign keys - 2 June 2014
+	    	}
+	    else {
+	    		keyPos = CollectionUtils.createSequence(0, K);
+	    		fkPos = CollectionUtils.createSequence(K, K);
+	    		for(int i = 0; i < K; i++) {
+	    			keys[i] = rel.getAttrArray(i).getName();
+	    			fks[i] = rel.getAttrArray(K + i).getName();
+	    		}
+//	    		normalPos = CollectionUtils.createSequence(2 * K, F);
+	    		
+	    		fac.addPrimaryKey(srcName, CollectionUtils.createSequence(0, K), true);
+	    		//MN removed the following line to be able to evaluate MapMerge - 2 June 2014
+	    		//fac.addForeignKey(srcName, fks, srcName, keys, true);
+	    }
+	    	
     	return true;
     }
     
@@ -347,7 +360,8 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		
 		fac.addRelation(hook, srcName, attrs, true);
 		fac.addPrimaryKey(srcName, keys, true);
-		fac.addForeignKey(srcName, fks, srcName, keys, true);
+		//MN removed the following line to be able to evaluate MapMerge - it should be undone later - 26 May 2014
+		//fac.addForeignKey(srcName, fks, srcName, keys, true);
 		
 		//MN BEGIN - 17 May 2014
 		targetReuse = false;

@@ -1,5 +1,7 @@
 package vtools.xml;
 
+import java.util.ArrayList;
+
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.RelationType;
 
@@ -13,6 +15,7 @@ import vtools.dataModel.types.Str;
 import vtools.dataModel.types.Type;
 
 //MN ADD four methods to print source/target primary and foreign keys - 3 April 2014
+//MN FIXED printSource and Target FKs - 1 June 2014
 public class XSDWriter
 {
     private final String _tab = "   ";
@@ -99,6 +102,7 @@ public class XSDWriter
     }
 
     //MN prints source primary keys
+    //MN 1 June 2014
     public void printSourcePK(StringBuffer buf, MappingScenario scenario) throws Exception
     {
     	for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray())
@@ -106,8 +110,19 @@ public class XSDWriter
     		String[] pkAttrs = scenario.getDoc().getPK(r.getName(), true);
     		if(pkAttrs != null)
     		{
-    			for(int j=0; j<pkAttrs.length; j++)
-    				buf.append("<xs:key name=\""+ r.getName() + pkAttrs[j] + "\"><xs:selector xpath=\"" + "." + "/" + r.getName() + "\"/><xs:field xpath=\"" + pkAttrs[j] + "\"/></xs:key>\n");
+    			//for(int i=0; i<pkAttrs.length; i++){
+    				//MN keyName
+    				buf.append("<xs:key name=\"" + r.getName());
+    				for(int j=0; j<pkAttrs.length; j++)
+    					buf.append(pkAttrs[j]);
+    				buf.append("\">");
+    				//MN relName
+    				buf.append("<xs:selector xpath=\"" + "." + "/" + r.getName() + "\"/>");
+    				//MN keyAttrs
+    				for(int j=0; j<pkAttrs.length; j++)
+    				    buf.append("<xs:field xpath=\"" + pkAttrs[j] + "\"/>");
+    				buf.append("</xs:key>\n");
+    			//}
     		}
     	}
     }
@@ -120,40 +135,113 @@ public class XSDWriter
     		String[] pkAttrs = scenario.getDoc().getPK(r.getName(), false);
     		if(pkAttrs != null)
     		{
-    			for(int j=0; j<pkAttrs.length; j++)
-    				buf.append("<xs:key name=\""+ r.getName() + pkAttrs[j] + "\"><xs:selector xpath=\"" + "." + "/" + r.getName() + "\"/><xs:field xpath=\"" + pkAttrs[j] + "\"/></xs:key>\n");
+    			//for(int i=0; i<pkAttrs.length; i++){
+    				//MN keyName
+    				buf.append("<xs:key name=\"" + r.getName());
+    				for(int j=0; j<pkAttrs.length; j++)
+    					buf.append(pkAttrs[j]);
+    				buf.append("\">");
+    				//MN relName
+    				buf.append("<xs:selector xpath=\"" + "." + "/" + r.getName() + "\"/>");
+    				//MN keyAttrs
+    				for(int j=0; j<pkAttrs.length; j++)
+    					buf.append("<xs:field xpath=\"" + pkAttrs[j] + "\"/>");
+    				buf.append("</xs:key>\n");
+    			//}
     		}
     	}
     }
     
     //MN prints source foreign keys
-    public void printSourceFK(StringBuffer buf, MappingScenario scenario)
+    public void printSourceFK(StringBuffer buf, MappingScenario scenario) throws Exception
     {
-    	for (RelationType from : scenario.getDoc().getSchema(true).getRelationArray())
-    		for (RelationType to : scenario.getDoc().getSchema(true).getRelationArray())
-    		{
-    			ForeignKeyType[] fkAttrs = scenario.getDoc().getFKs(from.getName(), to.getName(), true);
-    			if(fkAttrs != null)
-    			{
-    				for(int j=0; j<fkAttrs.length; j++)
-    					buf.append("<xs:keyref refer=\"" + to.getName() + fkAttrs[j].getTo().toString().split("<Attr>")[1].split("<")[0] + "\" name=\"" + "fk" + to.getName() + fkAttrs[j].getTo().toString().split("<Attr>")[1].split("<")[0] + "\"><xs:selector xpath=\"./" + from.getName() + "\"/><xs:field xpath=\"" + fkAttrs[j].getFrom().toString().split("<Attr>")[1].split("<")[0] + "\"/></xs:keyref>\n");
-    			}
+    	//ForeignKeyType[] fkAttrs = scenario.getDoc().getSchema(true).getForeignKeyArray();
+    	for (RelationType r : scenario.getDoc().getSchema(true).getRelationArray())
+    	{
+    		ForeignKeyType[] fkAttrs = scenario.getDoc().getSchema(true).getForeignKeyArray();
+    		//r is from
+    		ArrayList<ForeignKeyType> relfkAttrs = new ArrayList<ForeignKeyType> ();
+    		for(int i=0; i<fkAttrs.length; i++)
+    			if(fkAttrs[i].getFrom().getTableref().toString().equals(r.getName()))
+    				relfkAttrs.add(fkAttrs[i]);
+    		
+    		if(relfkAttrs.size() >0){
+    			for(int j=0; j<relfkAttrs.size(); j++){
+    				//MN referring key Name
+    				buf.append("<xs:keyref refer=\"" + relfkAttrs.get(j).getTo().getTableref().toString());
+    			
+    				String[] topkAttrs = scenario.getDoc().getPK(relfkAttrs.get(j).getTo().getTableref().toString(), true);
+    				for(int i=0; i<relfkAttrs.get(j).getTo().getAttrArray().length; i++)
+    					buf.append(topkAttrs[i]);
+    				buf.append("\" ");
+    				
+    				//MN foreign key Name
+    				buf.append("name=\"" + "fk" + r.getName() + 
+    					relfkAttrs.get(j).getTo().getTableref().toString());
+    				buf.append(relfkAttrs.get(j).getFrom().getAttrArray(0));
+    				for(int i=j+1; i<relfkAttrs.size(); i++)
+    					if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
+    						buf.append(relfkAttrs.get(i).getFrom().getAttrArray(0));
+    			    for(int i=0; i<topkAttrs.length; i++)
+    			    	buf.append(topkAttrs[i]);
+    			    buf.append("\">");
+    			
+    			    //MN from rel Name
+    			    buf.append("<xs:selector xpath=\"./" + r.getName() + "\"/>");
+    			    buf.append("<xs:field xpath=\"" + relfkAttrs.get(j).getFrom().getAttrArray(0) + "\"/>");
+    			    for(int i=j+1; i<relfkAttrs.size(); i++)
+    			    	if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
+    			    		buf.append("<xs:field xpath=\"" + relfkAttrs.get(i).getFrom().getAttrArray(0) + "\"/>");
+    			    buf.append("</xs:keyref>\n");
     		}
+    	}
+      }
     }
     
     //MN prints target foreign keys 
-    public void printTargetFK(StringBuffer buf, MappingScenario scenario)
+    public void printTargetFK(StringBuffer buf, MappingScenario scenario) throws Exception
     {
-    	for (RelationType from : scenario.getDoc().getSchema(false).getRelationArray())
-    		for (RelationType to : scenario.getDoc().getSchema(false).getRelationArray())
-    		{
-    			ForeignKeyType[] fkAttrs = scenario.getDoc().getFKs(from.getName(), to.getName(), false);
-    			if(fkAttrs != null)
-    			{
-    				for(int j=0; j<fkAttrs.length; j++)
-    					buf.append("<xs:keyref refer=\"" + to.getName() + fkAttrs[j].getTo().toString().split("<Attr>")[1].split("<")[0] + "\" name=\"" + "fk" + to.getName() + fkAttrs[j].getTo().toString().split("<Attr>")[1].split("<")[0] + "\"><xs:selector xpath=\"./" + from.getName() + "\"/><xs:field xpath=\"" + fkAttrs[j].getFrom().toString().split("<Attr>")[1].split("<")[0] + "\"/></xs:keyref>\n");
-    			}
+    	//ForeignKeyType[] fkAttrs = scenario.getDoc().getSchema(true).getForeignKeyArray();
+    	for (RelationType r : scenario.getDoc().getSchema(false).getRelationArray())
+    	{
+    		ForeignKeyType[] fkAttrs = scenario.getDoc().getSchema(false).getForeignKeyArray();
+    		//r is from
+    		ArrayList<ForeignKeyType> relfkAttrs = new ArrayList<ForeignKeyType> ();
+    		for(int i=0; i<fkAttrs.length; i++)
+    			if(fkAttrs[i].getFrom().getTableref().toString().equals(r.getName()))
+    				relfkAttrs.add(fkAttrs[i]);
+    		
+    		if(relfkAttrs.size() >0){
+    			for(int j=0; j<relfkAttrs.size(); j++){
+    				//MN referring key Name
+    				buf.append("<xs:keyref refer=\"" + relfkAttrs.get(j).getTo().getTableref().toString());
+    			
+    				String[] topkAttrs = scenario.getDoc().getPK(relfkAttrs.get(j).getTo().getTableref().toString(), false);
+    				for(int i=0; i<relfkAttrs.get(j).getTo().getAttrArray().length; i++)
+    					buf.append(topkAttrs[i]);
+    				buf.append("\" ");
+    				
+    				//MN foreign key Name
+    				buf.append("name=\"" + "fk" + r.getName() + 
+    					relfkAttrs.get(j).getTo().getTableref().toString());
+    				buf.append(relfkAttrs.get(j).getFrom().getAttrArray(0));
+    				for(int i=j+1; i<relfkAttrs.size(); i++)
+    					if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
+    						buf.append(relfkAttrs.get(i).getFrom().getAttrArray(0));
+    			    for(int i=0; i<topkAttrs.length; i++)
+    			    	buf.append(topkAttrs[i]);
+    			    buf.append("\">");
+    			
+    			    //MN from rel Name
+    			    buf.append("<xs:selector xpath=\"./" + r.getName() + "\"/>");
+    			    buf.append("<xs:field xpath=\"" + relfkAttrs.get(j).getFrom().getAttrArray(0) + "\"/>");
+    			    for(int i=j+1; i<relfkAttrs.size(); i++)
+    			    	if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
+    			    		buf.append("<xs:field xpath=\"" + relfkAttrs.get(i).getFrom().getAttrArray(0) + "\"/>");
+    			    buf.append("</xs:keyref>\n");
     		}
+    	}
+      }
     }
     
     public void printSource(StringBuffer buf, MappingScenario scenario, String name, int ident) throws Exception

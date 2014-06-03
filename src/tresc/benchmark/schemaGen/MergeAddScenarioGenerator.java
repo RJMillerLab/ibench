@@ -43,6 +43,7 @@ import vtools.dataModel.expression.Variable;
 // MN MODIFIED chooseSourceTargetRels - 13 May 2014
 // MN ENHANCED genSourceRels to pass types of attributes of source relations as argument to addRelation - 13 May 2014
 // MN FIXED chooseSourceRels - 17 May 2014
+// MN MODIFIED chooseTargetRels - 28 May 2014
 
 public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
@@ -214,7 +215,8 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 				break;
 			
 			//MN BEGIN - ME cannot handle source relations that do not have equal number of attributes - 13 May 2014
-			if((r.sizeOfAttrArray() - numNewAttr + numTJoinAttrs) % numOfTables != 0){
+			//MN BEGIN - modified the criterion for reusing target relation - 28 May 2014
+			if((r.sizeOfAttrArray() - numNewAttr + numTJoinAttrs) != (numOfTables * numOfAttributes[0])){
 				ok= false;
 				break;
 			}

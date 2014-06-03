@@ -27,7 +27,7 @@ import vtools.dataModel.expression.Variable;
 //MN ENHANCED genTargetRels to pass types of attributes of target relations as argument to addRelation - 4 May 2014
 //MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 16 May 2014
 //MN FIXED attrsTypeLast in genTargetRels - 16 May 2014
-
+//MN FIXED addFKs - 28 May 2014
 public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 
 	public static final int MAX_NUM_TRIES = 10;
@@ -418,7 +418,8 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 		addFK(2, fromA1, 0, toA1, false);
 		
 		// the second attribute of the "link" relation is a reference to the last attribute of the second relation
-		int toA2 = m.getNumRelAttr(0, false) - 1;
+		//MN FIXED: toA2 = m.getNumRelAttr(0, false)-1 should be m.getNumRelAttr(1, false)-1 - 28 May 2014
+		int toA2 = m.getNumRelAttr(1, false) - 1;
 		int fromA2 = 1;
 		addFK(2, fromA2, 1, toA2, false);
 	}
