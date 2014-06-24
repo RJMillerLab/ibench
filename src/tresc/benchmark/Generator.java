@@ -36,7 +36,9 @@ import tresc.benchmark.schemaGen.VPNtoMScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueGenerationScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueManagementScenarioGenerator;
 import tresc.benchmark.schemaGen.VerticalPartitionScenarioGenerator;
+import tresc.benchmark.schemaGen.newVP;
 
+//MN added new VP - 23 June 2014
 public class Generator {
 	static Logger log = Logger.getLogger(Generator.class);
 	
@@ -93,6 +95,9 @@ public class Generator {
 				new AddDeleteScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] =
 				new MergeAddScenarioGenerator();
+		//MN added new vertical partitioning - 23 June 2014
+		scenarioGenerators[Constants.ScenarioName.NEWVERTIPARTITION.ordinal()] =
+				new newVP();
 		
 		// create an FD generator
 		fdGen = new SourceFDGenerator();

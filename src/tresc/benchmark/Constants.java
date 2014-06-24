@@ -18,6 +18,7 @@ import tresc.benchmark.dataGen.TrampCSVGen;
 import tresc.benchmark.dataGen.TrampXMLinlineGen;
 
 
+//MN added new sceanrio newVP - 23 June 2014
 public class Constants
 {
     public enum ParameterName {
@@ -149,7 +150,9 @@ public class Constants
         VERTPARTITIONISA,
         VERTPARTITIONHASA,
         VERTPARTITIONNTOM,
-        MERGEADD
+        MERGEADD,
+        //MN added new scenario - 23 June 2014
+        NEWVERTIPARTITION
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -175,6 +178,8 @@ public class Constants
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
     	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
+    	//MN added new scenario - 23 June 2014
+    	nameForScenarios.put(ScenarioName.NEWVERTIPARTITION, "_NEWVP");
     }
     
     public enum OutputOption {

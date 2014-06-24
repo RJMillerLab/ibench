@@ -361,7 +361,7 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 		fac.addRelation(hook, srcName, attrs, true);
 		fac.addPrimaryKey(srcName, keys, true);
 		//MN removed the following line to be able to evaluate MapMerge - it should be undone later - 26 May 2014
-		//fac.addForeignKey(srcName, fks, srcName, keys, true);
+		fac.addForeignKey(srcName, fks, srcName, keys, true);
 		
 		//MN BEGIN - 17 May 2014
 		targetReuse = false;

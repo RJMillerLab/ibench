@@ -517,25 +517,21 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		//MN
 		return true;
 	}
-		
-	//MN ENHANCED to support source attr types - 3 May 2014
+	
+	
 	@Override
 	protected void genTargetRels() throws Exception 
 	{
 		String[] attrs;
-		//MN BEGIN - 8 May 2014
 		String[] attrsType;
 		String[] attrsTypeKey;
-		//MN END
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
 		// create key names with JoinAttr/Ref tacked on
 		String[] keyAttNames = new String[keySize];
 		String[] keyAttNameRef = new String[keySize];
 		
-		//MN BEGIN
 		attrsTypeKey = new String [keySize];
-		//MN END
 		
 		for(int i = 0; i < keySize; i++)
 		{
