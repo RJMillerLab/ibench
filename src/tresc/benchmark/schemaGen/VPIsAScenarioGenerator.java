@@ -21,6 +21,7 @@ import vtools.dataModel.expression.Variable;
 //MN IMPLEMENTED source and target reusability (chooseSourceRels and chooseTargetRels) - 3 May 2014
 //MN ENHANCED genTargetRels to pass types of attributes of target relation as argument to addRelation - 8 May 2014
 //MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 13 May 2014
+//MN FIXED the errors in foreign key generation - 24 June 2014
 
 public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -510,7 +511,8 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		attrRemainder =0;
 			
 		//MN foreign key should be set - 26 April 2014
-		addFKs();
+		//MN should be fixed - 24 June 2014
+		addFKsNoReuse();
 		
 		//MN - 13 May 2014
 		targetReuse = true;
@@ -518,6 +520,26 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		return true;
 	}
 	
+	//MN FIXED addFKs - 24 June 2014
+	private void addFKsNoReuse() 
+	{
+			for(int i = 1; i < numOfTgtTables; i++) 
+			{
+				// add a variable number of foreign keys per table (always the first keySize attributes)
+				//MN fixed the errors of incorrectly generating foreign key - 24 June 2014
+				//for (int j = 0; j < keySize; j++)
+					//addFK(i, j, 0, j, false);
+				String[] fAttr = new String[keySize];
+				for(int j=0; j<keySize; j++)
+					fAttr[j] = m.getTargetRels().get(i).getAttrArray(j).getName();
+				
+				String[] tAttr = new String[keySize];
+				for (int j=0; j<keySize; j++)
+					tAttr[j] = m.getTargetRels().get(0).getAttrArray(j).getName();
+				
+				addFK(i, fAttr, 0, tAttr, false);
+			}
+	}
 	
 	@Override
 	protected void genTargetRels() throws Exception 
@@ -607,19 +629,32 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
             
             if (i==0)
             	fac.addPrimaryKey(trgName, keyAttNames, false);
+            else
+            	addFKs(attrs, i);
         }
         
-        addFKs();
+        //addFKs();
 	}
 	
-	private void addFKs() 
+	//MN FIXED addFKs - 24 June 2014
+	private void addFKs(String attrs[], int relNum) 
 	{
-		for(int i = 1; i < numOfTgtTables; i++) 
-		{
+		//for(int i = 1; i < numOfTgtTables; i++) 
+		//{
 			// add a variable number of foreign keys per table (always the first keySize attributes)
-			for (int j = 0; j < keySize; j++)
-				addFK(i, j, 0, j, false);
-		}
+			//MN fixed the errors of incorrectly generating foreign key - 24 June 2014
+			//for (int j = 0; j < keySize; j++)
+				//addFK(i, j, 0, j, false);
+			String[] fAttr = new String[keySize];
+			for(int i=0; i<keySize; i++)
+				fAttr[i] = attrs[i];
+			
+			String[] tAttr = new String[keySize];
+			for (int i=0; i<keySize; i++)
+				tAttr [i] = m.getTargetRels().get(0).getAttrArray(i).getName();
+			
+			addFK(relNum, fAttr, 0, tAttr, false);
+		//}
 	}
 	
 	@Override
