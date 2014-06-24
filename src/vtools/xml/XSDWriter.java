@@ -16,6 +16,8 @@ import vtools.dataModel.types.Type;
 
 //MN ADD four methods to print source/target primary and foreign keys - 3 April 2014
 //MN FIXED printSource and Target FKs - 1 June 2014
+//MN FIXED printSourceFK and printTargetFK - 24 June 2014
+
 public class XSDWriter
 {
     private final String _tab = "   ";
@@ -176,22 +178,20 @@ public class XSDWriter
     				buf.append("\" ");
     				
     				//MN foreign key Name
-    				buf.append("name=\"" + "fk" + r.getName() + 
-    					relfkAttrs.get(j).getTo().getTableref().toString());
+    				buf.append("name=\"" + "fk" + r.getName());
     				buf.append(relfkAttrs.get(j).getFrom().getAttrArray(0));
-    				for(int i=j+1; i<relfkAttrs.size(); i++)
-    					if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
-    						buf.append(relfkAttrs.get(i).getFrom().getAttrArray(0));
+    				for(int i=1; i< relfkAttrs.get(j).getFrom().getAttrArray().length; i++)
+    					buf.append(relfkAttrs.get(j).getFrom().getAttrArray(i));
+    				
+    				buf.append(relfkAttrs.get(j).getTo().getTableref().toString());
     			    for(int i=0; i<topkAttrs.length; i++)
     			    	buf.append(topkAttrs[i]);
     			    buf.append("\">");
     			
     			    //MN from rel Name
     			    buf.append("<xs:selector xpath=\"./" + r.getName() + "\"/>");
-    			    buf.append("<xs:field xpath=\"" + relfkAttrs.get(j).getFrom().getAttrArray(0) + "\"/>");
-    			    for(int i=j+1; i<relfkAttrs.size(); i++)
-    			    	if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
-    			    		buf.append("<xs:field xpath=\"" + relfkAttrs.get(i).getFrom().getAttrArray(0) + "\"/>");
+    			    for(int k=0; k<relfkAttrs.get(j).getFrom().getAttrArray().length; k++)
+    			    	buf.append("<xs:field xpath=\"" + relfkAttrs.get(j).getFrom().getAttrArray(k) + "\"/>");
     			    buf.append("</xs:keyref>\n");
     		}
     	}
@@ -222,22 +222,20 @@ public class XSDWriter
     				buf.append("\" ");
     				
     				//MN foreign key Name
-    				buf.append("name=\"" + "fk" + r.getName() + 
-    					relfkAttrs.get(j).getTo().getTableref().toString());
+    				buf.append("name=\"" + "fk" + r.getName());
     				buf.append(relfkAttrs.get(j).getFrom().getAttrArray(0));
-    				for(int i=j+1; i<relfkAttrs.size(); i++)
-    					if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
-    						buf.append(relfkAttrs.get(i).getFrom().getAttrArray(0));
+    				for(int i=1; i< relfkAttrs.get(j).getFrom().getAttrArray().length; i++)
+    					buf.append(relfkAttrs.get(j).getFrom().getAttrArray(i));
+    				
+    				buf.append(relfkAttrs.get(j).getTo().getTableref().toString());
     			    for(int i=0; i<topkAttrs.length; i++)
     			    	buf.append(topkAttrs[i]);
     			    buf.append("\">");
     			
     			    //MN from rel Name
     			    buf.append("<xs:selector xpath=\"./" + r.getName() + "\"/>");
-    			    buf.append("<xs:field xpath=\"" + relfkAttrs.get(j).getFrom().getAttrArray(0) + "\"/>");
-    			    for(int i=j+1; i<relfkAttrs.size(); i++)
-    			    	if(relfkAttrs.get(i).getTo().getTableref().equals(relfkAttrs.get(j).getTo().getTableref().toString()))
-    			    		buf.append("<xs:field xpath=\"" + relfkAttrs.get(i).getFrom().getAttrArray(0) + "\"/>");
+    			    for(int k=0; k<relfkAttrs.get(j).getFrom().getAttrArray().length; k++)
+    			    	buf.append("<xs:field xpath=\"" + relfkAttrs.get(j).getFrom().getAttrArray(k) + "\"/>");
     			    buf.append("</xs:keyref>\n");
     		}
     	}
