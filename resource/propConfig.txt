@@ -5,7 +5,7 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 8
+Scenarios.COPY = 1
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
@@ -19,7 +19,7 @@ Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
 Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
-Scenarios.NEWVERTIPARTITION = 0
+Scenarios.VERTPARTITIONIASAAUTHORITY = 0
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -45,10 +45,10 @@ ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 0
-ConfigOptions.SourceInclusionDependencyPerc = 100
-ConfigOptions.SourceInclusionDependencyFKPerc = 100
-ConfigOptions.TargetInclusionDependencyPerc = 100
-ConfigOptions.TargetInclusionDependencyFKPerc = 100
+ConfigOptions.SourceInclusionDependencyPerc = 0
+ConfigOptions.SourceInclusionDependencyFKPerc = 0
+ConfigOptions.TargetInclusionDependencyPerc = 0
+ConfigOptions.TargetInclusionDependencyFKPerc = 0
 # exists is 1 and not exists is 0
 ConfigOptions.SourceCircularInclusionDependency = 0
 ConfigOptions.SourceCircularFK = 0
@@ -89,7 +89,7 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = false
+OutputOption.Data = true
 OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
@@ -97,8 +97,8 @@ OutputOption.ErrorsAndExplanations = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = false
-TrampXMLOutput.Data = false
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = true
 

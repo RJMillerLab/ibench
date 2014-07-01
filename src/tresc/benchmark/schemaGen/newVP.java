@@ -980,6 +980,6 @@ public class newVP extends AbstractScenarioGenerator{
 	
 	@Override
 	public ScenarioName getScenType() {
-		return ScenarioName.NEWVERTIPARTITION;
+		return ScenarioName.VERTPARTITIONIASAAUTHORITY;
 	}
 }

@@ -151,8 +151,8 @@ public class Constants
         VERTPARTITIONHASA,
         VERTPARTITIONNTOM,
         MERGEADD,
-        //MN added new scenario - 23 June 2014
-        NEWVERTIPARTITION
+        //MN added new scenario - 23 June 2014, 30 June 2014
+        VERTPARTITIONIASAAUTHORITY
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -178,8 +178,8 @@ public class Constants
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
     	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
-    	//MN added new scenario - 23 June 2014
-    	nameForScenarios.put(ScenarioName.NEWVERTIPARTITION, "_NEWVP");
+    	//MN added new scenario - 23 June 2014, 30 June 2014
+    	nameForScenarios.put(ScenarioName.VERTPARTITIONIASAAUTHORITY, "_VIAUTHORITY");
     }
     
     public enum OutputOption {

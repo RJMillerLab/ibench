@@ -96,7 +96,7 @@ public class Generator {
 		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] =
 				new MergeAddScenarioGenerator();
 		//MN added new vertical partitioning - 23 June 2014
-		scenarioGenerators[Constants.ScenarioName.NEWVERTIPARTITION.ordinal()] =
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONIASAAUTHORITY.ordinal()] =
 				new newVP();
 		
 		// create an FD generator
