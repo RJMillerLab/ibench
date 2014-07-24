@@ -41,17 +41,24 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
             numOfElementsDeviation);
         
-        // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
-        numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
-
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
-            numOfSetElementsDeviation);
-    	
+                numOfSetElementsDeviation);
+        	
         numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
+        
+        // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
+        // BG at least number of target table attributes
+        numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
+        numOfSrcTblAttr = (numOfSrcTblAttr < numOfTgtTables) ? numOfTgtTables : numOfSrcTblAttr;            
 
         attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
         
+        log.debug("number of src attrs: " + numOfSrcTblAttr
+        		+ "\nnumber of trg tables: " + numOfTgtTables
+        		+ "\nattributes per target rel: " + attsPerTargetRel
+        		+ "\nattributes last target rel:" + attrRemainder);
+        		
         
         jk = JoinKind.values()[joinKind];
         if (jk == JoinKind.VARIABLE)
@@ -231,7 +238,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	
 	//TODO does not seem to make a lot of sense, using the same skolem function, but with different number of arguments is wrong
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, String[] skIds) {
-//		int numArgsForSkolem;
+		int useReminder = (rel == numOfTgtTables - 1) ? attrRemainder : 0;
 
 //		// generate random number arguments for skolem function
 //		if (sk == SkolemKind.RANDOM)
@@ -258,12 +265,12 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 						CollectionUtils.concatArrays(
 								fac.getFreshVars(0, attsPerTargetRel),
 								fac.getFreshVars(rel * attsPerTargetRel, 
-										attsPerTargetRel)), 
+										attsPerTargetRel + useReminder)), 
 						skIds[rel]);
 				// fk to center of star
 				fac.addSKToExistsAtom(m1, rel, 
 						fac.getFreshVars(0, attsPerTargetRel), 
-						skIds[rel - 1]);			
+						skIds[0]);			
 				}
 		}
 		// CHAIN join
@@ -275,7 +282,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 			// intermediate rel add pk skolem + fk skolem to previous
 			else {
 				fac.addSKToExistsAtom(m1, rel, 
-						fac.getFreshVars(0, (rel + 1) * attsPerTargetRel), 
+						fac.getFreshVars(0, ((rel + 1) * attsPerTargetRel) + useReminder), 
 						skIds[rel]);
 				fac.addSKToExistsAtom(m1, rel, 
 						fac.getFreshVars(0, rel * attsPerTargetRel), 
@@ -306,18 +313,17 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		String joinAttNameRef;
 		
 		// join attrs different for star and chain join.
-		if (jk == JoinKind.STAR) {
+//		if (jk == JoinKind.STAR) {
 			joinAttName = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
             joinAttNameRef = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
-            
             //TODO check what they do there really
-		}
-		else {
-			int numAttr = m.getNumRelAttr(0, false);
-			joinAttName = m.getAttrId(0, numAttr - 1, false);
-            joinAttNameRef = m.getAttrId(0, numAttr - 2, false);
-		}
-
+//		}
+//		else {
+//			joinAttName = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
+//            joinAttNameRef = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
+//		}
+		log.debug("Join attribute: <" + joinAttName + ">" + " "
+        		+ "and join reference attributes is <" + joinAttNameRef + ">");
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String targetRelName = m.getTargetRels().get(i).getName();
@@ -336,11 +342,14 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 				Projection att = new Projection(new Variable("X"), trgAttrName);
 				sel.add(trgAttrName, att);
 	        }
+	        
+	        log.debug("Query for " + targetRelName + " is for now " + q.toTrampString());
 		}
 		
 		// add skolem function for join
 		if (jk == JoinKind.STAR) {
 			String skName = "";
+			vtools.dataModel.expression.SKFunction centerSK = null;
 			
 			for(int i = 0; i < numOfTgtTables; i++) {
 				SelectClauseList seli = queries[i].getSelect();
@@ -384,24 +393,31 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 						new vtools.dataModel.expression.SKFunction(skName);
 		 			
 		 		// this works because the key is always the first attribute 
-		 		for(int k = 0; k < numArgs; k++) {	//TODO differs from what SKs do		
-		 			String sAttName = m.getAttrId(0, k, true);
+		 		for(int k = 0; k < numArgs; k++) {	//TODO differs from what SKs do
+		 			int offset = (k < attsPerTargetRel) ? 0 : attsPerTargetRel * (i - 1);
+		 			String sAttName = m.getAttrId(0, k + offset, true);
 		 			Projection att = new Projection(new Variable("X"), sAttName);
 		 			stSK.addArg(att);
 		 		}
 				
-		 		if(i == 0)
+//		 		if(i == 0)
 		 			seli.add(joinAttName, stSK);
-		 		
-	            seli.add(joinAttNameRef, stSK);
+		 				 		
+		 		if (i == 0)
+		 			centerSK = stSK;
+		 		if(i != 0)
+		 			seli.add(joinAttNameRef, centerSK);
 			}
 		}
 		
         if (jk == JoinKind.CHAIN)
         {
+        	vtools.dataModel.expression.SKFunction prevSK = null;
         	String skName = "";
-            for (int i = 0; i < numOfTgtTables - 1; i++)
+        	
+            for (int i = 0; i < numOfTgtTables; i++)
             {
+            	log.debug("process table: " + i);
             	int numArgs;
             	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
 
@@ -426,11 +442,12 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
             	
             	SelectClauseList sel1 = queries[i].getSelect();
                 sel1.add(joinAttName, stSK);
-                queries[i].setSelect(sel1);
                 
-                SelectClauseList sel2 = queries[i + 1].getSelect();
-                sel2.add(joinAttNameRef, stSK);
-                queries[i + 1].setSelect(sel2);
+                if (i != 0)
+                	sel1.add(joinAttNameRef, prevSK);
+                
+                queries[i].setSelect(sel1);
+                prevSK = stSK;
             }
         }
         

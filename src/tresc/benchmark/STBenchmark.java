@@ -33,6 +33,7 @@ public class STBenchmark {
 
 	private static Configuration _configuration;
 	// PRG ADD Instance Variable to hold the schema mapping currently being generated
+	
 	private MappingScenario _scenario;
 
 	public STBenchmark() {
