@@ -323,13 +323,15 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 			// create SK projection
 			vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(name);
 
-			for(int k = 0; k < numVar; k++) 
-			{			
-				String sAttName = m.getAttrId(0, k, true);
-				Projection att = new Projection(new Variable("X"), sAttName);
-				stSK.addArg(att);
+			if (i != 2) {
+				for(int k = 0; k < numVar; k++) {			
+					int offset = (i == 0) ? 0 : m.getNumRelAttr(0, false) - 1;
+					
+					String sAttName = m.getAttrId(0, offset + k, true);
+					Projection att = new Projection(new Variable("X"), sAttName);
+					stSK.addArg(att);
+				}
 			}
-
 			if(i == 0)
 			{
 				seli.add(joinAtt1, stSK);
