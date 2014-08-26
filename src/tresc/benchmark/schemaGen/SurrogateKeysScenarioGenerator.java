@@ -393,11 +393,14 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
+		//SPJQuery q;
 		String creates = m.getRelName(0, false);
 		
-		q = genQueries();
-		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), creates);
+		//q = genQueries();
+		//fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), creates);
+		//MN BEGIN 16 August 2014
+		fac.addTransformation("", m.getMapIds(), creates);
+		//MN END
 	}
 	
 	private SPJQuery genQueries() throws Exception {

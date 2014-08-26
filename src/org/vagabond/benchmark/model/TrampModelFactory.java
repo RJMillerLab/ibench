@@ -368,8 +368,11 @@ public class TrampModelFactory {
 		stFK.addLeftTerm(fromVar, new Projection(Path.ROOT, fromRel));
 		Variable toVar = new Variable("K");
 		stFK.addRightTerm(toVar, new Projection(Path.ROOT, toRel));
-		stFK.addFKeyAttr(new Projection(toVar, toA[0]), 
-				new Projection(fromVar, fromA[0])); //TODO check whether supports more than one attr in FK
+		//MN BEGIN - 24 August 2014
+		for(int count=0; count<toA.length; count++)
+			stFK.addFKeyAttr(new Projection(toVar, toA[count]), 
+				new Projection(fromVar, fromA[count])); //TODO check whether supports more than one attr in FK
+		//MN END
 		s.addConstraint(stFK);
 	}
 

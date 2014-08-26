@@ -383,12 +383,15 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
-		Query q;
+		//Query q;
 		
-		q = genQueries();
-		q.storeCode(q.toTrampString(m.getMapIds()));
-		q = addQueryOrUnion(creates, q);
-		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//q = genQueries();
+		//q.storeCode(q.toTrampString(m.getMapIds()));
+		//q = addQueryOrUnion(creates, q);
+		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//MN BEGIN changed the line above to the following line - 16 August 2014
+		fac.addTransformation("", m.getMapIds(), creates);
+		//MN END
 	}
 	
 	private Query genQueries() throws Exception {

@@ -9,6 +9,7 @@ package vtools.xml;
 //MN assumption of two "a", only the second a is considered - what about skolem terms? - 16 April 2014
 
 //MN Fixed Foreign keys in print logical mappings - 1 June 2014
+//MN Removed naming of correspondences in .xsml file - 6 August 2014
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -88,7 +89,8 @@ public class XSMLWriter {
 
 		while (!correspondences.equals("")){
 			String nameCorr = correspondences.split("=")[1].split(">")[0];
-			buf.append("    <valueMapping" + " name=\"$" + (nameCorr.substring(1)) + ">\n");
+			//MN removing the name of correspondences - 6 August 2014
+			buf.append("    <valueMapping>\n");
 			
 			int corrIndexEnd = correspondences.indexOf("</Correspondence>");
 			String correspondence = correspondences.substring(0, corrIndexEnd+17);

@@ -118,10 +118,10 @@ public class STBenchmark {
 		STBenchmark benchmark = new STBenchmark();
 		//MN added lines to make connection with random config file generator - 21 April 2014
 		//MN the following lines should be enabled - 26 April 2014
-		ConfigGenerator cg = new ConfigGenerator();
+		//ConfigGenerator cg = new ConfigGenerator();
 		//cg.setConfigPath("config/");
-		String configFileName = cg.generateConfigFile(false);
-		configFileName = "config/" + configFileName;
+		//String configFileName = cg.generateConfigFile(false);
+		//configFileName = "config/" + configFileName;
 		//_configuration.configurationFile = configFileName;
 		//MN end of adding some lines - 21 April 2014
 		benchmark.parseArgs(args);

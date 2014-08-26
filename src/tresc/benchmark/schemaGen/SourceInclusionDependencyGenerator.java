@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.RelationType;
@@ -248,9 +249,13 @@ public class SourceInclusionDependencyGenerator implements ScenarioGenerator {
 						if (addInclusionDependency (ids, rels[fromRelIndex].getName(), rels[toRelIndex].getName(), 
 								fromAttrs, toPKAttrs, true)) {
 
-							scenario.getDocFac().addForeignKey(rels[fromRelIndex].getName(), fromAttrs, 
+							//MN BEGIN 24 August 2014 - corrected the way foreign keys are stored 
+							//for(int count=0; count<fromAttrs.length; count++){
+							TrampModelFactory fac = scenario.getDocFac();
+							fac.addForeignKey(rels[fromRelIndex].getName(), fromAttrs, 
 									rels[toRelIndex].getName(), toPKAttrs, true);
-							
+							//}
+							//MN END
 							if (log.isDebugEnabled()) {
 								log.debug("--------- GENERATING NEW RANDOM SOURCE FOREIGN KEY---------");
 								log.debug("fromRelName: " + rels[fromRelIndex].getName());

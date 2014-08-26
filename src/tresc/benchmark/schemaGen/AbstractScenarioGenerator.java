@@ -34,6 +34,7 @@ import vtools.dataModel.schema.Schema;
 // PRG RESTORED Reading Deviation Parameter (numOfElementsDeviation) from config file - August 28, 2012
 // PRG MOVED method getRandomSourceVars(int numArgsForSkolem, MappingType m1) to tresc.benchmark.utils.Utils.java to facilitate code reuse - Sep 21, 2012
 
+
 public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
 	static Logger log = Logger.getLogger(AbstractScenarioGenerator.class);
@@ -161,11 +162,14 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());};
 		}
 		genMappings();
+		//MN we don't need transformations for the purpose of evaluating mapmerge - 16 August 2014
+		//MN commented them - 16 August 2014
 		if (log.isDebugEnabled()) {log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());};
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Transformations)) {
 			genTransformations();
 			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());};
 		}
+		
 		scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
 		//if (log.isDebugEnabled()) {log.debug("Repetition <" + curRep +"> is " + m.toString());};
 	}

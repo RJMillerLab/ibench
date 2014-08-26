@@ -386,12 +386,15 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
-		Query q;
+		//Query q;
 		
-		q = genQueries();
-		q.storeCode(q.toTrampString(m.getMapIds()));
-		q = addQueryOrUnion(creates, q);
-		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//q = genQueries();
+		//q.storeCode(q.toTrampString(m.getMapIds()));
+		//q = addQueryOrUnion(creates, q);
+		//MN BEGIN 16 August 2014 
+		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		fac.addTransformation("", m.getMapIds(), creates);
+		//MN END 16 August 2014
 	}
 	
 	private Query genQueries() throws Exception {

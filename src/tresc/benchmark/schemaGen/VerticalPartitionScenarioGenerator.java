@@ -869,14 +869,17 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
-		SPJQuery genQuery = genQuery(new SPJQuery());
+		//SPJQuery q;
+		//SPJQuery genQuery = genQuery(new SPJQuery());
 		
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String creates = m.getTargetRels().get(i).getName();
-			q = (SPJQuery) genQuery.getSelect().getTerm(i);
+			//q = (SPJQuery) genQuery.getSelect().getTerm(i);
 			
-			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			//fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			//MN BEGIN 16 August 2014
+			fac.addTransformation("", m.getMapIds(), creates);
+			//MN END
 		}
 	}
 	

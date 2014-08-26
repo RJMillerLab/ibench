@@ -29,6 +29,8 @@ import vtools.dataModel.values.IntegerValue;
 //MN  ENHANCED genSourceRels to pass types of attributes as argument to addRelation - 11 May 2014
 //MN  FIXED tries++ in chooseTargetRels() - 11 May 2014
 //MN  FIXED chooseTargetRels() - 29 May 2014
+//MN  CHANGED type of selector from int to text - 17 August 2014
+
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
 	private static final int MAX_NUM_TRIES = 10;
@@ -125,7 +127,9 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	    
         // create the source attrs
         attrs[0] = nameSelector;
-        dTypes[0] = "INT8";
+        //MN -changed type of selector - 17 August 2014
+        //dTypes[0] = "INT8";
+        dTypes[0] = "TEXT";
         
         // and now populate the src SMarkElement and the target fragments with
         // the rest of the attributes.
@@ -309,17 +313,20 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		Query q;
+		//Query q;
 		
 		for(int i = 0; i < randomFragments; i++) {
 			String targetName = m.getTargetRels().get(i).getName();
 			String map = m.getMapIds()[i];
 			
-			q = genQuery(i);
-			q.storeCode(q.toTrampString(m.getMapIds()[i]));
-			q = addQueryOrUnion(targetName, q);
+			//q = genQuery(i);
+			//q.storeCode(q.toTrampString(m.getMapIds()[i]));
+			//q = addQueryOrUnion(targetName, q);
 
-			fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
+			//fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
+			//MN BEGIN 16 August 2014
+			fac.addTransformation("", new String[] {map}, targetName);
+			//MN END
 		}
 	}
 	

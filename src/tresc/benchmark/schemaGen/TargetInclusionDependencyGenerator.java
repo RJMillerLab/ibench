@@ -242,8 +242,12 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 							if (addInclusionDependency (ids, rels[fromRelIndex].getName(), rels[toRelIndex].getName(), 
 									fromAttrs, toPKAttrs, true)) {
 
-								scenario.getDocFac().addForeignKey(rels[fromRelIndex].getName(), fromAttrs, 
+								//MN BEGIN - 24 August 2014
+								//for(int count=0; count<fromAttrs.length; count++){
+									scenario.getDocFac().addForeignKey(rels[fromRelIndex].getName(), fromAttrs, 
 										rels[toRelIndex].getName(), toPKAttrs, false);
+								//}
+								//MN END
 								
 								if (log.isDebugEnabled()) {
 									log.debug("--------- GENERATING NEW RANDOM TARGET FOREIGN KEY---------");
