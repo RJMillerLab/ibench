@@ -19,7 +19,7 @@ Scenarios.VERTPARTITIONISA = 1
 Scenarios.VERTPARTITIONHASA = 0
 Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
-Scenarios.VERTPARTITIONIASAAUTHORITY = 0
+Scenarios.VERTPARTITIONISAAUTHORITY = 1
 
 # These should always be zero
 Scenarios.FLATTENING = 0

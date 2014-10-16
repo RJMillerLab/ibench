@@ -26,7 +26,9 @@ import vtools.dataModel.expression.Variable;
 //MN only investigated genSource and genTarget - 23 June 2014
 //MN the only difference between this scenario and vertical partitioning is in foreign keys - 23 June 2014
 //MN ToDo: enhance chooseTargetRels to check existing foreign keys on reused target relations - 23 June 2014
-public class newVP extends AbstractScenarioGenerator{
+//PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
+
+public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	public static final int MAX_NUM_TRIES = 10;
 	
 	private JoinKind jk;
@@ -48,7 +50,7 @@ public class newVP extends AbstractScenarioGenerator{
 	private boolean targetReuse;
 	// MN
 	
-    public newVP()
+    public VPIsAAuthorityScenarioGenerator ()
     {
         ;
     }
@@ -983,6 +985,6 @@ public class newVP extends AbstractScenarioGenerator{
 	
 	@Override
 	public ScenarioName getScenType() {
-		return ScenarioName.VERTPARTITIONIASAAUTHORITY;
+		return ScenarioName.VERTPARTITIONISAAUTHORITY;
 	}
 }

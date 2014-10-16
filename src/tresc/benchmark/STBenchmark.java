@@ -16,7 +16,8 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
-import randomConfigGenerator.ConfigGenerator;
+import tresc.benchmark.configGen.ConfigGenerator;
+
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
@@ -29,11 +30,13 @@ import vtools.dataModel.schema.Schema;
 import vtools.xml.XSDWriter;
 import vtools.xml.XSMLWriter;
 
-// MN  ADD two methods to generate random source and target inclusion dependencies, print results as mapjob, xsml and xsd files - 3 April 2014
+
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated
 // PRG ADD STBenchmark's to-be generated schema mapping is called "Mapping Scenario"
 // PRG Removed redundant output and also replaced code to avoid generating string if it is not going to be output - Oct 5, 2012
+// MN  ADD two methods to generate random source and target inclusion dependencies, print results as mapjob, xsml and xsd files - 3 April 2014
+// PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
 
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);

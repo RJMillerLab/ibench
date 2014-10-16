@@ -19,6 +19,8 @@ import tresc.benchmark.dataGen.TrampXMLinlineGen;
 
 
 //MN added new sceanrio newVP - 23 June 2014
+//PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
+
 public class Constants
 {
     public enum ParameterName {
@@ -152,7 +154,7 @@ public class Constants
         VERTPARTITIONNTOM,
         MERGEADD,
         //MN added new scenario - 23 June 2014, 30 June 2014
-        VERTPARTITIONIASAAUTHORITY
+        VERTPARTITIONISAAUTHORITY
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -179,7 +181,7 @@ public class Constants
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
     	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
     	//MN added new scenario - 23 June 2014, 30 June 2014
-    	nameForScenarios.put(ScenarioName.VERTPARTITIONIASAAUTHORITY, "_VIAUTHORITY");
+    	nameForScenarios.put(ScenarioName.VERTPARTITIONISAAUTHORITY, "_VA");
     }
     
     public enum OutputOption {
