@@ -5,21 +5,21 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 1
-Scenarios.HORIZPARTITION = 1
-Scenarios.SURROGATEKEY = 1
+Scenarios.COPY = 6
+Scenarios.HORIZPARTITION = 6
+Scenarios.SURROGATEKEY = 6
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 1
-Scenarios.ADDATTRIBUTE = 1
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 1
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.VERTPARTITION = 6
+Scenarios.ADDATTRIBUTE = 6
+Scenarios.DELATTRIBUTE = 5
+Scenarios.ADDDELATTRIBUTE = 6
+Scenarios.VERTPARTITIONISA = 5
+Scenarios.VERTPARTITIONHASA = 5
+Scenarios.VERTPARTITIONNTOM = 5
 Scenarios.MERGEADD = 0
-Scenarios.VERTPARTITIONISAAUTHORITY = 1
+Scenarios.VERTPARTITIONISAAUTHORITY = 6
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -29,7 +29,7 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 4
+ConfigOptions.NumOfSubElements = 3
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 1
 ConfigOptions.JoinSize = 3
@@ -81,8 +81,8 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = -1241084990
-RepElementCount = 5
-MaxStringLength = 5
+RepElementCount = 100
+MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
