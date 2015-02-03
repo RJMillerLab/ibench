@@ -68,7 +68,7 @@ public class ToXGeneWrapper {
 			session.usePOM = false;
 			session.pomBufferPath = ".";
 			session.pomMemFracBuffer = (float) 0.5;
-			session.pomBufferSize = 8 * 1024;
+			session.pomBufferSize = 80000 * 1024;
 			/* Initialize the engine */
 			tgEngine.startSession(session);
 
