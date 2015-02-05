@@ -5,19 +5,19 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 1
-Scenarios.HORIZPARTITION = 1
-Scenarios.SURROGATEKEY = 1
+Scenarios.COPY = 3
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 1
-Scenarios.ADDATTRIBUTE = 1
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 1
-Scenarios.VERTPARTITIONHASA = 1
-Scenarios.VERTPARTITIONNTOM = 1
+Scenarios.VERTPARTITION = 0
+Scenarios.ADDATTRIBUTE = 3
+Scenarios.DELATTRIBUTE = 3
+Scenarios.ADDDELATTRIBUTE = 3
+Scenarios.VERTPARTITIONISA = 3
+Scenarios.VERTPARTITIONHASA = 3
+Scenarios.VERTPARTITIONNTOM = 3
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -29,22 +29,22 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 4
+ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 1
-ConfigOptions.JoinSize = 3
-ConfigOptions.NumOfParamsInFunctions = 1
-ConfigOptions.PrimaryKeySize = 2
+ConfigOptions.JoinSize = 1
+ConfigOptions.NumOfParamsInFunctions = 2
+ConfigOptions.PrimaryKeySize = 1
 ConfigOptions.NumOfJoinAttributes = 1
 ConfigOptions.JoinKind = 0 
 # Star is 0 , chain is 1
 ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
-ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 0
-ConfigOptions.ReuseTargetPerc = 0
-ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.NestingDepth = 5
+ConfigOptions.ReuseSourcePerc = 30
+ConfigOptions.ReuseTargetPerc = 30
+ConfigOptions.NoReuseScenPerc = 40
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
@@ -67,7 +67,7 @@ ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.ReuseSourcePerc = 0
 ConfigOptionsDeviation.ReuseTargetPerc = 0
-ConfigOptionsDeviation.NoReuseScenPerc = 0
+ConfigOptionsDeviation.NoReuseScenPerc = 100
 ConfigOptionsDeviation.SourceInclusionDependencyPerc = 0
 ConfigOptionsDeviation.SourceInclusionDependencyFKPerc = 0
 ConfigOptionsDeviation.TargetInclusionDependencyPerc = 0
@@ -81,8 +81,8 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = -1241084990
-RepElementCount = 5
-MaxStringLength = 500
+RepElementCount = 47
+MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds

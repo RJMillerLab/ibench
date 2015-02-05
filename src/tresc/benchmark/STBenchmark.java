@@ -137,7 +137,7 @@ public class STBenchmark {
 			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
 		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
 		
-		File xsmlDir = new File("./mapmerge");
+		File xsmlDir = new File("./out0");
 		if (!xsmlDir.exists())
 			xsmlDir.mkdirs();
 		
@@ -155,7 +155,7 @@ public class STBenchmark {
 		    
 			BufferedWriter bufWriterMapjob =
 					new BufferedWriter(new FileWriter(new File(
-							"./mapmerge", mapjob + ".mapjob")));
+							"./out0", mapjob + ".mapjob")));
 			bufWriterMapjob.write(bufMapjob.toString());
 			bufWriterMapjob.close();
 		}
@@ -177,7 +177,7 @@ public class STBenchmark {
 		try {
 			BufferedWriter bufWriterXSML =
 					new BufferedWriter(new FileWriter(new File(
-							"./mapmerge", mapjob + ".xsml")));
+							"./out0", mapjob + ".xsml")));
 			bufWriterXSML.write(bufXSML.toString());
 			bufWriterXSML.close();
 			System.out.print(".xsml file done!\n");
@@ -200,14 +200,14 @@ public class STBenchmark {
 		try {
 			BufferedWriter bufWriterXSD =
 					new BufferedWriter(new FileWriter(new File(
-							"./mapmerge", S)));
+							"./out0", S)));
 			bufWriterXSD.write(bufSourceXSD.toString());
 			bufWriterXSD.close();
 			System.out.print("source .xsd file done!\n");
 
 			bufWriterXSD =
 					new BufferedWriter(new FileWriter(new File(
-							"./mapmerge", T.substring(0, T.length()-7) + "Trg.xsd")));
+							"./out0", T.substring(0, T.length()-7) + "Trg.xsd")));
 			bufWriterXSD.write(bufTargetXSD.toString());
 			bufWriterXSD.close();
 			System.out.print("target .xsd file done!\n");
