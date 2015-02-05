@@ -18,7 +18,7 @@ import tresc.benchmark.Constants.DESErrorType;
 public class SuperfluousMappingGen extends AbstractExplanationGenerator {
 
 	static Logger log = LogProviderHolder.getInstance().getLogger(
-			MarkerSetFlattenedView.class);
+			SuperfluousMappingExplanationGenerator.class);
 
 	private SuperfluousMappingExplanationGenerator gen = new SuperfluousMappingExplanationGenerator();
 

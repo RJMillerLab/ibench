@@ -55,13 +55,13 @@ ConfigOptionsDeviation.NumOfJoinAttributes = 0
 ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
-ConfigOptionsDeviation.SourceFDPerc = 20
+ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = -1241084990
-RepElementCount = 5
-MaxStringLength = 5
-MaxNumValue = 10000
+RepElementCount = 20000
+MaxStringLength = 200
+MaxNumValue = 400000000
 DataGenerator = TrampCSV
 MappingLanguage = FOtgds
 
@@ -78,5 +78,5 @@ TrampXMLOutput.Correspondences = true
 TrampXMLOutput.Transformations = true
 TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = true
-TrampXMLOutput.FDs = true
+TrampXMLOutput.FDs = false
 

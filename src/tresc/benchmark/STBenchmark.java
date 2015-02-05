@@ -31,7 +31,7 @@ import vtools.xml.XSDWriter;
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);
 
-	private static Configuration _configuration;
+	private static Configuration _configuration = null;
 	// PRG ADD Instance Variable to hold the schema mapping currently being generated
 	
 	private MappingScenario _scenario;
@@ -45,6 +45,8 @@ public class STBenchmark {
 	// PRG ADD Instance Method	
 	public static Configuration getConfiguration()
 	{ 
+		if (_configuration == null)
+			_configuration = new Configuration();
 		return _configuration;
 	}
 	
