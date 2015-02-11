@@ -5,19 +5,19 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 3
-Scenarios.HORIZPARTITION = 3
+Scenarios.COPY = 0
+Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 3
-Scenarios.ADDATTRIBUTE = 3
-Scenarios.DELATTRIBUTE = 3
+Scenarios.VERTPARTITION = 0
+Scenarios.ADDATTRIBUTE = 10
+Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 3
-Scenarios.VERTPARTITIONHASA = 3
-Scenarios.VERTPARTITIONNTOM = 3
+Scenarios.VERTPARTITIONISA = 10
+Scenarios.VERTPARTITIONHASA = 10
+Scenarios.VERTPARTITIONNTOM = 10
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -30,8 +30,8 @@ Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 3
-ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumOfAttributesToDelete = 1
+ConfigOptions.NumOfNewAttributes = 2
+ConfigOptions.NumOfAttributesToDelete = 2
 ConfigOptions.JoinSize = 1
 ConfigOptions.NumOfParamsInFunctions = 1
 ConfigOptions.PrimaryKeySize = 1
@@ -43,8 +43,8 @@ ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
-ConfigOptions.ReuseTargetPerc = 0
-ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.ReuseTargetPerc = 50
+ConfigOptions.NoReuseScenPerc = 40
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
@@ -81,7 +81,7 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = -1241084990
-RepElementCount = 50
+RepElementCount = 500
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
