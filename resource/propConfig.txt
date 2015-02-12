@@ -29,7 +29,7 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfSubElements = 7
 ConfigOptions.NumOfNewAttributes = 2
 ConfigOptions.NumOfAttributesToDelete = 2
 ConfigOptions.JoinSize = 1
@@ -43,8 +43,8 @@ ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
-ConfigOptions.ReuseTargetPerc = 0
-ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.ReuseTargetPerc = 50
+ConfigOptions.NoReuseScenPerc = 40
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
@@ -56,7 +56,7 @@ ConfigOptions.TargetCircularInclusionDependency = 0
 ConfigOptions.TargetCircularFK = 0
 
 # Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 0
+ConfigOptionsDeviation.NumOfSubElements = 3
 ConfigOptionsDeviation.NumOfNewAttributes = 0
 ConfigOptionsDeviation.NumOfAttributesToDelete = 0
 ConfigOptionsDeviation.JoinSize = 0
@@ -81,7 +81,7 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = -1241084990
-RepElementCount = 5
+RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
