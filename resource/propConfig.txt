@@ -12,12 +12,12 @@ Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 10
+Scenarios.ADDATTRIBUTE = 5
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 10
-Scenarios.VERTPARTITIONHASA = 10
-Scenarios.VERTPARTITIONNTOM = 10
+Scenarios.VERTPARTITIONISA = 5
+Scenarios.VERTPARTITIONHASA = 5
+Scenarios.VERTPARTITIONNTOM = 5
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -29,7 +29,7 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3
+ConfigOptions.NumOfSubElements = 10
 ConfigOptions.NumOfNewAttributes = 2
 ConfigOptions.NumOfAttributesToDelete = 2
 ConfigOptions.JoinSize = 1
@@ -43,8 +43,8 @@ ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
-ConfigOptions.ReuseTargetPerc = 50
-ConfigOptions.NoReuseScenPerc = 40
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
@@ -81,7 +81,7 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = -1241084990
-RepElementCount = 500
+RepElementCount = 5
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
