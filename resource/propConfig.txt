@@ -42,18 +42,18 @@ ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
+ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
-ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 0
-ConfigOptions.SourceInclusionDependencyFKPerc = 0
-ConfigOptions.TargetInclusionDependencyPerc = 0
-ConfigOptions.TargetInclusionDependencyFKPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.SourceInclusionDependencyPerc = 10
+ConfigOptions.SourceInclusionDependencyFKPerc = 10
+ConfigOptions.TargetInclusionDependencyPerc = 10
+ConfigOptions.TargetInclusionDependencyFKPerc = 10
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 0
-ConfigOptions.SourceCircularFK = 0
-ConfigOptions.TargetCircularInclusionDependency = 0
-ConfigOptions.TargetCircularFK = 0
+ConfigOptions.SourceCircularInclusionDependency = 1
+ConfigOptions.SourceCircularFK = 1
+ConfigOptions.TargetCircularInclusionDependency = 1
+ConfigOptions.TargetCircularFK = 1
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 2
@@ -80,7 +80,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 2
+RandomSeed = 220
 RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
@@ -101,4 +101,3 @@ TrampXMLOutput.Transformations = true
 TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = true
-
