@@ -1,11 +1,15 @@
 package tresc.benchmark;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
+import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.util.LoggerUtil;
+import org.vagabond.xmlmodel.MappingScenarioDocument;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.DataGenType;
@@ -20,6 +24,7 @@ import tresc.benchmark.schemaGen.FlatteningScenarioGenerator;
 import tresc.benchmark.schemaGen.FusionScenarioGenerator;
 import tresc.benchmark.schemaGen.GLAVScenarioGenerator;
 import tresc.benchmark.schemaGen.HorizontalPartitionScenarioGenerator;
+import tresc.benchmark.schemaGen.LoadExistingScenarioGenerator;
 import tresc.benchmark.schemaGen.MergeAddScenarioGenerator;
 import tresc.benchmark.schemaGen.MergingScenarioGenerator;
 import tresc.benchmark.schemaGen.NestingScenarioGenerator;
@@ -45,6 +50,7 @@ public class Generator {
 	static Logger log = Logger.getLogger(Generator.class);
 	
 	private AbstractScenarioGenerator[] scenarioGenerators;
+	private AbstractScenarioGenerator[] loadScenarioGenerators;
 	private ScenarioGenerator fdGen;
 	private DataGenerator dataGenerator;
 	private RandomSourceSkolemToMappingGenerator skGen;
@@ -53,9 +59,13 @@ public class Generator {
 	private ArrayList<String> randomSourceInclusionDependencies;
 	private ArrayList<String> randomTargetInclusionDependencies;
 	
-	public Generator(Configuration config) {
-		int numOfScenarios = Constants.ScenarioName.values().length;
+	public Generator(Configuration config) throws XmlException, IOException {
+		int numOfScenarios = Constants.ScenarioName.values().length - 1;
+		
+		//TODO if you creates new primitives from existing mapping files then add these here
+		
 		scenarioGenerators = new AbstractScenarioGenerator[numOfScenarios];
+		
 		for (int i = 0; i < numOfScenarios; i++)
 			scenarioGenerators[i] = null;
 
@@ -100,6 +110,16 @@ public class Generator {
 		//MN added new vertical partitioning - 23 June 2014
 		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISAAUTHORITY.ordinal()] =
 				new VPIsAAuthorityScenarioGenerator();
+		
+		// add new scenario generators for load scenarios
+		int numLoad = config.getNumLoadScenarios();
+		loadScenarioGenerators = new AbstractScenarioGenerator[numLoad];
+		for(int i = 0; i < numLoad; i++) {
+			String name = config.getLoadScenarioNames().get(i);
+			MapScenarioHolder h = new MapScenarioHolder(); 
+			h.setDocument(MappingScenarioDocument.Factory.parse(config.getExistingScenarios().get(i)));
+			loadScenarioGenerators[i] = new LoadExistingScenarioGenerator(h, name);
+		}
 		
 		// create an FD generator
 		fdGen = new SourceFDGenerator();
@@ -146,19 +166,26 @@ public class Generator {
 		MappingScenario scenario = new MappingScenario(configuration);
 
 		// no reuse of source and target schemas?
-		if (configuration.getParam(ParameterName.NoReuseScenPerc) == 100)
+		if (configuration.getParam(ParameterName.NoReuseScenPerc) == 100) {
 			for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
 				scenarioGenerators[i].generateScenario(scenario, configuration);
+			for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
+				loadScenarioGenerators[i].generateScenario(scenario, configuration);
+		}
 		// partial reuse of generated source and target schema elements
 		else {
 			// init generators
 			for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
 				scenarioGenerators[i].init(configuration, scenario);
+			for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
+				loadScenarioGenerators[i].init(configuration, scenario);
 			
 			// do one scenario of each until we are done
 			while(scenario.getNumBasicScen() < configuration.getTotalNumScen()) {
 				for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
-					scenarioGenerators[i].generateNextScenario(scenario, configuration);				
+					scenarioGenerators[i].generateNextScenario(scenario, configuration);
+				for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
+					loadScenarioGenerators[i].generateNextScenario(scenario, configuration);
 			}
 		}
 		

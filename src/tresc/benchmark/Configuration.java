@@ -1,6 +1,8 @@
 package tresc.benchmark;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -71,20 +73,27 @@ public class Configuration {
 
 	int namingPolicy;
 
+	List<File> loadScenarios;
+	private List<String> loadScenarioNames;
+	private int numLoadScenarios = 0;
+	private int[] numLoadScenarioInsts;
+	
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 
 	public Configuration() {
 		initArrays();
 		setDefaultConfiguration();
+		loadScenarios = new ArrayList<File> ();
+		loadScenarioNames = new ArrayList<String> ();
 	}
 
-	public Configuration(PropertyWrapper prop) {
+	public Configuration(PropertyWrapper prop) throws Exception {
 		initArrays();
 		readFromProperties(prop);
 	}
 
-	public void readFromProperties(PropertyWrapper prop) {
+	public void readFromProperties(PropertyWrapper prop) throws Exception {
 		String fileNameSuffix = "";
 
 		// read the output file prefixes
@@ -169,6 +178,23 @@ public class Configuration {
 		
 		// explgen options like percentage of errors to add
 		
+		// options for loading existing scenarios as new primitives
+		prop.setPrefix("LoadScenarios");
+		setNumLoadScenarios(prop.getInt("NumScenarios", 0));
+		numLoadScenarioInsts = new int[numLoadScenarios];
+		
+		for (int i = 0; i < getNumLoadScenarios(); i++) {
+			String fileName = prop.getProperty(i + ".File", "");
+			String name = prop.getProperty(i + ".Name", "");
+			int numInst = prop.getInt(i + ".Inst", 0);
+			File scenFile = new File(fileName);
+			if (!scenFile.exists())
+				throw new Exception("scenario file " + scenFile + " does not exist");
+			numLoadScenarioInsts[i] = numInst;
+			loadScenarios.add(scenFile);
+			loadScenarioNames.add(name);
+		}
+		prop.resetPrefix();
 		
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);
@@ -606,7 +632,7 @@ public class Configuration {
 	}
 
 	public int getTotalNumScen() {
-		return CollectionUtils.sum(_repetitions);
+		return CollectionUtils.sum(_repetitions) + CollectionUtils.sum(numLoadScenarioInsts);
 	}
 
 	public void sanityCheck() {
@@ -698,6 +724,32 @@ public class Configuration {
 
 	public void setSchemaFile(String schemaFile) {
 		this.schemaFile = schemaFile;
+	}
+
+	public List<File> getExistingScenarios() {
+		return loadScenarios;
+	}
+
+	public void setExistingScenarios(List<File> existingScenarios) {
+		this.loadScenarios = existingScenarios;
+	}
+
+	public List<String> getLoadScenarioNames() {
+		return loadScenarioNames;
+	}
+
+	
+
+	public int getNumLoadScenarios() {
+		return numLoadScenarios;
+	}
+
+	public void setNumLoadScenarios(int numLoadScenarios) {
+		this.numLoadScenarios = numLoadScenarios;
+	}
+
+	public int[] getNumLoadScenarioInsts() {
+		return numLoadScenarioInsts;
 	}
 
 }

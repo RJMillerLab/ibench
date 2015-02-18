@@ -23,7 +23,7 @@ public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
 	static Logger log = Logger.getLogger(TestCreationReusingSchemas.class);
 	
 	@Before
-	public void setUpConf () throws FileNotFoundException, IOException {
+	public void setUpConf () throws Exception {
 		PropertyWrapper prop = new PropertyWrapper("testresource/reuseconf.txt");
 		conf = new Configuration();
 		conf.readFromProperties(prop);

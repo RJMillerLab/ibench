@@ -154,7 +154,8 @@ public class Constants
         VERTPARTITIONNTOM,
         MERGEADD,
         //MN added new scenario - 23 June 2014, 30 June 2014
-        VERTPARTITIONISAAUTHORITY
+        VERTPARTITIONISAAUTHORITY,
+        LOADEXISTING
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -182,6 +183,7 @@ public class Constants
     	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
     	//MN added new scenario - 23 June 2014, 30 June 2014
     	nameForScenarios.put(ScenarioName.VERTPARTITIONISAAUTHORITY, "_VA");
+    	nameForScenarios.put(ScenarioName.LOADEXISTING, "_LE");
     }
     
     public enum OutputOption {
