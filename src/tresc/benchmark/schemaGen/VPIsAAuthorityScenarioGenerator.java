@@ -29,6 +29,7 @@ import vtools.dataModel.expression.Variable;
 //PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
 //MN Changes to VP Authority Scenario - 6 Feb 2015 (submitted to prg@cs via email on 10 Feb 2015, not committed as changes were done to an old java class)
 //PRG - COMPLETE RE-IMPLEMENTATION as the previous code did not work at all - 17 Feb 2015
+//PRG - Comment out creation of primary key for slave target relations as per MapMerge's VPGenerator.java code - 19 FEB 2015
 
 public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	public static final int MAX_NUM_TRIES = 10;
@@ -397,9 +398,10 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
         		// Create the join attribute
         		attrsTarget[1] = joinAttNameRef;
         		attrsTypeTarget[1] = "TEXT";
-        		// Add Top Authority Relation
+        		// Add Slave Relation
         		fac.addRelation(hookTarget, trgName, attrsTarget, false);
-        		fac.addPrimaryKey(trgName, joinAttNameRef, false);   
+        		// PRG - Comment out creation of primary key for slave target relation as per MapMerge's VPGenerator.java code - FEB 19 2015
+        		// fac.addPrimaryKey(trgName, joinAttNameRef, false);   
         		// Step 3 - Add FKs - This is fixed, irrelevant of join kind 
         		// fromRel is determined by "index+slave", fromAttr is 1, toRel is determined by index, toAttr is 1, false means is a target FK
         		addFK(index+slave,1,index,1, false);
