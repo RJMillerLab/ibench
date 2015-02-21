@@ -12,12 +12,12 @@ Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 8
+Scenarios.ADDATTRIBUTE = 32
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 8
-Scenarios.VERTPARTITIONHASA = 8
-Scenarios.VERTPARTITIONNTOM = 8
+Scenarios.VERTPARTITIONISA = 32
+Scenarios.VERTPARTITIONHASA = 32
+Scenarios.VERTPARTITIONNTOM = 32
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -80,7 +80,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 107
+RandomSeed = 1230918
 RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
