@@ -1,17 +1,17 @@
 # Configuration File for STBenchmark
 
 # Output Path Prefixes
-SchemaPathPrefix=test1
-InstancePathPrefix=test1
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 3
+Scenarios.COPY = 0
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 1
+Scenarios.VERTPARTITION = 0
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
@@ -28,33 +28,40 @@ Scenarios.NESTING = 0
 Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
+# define additional scenarios to be loaded from Scenario XML files
+# number of such scenarios to load
+LoadScenarios.NumScenarios = 1
+# these scenarios are numbered and for each we require the name, the XML file, and how many instances we should create
+LoadScenarios.0.File = exampleScenarios/simpleTest.xml
+LoadScenarios.0.Name = simpleTest
+LoadScenarios.0.Inst = 2
+
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3
+ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumofAttributestoDelete = 1
-ConfigOptions.JoinSize = 2
+ConfigOptions.NumOfAttributesToDelete = 1
+ConfigOptions.JoinSize = 1
 ConfigOptions.NumOfParamsInFunctions = 1
 ConfigOptions.PrimaryKeySize = 1
 ConfigOptions.NumOfJoinAttributes = 1
-# Star is 0 , chain is 1
 ConfigOptions.JoinKind = 0 
-ConfigOptions.SkolemKind = 0
+# Star is 0 , chain is 1
+ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 25
-ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 20
-ConfigOptions.SourceInclusionDependencyFKPerc = 20
-ConfigOptions.TargetInclusionDependencyPerc = 20
-ConfigOptions.TargetInclusionDependencyFKPerc = 20
+ConfigOptions.ReuseSourcePerc = 0
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.SourceInclusionDependencyPerc = 0
+ConfigOptions.SourceInclusionDependencyFKPerc = 0
+ConfigOptions.TargetInclusionDependencyPerc = 0
+ConfigOptions.TargetInclusionDependencyFKPerc = 0
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 1
-ConfigOptions.SourceCircularFK = 1
-ConfigOptions.TargetCircularInclusionDependency = 1
-ConfigOptions.TargetCircularFK = 1
-
+ConfigOptions.SourceCircularInclusionDependency = 0
+ConfigOptions.SourceCircularFK = 0
+ConfigOptions.TargetCircularInclusionDependency = 0
+ConfigOptions.TargetCircularFK = 0
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 2
@@ -81,24 +88,24 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 1230918
+RandomSeed = 144
 RepElementCount = 10
 MaxStringLength = 100
-MaxNumValue = 100000
+MaxNumValue = 1000
 DataGenerator = TrampCSV
-MappingLanguage = FOtgds
+MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
 OutputOption.Data = true
-OutputOption.XMLSchemas = false
+OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = true
+TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = true
-TrampXMLOutput.ConnectionInfo = true
-TrampXMLOutput.FDs = false
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true

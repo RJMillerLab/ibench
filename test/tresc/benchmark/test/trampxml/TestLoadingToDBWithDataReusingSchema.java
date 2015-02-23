@@ -27,7 +27,7 @@ public class TestLoadingToDBWithDataReusingSchema extends AbstractAllScenarioTes
 	static Logger log = Logger.getLogger(TestLoadingToDBWithDataReusingSchema.class);
 	
 	@Before
-	public void setUpConf () throws FileNotFoundException, IOException {
+	public void setUpConf () throws Exception {
 		PropertyWrapper prop = new PropertyWrapper("testresource/reuseDBconf.txt");
 		conf = new Configuration();
 		conf.readFromProperties(prop);

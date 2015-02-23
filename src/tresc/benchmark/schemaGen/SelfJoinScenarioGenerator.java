@@ -1,6 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.vagabond.util.CollectionUtils;
@@ -17,14 +19,27 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+//MN FIXED "K"; it had not been set correctly - 6 May 2014
+//MN Enhanced genTargetRels to pass types of attributes of target relations as argument to addRelation - 6 May 2014
+//MN Implemented chooseTargetRels - 17 May 2014
+//MN Enhanced genSourceRels to pass types of attributes of source relation as argument to addRelation - 17 May 2014
+//MN FIXED chooseTargetRels - 20 May 2014
+//MN FIXED target relation names in genTargetRels - 20 May 2014
+//MN MODIFIED genSourceRels to be able to evaluate MapMegre (Notice that this modification should be undone later) - 26 May 2014
+//MN FIXED chooseTargetRels (F) - 2 June 2014
+//MN ToDo FIX chooseSourceRels for circular FK - 2 June 2014
+
 public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 {
 	static Logger log = Logger.getLogger(SelfJoinScenarioGenerator.class);
 	
 	public static final int MAX_NUM_TRIES = 10;
 	
+	//MN join size - 17 May 2014
 	private int JN;
+	//MN primary key - 17 May 2014
 	private int K;
+	//MN source rel size - 17 May 2014
 	private int E;
 	private int F;
 	private String[] keys;
@@ -32,6 +47,10 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     private int[] keyPos;
     private int[] fkPos;
 //    private int[] normalPos;
+    
+    //MN added attribute to check whether we are reusing target relations - 17 May 2014
+    private boolean targetReuse;
+
     
     public SelfJoinScenarioGenerator()
     {
@@ -41,14 +60,180 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     protected void initPartialMapping () {
     	super.initPartialMapping();
         E = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
-        K = Utils.getRandomNumberAroundSomething(_generator, keyWidth, keyWidthDeviation);
+        
+        //MN modified the code so that K works correctly - 6 May 2014
+        K = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
+        
         E = (E < ((2 * K) + 1)) ? ((2 * K) + 1) : E;
+        
+        //MN join size
         JN = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         
         JN = (JN < 1) ? 1 : JN;
         F = E - (2 * K);
+        
+        //MN BEGIN - 17 May 2014
+        targetReuse = false;
+        //MN END
+    }
+    
+    
+    //MN - implemented chooseTargetRels - 17 May 2014
+    @Override
+    protected boolean chooseTargetRels() throws Exception{
+    	//MN we need two relations with the same size - 17 May 2014
+    	boolean found1 = false;
+    	boolean found2 = false;
+    	RelationType rel1 = null;
+    	RelationType rel2 = null;
+    	
+    	if(K==0)
+    		K=1;
+    	//MN 2 June 2014
+    	F =1 ;
+    	
+    	int numTries =0;
+    	
+    	while((numTries<MAX_NUM_TRIES) && (!found1) && (!found2)){
+    		
+    		//find the first one - relation S
+    		int minAttrs1 = K + 1;
+    		rel1 = getRandomRel(false, minAttrs1, minAttrs1);
+    		if(rel1 == null)
+    			found1 = false;
+    		else{
+    			//MN FIXED - 18 May 2014
+    			if ((rel1.sizeOfAttrArray() != K + 1))
+    				found1 = false;
+    			if(found1){
+    				if(rel1.isSetPrimaryKey()){
+    					int[] pkPos = model.getPKPos(rel1.getName(), false);
+    					if(pkPos.length != K)
+    						found1 = false;
+    					else
+    						for(int h=0; h<K; h++)
+    							if(pkPos[h] != h)
+    								found1=false;
+    				}
+    				else{
+    					int [] primaryKeyPos = new int [K];
+    					for(int i=0; i<K; i++)
+    						primaryKeyPos [i] = i;
+    					fac.addPrimaryKey(rel1.getName(), primaryKeyPos, false);
+    					found1=true;
+    				}
+    			}
+    			if(found1)
+    				m.addTargetRel(rel1);
+    		
+    		}
+    	
+    		//find the second one - relation T
+    		int minAttrs2 = K + K;
+    		rel2 = getRandomRel(false, minAttrs2, minAttrs2);
+    		if(rel2 == null)
+    			found2 = false;
+    		else{
+    			//MN 18 May 2014
+    			if(rel2.sizeOfAttrArray()/K != 2)
+    				found2=false;
+    			if((rel1 != null) && (rel1.getName()==rel2.getName()))
+    				found2 = false;
+    			
+    			if(found2){
+    				if(rel2.isSetPrimaryKey()){
+    					int[] pkPos = model.getPKPos(rel2.getName(), false);
+    					if(pkPos.length != K)
+    						found2 = false;
+    					else
+    						for(int h=0; h<K; h++)
+    							if(pkPos[h] != h)
+    								found2=false;
+    				}
+    				else{
+    					int [] primaryKeyPos = new int [K];
+    					for(int i=0; i<K; i++)
+    						primaryKeyPos [i] = i;
+    					fac.addPrimaryKey(rel2.getName(), primaryKeyPos, false);
+    					found2=true;
+    				}
+    			}
+    		}
+    		
+    		if(!found1 && !found2)
+    			numTries++;
+    	
+    		if(!found1){
+    			//create one
+    			String[] attrs = new String[K + 1];
+
+    			for(int j = 0; j < K + 1; j++)
+    				attrs[j] = randomAttrName(0, j);
+			
+    			// create the relation
+    			String relName = randomRelName(0);
+    			rel1 = fac.addRelation(getRelHook(0), relName, attrs, false);
+			
+    			//set primary key
+    			int [] primaryKeyPos = new int [K];
+    			for(int i=0; i<K; i++)
+    				primaryKeyPos [i] = i;
+    			fac.addPrimaryKey(relName, primaryKeyPos, false);
+    			found1 = true;
+    		}
+    	
+    		if(found2)
+    			m.addTargetRel(rel2);
+    		else{
+    			//create one
+    			String[] attrs = new String[K + K];
+
+    			for(int j = 0; j < K + K; j++)
+    				attrs[j] = randomAttrName(0, j);
+			
+    			// create the relation
+    			String relName = randomRelName(0);
+    			
+    			rel2 = fac.addRelation(getRelHook(0), relName, attrs, false);
+			
+    			//set primary key
+    			int [] primaryKeyPos = new int [K];
+    			for(int i=0; i<K; i++)
+    				primaryKeyPos [i] = i;
+    			fac.addPrimaryKey(relName, primaryKeyPos, false);
+    			found2=true;
+    		}
+    	}
+    	
+    	if(numTries>MAX_NUM_TRIES)
+    		return false;
+    	
+    	//set source relation parameters
+    	keys = new String[K];
+    	keyPos = new int[K];
+    	fks = new String[K];
+    	fkPos = new int[K];
+    	E = K + K + 1;
+    	
+    	//set keys
+    	for(int i=0; i<K; i++){
+    		keys[i] = rel1.getAttrArray(i).getName().toString();
+    		fks[i] = rel2.getAttrArray(i+K).getName().toString();
+    		keyPos[i]=i;
+    		fkPos[i]=i+K;
+    	}
+    	
+    	//set FKs
+    	addFK(1, fks, 0, keys, false);
+    	
+    	targetReuse = true;
+    	return true;
+    	
     }
 
+    //MN modified chooseSoruceRels - 6 May 2014
+    //MN Question: I don't get some parts of the code - 6 May 2014
+    //MN the goal is to preserve value of Key - 6 May 2014
     @Override
     protected boolean chooseSourceRels() throws Exception {
     	int numTries = 0;
@@ -56,8 +241,16 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	String srcName;
     	
     	// fetch random rel with enough attrs
-    	while(numTries < MAX_NUM_TRIES && rel == null)
+    	//MN do we need numTries here? - 17 May 2014
+    	while(numTries < MAX_NUM_TRIES){
+    		//MN two keys (one key set is referring to the other) + 1 (to be reasonable)
     		rel = getRandomRel(true, K + K + 1);
+    		
+    		if(rel == null)
+    			break;
+  
+    		numTries++;
+    	}
     	
     	//TODO try to reduce number of keys and foreign keys?
     	
@@ -69,52 +262,71 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
     	if (rel == null)
     		return false;
     	
+    	//MN BEGIN
+    	E = rel.sizeOfAttrArray();
+    	//MN END
+    	
     	F = rel.sizeOfAttrArray() - 2 * K;
 //    	normalPos = new int[F];
     	m.addSourceRel(rel);
-    	srcName = rel.getName();
-
-    	// already has PK, get positions of PK attrs
-    	if (rel.isSetPrimaryKey()) {
-    		keyPos = model.getPKPos(srcName, true);
-    		keys = model.getPK(srcName, true);
-
-    		// find attributes to use as fk
-    		int fkDone = 0, pos = 0;
-    		while(fkDone < K) {
-    			// is pk position?
-    			if (Arrays.binarySearch(keyPos, pos) < 0) {
-    				fkPos[fkDone] = pos;
-    				fks[fkDone] = m.getAttrId(0, pos, true); 
-    				fkDone++;
-    			}
-    			pos++;
-    		}
-    	}
-    	else {
-    		keyPos = CollectionUtils.createSequence(0, K);
-    		fkPos = CollectionUtils.createSequence(K, K);
-    		for(int i = 0; i < K; i++) {
-    			keys[i] = rel.getAttrArray(i).getName();
-    			fks[i] = rel.getAttrArray(K + i).getName();
-    		}
-//    		normalPos = CollectionUtils.createSequence(2 * K, F);
-
-    		fac.addPrimaryKey(srcName, CollectionUtils.createSequence(0, K), true);
-    		fac.addForeignKey(srcName, fks, srcName, keys, true);
-    	}
     	
+	    srcName = rel.getName();
+
+	    // already has PK, get positions of PK attrs
+	    if (rel.isSetPrimaryKey()) {
+	    		keyPos = model.getPKPos(srcName, true);
+	    		keys = model.getPK(srcName, true);
+
+	    		// find attributes to use as fk
+	    		int fkDone = 0, pos = 0;
+	    		//MN I have trouble in understanding the following piece of code - 6 May 2014
+	    		while(fkDone < K) {
+	    			// is pk position?
+	    			if (Arrays.binarySearch(keyPos, pos) < 0) {
+	    				fkPos[fkDone] = pos;
+	    				fks[fkDone] = m.getAttrId(0, pos, true); 
+	    				fkDone++;
+	    			}
+	    			pos++;
+	    		}
+	    		
+	    		//MN addForeignKey or check types of foreign keys - 2 June 2014
+	    	}
+	    else {
+	    		keyPos = CollectionUtils.createSequence(0, K);
+	    		fkPos = CollectionUtils.createSequence(K, K);
+	    		for(int i = 0; i < K; i++) {
+	    			keys[i] = rel.getAttrArray(i).getName();
+	    			fks[i] = rel.getAttrArray(K + i).getName();
+	    		}
+//	    		normalPos = CollectionUtils.createSequence(2 * K, F);
+	    		
+	    		fac.addPrimaryKey(srcName, CollectionUtils.createSequence(0, K), true);
+	    		//MN removed the following line to be able to evaluate MapMerge - 2 June 2014
+	    		//fac.addForeignKey(srcName, fks, srcName, keys, true);
+	    }
+	    	
     	return true;
     }
     
+	
 	@Override
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[E];
-		keys = new String[K];
-		fks = new String[K];
-		keyPos = new int[K];
-		fkPos = new int[K];
+		
+		//MN BEGIN -considered an array to store types of attributes - 17 May 2014
+		String[] attrsType = new String[E];
+		//MN END
+		
+		//MN BEGIN - 17 May 2014
+		if(!targetReuse){
+			keys = new String[K];
+			fks = new String[K];
+			keyPos = new int[K];
+			fkPos = new int[K];
+		}
+		//MN END
 //		normalPos = new int[F];
 		
 		String hook = getRelHook(0);
@@ -134,31 +346,72 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 			attrs[i] = randomAttrName(0, i);
 //		normalPos = CollectionUtils.createSequence(2 * K, F);
 		
+		//MN BEGIN - 17 May 2014
+		if(targetReuse){
+			for(int h=0; h<2*K; h++)
+				attrsType[h] = m.getTargetRels().get(1).getAttrArray(h).getDataType();
+			int count =0;
+			for(int h=2*K; h<E; h++){
+				attrsType[h] = m.getTargetRels().get(0).getAttrArray(K+count).getDataType();
+				count++;
+			}
+		}
+		//MN END
+		
 		fac.addRelation(hook, srcName, attrs, true);
 		fac.addPrimaryKey(srcName, keys, true);
+		//MN removed the following line to be able to evaluate MapMerge - it should be undone later - 26 May 2014
 		fac.addForeignKey(srcName, fks, srcName, keys, true);
+		
+		//MN BEGIN - 17 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	@Override
 	protected void genTargetRels() throws Exception {
-		String bRelName = m.getRelName(0, true) + "_b";
-		String fkRelName = m.getRelName(0, true) + "_fk";
+		//MN modified the way that iBench generates names for target relations by adding curRep
+		//MN in order to be able to support reusability - 20 May 2014
+		String bRelName = m.getRelName(0, true) + curRep + "_b";
+		String fkRelName = m.getRelName(0, true) + curRep + "_fk";
 		String[] bAttrs = new String[K + F];
 		String[] fkAttrs = new String[2 * K];
-
+		//MN considered arrays to store types of attributes - 4 May 2014
+		List<String> attrsType1 = new ArrayList<String> ();
+		List<String> attrsType2 = new ArrayList<String> ();
+		
 		// add keys to basic table and keys and fks to fk table
 		for(int i = 0; i < K; i++) {
+			//MN BEGIN - 6 May 2014
+			//bAttrs
+			attrsType1.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//fkAttrs
+			attrsType2.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//MN END
 			bAttrs[i] = m.getAttrId(0, i, true);
 			fkAttrs[i] = m.getAttrId(0, i, true);
 			fkAttrs[i + K] = m.getAttrId(0, i + K, true);
 		}
+		
+		//MN BEGIN - 6 May 2014
+		//fkAttrs
+		for(int i=0; i<K; i++)
+			attrsType2.add(m.getSourceRels().get(0).getAttrArray(i + K).getDataType());
+		//MN END
+		
 		// add free attrs to basic table
-		for(int i = 2 * K; i < E; i++)
+		for(int i = 2 * K; i < E; i++){
 			bAttrs[i - K] = m.getAttrId(0, i, true);
+			//MN BEGIN - 6 May 2014
+			//bAttrs
+			attrsType1.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//MN END
+		}
 		
 		// create relations and foreign keys
-		fac.addRelation(getRelHook(0), bRelName, bAttrs, false);
-		fac.addRelation(getRelHook(1), fkRelName, fkAttrs, false);
+		//MN - 6 May 2014
+		fac.addRelation(getRelHook(0), bRelName, bAttrs, attrsType1.toArray(new String[] {}), false);
+		fac.addRelation(getRelHook(1), fkRelName, fkAttrs, attrsType2.toArray(new String[] {}), false);
 		
 		fac.addPrimaryKey(bRelName, keys, false);
 		fac.addPrimaryKey(fkRelName, keys, false);

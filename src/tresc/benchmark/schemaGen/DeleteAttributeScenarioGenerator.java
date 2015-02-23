@@ -1,5 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
@@ -13,6 +16,9 @@ import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+//MN ENHANCED genTargetRels to pass types of attributes as argument to addRelation - 11 May 2014
+//MN ENHANCED genSourceRels to pass types of attributes as argument to addRelation - 11 May 2014
+//MN FIXED keySize in chooseTargetRels - 11 May 2014
 /**
  * Copies the source relation and deletes an attribute from the target relation.
  * 
@@ -23,6 +29,10 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 	private int numOfSrcTblAttr;
 	private int numDelAttr;
 	private int keySize;
+	
+	//MN added new attribute to check whether we are reusing target relation or not - 11 May 2014
+	private boolean targetReuse;
+	//MN
 	
     public DeleteAttributeScenarioGenerator()
     {
@@ -49,6 +59,9 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		// e.g. numOfSrcTblAttr = 3, numDelAttr = 1 and ConfigOptions.PrimaryKeySize = 2. Then keySize should be 2
 		keySize = (keySize > numOfSrcTblAttr - numDelAttr) ? numOfSrcTblAttr - numDelAttr : keySize;
 		
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	@Override
@@ -86,6 +99,9 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
+		//MN considered an array to store types of attributes of sourc relation - 11 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
+		//MN
 		
 		// First, generate the appropriate number of key elements
 		// Note: keySize should be > 0 to generate any key elements
@@ -106,13 +122,29 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 			keyCount++;
 			
 			attrs[i] = attrName;
+			//MN BEGIN - 11 May 2014
+			if(targetReuse)
+				if(i<m.getTargetRels().get(0).getAttrArray().length)
+					attrsType[i] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+				else
+					attrsType[i] = "TEXT";
+			//MN END
 		}
 		
-		fac.addRelation(getRelHook(0), srcName, attrs, true);
+		//MN BEGIN - 11 May 2014
+		if(!targetReuse)
+			fac.addRelation(getRelHook(0), srcName, attrs, true);
+		else
+			fac.addRelation(getRelHook(0), srcName, attrs, attrsType, true);
+		//MN END
+		
 		// Add primary key if explicitly requested 
 		if (keySize > 0)
 			fac.addPrimaryKey(srcName, keys, true);
 	
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	@Override
@@ -121,6 +153,7 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		int minAttr = keySize;
 		
 		rel = getRandomRel(false, minAttr);
+		//MN we can consider Max_Num_Tries to add more flexibility - 11 May 2014
 		if (rel == null)
 			return false;
 			
@@ -134,7 +167,9 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		numOfSrcTblAttr = rel.sizeOfAttrArray() + numDelAttr;
 		
 		m.addTargetRel(rel);
-		
+		//MN BEGIN - 11 May 2014
+		targetReuse = true;
+		//MN END
 		return true;
 	}
 	
@@ -144,11 +179,20 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		String trgName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr-numDelAttr];
 		String[] srcAttrs = m.getAttrIds(0, true);
-
+		//MN considered an array to store types of attributes of target relation - 4 May 2014
+		List<String> attrsType = new ArrayList<String> ();
+		//MN
+		
 		// copy all the source attributes except the last few (to account for the ones we want to delete)
 		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr-numDelAttr);
+		
+		//MN BEGIN - 4 May 2014
+		for(int i=0; i<numOfSrcTblAttr-numDelAttr; i++)
+			attrsType.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+		//MN END
 
-		fac.addRelation(getRelHook(0), trgName, attrs, false);
+		//MN changed - 4 May 2014
+		fac.addRelation(getRelHook(0), trgName, attrs, attrsType.toArray(new String[] {}), false);
 		
 		// PRG ADD primary key to target relation if necessary
 		String[] keys = new String[keySize];
@@ -179,12 +223,15 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
-		Query q;
+		//Query q;
 		
-		q = genQueries();
-		q.storeCode(q.toTrampString(m.getMapIds()));
-		q = addQueryOrUnion(creates, q);
-		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//q = genQueries();
+		//q.storeCode(q.toTrampString(m.getMapIds()));
+		//q = addQueryOrUnion(creates, q);
+		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//MN BEGIN 16 August 2014
+		fac.addTransformation("", m.getMapIds(), creates);
+		//MN END
 	}
 	
 	private Query genQueries() throws Exception {

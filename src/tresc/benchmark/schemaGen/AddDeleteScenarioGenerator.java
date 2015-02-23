@@ -1,5 +1,7 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.vagabond.util.CollectionUtils;
@@ -30,6 +32,11 @@ import vtools.dataModel.expression.Variable;
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 21, 2012 
 
+// MN ENHANCED genTargetRel to pass types of attributes as argument to addRelation in genTargetRels - 4 May 2014
+// MN ENHANCED genSourceRel to pass types of attributes as argument to addRelation in genSourceRels - 11 May 2014
+// MN ADDED checking whether value of keySize is greater than number of source relation attributes or not - 11 May 2014
+
+
 public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator 
 {
 	private int numOfSrcTblAttr;
@@ -37,6 +44,10 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	private int numDelAttr;
 	private int keySize;
 	private SkolemKind sk;
+	
+	//MN - added new attribute to pass types of attributes when reusing target relation - 11 May 2014
+	private boolean targetReuse;
+	//MN
 	
 	@Override
 	protected void initPartialMapping() {
@@ -63,6 +74,10 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// PRG Added the following code to always force key generation when SkolemKind.KEY 
 		if (sk == SkolemKind.KEY)
 			keySize = (keySize > 0) ? keySize : 1;
+		
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 	
 	@Override
@@ -73,6 +88,8 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		// get a random relation
 		rel = getRandomRel(true, minAttrs);
 		
+		//MN we can consider Max_Num_Tries to add more flexibility
+		//MN To Do: we need to relax the value of minimum required number of attributes - 11 May 2014
 		if (rel == null) 
 			return false;
 		
@@ -100,6 +117,8 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	protected void genSourceRels() throws Exception {
 		String srcName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
+		//MN - considered an array to pass types of attributes as argument to addRelation -11 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
 		
 		// generate the appropriate number of keys
 		String[] keys = new String[keySize];
@@ -116,15 +135,31 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 			keyCount++;
 			
 			attrs[i] = attrName;
+			
+			//MN BEGIN - 11 May 2014
+			if(targetReuse)
+				if(i<m.getTargetRels().get(0).sizeOfAttrArray()-numAddAttr)
+					attrsType[i] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+				else
+					attrsType[i] = "TEXT";
+			//MN END
 		}
 
-		fac.addRelation(getRelHook(0), srcName, attrs, true);
-
+		//MN BEGIN - 11 May 2014
+		if (!targetReuse)
+			fac.addRelation(getRelHook(0), srcName, attrs, true);
+		else
+			fac.addRelation(getRelHook(0), srcName, attrs, attrsType, true);
+		//MN END
+		
 		// PRG FIX - DO NOT ENFORCE KEY UNLESS EXPLICITLY REQUESTED - Sep 17, 2012
 		// if (sk == SkolemKind.KEY)
 		if (keySize > 0 || sk == SkolemKind.KEY)
 			fac.addPrimaryKey(srcName, keys, true);
 
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 	@Override
@@ -149,6 +184,10 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		
 		m.addTargetRel(rel);
 		
+		//MN BEGIN - 11 May 2014
+		targetReuse = true;
+		//MN END
+		
 		return true;
 	}
 	
@@ -157,15 +196,29 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 		String trgName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr + numAddAttr - numDelAttr];
 		String[] srcAttrs = m.getAttrIds(0, true);
+		
+		//MN considered an array to pass types of attributes of target relation as argument to addRelation
+		//MN this is important, especially when reusing HP source relations as source relation
+		//MN because type of one of the attributes is INT8 - 4 May 2014
+		List<String> attrsType = new ArrayList<String> ();
 
 		// copy src attrs less the amount we should be deleting
 		System.arraycopy(srcAttrs, 0, attrs, 0, numOfSrcTblAttr - numDelAttr);
-
+		//MN BEGIN - May 8
+		for(int i=0; i<numOfSrcTblAttr-numDelAttr; i++)
+			attrsType.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+		//MN END
+		
 		// create random names for the added attrs
-		for (int i = (numOfSrcTblAttr - numDelAttr); i < (numOfSrcTblAttr - numDelAttr) + numAddAttr; i++)
+		for (int i = (numOfSrcTblAttr - numDelAttr); i < (numOfSrcTblAttr - numDelAttr) + numAddAttr; i++){
 			attrs[i] = randomAttrName(0, i);
+			//MN BEGIN - 8 May 2014
+			attrsType.add("TEXT");
+			//MN END
+		}
 
-		fac.addRelation(getRelHook(0), trgName, attrs, false);
+		//MN - 4 May 2014
+		fac.addRelation(getRelHook(0), trgName, attrs, attrsType.toArray(new String[] {}), false);
 		
 		String[] keys = new String[keySize];
 		for (int j = 0; j < keySize; j++)
@@ -330,12 +383,15 @@ public class AddDeleteScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
-		Query q;
+		//Query q;
 		
-		q = genQueries();
-		q.storeCode(q.toTrampString(m.getMapIds()));
-		q = addQueryOrUnion(creates, q);
-		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//q = genQueries();
+		//q.storeCode(q.toTrampString(m.getMapIds()));
+		//q = addQueryOrUnion(creates, q);
+		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//MN BEGIN changed the line above to the following line - 16 August 2014
+		fac.addTransformation("", m.getMapIds(), creates);
+		//MN END
 	}
 	
 	private Query genQueries() throws Exception {

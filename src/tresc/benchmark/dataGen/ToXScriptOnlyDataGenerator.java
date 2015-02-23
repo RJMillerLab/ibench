@@ -25,10 +25,15 @@ import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Type;
 
 public class ToXScriptOnlyDataGenerator extends DataGenerator {
+	
+	public String f (String s) {
+		return s;//return "h"+Integer.toString(s.hashCode());
+	}
+	
 
 	static Logger log = Logger.getLogger(ToXScriptOnlyDataGenerator.class);
 
-	public static final String LIST_NAME_SUFFIX = "_List";
+	public static final String LIST_NAME_SUFFIX = "";//"_List";
 
 	List<StringBuffer> toxLists;
 	List<StringBuffer> toxTypes;
@@ -328,13 +333,13 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private String getUniqueCode(String rel, String keyAttr) {
-		return " unique=\"" + rel + "/" + keyAttr
+		return " unique=\"" + f(rel) + "/" + f(keyAttr)
 				+ "\" ";
 	}
 
 	private void generateListOpening(String eltName, StringBuffer buf,
 			int eltCount, String unique, String where) {
-		buf.append("<tox-list name=\"" + eltName + LIST_NAME_SUFFIX + "\""
+		buf.append("<tox-list name=\"" + f(eltName) + LIST_NAME_SUFFIX + "\""
 				+ unique + where + ">\n");
 		generateComplexElementOpening(eltName, buf, eltCount);
 	}
@@ -346,7 +351,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	private void generateComplexElementOpening(String eltName,
 			StringBuffer buf, int eltCount) {
-		buf.append("<element name=\"" + eltName + "\" minOccurs=\"" + eltCount
+		buf.append("<element name=\"" + f(eltName) + "\" minOccurs=\"" + eltCount
 				+ "\" maxOccurs=\"" + eltCount + "\">\n");
 		buf.append("<complexType>\n");
 	}
@@ -360,7 +365,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			StringBuffer buf, Atomic atomicType) {
 		String typeString =
 				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
-		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
+		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
 				+ "\"/>\n");
 	}
 	
@@ -396,8 +401,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	
 	private void
 			generateListIterationConstruct(String eltName, StringBuffer buf) {
-		buf.append("<tox-foreach path=\"[" + eltName + LIST_NAME_SUFFIX + "/"
-				+ eltName + "]\">\n");
+		buf.append("<tox-foreach path=\"[" + f(eltName) + LIST_NAME_SUFFIX + "/"
+				+ f(eltName) + "]\">\n");
 		buf.append("<tox-expr value=\"[!]\"/>\n");
 		buf.append("</tox-foreach>\n");
 	}
@@ -439,7 +444,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		buf.append("<simpleType name=\"bench_string\">\n");
 		buf.append("<restriction base=\"string\">\n");
 		// buf.append("<tox-string type=\"xmrk_text\" maxLength=\""+maxStringLength+"\"/>\n");
-		buf.append("<tox-string type=\"multiword\" maxLength=\"" + maxStringLength
+		buf.append("<tox-string type=\"word\" maxLength=\"" + maxStringLength
 				+ "\"/>\n");
 		buf.append("</restriction>\n");
 		buf.append("</simpleType>\n");

@@ -24,7 +24,17 @@ import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
 // PRG FIXED Chain Join Problems - August 30, 2012
-// PRG PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
+// PRG FIXED Foreach Source Expression by correcting fromIndex - Sep 4, 2012 
+// MN  FIXED NumOfAttributes in chooseSourceRels - 3 May 2014
+// MN  FIXED joinAttrs in chooseSourceRels  - 3 May 2014
+// MN  FIXED chooseTargetRels to correctly set numOfUseAttrs which is needed to generate source rels - 9 May 2014
+// MN  ENHANCED genTargetRels to pass types of attributes of target relation as argument to addRelation - 11 May 2014
+// MN  MODIFIED criteria for choosing target relation in chooseTargetRels - 11 May 2014
+// MN  ENHANCED genSourcRels to pass types of attributes of source relations as argument to addRelation - 11 May 2014
+// MN  FIXED primaryKeys in chooseSourceRels - 11 May 2014
+// MN  FIXED numOfUseAttrs in chooseSourceRels - 12 May 2014
+// MN  FIXED chooseSourceRels - 17 May 2014
+// MN  MODIFIED chooseTargetRels - 28 May 2014
 
 public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
@@ -39,6 +49,10 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	protected int[] numOfAttributes;
 	protected int[] numOfUseAttrs;
 	protected String[] joinAttrs;
+	
+	//MN ADDED attribute to check whether we are reusing a target relation - 11 May 2014
+	protected boolean targetReuse;
+	//MN
     
     public MergingScenarioGenerator()
     {		;		}
@@ -73,6 +87,10 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
             numOfAttributes[k] = tmpInt;
             numOfUseAttrs[k] = tmpInt - getNumJoinAttrs(k);
         }
+        
+        //MN BEGIN - 11 May 2014
+        targetReuse = false;
+        //MN END
     }
 	
     
@@ -91,20 +109,37 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		RelationType rel;
 		String[][] attrs = new String[numOfTables][];
 		
+		
 		// first choose one that has no key or key at the right place
 		while(created < numOfTables) {
 			found = true;
+			//MN I'm not sure whether the following is correct (Am I right?)- 3 May 2014
 			rel = getRandomRel(true, getNumJoinAttrs(rels.size()) + 1);
 			if (rel != null) {
+				//MN BEGIN - 3 May 2014
+				for(int g=0; g<rels.size(); g++)
+					if(rels.get(g).getName().equals(rel.getName()))
+						found = false;
+				//MN END
 				// if PK, then has to be num of join attributes
 				if (rel.isSetPrimaryKey()) {
 					int[] pkPos = model.getPKPos(rel.getName(), true);
 					if (pkPos.length != numOfJoinAttributes)
 						found = false;
-					for(int i = 0; i < numOfJoinAttributes; i++) {
-						if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
-							found = false;
+					//MN BEGIN tested - 17 May 2014
+					if(found){
+						if(created ==0 )
+							for(int i = 0; i < numOfJoinAttributes; i++) {
+								if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i)
+									found = false;
+							}
+						if(created>0 && created<numOfTables-1)
+							for(int i = 0; i < numOfJoinAttributes; i++) {
+								if (pkPos[i] != rel.sizeOfAttrArray() - numOfJoinAttributes + i - numOfJoinAttributes)
+									found = false;
+							}
 					}
+					//MN END
 				}
 			}
 			else
@@ -114,17 +149,24 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			if (found) {
 				rels.add(rel);
 				m.addSourceRel(rel);
-				if (!rel.isSetPrimaryKey()) {
-					int[] templateKey = new int[getNumJoinAttrs(created)];
-					for(int i = 0; i < templateKey.length; i++)
-						templateKey[i] = rel.sizeOfAttrArray() - numOfJoinAttributes;
-					fac.addPrimaryKey(rel.getName(), templateKey, true);
-				}
 				attrs[created] = new String[rel.sizeOfAttrArray()];
 				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
 					attrs[created][i] = rel.getAttrArray(i).getName();
 				numOfAttributes[created] = rel.sizeOfAttrArray();
-				
+				//MN BEGIN - 3 May 2014 - 12 May 2014
+				numOfUseAttrs[created] = rel.sizeOfAttrArray() - getNumJoinAttrs(created);
+				//MN END
+				//MN BEGIN - 11 May 2014
+				//if (!rel.isSetPrimaryKey()) {
+					////int[] templateKey = new int[getNumJoinAttrs(created)];
+					////for(int i = 0; i < templateKey.length; i++)
+						////templateKey[i] = rel.sizeOfAttrArray() - numOfJoinAttributes;
+					////fac.addPrimaryKey(rel.getName(), templateKey, true);
+					//MN BEGIN - 11 May 2014
+					//createPKsRel(attrs, created, rel);
+					//MN END
+				//}
+				//MN END
 				created++;
 				numTries = 0;
 			}
@@ -138,9 +180,14 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 					int numOfNonJoinAttr = numOfAttributes[created] - getNumJoinAttrs(created);
 					for(int j = 0; j < numOfNonJoinAttr; j++)
 						attrs[created][j] = randomAttrName(created, j);
-				
 					// create join and join ref attributes
 					if (jk == JoinKind.STAR) {
+						//MN BEGIN - 3 May 2014
+						joinAttrs = new String[numOfJoinAttributes];
+						// create join attr names
+						for(int i = 0; i < numOfJoinAttributes; i++)
+							joinAttrs[i] = randomAttrName(0, i);
+						//MN END
 						// first relation (center of the star) add fk attributes
 						if (created == 0) {
 							int offset = numOfAttributes[0] - ((numOfTables - 1) * numOfJoinAttributes);
@@ -152,28 +199,41 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 						}
 						// other relation add join attributes
 						else {
-							int offset = numOfAttributes[created] - (numOfJoinAttributes);
-							for(int j = 0; j < numOfJoinAttributes; j++)
-								attrs[created][offset + j] = getJoinAttr(created, j);
+							for(int i=1; i<numOfTables; i++){
+								int offset = numOfAttributes[created] - (numOfJoinAttributes);
+								for(int j = 0; j < numOfJoinAttributes; j++)
+									attrs[created][offset + j] = getJoinAttr(created, j);
+							}
 						}
 					}
 					// same for chain joins
 					if (jk == JoinKind.CHAIN) {
+						//MN BEGIN - 3 May 2014
+						joinAttrs = new String[numOfJoinAttributes];
+						// create join attr names
+						for(int i = 0; i < numOfJoinAttributes; i++)
+							joinAttrs[i] = randomAttrName(0, i);
+						//MN END
 						// if not last table, create join attributes
-						if (created != numOfTables - 1) {
-							int offset = numOfAttributes[created] - numOfJoinAttributes;
-							for(int j = 0; j < numOfJoinAttributes; j++)
-								attrs[created][offset + j] = getJoinAttr(created, j);
-						}
-
-						// create fk attributes if not first table
-						if (created != 0) {
+						if (created != numOfTables -1) {
 							int fac = created == 0 ? 1 : 2;
 							int offset = numOfAttributes[created] - (numOfJoinAttributes * fac);
 							for(int j = 0; j < numOfJoinAttributes; j++)
+								attrs[created][offset + j] = getJoinAttr(created, j);
+						}
+						// create fk attributes if not first table
+						if (created != 0) {
+							int offset = numOfAttributes[created] - numOfJoinAttributes;
+							for(int j = 0; j < numOfJoinAttributes; j++)
 								attrs[created][offset + j] = getJoinRef(created, j);
 						}
+						
 					}
+					
+					//createPK
+					//MN BEGIN - 11 May 2014
+					//createPKsRel(attrs, created, rel);
+					//MN END
 					
 					// create the relation
 					rels.add(fac.addRelation(getRelHook(created), randomRelName(created), attrs[created], true));
@@ -217,6 +277,10 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		String[] sourceNames = new String[numOfTables];
 		String[][] attrs  = new String[numOfTables][];
 		joinAttrs = new String[numOfJoinAttributes];
+		//MN BEGIN - considered an array to store types of attributes of source relations - 11 May 2014
+		String[] [] attrsType = new String[numOfTables][];
+		//MN END
+		
 		// create join attr names
 		for(int i = 0; i < numOfJoinAttributes; i++)
 			joinAttrs[i] = randomAttrName(0, i);
@@ -225,18 +289,46 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			sourceNames[i] = randomRelName(i);
 			int numOfNonJoinAttr = numOfAttributes[i] - getNumJoinAttrs(i);
 			attrs[i] = new String[numOfAttributes[i]];
-		
-			for(int j = 0; j < numOfNonJoinAttr; j++)
+			//MN BEGIN - 11 May 2014
+			attrsType[i] = new String[numOfAttributes[i]];
+			//MN END
+			
+			//MN BEGIN - 11 May 2014
+			int offset =0;
+			for(int k=0; k<i; k++)
+				offset += (numOfAttributes[k] - getNumJoinAttrs(k));
+			//MN END
+			for(int j = 0; j < numOfNonJoinAttr; j++){
 				attrs[i][j] = randomAttrName(i, j);
+				//MN BEGIN - 11 May 2014
+				if(targetReuse)
+					attrsType[i][j] = m.getTargetRels().get(0).getAttrArray(offset + j).getDataType();
+				//MN END
+			}
 		}
 		
 		createJoinAttrs(attrs);
 		
+		//MN BEGIN - 11 May 2014
+		for (int k=0; k<numOfTables; k++)
+			for(int j=0; j<numOfAttributes[k]; j++)
+				if(attrsType[k][j] == null)
+					attrsType[k][j] = "TEXT";
+		//MN END
 		// create tables 
-		for(int i = 0; i < numOfTables; i++)
-			fac.addRelation(getRelHook(i), sourceNames[i], attrs[i], true);
+		//MN BEGIN - 11 May 2014
+		for(int i = 0; i < numOfTables; i++){
+			if(!targetReuse)
+				fac.addRelation(getRelHook(i), sourceNames[i], attrs[i], true);
+			else
+				fac.addRelation(getRelHook(i), sourceNames[i], attrs[i], attrsType[i], true);
+		}
+		//MN END
 		
 		createConstraints(attrs);
+		//MN BEGIN - 11 May 2014
+		targetReuse = false;
+		//MN END
 	}
 
 
@@ -266,6 +358,31 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		if (jk == JoinKind.CHAIN)
 			createChainConstraints(attrs);
 	}
+	
+	
+	//MN added method to create PK for reused source relations - 11 May 2014
+	protected void createPKsRel(String [][] attrs, int relNum, RelationType rel) throws Exception
+	{
+		int i = relNum;
+		if ((jk == JoinKind.STAR && i != 0) // center of star has different PK 
+				|| (jk == JoinKind.CHAIN && i != numOfTables - 1)) // last table for chain join has no PK 
+		{ 
+			if (!rel.isSetPrimaryKey())				
+				fac.addPrimaryKey(rel.getName(), getJoinAttrs(i, attrs), true);
+		}
+		// center of the star
+		else if (jk == JoinKind.STAR && i == 0) {
+			if (!rel.isSetPrimaryKey()) {
+				int numAttr = rel.getAttrArray().length;
+				int numJoinAttr = numOfJoinAttributes * (numOfTables - 1);
+				fac.addPrimaryKey(rel.getName(), 
+						CollectionUtils.createSequence(numAttr - numJoinAttr, 
+								numJoinAttr), 
+						true);
+			}
+		}
+	}
+	//MN END
 	
 	protected void createPKs(String[][] attrs) throws Exception {
 		for(int i = 0; i < numOfTables; i++) {
@@ -412,6 +529,14 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			if (r == null)
 				break;
 			
+			//MN BEGIN - ME cannot handle source relations that do not have equal number of attributes - 11 May 2014
+			//MN modified the criterion for reusing target relation - 28 May 2014
+			if((r.sizeOfAttrArray() + numTJoinAttrs) != (numOfTables * numOfAttributes[0])){
+				ok= false;
+				break;
+			}
+			//MN END
+			
 			numNormalAttr = r.sizeOfAttrArray() - numTJoinAttrs;
 			joinAttPos = CollectionUtils.createSequence(numNormalAttr, 
 					numTJoinAttrs);
@@ -431,6 +556,10 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		// didn't find suiting rel? Create it
 		if (!ok)
 			return false;
+		
+		//MN BEGIN - 11 May 2014
+		targetReuse = true;
+		//MN END
 		// add keys and distribute the normal attributes of rel
 		m.addTargetRel(r);
 
@@ -438,29 +567,40 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			fac.addPrimaryKey(r.getName(), joinAttPos, false);
 
 		// adapt number of normal attributes used (copied to target) per source rel
-		int numPerSrcRel = numNormalAttr / numOfTables;
+		//MN I don't understand this part of the code! - 9 May 2014
+		int numPerSrcRel = r.sizeOfAttrArray() / numOfTables;
 		int usedAttrs = 0;
+		//MN BEGIN (numOfAttributes has been set in initialPartialMapping !) - 9 May 2014 - 13 May 2014
 		for(int i = 0; i < numOfTables; i++) {
 			numOfUseAttrs[i] = (numPerSrcRel > getNumNormalAttrs(i)) 
 					? getNumNormalAttrs(i) : numPerSrcRel;
-					usedAttrs += numOfUseAttrs[i];
+			//usedAttrs += numOfUseAttrs[i];
+			//numOfAttributes[i] = numOfUseAttrs[i];
 		}
-		numOfUseAttrs[numOfTables - 1] += numNormalAttr - usedAttrs;
-		
+		//numOfUseAttrs[numOfTables - 1] += (r.sizeOfAttrArray() - usedAttrs);
+		//numOfAttributes[numOfTables - 1] = numOfUseAttrs[numOfTables - 1];
+		//MN END
 		return true;
 	}
+	
 	
 	@Override
 	protected void genTargetRels() throws Exception {
 		String targetName = randomRelName(0);
 		List<String> attrs = new ArrayList<String> ();
 		int numNormalAttrs;
-		
+		//MN considered an array to store types of attributes of target relation - 29 April 2014
+		List<String> attrsType = new ArrayList<String> ();
+
 		// first copy normal attributes
 		for(int i = 0; i < numOfTables; i++) {
 			int numAtt = getNumNormalAttrs(i);
-			for(int j = 0; j < numAtt; j++)
+			for(int j = 0; j < numAtt; j++){
 				attrs.add(m.getAttrId(i, j, true));
+				//MN BEGIN - 29 April 2014
+				attrsType.add(m.getSourceRels().get(i).getAttrArray(j).getDataType());
+				//MN END
+			}
 		}
 		
 		numNormalAttrs = attrs.size();
@@ -469,20 +609,30 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 		if (jk == JoinKind.STAR) {
 			for(int i = 1; i < numOfTables; i++) {
 				int offset = getNumNormalAttrs(i);
-				for(int j = 0; j < numOfJoinAttributes; j++)
-					attrs.add(m.getAttrId(i, j + offset, true));		
+				for(int j = 0; j < numOfJoinAttributes; j++){
+					attrs.add(m.getAttrId(i, j + offset, true));
+					//MN BEGIN - 29 April 2014
+					attrsType.add(m.getSourceRels().get(i).getAttrArray(j + offset).getDataType());
+					//MN END
+				}
 			}
 		}
 		if (jk == JoinKind.CHAIN) {
 			for(int i = 0; i < numOfTables - 1; i++) {
 				int offset = getNumNormalAttrs(i);
-				for(int j = 0; j < numOfJoinAttributes; j++)
-					attrs.add(m.getAttrId(i, j + offset, true));				
+				for(int j = 0; j < numOfJoinAttributes; j++){
+					attrs.add(m.getAttrId(i, j + offset, true));	
+					//MN BEGIN - 29 April 2014
+					attrsType.add(m.getSourceRels().get(i).getAttrArray(j + offset).getDataType());
+					//MN END
+				}
 			}
 		}
 		
+		//MN - 29 April 2014
 		fac.addRelation(getRelHook(0), targetName, 
-				attrs.toArray(new String[] {}), false);
+				attrs.toArray(new String[] {}), attrsType.toArray(new String[] {}), false);
+		//MN
 		
 		// add PK on join attributes
 		fac.addPrimaryKey(targetName, CollectionUtils.
@@ -575,15 +725,18 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		Query q;
+		//Query q;
 		String creates = m.getRelName(0, false);
-		String mapping = m.getMapIds()[0];
+		//String mapping = m.getMapIds()[0];
 		
-		q = genQueries();
-		q.storeCode(q.toTrampStringOneMap(mapping));
-		q = addQueryOrUnion(creates, q);
+		//q = genQueries();
+		//q.storeCode(q.toTrampStringOneMap(mapping));
+		//q = addQueryOrUnion(creates, q);
 		
-		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		//MN BEGIN 16 August 2014
+		fac.addTransformation("", m.getMapIds(), creates);
+		//MN END
 	}
 	
 	private SPJQuery genQueries() {

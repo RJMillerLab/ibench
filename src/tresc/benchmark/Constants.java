@@ -18,6 +18,9 @@ import tresc.benchmark.dataGen.TrampCSVGen;
 import tresc.benchmark.dataGen.TrampXMLinlineGen;
 
 
+//MN added new sceanrio newVP - 23 June 2014
+//PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
+
 public class Constants
 {
     public enum ParameterName {
@@ -37,7 +40,17 @@ public class Constants
         SourceFDPerc,	// associate FDs with source
         PrimaryKeyFDs,
         SourceSkolemNumAttr,		// attributes and use them in mappings
-        PrimaryKeySize
+        PrimaryKeySize,
+        //mehrnaz: I've added six parameters in order to implement random inclusion dependency generation
+        SourceInclusionDependencyPerc,
+        SourceInclusionDependencyFKPerc,
+        TargetInclusionDependencyPerc,
+        TargetInclusionDependencyFKPerc,
+        SourceCircularInclusionDependency,
+        SourceCircularFK,
+        TargetCircularInclusionDependency,
+        TargetCircularFK
+        
     };
 
     public static final Map<ParameterName, Integer> defaultParameterValues
@@ -61,6 +74,16 @@ public class Constants
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
     	defaultParameterValues.put(ParameterName.PrimaryKeySize, 2);
+    	
+    	defaultParameterValues.put(ParameterName.SourceInclusionDependencyPerc, 0);
+    	defaultParameterValues.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
+    	defaultParameterValues.put(ParameterName.TargetInclusionDependencyPerc, 0);
+    	defaultParameterValues.put(ParameterName.TargetInclusionDependencyFKPerc, 0);
+    	
+    	defaultParameterValues.put(ParameterName.SourceCircularInclusionDependency, 1);
+    	defaultParameterValues.put(ParameterName.SourceCircularFK, 1);
+    	defaultParameterValues.put(ParameterName.TargetCircularInclusionDependency, 1);
+    	defaultParameterValues.put(ParameterName.TargetCircularFK, 1);
     }
     
     public static final Map<ParameterName, Integer> defaultParameterDeviation
@@ -84,6 +107,16 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeySize, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeyFDs, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.SourceInclusionDependencyPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetInclusionDependencyPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetInclusionDependencyFKPerc, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.SourceCircularInclusionDependency, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceCircularFK, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetCircularInclusionDependency, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetCircularFK, 0);
     }
     
     public enum JoinKind {
@@ -119,7 +152,10 @@ public class Constants
         VERTPARTITIONISA,
         VERTPARTITIONHASA,
         VERTPARTITIONNTOM,
-        MERGEADD
+        MERGEADD,
+        //MN added new scenario - 23 June 2014, 30 June 2014
+        VERTPARTITIONISAAUTHORITY,
+        LOADEXISTING
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -145,6 +181,9 @@ public class Constants
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
     	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
+    	//MN added new scenario - 23 June 2014, 30 June 2014
+    	nameForScenarios.put(ScenarioName.VERTPARTITIONISAAUTHORITY, "_VA");
+    	nameForScenarios.put(ScenarioName.LOADEXISTING, "_LE");
     }
     
     public enum OutputOption {

@@ -17,6 +17,7 @@ import org.vagabond.xmlmodel.TransformationType;
 
 import vtools.dataModel.expression.Query;
 
+//MN FIXED getCorrs(int rel, boolean source) - problem: in .xml file, we did not have uses tag for self join mappings - 20 May 2014
 public class PartialMapping {
 
 	static Logger log = Logger.getLogger(PartialMapping.class);
@@ -110,16 +111,17 @@ public class PartialMapping {
 		return corrs;
 	}
 	
+	//MN modified the following code by adding { - it did not work properly - 20 May 2014
 	public List<CorrespondenceType> getCorrs(int rel, boolean source) {
 		String relName = getRelName(rel, source);
 		List<CorrespondenceType> result = new ArrayList<CorrespondenceType> ();
 		for(CorrespondenceType c: corrs) {
-			if (source)
+			if (source){
 				if (c.getFrom().getTableref().equals(relName))
-					result.add(c);
-			else
+					result.add(c);}
+			else{
 				if (c.getTo().getTableref().equals(relName))
-					result.add(c);
+					result.add(c);}
 		}
 		return result;
 	}

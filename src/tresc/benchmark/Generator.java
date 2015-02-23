@@ -1,9 +1,15 @@
 package tresc.benchmark;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
+import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.util.LoggerUtil;
+import org.vagabond.xmlmodel.MappingScenarioDocument;
 
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.DataGenType;
@@ -18,6 +24,7 @@ import tresc.benchmark.schemaGen.FlatteningScenarioGenerator;
 import tresc.benchmark.schemaGen.FusionScenarioGenerator;
 import tresc.benchmark.schemaGen.GLAVScenarioGenerator;
 import tresc.benchmark.schemaGen.HorizontalPartitionScenarioGenerator;
+import tresc.benchmark.schemaGen.LoadExistingScenarioGenerator;
 import tresc.benchmark.schemaGen.MergeAddScenarioGenerator;
 import tresc.benchmark.schemaGen.MergingScenarioGenerator;
 import tresc.benchmark.schemaGen.NestingScenarioGenerator;
@@ -25,25 +32,40 @@ import tresc.benchmark.schemaGen.RandomSourceSkolemToMappingGenerator;
 import tresc.benchmark.schemaGen.ScenarioGenerator;
 import tresc.benchmark.schemaGen.SelfJoinScenarioGenerator;
 import tresc.benchmark.schemaGen.SourceFDGenerator;
+import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
 import tresc.benchmark.schemaGen.SurrogateKeysScenarioGenerator;
+import tresc.benchmark.schemaGen.TargetInclusionDependencyGenerator;
 import tresc.benchmark.schemaGen.VPHasAScenarioGenerator;
 import tresc.benchmark.schemaGen.VPIsAScenarioGenerator;
 import tresc.benchmark.schemaGen.VPNtoMScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueGenerationScenarioGenerator;
 import tresc.benchmark.schemaGen.ValueManagementScenarioGenerator;
 import tresc.benchmark.schemaGen.VerticalPartitionScenarioGenerator;
+import tresc.benchmark.schemaGen.VPIsAAuthorityScenarioGenerator;
+
+//MN added new VP - 23 June 2014
+//PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
 
 public class Generator {
 	static Logger log = Logger.getLogger(Generator.class);
 	
 	private AbstractScenarioGenerator[] scenarioGenerators;
+	private AbstractScenarioGenerator[] loadScenarioGenerators;
 	private ScenarioGenerator fdGen;
 	private DataGenerator dataGenerator;
 	private RandomSourceSkolemToMappingGenerator skGen;
 	
-	public Generator(Configuration config) {
-		int numOfScenarios = Constants.ScenarioName.values().length;
+	//MN two attributes for random source and target 
+	private ArrayList<String> randomSourceInclusionDependencies;
+	private ArrayList<String> randomTargetInclusionDependencies;
+	
+	public Generator(Configuration config) throws XmlException, IOException {
+		int numOfScenarios = Constants.ScenarioName.values().length - 1;
+		
+		//TODO if you creates new primitives from existing mapping files then add these here
+		
 		scenarioGenerators = new AbstractScenarioGenerator[numOfScenarios];
+		
 		for (int i = 0; i < numOfScenarios; i++)
 			scenarioGenerators[i] = null;
 
@@ -85,6 +107,19 @@ public class Generator {
 				new AddDeleteScenarioGenerator();
 		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] =
 				new MergeAddScenarioGenerator();
+		//MN added new vertical partitioning - 23 June 2014
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISAAUTHORITY.ordinal()] =
+				new VPIsAAuthorityScenarioGenerator();
+		
+		// add new scenario generators for load scenarios
+		int numLoad = config.getNumLoadScenarios();
+		loadScenarioGenerators = new AbstractScenarioGenerator[numLoad];
+		for(int i = 0; i < numLoad; i++) {
+			String name = config.getLoadScenarioNames().get(i);
+			MapScenarioHolder h = new MapScenarioHolder(); 
+			h.setDocument(MappingScenarioDocument.Factory.parse(config.getExistingScenarios().get(i)));
+			loadScenarioGenerators[i] = new LoadExistingScenarioGenerator(h, name);
+		}
 		
 		// create an FD generator
 		fdGen = new SourceFDGenerator();
@@ -113,6 +148,16 @@ public class Generator {
 		}
 		return null; // keep compiler quiet
 	}
+	
+	//MN this method returns random source inclusion dependencies (only regular ones) - 14 April 2014
+	public ArrayList<String> getRandomSourceInlcusionDependencies (){
+		return randomSourceInclusionDependencies;
+	}
+	
+	//MN this method returns random target inclusion dependencies (only regular ones) - 14 April 2014
+	public ArrayList<String> getRandomTargetInclusionDependencies(){
+		return randomTargetInclusionDependencies;
+	}
 
 	public MappingScenario generateScenario(Configuration configuration) throws Exception {
 		/*
@@ -121,21 +166,40 @@ public class Generator {
 		MappingScenario scenario = new MappingScenario(configuration);
 
 		// no reuse of source and target schemas?
-		if (configuration.getParam(ParameterName.NoReuseScenPerc) == 100)
+		if (configuration.getParam(ParameterName.NoReuseScenPerc) == 100) {
 			for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
 				scenarioGenerators[i].generateScenario(scenario, configuration);
+			for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
+				loadScenarioGenerators[i].generateScenario(scenario, configuration);
+		}
 		// partial reuse of generated source and target schema elements
 		else {
 			// init generators
 			for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
 				scenarioGenerators[i].init(configuration, scenario);
+			for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
+				loadScenarioGenerators[i].init(configuration, scenario);
 			
 			// do one scenario of each until we are done
 			while(scenario.getNumBasicScen() < configuration.getTotalNumScen()) {
 				for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
-					scenarioGenerators[i].generateNextScenario(scenario, configuration);				
+					scenarioGenerators[i].generateNextScenario(scenario, configuration);
+				for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
+					loadScenarioGenerators[i].generateNextScenario(scenario, configuration);
 			}
 		}
+		
+		//MN generates Random Source Inclusion Dependencies
+		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
+		srcIDGen.generateScenario(scenario, configuration);
+		//MN to inject random source inclusion dependencies into mappings - 14 April 2014
+		randomSourceInclusionDependencies = srcIDGen.getRandomSourceIDs();
+				
+		//MN generates Random Target Inclusion Dependencies
+		TargetInclusionDependencyGenerator trgIDGen = new TargetInclusionDependencyGenerator();
+		trgIDGen.generateScenario(scenario, configuration);
+		//MN to inject random target inclusion dependencies into mappings - 14 April 2014
+		randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
 		
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -14,26 +16,33 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
+import tresc.benchmark.configGen.ConfigGenerator;
+
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
+import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
+import tresc.benchmark.schemaGen.TargetInclusionDependencyGenerator;
 import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.HTMLPresenter;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.schema.Schema;
 import vtools.xml.XSDWriter;
+import vtools.xml.XSMLWriter;
+
 
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated
 // PRG ADD STBenchmark's to-be generated schema mapping is called "Mapping Scenario"
 // PRG Removed redundant output and also replaced code to avoid generating string if it is not going to be output - Oct 5, 2012
+// MN  ADD two methods to generate random source and target inclusion dependencies, print results as mapjob, xsml and xsd files - 3 April 2014
+// PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
 
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);
 
-	private static Configuration _configuration = null;
+	private static Configuration _configuration;
 	// PRG ADD Instance Variable to hold the schema mapping currently being generated
-	
 	private MappingScenario _scenario;
 
 	public STBenchmark() {
@@ -45,8 +54,6 @@ public class STBenchmark {
 	// PRG ADD Instance Method	
 	public static Configuration getConfiguration()
 	{ 
-		if (_configuration == null)
-			_configuration = new Configuration();
 		return _configuration;
 	}
 	
@@ -112,10 +119,105 @@ public class STBenchmark {
 		PropertyConfigurator.configure("resource/log4jproperties.txt");
 
 		STBenchmark benchmark = new STBenchmark();
+		//MN added lines to make connection with random config file generator - 21 April 2014
+		//MN the following lines should be enabled - 26 April 2014
+		//ConfigGenerator cg = new ConfigGenerator();
+		//cg.setConfigPath("config/");
+		//String configFileName = cg.generateConfigFile(false);
+		//configFileName = "config/" + configFileName;
+		//_configuration.configurationFile = configFileName;
+		//MN end of adding some lines - 21 April 2014
 		benchmark.parseArgs(args);
 		benchmark.run(args);
 	}
 
+	//MN prints results as mapjob, xsml and xsd files
+	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
+	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
+			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
+		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
+		
+		File xsmlDir = new File("./out0");
+		if (!xsmlDir.exists())
+			xsmlDir.mkdirs();
+		
+		if (log.isDebugEnabled()) {log.debug("mapjob, xsml and xsd schema path: " + xsmlDir.toString());};
+		
+		String mapjob = S.substring(0, S.length()-8);
+		//prints as map job file
+		try{
+		    
+		    StringBuffer bufMapjob = new StringBuffer ();
+		    bufMapjob.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
+		    bufMapjob.append("<job:Job xmlns:job=\"http://com.ibm.clio.model/job/1.0\">\n");
+		    bufMapjob.append("<mapping>"+mapjob+".xsml#/</mapping>\n");
+		    bufMapjob.append("</job:Job>");
+		    
+			BufferedWriter bufWriterMapjob =
+					new BufferedWriter(new FileWriter(new File(
+							"./out0", mapjob + ".mapjob")));
+			bufWriterMapjob.write(bufMapjob.toString());
+			bufWriterMapjob.close();
+		}
+		catch (Exception e) {
+			LoggerUtil.logException(e, log);
+			throw e;
+		}
+		
+		//prints as XSML file
+		XSMLWriter xsmlPrinter = new XSMLWriter();
+		
+		StringBuffer bufXSML = new StringBuffer();
+		//////print schemas
+		xsmlPrinter.print(bufXSML, mapjob);
+		/////print correspondences
+		xsmlPrinter.print(bufXSML, mapjob, scenario);
+		////print logical mappings (for first experiment)
+		xsmlPrinter.print(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+		try {
+			BufferedWriter bufWriterXSML =
+					new BufferedWriter(new FileWriter(new File(
+							"./out0", mapjob + ".xsml")));
+			bufWriterXSML.write(bufXSML.toString());
+			bufWriterXSML.close();
+			System.out.print(".xsml file done!\n");
+		}
+		catch (Exception e) {
+			LoggerUtil.logException(e, log);
+			throw e;
+		}
+		
+		//prints as XSD file
+		XSDWriter xsdPrinter = new XSDWriter();
+		
+		StringBuffer bufSourceXSD = new StringBuffer();
+		///print source schema (schema.getLabel())
+		xsdPrinter.printSource(bufSourceXSD, scenario, mapjob + "_Src", 0);
+		
+		StringBuffer bufTargetXSD = new StringBuffer();
+		///print target schema (schema.getLabel())
+		xsdPrinter.printTarget(bufTargetXSD, scenario, mapjob + "_Trg", 0);
+		try {
+			BufferedWriter bufWriterXSD =
+					new BufferedWriter(new FileWriter(new File(
+							"./out0", S)));
+			bufWriterXSD.write(bufSourceXSD.toString());
+			bufWriterXSD.close();
+			System.out.print("source .xsd file done!\n");
+
+			bufWriterXSD =
+					new BufferedWriter(new FileWriter(new File(
+							"./out0", T.substring(0, T.length()-7) + "Trg.xsd")));
+			bufWriterXSD.write(bufTargetXSD.toString());
+			bufWriterXSD.close();
+			System.out.print("target .xsd file done!\n");
+		}
+		catch (Exception e) {
+			LoggerUtil.logException(e, log);
+			throw e;
+		}
+	}
+	
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
 		if (log.isDebugEnabled()) {log.debug("Printing results !");};
@@ -244,9 +346,18 @@ public class STBenchmark {
 	public void run(String[] args) throws Exception {
 		
 		if (_configuration.configurationFile != null) {
-			parseConfigFile(_configuration.configurationFile);
+			//parseConfigFile(_configuration.configurationFile);
+			//MN changed the code - 21 April 2014
+			System.out.print(_configuration.configurationFile);
+			PropertyWrapper props = new PropertyWrapper(_configuration.configurationFile);
+			if (log.isDebugEnabled()) {log.debug(props.toString());};
+			_configuration.readFromProperties(props);
+			parseArgs(args);
+			if (log.isDebugEnabled()) {log.debug(_configuration.toString());};
+			runConfig();
 		}
 		else if (_configuration.propertyFileName != null) {
+			System.out.print(_configuration.propertyFileName);
 			PropertyWrapper props = new PropertyWrapper(_configuration.propertyFileName);
 			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);
@@ -274,6 +385,10 @@ public class STBenchmark {
 		_scenario = 
 				Modules.scenarioGenerator.generateScenario(_configuration);
 		
+		//MN returns random source and target inclusion dependencies - 14 April 2014
+		ArrayList<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
+		ArrayList<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
+		
 		// log.debug("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 
 		// At last, STBenchmark must output and/or write to disk the generated output in TrampXML format
@@ -283,7 +398,15 @@ public class STBenchmark {
 				     _configuration.getMappingFileName(),
 				     _configuration.getSchemaFile());
 		
-
+		//MN prints results in Mapjob, XSML and XSD formats for the purpose of evaluating MapMerge
+		printResultsMapjobAndXSMLAndXSD(_scenario, 
+			     _configuration.getSourceSchemaFile(), 
+			     _configuration.getTargetSchemaFile(),
+			     _configuration.getMappingFileName(),
+			     _configuration.getSchemaFile(), randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+		
+		
+		
 		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(_scenario);
 		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))

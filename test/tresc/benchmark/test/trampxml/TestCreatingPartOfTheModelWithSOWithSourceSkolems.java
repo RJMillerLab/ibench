@@ -22,7 +22,7 @@ public class TestCreatingPartOfTheModelWithSOWithSourceSkolems extends AbstractA
 	static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
 
 	@Before
-	public void setUpConf () throws FileNotFoundException, IOException {
+	public void setUpConf () throws Exception {
 		PropertyWrapper prop = new PropertyWrapper("testresource/partconfsk.txt");
 		conf = new Configuration();
 		conf.readFromProperties(prop);

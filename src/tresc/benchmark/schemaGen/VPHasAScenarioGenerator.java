@@ -1,5 +1,8 @@
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
@@ -17,9 +20,14 @@ import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
 //PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
+//MN  IMPLEMENTED chooseSourceRels and chooseTargetRels - 1 May 2014
+//MN  ENHANCED genTargetRels to pass types of attributes of target relations as argument to addRelation - 3 May 2014
+//MN  ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 13 May 2014
 
 public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 
+	public static final int MAX_NUM_TRIES = 10;
+	
 	private JoinKind jk;
 	private int numOfSrcTblAttr;
 	private int numOfTgtTables;
@@ -27,6 +35,10 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	private int attrRemainder;
 	private SkolemKind sk = SkolemKind.ALL;
 //	private String skId;
+	
+	//MN - considered an attribute to check whether we are reusing target relations - 13 May 2014
+	private boolean targetReuse;
+	//MN
     
     public VPHasAScenarioGenerator()
     {
@@ -41,15 +53,13 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements,
             numOfElementsDeviation);
         
-        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
-                numOfSetElementsDeviation);
-        	
-        numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
-        
         // PRG ADD - Generate at least a source relation of 2 elements - Sep 19, 2012
-        // BG at least number of target table attributes
         numOfSrcTblAttr = (numOfSrcTblAttr > 2 ? numOfSrcTblAttr : 2);
-        numOfSrcTblAttr = (numOfSrcTblAttr < numOfTgtTables) ? numOfTgtTables : numOfSrcTblAttr;            
+
+        numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements,
+            numOfSetElementsDeviation);
+    	
+        numOfTgtTables = (numOfTgtTables > 1) ? numOfTgtTables : 2;
 
         attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
@@ -68,6 +78,10 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
                 jk = JoinKind.STAR;
             else jk = JoinKind.CHAIN;
         }
+        
+        //MN - 13 May 2014
+        targetReuse = false;
+        //MN
     }
 
 	@Override
@@ -77,17 +91,92 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		String[] attNames = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
 		
+		//MN - 13 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
+		//MN
+		
 		for (int i = 0; i < numOfSrcTblAttr; i++)
 			attNames[i] = randomAttrName(0, i);
 		
-		RelationType sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		//MN - 13 May 2014
+		if(targetReuse){
+			int count =0;
+			for(int i=0; i<numOfTgtTables; i++){
+				if(i == 0){
+					for(int j=0; j<attsPerTargetRel -1; j++){
+							attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+							count++;
+							}
+				}
+				else if (i == numOfTgtTables -1){
+					for(int j=0; j<attsPerTargetRel + attrRemainder -2; j++){
+							attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+							count++;
+					}
+				}
+				else{
+					for(int j=0; j<attsPerTargetRel -2; j++){
+						attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+						count++;
+					}
+				}
+					
+			 for(i=0; i<numOfSrcTblAttr; i++)
+				if(attrsType[i] == null)
+					attrsType[i] = "TEXT";
+			 }
+		}
+		//MN
+		
+		
+		RelationType sRel = null;
+		
+		//MN - 13 May 2014
+		if(!targetReuse)
+			sRel = fac.addRelation(hook, sourceRelName, attNames, true);
+		else
+			sRel = fac.addRelation(hook, sourceRelName, attNames, attrsType, true);
+		//MN
+		
+		//MN - 13 May 2014
+		targetReuse = false;
+		//MN
+		
 		m.addSourceRel(sRel);
 	}
 
+	//MN implemented chooseSourceRels method to support source reusability - 1 May 2014
+	@Override
+	protected boolean chooseSourceRels() throws Exception {
+		int minAttrs = numOfTgtTables;
+
+			
+		RelationType rel;
+			
+		//MN get a random relation - 26 April 2014
+		rel = getRandomRel(true, minAttrs);
+			
+		if (rel == null) 
+			return false;
+			
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		//MN reevaluate the following fields (tried to preserve initial value of numOfTgtTables) - 1 May 2014
+		attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
+	    attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
+			
+		m.addSourceRel(rel);
+			
+		return true;
+	}
+		
+	//MN ENHANCED to support types of target attributes - 3 May 2014
 	@Override
 	protected void genTargetRels() throws Exception {
 		if (log.isDebugEnabled()) {log.debug("---GENERATING TARGET---");};
         String[] attrs;
+        //MN BEGIN
+        String[] attrsType;
+        //MN END
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
 		String joinAttName = randomAttrName(0, 0) + "JoinAttr";
@@ -106,33 +195,60 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         			? 2 : 1);
         	int attWithFK = attrNum + fkAttrs;
         	attrs = new String[attWithFK];
+        	//MN BEGIN
+        	attrsType = new String[attWithFK];
+        	//MN END
         
         	// create normal attributes for table (copy from source)
-            for (int j = 0; j < attrNum; j++)
+            for (int j = 0; j < attrNum; j++){
             	attrs[j] = srcAttrs[offset + j];
+            	//MN BEGIN - 8 May 2014
+            	attrsType[j] = m.getSourceRels().get(0).getAttrArray(j + offset).getDataType();
+            	//MN END
+            }
             
             // create the join attributes
             // for star join the first one has the join attribute and the following ones 
             // have the join reference (FK)
             if (jk == JoinKind.STAR) {
-            	if (i == 0)//TODO check
+            	if (i == 0){//TODO check
             		attrs[attrs.length - 1] = joinAttName;
+            		//MN BEGIN
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
+            	}
             	else {
             		attrs[attrs.length - 2] = joinAttName;
             		attrs[attrs.length - 1] = joinAttNameRef;
+            		//MN BEGIN
+            		attrsType[attrs.length - 2] = "TEXT";
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
             	}
             // for chain join each one has a join and join ref to the previous
             // thus, the first does not have a ref and the last one does not have a join attr
             } else { // chain
-            	if (i == 0)
+            	if (i == 0){
             		attrs[attrs.length - 1] = joinAttName;
+            		//MN BEGIN
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
+            	}
             	else {
             		attrs[attrs.length - 2] = joinAttName;
             		attrs[attrs.length - 1] = joinAttNameRef;
+            		//MN BEGIN
+            		attrsType[attrs.length - 2] = "TEXT";
+            		attrsType[attrs.length - 1] = "TEXT";
+            		//MN END
             	}
             }
             
-            fac.addRelation(hook, trgName, attrs, false);
+            //MN modified the following line- 4 May 2014
+            String[] attrsCopy = new String[attrs.length];
+            for(int h=0; h<attrs.length; h++)
+            	attrsCopy[h] = attrsType[h];
+            fac.addRelation(hook, trgName, attrs, attrsCopy, false);
             
             if (jk == JoinKind.STAR) 
             {
@@ -154,6 +270,134 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         addFKs();
 	}
 
+	//MN implemented chooseTargetRels method to support target reusability - 1 May 2014
+	//MN assumptions - (1): attrRemainder =0 - 1 May 2014
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+		List<RelationType> rels = new ArrayList<RelationType> ();
+		int numTries = 0;
+		int created = 0;
+		boolean found = false;
+		RelationType rel;
+		//MN wanted to preserve the initial values of numOfTgtTables and attsPerTargetRel - 1 May 2014
+		String[][] attrs = new String[numOfTgtTables][];
+			
+		// first choose one that has attsPerTargetRel
+		while(created < numOfTgtTables) {
+			found = true;
+				
+			//MN check the following again (it is really tricky) - 1 May 2014
+			if(created == 0){
+				rel = getRandomRel(false, attsPerTargetRel+1);
+			}
+			else{
+				//MN second, third, ... target relations should have attsPerTargetRel+2 attributes - 1 May 2014
+				rel = getRandomRel(false, attsPerTargetRel+2, attsPerTargetRel+2);
+				
+				if(rel != null){
+					for(int j=0; j<rels.size(); j++)
+						if(rels.get(j).getName().equals(rel.getName()))
+							found = false;
+				}else{
+					found = false;
+				}
+			}
+				
+			//MN VP cares about primary key - 1 May 2014
+			if(found && !rel.isSetPrimaryKey()) {
+				//MN set to false because this is target relation (Am I right?) - 26 April 2014
+				//MN primary key size should be 1 - 1 May 2014
+				int [] primaryKeyPos = new int [1];
+				if(created == 0){
+					primaryKeyPos[0] = rel.sizeOfAttrArray()-1;
+					fac.addPrimaryKey(rel.getName(), primaryKeyPos[0], false);
+				}
+				else{
+					primaryKeyPos[0] = rel.sizeOfAttrArray()-2;
+					fac.addPrimaryKey(rel.getName(), primaryKeyPos[0], false);
+				}
+			}
+				
+			if(found && rel.isSetPrimaryKey()){
+				//MN keySize should be 1 and key attr should be the last attr or last attr -1 May 2014
+				int[] pkPos = model.getPKPos(rel.getName(), false);
+				if(pkPos.length != 1)
+					found = false;
+				if(found)
+					if(created == 0){
+						if(pkPos[0] != (rel.getAttrArray().length-1))
+							found = false;}
+					else
+						if(pkPos[0] != (rel.getAttrArray().length-2))
+							found = false;
+			}
+				
+			// found a fitting relation
+			if (found) {
+				rels.add(rel);
+				m.addTargetRel(rel);
+
+				attrs[created] = new String[rel.sizeOfAttrArray()];
+				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
+					attrs[created][i] = rel.getAttrArray(i).getName();
+					
+				//MN attsPerTargetRel should be set (check that) (it is really tricky) - 26 April 2014
+				if(created == 0)
+					attsPerTargetRel = rel.getAttrArray().length-1;
+					
+				created++;
+				numTries = 0;
+			}
+			// not found, have exhausted number of tries? then create new one
+			else {
+				numTries++;
+				if (numTries >= MAX_NUM_TRIES)
+				{
+					numTries = 0;
+					//MN created plays an important role here - 1 May 2014
+					if(created == 0){
+						attrs[created] = new String[attsPerTargetRel+1];
+						for(int j = 0; j < attsPerTargetRel+1; j++)
+							attrs[created][j] = randomAttrName(created, j);
+					}
+					else{
+						attrs[created] = new String[attsPerTargetRel+2];
+						for(int j = 0; j < attsPerTargetRel+2; j++)
+							attrs[created][j] = randomAttrName(created, j);
+					}
+					
+					// create the relation
+					String relName = randomRelName(created);
+					rels.add(fac.addRelation(getRelHook(created), relName, attrs[created], false));
+						
+					// primary key should be set and its size should be 1- 1 May 2014
+					int [] primaryKeyPos = new int [1];
+					if(created == 0)
+						primaryKeyPos [0] = attsPerTargetRel;
+					else
+						primaryKeyPos [0] = attsPerTargetRel+1;
+ 					
+					fac.addPrimaryKey(relName, primaryKeyPos[0], false);
+						
+					//MN should I add it to TargetRel? - 26 April 2014 - tested 1 May 2014
+					//m.addTargetRel(rels.get(rels.size()-1));
+						
+					created++;
+					numTries = 0;
+				}
+			}
+		}
+			
+		//MN set attrRemainder and numOfSrcTables - 1 May 2014
+		numOfSrcTblAttr= numOfTgtTables * attsPerTargetRel; 
+		//MN considering only these two cases - 1 May 2014
+		attrRemainder =0;
+			
+		//MN foreign key should be set - 26 April 2014
+		addFKs();
+		return true;
+	}
+		
 	private void addFKs() {
 		if (jk == JoinKind.STAR) {
 			for(int i = 1; i < numOfTgtTables; i++) {
@@ -238,7 +482,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	
 	//TODO does not seem to make a lot of sense, using the same skolem function, but with different number of arguments is wrong
 	private void generateSKs(MappingType m1, int rel, int offset, int numAtts, String[] skIds) {
-		int useReminder = (rel == numOfTgtTables - 1) ? attrRemainder : 0;
+//		int numArgsForSkolem;
 
 //		// generate random number arguments for skolem function
 //		if (sk == SkolemKind.RANDOM)
@@ -265,12 +509,12 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 						CollectionUtils.concatArrays(
 								fac.getFreshVars(0, attsPerTargetRel),
 								fac.getFreshVars(rel * attsPerTargetRel, 
-										attsPerTargetRel + useReminder)), 
+										attsPerTargetRel)), 
 						skIds[rel]);
 				// fk to center of star
 				fac.addSKToExistsAtom(m1, rel, 
 						fac.getFreshVars(0, attsPerTargetRel), 
-						skIds[0]);			
+						skIds[rel - 1]);			
 				}
 		}
 		// CHAIN join
@@ -282,7 +526,7 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 			// intermediate rel add pk skolem + fk skolem to previous
 			else {
 				fac.addSKToExistsAtom(m1, rel, 
-						fac.getFreshVars(0, ((rel + 1) * attsPerTargetRel) + useReminder), 
+						fac.getFreshVars(0, (rel + 1) * attsPerTargetRel), 
 						skIds[rel]);
 				fac.addSKToExistsAtom(m1, rel, 
 						fac.getFreshVars(0, rel * attsPerTargetRel), 
@@ -293,14 +537,17 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
-		SPJQuery genQuery = genQuery(new SPJQuery());
+		//SPJQuery q;
+		//SPJQuery genQuery = genQuery(new SPJQuery());
 		
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String creates = m.getTargetRels().get(i).getName();
-			q = (SPJQuery) genQuery.getSelect().getTerm(i);
+			//q = (SPJQuery) genQuery.getSelect().getTerm(i);
 			
-			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			//fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			//MN BEGIN 16 August 2014
+			fac.addTransformation("", m.getMapIds(), creates);
+			//MN END
 		}
 	}
 	
@@ -313,17 +560,18 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 		String joinAttNameRef;
 		
 		// join attrs different for star and chain join.
-//		if (jk == JoinKind.STAR) {
+		if (jk == JoinKind.STAR) {
 			joinAttName = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
             joinAttNameRef = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
+            
             //TODO check what they do there really
-//		}
-//		else {
-//			joinAttName = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
-//            joinAttNameRef = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
-//		}
-		log.debug("Join attribute: <" + joinAttName + ">" + " "
-        		+ "and join reference attributes is <" + joinAttNameRef + ">");
+		}
+		else {
+			int numAttr = m.getNumRelAttr(0, false);
+			joinAttName = m.getAttrId(0, numAttr - 1, false);
+            joinAttNameRef = m.getAttrId(0, numAttr - 2, false);
+		}
+
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String targetRelName = m.getTargetRels().get(i).getName();
@@ -342,14 +590,11 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 				Projection att = new Projection(new Variable("X"), trgAttrName);
 				sel.add(trgAttrName, att);
 	        }
-	        
-	        log.debug("Query for " + targetRelName + " is for now " + q.toTrampString());
 		}
 		
 		// add skolem function for join
 		if (jk == JoinKind.STAR) {
 			String skName = "";
-			vtools.dataModel.expression.SKFunction centerSK = null;
 			
 			for(int i = 0; i < numOfTgtTables; i++) {
 				SelectClauseList seli = queries[i].getSelect();
@@ -393,31 +638,24 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 						new vtools.dataModel.expression.SKFunction(skName);
 		 			
 		 		// this works because the key is always the first attribute 
-		 		for(int k = 0; k < numArgs; k++) {	//TODO differs from what SKs do
-		 			int offset = (k < attsPerTargetRel) ? 0 : attsPerTargetRel * (i - 1);
-		 			String sAttName = m.getAttrId(0, k + offset, true);
+		 		for(int k = 0; k < numArgs; k++) {	//TODO differs from what SKs do		
+		 			String sAttName = m.getAttrId(0, k, true);
 		 			Projection att = new Projection(new Variable("X"), sAttName);
 		 			stSK.addArg(att);
 		 		}
 				
-//		 		if(i == 0)
+		 		if(i == 0)
 		 			seli.add(joinAttName, stSK);
-		 				 		
-		 		if (i == 0)
-		 			centerSK = stSK;
-		 		if(i != 0)
-		 			seli.add(joinAttNameRef, centerSK);
+		 		
+	            seli.add(joinAttNameRef, stSK);
 			}
 		}
 		
         if (jk == JoinKind.CHAIN)
         {
-        	vtools.dataModel.expression.SKFunction prevSK = null;
         	String skName = "";
-        	
-            for (int i = 0; i < numOfTgtTables; i++)
+            for (int i = 0; i < numOfTgtTables - 1; i++)
             {
-            	log.debug("process table: " + i);
             	int numArgs;
             	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
 
@@ -442,12 +680,11 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
             	
             	SelectClauseList sel1 = queries[i].getSelect();
                 sel1.add(joinAttName, stSK);
-                
-                if (i != 0)
-                	sel1.add(joinAttNameRef, prevSK);
-                
                 queries[i].setSelect(sel1);
-                prevSK = stSK;
+                
+                SelectClauseList sel2 = queries[i + 1].getSelect();
+                sel2.add(joinAttNameRef, stSK);
+                queries[i + 1].setSelect(sel2);
             }
         }
         
