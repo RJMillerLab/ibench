@@ -3,7 +3,7 @@
 <tox-template>
 <simpleType name="bench_string">
 <restriction base="string">
-<tox-string type="word" maxLength="5"/>
+<tox-string type="multiword" maxLength="5"/>
 </restriction>
 </simpleType>
 <simpleType name="bench_int">
