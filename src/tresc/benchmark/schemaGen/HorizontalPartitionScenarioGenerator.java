@@ -23,6 +23,12 @@ import vtools.dataModel.expression.Variable;
 import vtools.dataModel.values.IntegerValue;
 
 //PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
+//MN  FIXED tries++ in chooseSourceRels() - 28 April 2014
+//MN  ENHANCED genTargetRels to pass types of attributes as argument to addRelation - 5 May 2014
+//MN  ENHANCED genSourceRels to pass types of attributes as argument to addRelation - 11 May 2014
+//MN  FIXED tries++ in chooseTargetRels() - 11 May 2014
+//MN  FIXED chooseTargetRels() - 29 May 2014
+//MN  CHANGED type of selector from int to text - 17 August 2014
 
 public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenerator
 {
@@ -32,7 +38,10 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	private int randomFragments;
 
 	private int fragmentWidth;
-    
+	//MN - added attribute to check whether we are reusing target relation -11 May 2014
+	private boolean[] targetReuse;
+    //MN
+	
     public HorizontalPartitionScenarioGenerator()
     {		;		}
 
@@ -51,6 +60,12 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
         randomFragments = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         randomFragments = (randomFragments > 1) ? randomFragments : 2;
         fragmentWidth = 10000 / randomFragments;
+        
+        //MN BEGIN - 11 May 2014
+        targetReuse = new boolean [1000];
+        for(int i=0; i<1000; i++)
+        	targetReuse[i] = false;
+        //MN END
     }
 
     /**
@@ -82,6 +97,9 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
     			ok = true;
     			break;
     		}
+    		//MN added tries ++ - 28 April 2014
+			tries++;
+			//MN
     	}
     	
     	// did not find suitable relation
@@ -108,17 +126,34 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	    
         // create the source attrs
         attrs[0] = nameSelector;
-        dTypes[0] = "INT8";
+        //MN -changed type of selector - 17 August 2014
+        //dTypes[0] = "INT8";
+        dTypes[0] = "TEXT";
         
         // and now populate the src SMarkElement and the target fragments with
         // the rest of the attributes.
         for (int i = 0; i < randomElements; i++) {
             String attName = randomAttrName(0, i); 
             attrs[i + 1] = attName;
-            dTypes[i + 1] = "TEXT";
+            
+            //MN BEGIN - 11 May 2014
+            boolean reused = false;
+            for(int j=0; j<1000; j++)
+            	if(targetReuse[j])
+            		reused =true;
+            if(!reused)
+            	dTypes[i + 1] = "TEXT";
+            else
+            	dTypes[i + 1] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+            //MN END
         }
 
         fac.addRelation(getRelHook(0), srcName, attrs, dTypes, true);
+        
+        //MN BEGIN - 11 May 2014
+        for(int j=0; j<1000; j++)
+        	targetReuse[j] = false;
+        //MN END
 	}
 
 	/**
@@ -132,14 +167,24 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		int tries = 0;
 		int numAttrs = 0;
 		List<RelationType> rels = new ArrayList<RelationType> (randomFragments);
+		//MN considered count to know which target relation are the ones that are being reused - 11 May 2014
+		int count =0;
+		//MN
 		
 		// first one
 		while (tries < MAX_NUM_TRIES && rels.size() == 0) {
 			cand = getRandomRel(false, 2);
 			if (relOk(cand)) {
 				rels.add(cand);
+				//MN BEGIN - 11 May 2014
+				targetReuse[count] = true;
+				count++;
+				//MN END
 				break;
 			}
+			//MN BEGIN - 11 May 2014
+			tries++;
+			//MN END
 		}
 		
 		// didn't find one? generate target relations
@@ -153,8 +198,24 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		while (tries < MAX_NUM_TRIES * randomFragments && cand != null 
 				&& rels.size() < randomFragments) {
 			cand = getRandomRelWithNumAttr(false, numAttrs);
-			if (relOk(cand))
+			
+			//MN BEGIN - 29 May 2014
+			boolean ok = true;
+			for(int i=0; i<rels.size(); i++)
+				if(rels.get(i).getName().equals(cand.getName()))
+					ok = false;
+			//MN END
+			//MN - 29 May 2014
+			if (ok && relOk(cand)){
 				rels.add(cand);
+				//MN BEGIN - 11 May 2014
+				targetReuse[count] = true;
+				count++;
+				//MN END
+			}
+			//MN BEGIN - 11 May 2014
+			tries++;
+			//MN END
 		}
 		
 		// create additional target relations
@@ -192,12 +253,22 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 		return false;
 	}
 	
+	//MN modified genTargetRels - 5 May 2014
 	@Override
 	protected void genTargetRels() {
 		String srcName = m.getSourceRels().get(0).getName();
         String[] attrs = m.getAttrIds(0, true);
         
+        //MN BEGIN considered an array to store types of attributes of target relation - 5 May 2014
+        List<String> attrsType = new ArrayList<String> ();
+        //MN BEGIN
+        for(int i=1; i< attrs.length; i++)
+        	attrsType.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+		//MN END
+        
         attrs = Arrays.copyOfRange(attrs, 1, attrs.length);
+        
+        
         
         for(int i = 0; i < randomFragments; i++) {
             int lowerLimit = i * fragmentWidth;
@@ -206,7 +277,8 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
                     + upperLimit;
             String name = srcName + "_" + hook;
             
-        	fac.addRelation(hook, name, attrs, false);
+            //MN modified the following line - 4 May 2014
+        	fac.addRelation(hook, name, attrs, attrsType.toArray(new String[] {}), false);
         }
 	}
 
@@ -240,17 +312,20 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		Query q;
+		//Query q;
 		
 		for(int i = 0; i < randomFragments; i++) {
 			String targetName = m.getTargetRels().get(i).getName();
 			String map = m.getMapIds()[i];
 			
-			q = genQuery(i);
-			q.storeCode(q.toTrampString(m.getMapIds()[i]));
-			q = addQueryOrUnion(targetName, q);
+			//q = genQuery(i);
+			//q.storeCode(q.toTrampString(m.getMapIds()[i]));
+			//q = addQueryOrUnion(targetName, q);
 
-			fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
+			//fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
+			//MN BEGIN 16 August 2014
+			fac.addTransformation("", new String[] {map}, targetName);
+			//MN END
 		}
 	}
 	

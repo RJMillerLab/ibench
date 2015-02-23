@@ -151,6 +151,13 @@ public class TrampModelFactory {
 		return c;
 	}
 	
+	public CorrespondenceType addCorrespondence(CorrespondenceType c) {
+		CorrespondenceType newC = doc.getDocument().getMappingScenario().getCorrespondences().addNewCorrespondence();
+		newC.set(c);
+		p.addCorr(newC);
+		return newC;
+	}
+	
 	public void addPKFds () throws Exception {
 		for (RelationType r: doc.getScenario().getSchemas().getSourceSchema().getRelationArray()) {
 			if (r.isSetPrimaryKey())
@@ -173,6 +180,12 @@ public class TrampModelFactory {
 			fd.getTo().addAttr(a);;
 		
 		return fd;
+	}
+	
+	public FDType addFD (FDType fd) {
+		FDType newFd = doc.getScenario().getSchemas().getSourceSchema().addNewFD();
+		newFd.set(fd);
+		return newFd;
 	}
 	
 	public FDType[] getRelFDs (String rel) {
@@ -368,8 +381,37 @@ public class TrampModelFactory {
 		stFK.addLeftTerm(fromVar, new Projection(Path.ROOT, fromRel));
 		Variable toVar = new Variable("K");
 		stFK.addRightTerm(toVar, new Projection(Path.ROOT, toRel));
-		stFK.addFKeyAttr(new Projection(toVar, toA[0]), 
-				new Projection(fromVar, fromA[0])); //TODO check whether supports more than one attr in FK
+		//MN BEGIN - 24 August 2014
+		for(int count=0; count<toA.length; count++)
+			stFK.addFKeyAttr(new Projection(toVar, toA[count]), 
+				new Projection(fromVar, fromA[count])); //TODO check whether supports more than one attr in FK
+		//MN END
+		s.addConstraint(stFK);
+	}
+	
+	public void addForeignKey (ForeignKeyType fks, boolean source) {
+		Schema s = source ? stScen.getSource() : stScen.getTarget();
+		SchemaType st = source ? doc.getScenario().getSchemas().getSourceSchema() :
+			doc.getScenario().getSchemas().getTargetSchema();
+		
+		ForeignKeyType fk = st.addNewForeignKey();
+		fk.set(fks);
+		String fromRel = fk.getFrom().getTableref();
+		String[] fromA = fk.getFrom().getAttrArray();
+			
+		String toRel = fk.getTo().getTableref();
+		String[] toA = fk.getTo().getAttrArray();
+		
+		ForeignKey stFK = new ForeignKey();
+		Variable fromVar = new Variable("F");
+		stFK.addLeftTerm(fromVar, new Projection(Path.ROOT, fromRel));
+		Variable toVar = new Variable("K");
+		stFK.addRightTerm(toVar, new Projection(Path.ROOT, toRel));
+		//MN BEGIN - 24 August 2014
+		for(int count=0; count<toA.length; count++)
+			stFK.addFKeyAttr(new Projection(toVar, toA[count]), 
+				new Projection(fromVar, fromA[count])); //TODO check whether supports more than one attr in FK
+		//MN END
 		s.addConstraint(stFK);
 	}
 
@@ -397,6 +439,13 @@ public class TrampModelFactory {
 		return map;
 	}
 
+	public MappingType addMapping (MappingType m) {
+		MappingType newM = doc.getScenario().getMappings().addNewMapping();
+		newM.set(m);
+		p.addMapping(newM);
+		return newM;
+	}
+	
 	public void addForeachAtom(MappingType m, int rel, String[] vars) 
 			throws Exception {
 		addForeachAtom(m.getId(), p.getRelName(rel, true), vars);

@@ -48,7 +48,7 @@ public abstract class AbstractCheckExpectedOutputTester {
 	}
 	
 	@Before
-	public void readConf () throws FileNotFoundException, IOException {
+	public void readConf () throws Exception {
 		b = new STBenchmark();
 		setPaths();
 		PropertyWrapper prop = new PropertyWrapper("testresource/" + confName);

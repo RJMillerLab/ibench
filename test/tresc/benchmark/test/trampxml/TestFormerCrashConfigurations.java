@@ -47,7 +47,7 @@ public class TestFormerCrashConfigurations {
 //		}
 	}
 	
-	public void setUpConf (String fileName) throws FileNotFoundException, IOException {
+	public void setUpConf (String fileName) throws Exception {
 		PropertyWrapper prop = new PropertyWrapper("testresource/" + fileName);
 		conf = new Configuration();
 		conf.readFromProperties(prop);

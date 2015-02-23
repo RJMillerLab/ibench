@@ -161,6 +161,8 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());};
 		}
 		genMappings();
+		//MN we don't need transformations for the purpose of evaluating mapmerge - 16 August 2014
+		//MN commented them - 16 August 2014
 		if (log.isDebugEnabled()) {log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());};
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Transformations)) {
 			genTransformations();
@@ -184,8 +186,15 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		}
 		// roll dice to determine whether source or target are reused
 		else {
-			boolean reuseSrc = _generator.nextInt(100) <= srcReusePerc;
-			boolean reuseTrg = _generator.nextInt(100) <= trgReusePerc;
+			//MN I've modified the code for the case whether source reusability is zero
+			//MN or target reusability is zero - 2 May 2014
+			boolean reuseSrc = false;
+			boolean reuseTrg = false;
+			
+			if(srcReusePerc>0 )
+				reuseSrc = _generator.nextInt(100) <= srcReusePerc;
+			if(trgReusePerc>0)
+				reuseTrg = _generator.nextInt(100) <= trgReusePerc;
 			
 			// check whether at least one target or source relation exists when reusing
 			if (reuseSrc && model.getSchema(true).sizeOfRelationArray() == 0)
