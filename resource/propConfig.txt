@@ -5,19 +5,19 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
-Scenarios.HORIZPARTITION = 0
-Scenarios.SURROGATEKEY = 0
+Scenarios.COPY = 10
+Scenarios.HORIZPARTITION = 10
+Scenarios.SURROGATEKEY = 10
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 32
+Scenarios.VERTPARTITION = 10
+Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 32
-Scenarios.VERTPARTITIONHASA = 32
-Scenarios.VERTPARTITIONNTOM = 32
+Scenarios.VERTPARTITIONISA = 0
+Scenarios.VERTPARTITIONHASA = 0
+Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -29,7 +29,7 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 4
+ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 1
 ConfigOptions.JoinSize = 1
@@ -43,17 +43,17 @@ ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 25
+ConfigOptions.ReuseTargetPerc = 50
 ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 20
-ConfigOptions.SourceInclusionDependencyFKPerc = 20
-ConfigOptions.TargetInclusionDependencyPerc = 20
-ConfigOptions.TargetInclusionDependencyFKPerc = 20
+ConfigOptions.SourceInclusionDependencyPerc = 0
+ConfigOptions.SourceInclusionDependencyFKPerc = 0
+ConfigOptions.TargetInclusionDependencyPerc = 0
+ConfigOptions.TargetInclusionDependencyFKPerc = 0
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 1
-ConfigOptions.SourceCircularFK = 1
-ConfigOptions.TargetCircularInclusionDependency = 1
-ConfigOptions.TargetCircularFK = 1
+ConfigOptions.SourceCircularInclusionDependency = 0
+ConfigOptions.SourceCircularFK = 0
+ConfigOptions.TargetCircularInclusionDependency = 0
+ConfigOptions.TargetCircularFK = 0
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 2
@@ -80,7 +80,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 1230918
+RandomSeed = 917289912
 RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
