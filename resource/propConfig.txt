@@ -5,13 +5,13 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 10
-Scenarios.HORIZPARTITION = 10
-Scenarios.SURROGATEKEY = 10
+Scenarios.COPY = 0
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 10
+Scenarios.VERTPARTITION = 0
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
@@ -19,7 +19,7 @@ Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
 Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
-Scenarios.VERTPARTITIONISAAUTHORITY = 0
+Scenarios.VERTPARTITIONISAAUTHORITY = 1
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -42,9 +42,9 @@ ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 50
-ConfigOptions.NoReuseScenPerc = 50
+ConfigOptions.ReuseSourcePerc = 0
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
@@ -54,6 +54,7 @@ ConfigOptions.SourceCircularInclusionDependency = 0
 ConfigOptions.SourceCircularFK = 0
 ConfigOptions.TargetCircularInclusionDependency = 0
 ConfigOptions.TargetCircularFK = 0
+ConfigOptions.VPAuthorityComplexity = 3
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 2
@@ -78,6 +79,7 @@ ConfigOptionsDeviation.TargetCircularInclusionDependency = 0
 ConfigOptionsDeviation.TargetCircularFK = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
+ConfigOptionsDeviation.VPAuthorityComplexity = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 917289912
@@ -89,11 +91,12 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = true
+OutputOption.Data = false
 OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
+OutputOption.Clio = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true

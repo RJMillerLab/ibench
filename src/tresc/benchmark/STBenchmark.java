@@ -398,13 +398,14 @@ public class STBenchmark {
 				     _configuration.getMappingFileName(),
 				     _configuration.getSchemaFile());
 		
+		if (_configuration.getOutputOption(OutputOption.Clio)) {
 		//MN prints results in Mapjob, XSML and XSD formats for the purpose of evaluating MapMerge
 		printResultsMapjobAndXSMLAndXSD(_scenario, 
 			     _configuration.getSourceSchemaFile(), 
 			     _configuration.getTargetSchemaFile(),
 			     _configuration.getMappingFileName(),
 			     _configuration.getSchemaFile(), randomSourceInclusionDependencies, randomTargetInclusionDependencies);
-		
+		}
 		
 		
 		if (_configuration.getOutputOption(OutputOption.Data))

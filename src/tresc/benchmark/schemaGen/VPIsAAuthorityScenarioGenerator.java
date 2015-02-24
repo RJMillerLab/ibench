@@ -30,6 +30,7 @@ import vtools.dataModel.expression.Variable;
 //MN Changes to VP Authority Scenario - 6 Feb 2015 (submitted to prg@cs via email on 10 Feb 2015, not committed as changes were done to an old java class)
 //PRG - COMPLETE RE-IMPLEMENTATION as the previous code did not work at all - 17 Feb 2015
 //PRG - Comment out creation of primary key for slave target relations as per MapMerge's VPGenerator.java code - 19 FEB 2015
+//PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
 
 public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	public static final int MAX_NUM_TRIES = 10;
@@ -53,7 +54,7 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	// MN
 	
    	// VP Authority Scenario, assume complexityScen denotes "n" (here n can be equal or greater than 2)
-	private int complexityScen = 4;
+	private int complexityScen = 2;
 
 	
     public VPIsAAuthorityScenarioGenerator ()
@@ -67,6 +68,11 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
     	super.initPartialMapping();
     	
     	// VP Authority Scenario, assume complexityScen denotes "n"
+    	
+    	complexityScen = Utils.getRandomNumberAroundSomething(_generator, VPAuthorityComplexity, VPAuthorityComplexityDeviation);
+    	// Sanity Check to enforce lower and upper limits for this scenario
+    	complexityScen = (complexityScen < 2) ? 2 : complexityScen;
+    	complexityScen = (complexityScen > 16) ? 16 : complexityScen;
     	
     	numOfSrcTblAttr = complexityScen * (complexityScen + 1);   	
     	numOfTgtTables = complexityScen * (complexityScen + 1);

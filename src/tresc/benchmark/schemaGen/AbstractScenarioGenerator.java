@@ -33,7 +33,7 @@ import vtools.dataModel.schema.Schema;
 
 // PRG RESTORED Reading Deviation Parameter (numOfElementsDeviation) from config file - August 28, 2012
 // PRG MOVED method getRandomSourceVars(int numArgsForSkolem, MappingType m1) to tresc.benchmark.utils.Utils.java to facilitate code reuse - Sep 21, 2012
-
+// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
 
 public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
@@ -79,6 +79,10 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected int srcFDPerc;
 	protected int primaryKeySize;
 	protected int primaryKeySizeDeviation;
+	
+	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+	protected int VPAuthorityComplexity;
+	protected int VPAuthorityComplexityDeviation;
 	
 	protected MappingLanguageType mapLang;
 	protected int curRep;
@@ -374,7 +378,12 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		primaryKeySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
 		primaryKeySizeDeviation = configuration.getDeviation(Constants.ParameterName.PrimaryKeySize);
         
-		
+		// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+		VPAuthorityComplexity = configuration.getParam(Constants.ParameterName.VPAuthorityComplexity);
+		VPAuthorityComplexityDeviation = configuration.getDeviation(Constants.ParameterName.VPAuthorityComplexity);
+		// PRG END ADD - 24 FEB 2015
+				
+				
         mapLang = configuration.getMapType();
 
 		source = scen.getSource();
