@@ -192,7 +192,8 @@ public class Constants
     	XMLSchemas,
     	HTMLMapping,
     	TrampXML,
-    	ErrorsAndExplanations
+    	ErrorsAndExplanations,
+    	XSML
     }
     
     public static final Map<OutputOption, Boolean> defaultOutputOptionValues
@@ -205,6 +206,7 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.Data, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.TrampXML, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
+    	defaultOutputOptionValues.put(OutputOption.XSML, Boolean.FALSE);
     }
     
   

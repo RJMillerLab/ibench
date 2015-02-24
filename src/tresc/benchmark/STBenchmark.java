@@ -135,6 +135,10 @@ public class STBenchmark {
 	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
 	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
 			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
+		
+		if(!_configuration.getOutputOption(OutputOption.XSML))
+			return;
+		
 		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
 		
 		File xsmlDir = new File("./out0");
