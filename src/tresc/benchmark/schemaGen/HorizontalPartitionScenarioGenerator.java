@@ -312,19 +312,19 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		//Query q;
+		Query q;
 		
 		for(int i = 0; i < randomFragments; i++) {
 			String targetName = m.getTargetRels().get(i).getName();
 			String map = m.getMapIds()[i];
 			
-			//q = genQuery(i);
-			//q.storeCode(q.toTrampString(m.getMapIds()[i]));
-			//q = addQueryOrUnion(targetName, q);
+			q = genQuery(i);
+			q.storeCode(q.toTrampString(m.getMapIds()[i]));
+			q = addQueryOrUnion(targetName, q);
 
-			//fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
+			fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
 			//MN BEGIN 16 August 2014
-			fac.addTransformation("", new String[] {map}, targetName);
+//			fac.addTransformation("", new String[] {map}, targetName);
 			//MN END
 		}
 	}

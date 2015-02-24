@@ -127,14 +127,14 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 	@Override
 	protected void genTransformations () throws Exception {
 		String creates = m.getRelName(0, false);
-		//Query q;
+		Query q;
 		
-		//q = genQuery();
-		//q.storeCode(q.toTrampString(m.getMapIds()));
-		//q = addQueryOrUnion(creates, q);
+		q = genQuery();
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
 		
-		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
-		fac.addTransformation("", m.getMapIds(), creates);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+//		fac.addTransformation("", m.getMapIds(), creates);
 	}
 	
 	private Query genQuery () {
