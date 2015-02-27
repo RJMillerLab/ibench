@@ -5,13 +5,13 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 10
+Scenarios.COPY = 15
 Scenarios.HORIZPARTITION = 5
-Scenarios.SURROGATEKEY = 13
+Scenarios.SURROGATEKEY = 10
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 12
+Scenarios.VERTPARTITION = 10
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
@@ -42,8 +42,8 @@ ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 0
-ConfigOptions.ReuseTargetPerc = 25
+ConfigOptions.ReuseSourcePerc = 25
+ConfigOptions.ReuseTargetPerc = 30
 ConfigOptions.NoReuseScenPerc = 50
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
@@ -82,7 +82,7 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 ConfigOptionsDeviation.VPAuthorityComplexity = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 999
+RandomSeed = 9
 RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
