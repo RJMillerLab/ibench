@@ -348,7 +348,7 @@ public class STBenchmark {
 		if (_configuration.configurationFile != null) {
 			//parseConfigFile(_configuration.configurationFile);
 			//MN changed the code - 21 April 2014
-			System.out.print(_configuration.configurationFile);
+//			System.out.print(_configuration.configurationFile);
 			PropertyWrapper props = new PropertyWrapper(_configuration.configurationFile);
 			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);
@@ -357,7 +357,7 @@ public class STBenchmark {
 			runConfig();
 		}
 		else if (_configuration.propertyFileName != null) {
-			System.out.print(_configuration.propertyFileName);
+//			System.out.print(_configuration.propertyFileName);
 			PropertyWrapper props = new PropertyWrapper(_configuration.propertyFileName);
 			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);
