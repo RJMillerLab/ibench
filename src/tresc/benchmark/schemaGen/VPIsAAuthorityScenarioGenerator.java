@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.vagabond.util.CollectionUtils;
+import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
@@ -31,6 +32,7 @@ import vtools.dataModel.expression.Variable;
 //PRG - COMPLETE RE-IMPLEMENTATION as the previous code did not work at all - 17 Feb 2015
 //PRG - Comment out creation of primary key for slave target relations as per MapMerge's VPGenerator.java code - 19 FEB 2015
 //PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+//PRG - RECODE genMappings(), Mapping Output = SOtgds, to generate n^2 mappings instead of one single mapping per VP Authority Scenario - MAR 5 2015
 
 public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	public static final int MAX_NUM_TRIES = 10;
@@ -442,20 +444,120 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 		}
 	}
 	*/
+	
+	private List<CorrespondenceType> getCorrsForThisMapping(int targetTopAuth, int targetSlave) {
+		
+		String topAuthName = m.getRelName(targetTopAuth, false);
+		String slaveName = m.getRelName(targetSlave, false);
+		
+		List<CorrespondenceType> result = new ArrayList<CorrespondenceType> ();
+		
+		for(CorrespondenceType c : m.getCorrs()) {
+			if (c.getTo().getTableref().equals(topAuthName) || c.getTo().getTableref().equals(slaveName)) {
+				result.add(c);
+			}
+		}
+		return result;
+	}
 
 	// PRG RE-CODE VP AUTHORITY - genMappings() Method - FEB 16 2015
     // Assume complexityScen denotes "n"
     // Generate "n" hierarchies of Authority Relations, where each hierarchy has "n" slaves
-	// Assumption: as per MapMerge's Paper, each target relation have exactly 2 attributes. Each hierarchy shares the same Skolem function
+	// ASSUMPTIONS: as per MapMerge's Paper, (a) each target relation has exactly 2 attributes. 
+	// (b) Each hierarchy shares the same Skolem function. We use a single argument per Skolem to save some computation resources ;)
+	// (c) In the case Mapping Output = SOtgds, we generate exactly n^2 mappings (cuadratic in the scenario complexity) where n is between 2 and 16 max.
+	// Note that we keep generating a single schema mapping if Mapping Output = FOtgds.
 	@Override
 	protected void genMappings() throws Exception {
+		
+		int previousMarker = 0;
+		
+		String[] sourceVars = fac.getFreshVars(0, numOfSrcTblAttr);
+		//System.out.println("All vars are " + Arrays.toString(sourceVars));
+		
+		switch (mapLang) {
+		
+		case FOtgds:
+			MappingType m1 = fac.addMapping(m.getCorrs());
+			String[] newExistVars = new String[1];
+			
+			fac.addForeachAtom(m1, 0, sourceVars);
+			
+			int hierarchyIndex = 0;
+			for(int i = 0; i < numOfTgtTables; i++) {
+				
+				int offset = i * attsPerTargetRel;
+	        	int numAtts = attsPerTargetRel;
+	        	
+	        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
+	        	fac.addEmptyExistsAtom(m1, i);
+	        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(i, 1));
+	        	if (i == 0 || i == (previousMarker + complexityScen + 1)) {
+	        		previousMarker = i;
+	        		newExistVars = fac.getFreshVars(numOfSrcTblAttr + hierarchyIndex++, 1);
+	        		//System.out.println("New Exist Vars are " + Arrays.toString(newExistVars));
+	        	}
+	        	fac.addVarsToExistsAtom(m1, i, newExistVars);	        	
+			}					
+			break;
+		
+		case SOtgds:
+					
+			boolean createSK = false;
+			
+			for(int i = 0; i < numOfTgtTables; i++) {
+	        	
+	        	if (i == 0 || i == (previousMarker + complexityScen + 1)) {
+	        		// Processing a Target Relation that represents a Top Authority; simply save its index
+	        		previousMarker = i; 
+	        		createSK = true;
+	        	}
+	        	else {
+	        		// Generating a single mapping per each <top authority, slave> pair	  
+	        		MappingType thisMapping = fac.addMapping(getCorrsForThisMapping(previousMarker,i));
+	        		// PRG NOTE - We may want to add attaching the correct set of correspondences just to save computation resources
+	        		// If so, use the following line or code instead of the previous one - MAR 5 2015
+	        		// MappingType thisMapping = fac.addMapping(new ArrayList<CorrespondenceType> ());
+	        		fac.addForeachAtom(thisMapping, 0, sourceVars);
+	        		
+	        		// (1) Add top authority exists atom
+	        		fac.addEmptyExistsAtom(thisMapping, previousMarker);
+	        		// 0 in the next instruction means the first exists atom in the array
+	        		fac.addVarsToExistsAtom(thisMapping, 0, fac.getFreshVars(previousMarker, 1));
+	        		if (createSK) {
+	        			skId = fac.addSKToExistsAtom(thisMapping, 0, fac.getFreshVars(previousMarker, 1));
+	        			createSK = false;
+	        		}
+	        		else {
+	        			fac.addSKToExistsAtom(thisMapping, 0, fac.getFreshVars(previousMarker, 1), skId);
+	        		}
+	        		
+	        		// (2) Add slave exists atom	        		
+	        		fac.addEmptyExistsAtom(thisMapping, i);
+	        		String[] slaveExistVars = fac.getFreshVars(i, 1);
+	        		//System.out.println("Slave Exist vars are " + Arrays.toString(slaveExistVars));
+		        	fac.addVarsToExistsAtom(thisMapping, 1, fac.getFreshVars(i, 1));	        		
+	        		// Adding a previously generated Skolem function "skId" using SkolemKind.ALL
+	        		fac.addSKToExistsAtom(thisMapping, 1, fac.getFreshVars(previousMarker, 1), skId);
+	        	}	
+			}		
+			break;
+		
+		}
+		
+		/* 
+		 * NOTE PRG Mar 5 2015 
+		 * For reference purposes, below is the previous implementation of genMappings() which supported the generation 
+		 * of *one* single schema mapping per VP Authority Scenario. We replaced this code with a new implementation that
+		 * generates n^2 mappings to produce the same kind of mappings used in the MapMerge's paper.
+		 * 
+		 *
 		MappingType m1 = fac.addMapping(m.getCorrs());
 		String[] newExistVars = new String[1];
 		int previousMarker = 0;
 				
 		// source table gets fresh variables
 		String[] sourceVars = fac.getFreshVars(0, numOfSrcTblAttr);
-		//System.out.println("All vars are " + Arrays.toString(sourceVars));
 		fac.addForeachAtom(m1, 0, sourceVars);
 		
 		switch (mapLang) {
@@ -473,7 +575,6 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	        	if (i == 0 || i == (previousMarker + complexityScen + 1)) {
 	        		previousMarker = i;
 	        		newExistVars = fac.getFreshVars(numOfSrcTblAttr + hierarchyIndex++, 1);
-	        		//System.out.println("New Exist Vars are " + Arrays.toString(newExistVars));
 	        	}
 	        	fac.addVarsToExistsAtom(m1, i, newExistVars);	        	
 			}					
@@ -490,58 +591,23 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(i, 1));
 	        	if (i == 0 || i == (previousMarker + complexityScen + 1)) {
 	        		previousMarker = i;
-	        		// Generating one fresh Skolem function using SkolemKind.ALL
-	        		skId = fac.addSKToExistsAtom(m1, i, fac.getFreshVars(0, numOfSrcTblAttr));
+	        		// Generating one fresh Skolem function using SkolemKind.ALL using a single argument (the top authority main attribute)
+	        		//skId = fac.addSKToExistsAtom(m1, i, fac.getFreshVars(0, numOfSrcTblAttr));
+	        		// PRG FEB 25 2015 - See comment below
+	        		// Let's try to use a single argument per Skolem function to save some computation resources ;)
+	        		skId = fac.addSKToExistsAtom(m1, i, fac.getFreshVars(i, 1));
 	        		
 	        	}
 	        	else {
 	        		// Adding a previously generated Skolem function "skId" using SkolemKind.ALL
-	        		fac.addSKToExistsAtom(m1, i, fac.getFreshVars(0, numOfSrcTblAttr), skId);
+	        		//fac.addSKToExistsAtom(m1, i, fac.getFreshVars(0, numOfSrcTblAttr), skId);
+	        		// PRG FEB 25 2015 - See comment below
+	        		// Let's try to use a single argument per Skolem function to save some computation resources ;)
+	        		fac.addSKToExistsAtom(m1, i, fac.getFreshVars(previousMarker, 1), skId);
 	        	}	
 			}		
 			break;
 		
-		}
-			
-        /*
-		
-		// source table gets fresh variables
-		fac.addForeachAtom(m1, 0, fac.getFreshVars(0, numOfSrcTblAttr));
-		keyVars = fac.getFreshVars(numOfSrcTblAttr, 1);
-		
-		switch (mapLang) 
-		{
-			case FOtgds:
-				for(int i = 0; i < numOfTgtTables; i++) {
-					int offset = i * attsPerTargetRel;
-		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
-		    				attsPerTargetRel + attrRemainder;
-		        	
-		        	fac.addExistsAtom(m1, i, CollectionUtils.concat(fac.getFreshVars(offset, numAtts), keyVars));
-				}
-				break;
-				
-			case SOtgds:
-				
-				SkolemKind sk1 = sk;
-				if(sk == SkolemKind.VARIABLE)
-					sk1 = SkolemKind.values()[_generator.nextInt(4)];
-				
-				for(int i = 0; i < numOfTgtTables; i++) {
-					int offset = i * attsPerTargetRel;
-		        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
-		    				attsPerTargetRel + attrRemainder;
-		        	
-		        	//RelAtomType atom = fac.addEmptyExistsAtom(m1, 0);
-		        	fac.addEmptyExistsAtom(m1, i);
-		        	fac.addVarsToExistsAtom(m1, i, fac.getFreshVars(offset, numAtts));
-		        	// PRG FIX BUG - The selection can't be done here or else it affects record keeping (skId and skIdRandomArgs) - Sep 18, 2012
-		        	// SkolemKind sk1 = sk;
-					// if(sk == SkolemKind.VARIABLE)
-					//  	sk1 = SkolemKind.values()[_generator.nextInt(4)];
-		        	generateSKs(m1, i, offset, numAtts, sk1);
-				}
-				break;
 		}
 		*/
 			
