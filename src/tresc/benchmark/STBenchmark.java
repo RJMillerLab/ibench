@@ -253,7 +253,7 @@ public class STBenchmark {
 		// PRG - Replaced to avoid generating string if it is not going to be output - Oct 5, 2012
 		// scenario.prettyPrint(buf, 0);
 		// if (log.isDebugEnabled()) {log.debug(buf);};
-		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
+//		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
 
 		// print scenario on file
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {

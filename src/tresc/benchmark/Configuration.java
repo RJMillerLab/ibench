@@ -178,28 +178,18 @@ public class Configuration {
 		
 		// explgen options like percentage of errors to add
 		
-		
-	/*	System.out.println(prop.getProperty("LoadScenarios.0.File"));
-		prop.setPrefix("LoadScenarios");
-		System.out.println(prop.getProperty("0.File"));
-		System.exit(1);
-		*/
-		
 		// options for loading existing scenarios as new primitives
 		prop.setPrefix("LoadScenarios");
 		setNumLoadScenarios(prop.getInt("NumScenarios", 0));
 		numLoadScenarioInsts = new int[numLoadScenarios];
 		
-
-		
 		for (int i = 0; i < getNumLoadScenarios(); i++) {
-			String fileName = "exampleScenarios/simpleTest.xml"; //prop.getProperty(i + ".File", "");
-			String name = "simpleTest"; prop.getProperty(i + ".Name", "");
-			int numInst = 2; //prop.getInt(i + ".Inst", 0);
+			String fileName = prop.getProperty(i + ".File", "");
+			String name = prop.getProperty(i + ".Name", "");
+			int numInst = prop.getInt(i + ".Inst", 0);
 			File scenFile = new File(fileName);
 			if (!scenFile.exists())
-				throw new Exception("scenario file " + scenFile + " does not exist");
-			//	throw new Exception("scenario file <" + scenFile + "> from <" + fileName + "> does not exist");
+				throw new Exception("scenario file <" + scenFile + "> from <" + fileName + "> does not exist");
 			numLoadScenarioInsts[i] = numInst;
 			loadScenarios.add(scenFile);
 			loadScenarioNames.add(name);

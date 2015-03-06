@@ -1,11 +1,11 @@
 # Configuration File for STBenchmark
 
 # Output Path Prefixes
-SchemaPathPrefix=out0
-InstancePathPrefix=out0
+SchemaPathPrefix=test2
+InstancePathPrefix=test2
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
+Scenarios.COPY = 1
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
@@ -32,7 +32,7 @@ Scenarios.VALUEMANAGEMENT = 0
 # number of such scenarios to load
 LoadScenarios.NumScenarios = 1
 # these scenarios are numbered and for each we require the name, the XML file, and how many instances we should create
-LoadScenarios.0.File = exampleScenarios/simpleTest.xml
+LoadScenarios.0.File = /Users/lord_pretzel/Documents/Research/Projects/Vagabond/Experiments/Workloads/2015-02-RealDataSets/Amalgam/a1-to-a3.xml
 LoadScenarios.0.Name = simpleTest
 LoadScenarios.0.Inst = 2
 
@@ -97,8 +97,8 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = true
-OutputOption.XMLSchemas = true
+OutputOption.Data = false
+OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
@@ -108,4 +108,4 @@ TrampXMLOutput.Correspondences = true
 TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
-TrampXMLOutput.FDs = true
+TrampXMLOutput.FDs = false
