@@ -136,6 +136,8 @@ public class TrampModelFactory {
 				doc.getDocument().getMappingScenario().getCorrespondences()
 						.addNewCorrespondence();
 		c.setId(idGen.createId("Corr"));
+		doc.indexCorr(c);
+		
 		c.addNewFrom();
 		c.getFrom().setTableref(fromRel);
 		for (String a : fromAttrs)
@@ -201,6 +203,8 @@ public class TrampModelFactory {
 						.getScenario().getSchemas().getTargetSchema();
 		RelationType rel = schema.addNewRelation();
 		rel.setName(name);
+		doc.indexRel(rel, source);
+		
 		addToIndex(rel, source);
 		for (int i = 0; i < attrs.length; i++) {
 			AttrDefType a = rel.addNewAttr();
@@ -235,6 +239,8 @@ public class TrampModelFactory {
 		SchemaType s = doc.getSchema(source);
 		s.addNewRelation();
 		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
+		
+		doc.indexRel(s.getRelationArray()[s.sizeOfRelationArray() - 1], source);
 		addSTRelation(hook, r.getName(), attr, dTypes, source);
 		addToIndex(r, source);
 		
@@ -425,7 +431,7 @@ public class TrampModelFactory {
 		map = doc.getScenario().getMappings().addNewMapping();
 
 		map.setId(idGen.createId("Map"));
-		;
+		doc.indexMapping(map);
 		map.addNewExists();
 
 		if (cs != null && cs.length > 0) {
@@ -442,6 +448,7 @@ public class TrampModelFactory {
 	public MappingType addMapping (MappingType m) {
 		MappingType newM = doc.getScenario().getMappings().addNewMapping();
 		newM.set(m);
+		doc.indexMapping(newM);
 		p.addMapping(newM);
 		return newM;
 	}
