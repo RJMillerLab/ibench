@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- Biological Sample Database Schema Evolution for Gene Expression Analysis - SDB Version 2 to SDB Version 3 -->
+<!-- Mapping created by PRG according to material provided by Yuan An [ICDE 2008] and Thodoros Topaloglou [RE 2006] -->
+<Schemas>
+  <SourceSchema>
+
+    <Relation name="Biosample-NodeTable" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_category</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_source</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_gender</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Tissue-NodeTable" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_diagnosis</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_organ</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>tissue_grade</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>time_to_freezing</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Cell_Culture-NodeTable" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_strain</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>time_after_harvest</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>cell_number</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>culture_mode</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>plating_protocol</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+
+    <Relation name="Biosample-Donor-EdgeTable" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>date</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor-NodeTable" >
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_type</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>have_clinical</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_strain</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_autopsy</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_death_age</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_death_cause</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor_Human-NodeTable" >
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_human_height</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_human_weight</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>smoking_status</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor_Animal-NodeTable" >
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>euthanasia_method</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_animal_weight</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_animal_size</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Visit_Update-NodeTable" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>update_date</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>update_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+    
+    <Relation name="Medication-NodeTable" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>generic_name</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>trade_name</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>therapeutic</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>manufacturer</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>dose_indication</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>medication_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Diagnosis-NodeTable" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>description</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>diagnosis_type</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>diagnosis_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Family_History-NodeTable" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>relatives</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>life_style</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>family_history_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <ForeignKey>
+      <From tableref="Donor_Human-NodeTable">
+        <Attr>donor_ID</Attr>
+      </From>
+      <To tableref="Donor-NodeTable">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Donor_Animal-NodeTable">
+        <Attr>donor_ID</Attr>
+      </From>
+      <To tableref="Donor-NodeTable">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Tissue-NodeTable">
+        <Attr>biosample_ID</Attr>
+      </From>
+      <To tableref="Biosample-NodeTable">
+        <Attr>biosample_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Cell_Culture-NodeTable">
+        <Attr>biosample_ID</Attr>
+      </From>
+      <To tableref="Biosample-NodeTable">
+        <Attr>biosample_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Biosample-Donor-EdgeTable">
+        <Attr>biosample_ID</Attr>
+      </From>
+      <To tableref="Biosample-NodeTable">
+        <Attr>biosample_ID</Attr>
+      </To>
+    </ForeignKey>
+
+     <ForeignKey>
+      <From tableref="Biosample-Donor-EdgeTable">
+        <Attr>donor_ID</Attr>
+      </From>
+      <To tableref="Donor-NodeTable">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+
+     <ForeignKey>
+      <From tableref="Visit_Update-NodeTable">
+        <Attr>donor_ID</Attr>
+      </From>
+      <To tableref="Donor-NodeTable">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Medication-NodeTable">
+        <Attr>update_ID</Attr>
+      </From>
+      <To tableref="Visit_Update-NodeTable">
+        <Attr>update_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Diagnosis-NodeTable">
+        <Attr>update_ID</Attr>
+      </From>
+      <To tableref="Visit_Update-NodeTable">
+        <Attr>update_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Family_History-NodeTable">
+        <Attr>update_ID</Attr>
+      </From>
+      <To tableref="Visit_Update-NodeTable">
+        <Attr>update_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <FD id="FD0" tableref="Biosample-Donor-EdgeTable">
+        <From>
+          <Attr>donor_ID</Attr>
+          <Attr>date</Attr>
+        </From>
+        <To>
+          <Attr>biosample_ID</Attr>
+        </To>
+    </FD>
+
+
+
+  </SourceSchema>
+
+  <TargetSchema>
+
+    <Relation name="Biosample-NodeTable3" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_category</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_source</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_visit_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Tissue-NodeTable3" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_diagnosis</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_organ</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>tissue_grade</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>time_to_freezing</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Cell_Culture-NodeTable3" >
+      <Attr><Name>biosample_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>biosample_strain</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>time_after_harvest</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>cell_number</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>culture_mode</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>plating_protocol</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>biosample_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor_Visit-NodeTable3" >
+      <Attr><Name>donor_visit_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>visit_date</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_visit_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor-NodeTable3" >
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_type</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>have_clinical</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_strain</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_autopsy</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_death_age</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_death_case</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>gender</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor_Human-NodeTable3" >
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_human_height</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_human_weight</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>smoking_status</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Donor_Animal-NodeTable3" >
+      <Attr><Name>donor_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>euthanasia_method</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_animal_weight</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_animal_size</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>donor_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Visit_Update-NodeTable3" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>donor_visit_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>update_date</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>update_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Medication-NodeTable3" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>generic_name</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>trade_name</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>therapeutic</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>manufacturer</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>dose_indication</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>update_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Diagnosis-NodeTable3" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>description</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>diagnosis_type</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>update_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="Family_History-NodeTable3" >
+      <Attr><Name>update_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>relatives</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>life_style</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>update_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+ 
+    
+    <ForeignKey>
+      <From tableref="Biosample-NodeTable3">
+        <Attr>donor_visit_Id</Attr>
+      </From>
+      <To tableref="Donor_Visit-NodeTable3">
+        <Attr>donor_visit_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Donor_Visit-NodeTable3">
+        <Attr>donor_Id</Attr>
+      </From>
+      <To tableref="Donor-NodeTable3">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Tissue-NodeTable3">
+        <Attr>biosample_Id</Attr>
+      </From>
+      <To tableref="Biosample-NodeTable3">
+        <Attr>biosample_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Cell_Culture-NodeTable3">
+        <Attr>biosample_Id</Attr>
+      </From>
+      <To tableref="Biosample-NodeTable3">
+        <Attr>biosample_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Donor_Human-NodeTable3">
+        <Attr>donor_ID</Attr>
+      </From>
+      <To tableref="Donor-NodeTable3">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Donor_Animal-NodeTable3">
+        <Attr>donor_ID</Attr>
+      </From>
+      <To tableref="Donor-NodeTable3">
+        <Attr>donor_ID</Attr>
+      </To>
+    </ForeignKey>
+    
+    <ForeignKey>
+      <From tableref="Visit_Update-NodeTable3">
+        <Attr>donor_visit_ID</Attr>
+      </From>
+      <To tableref="Donor_Visit-NodeTable3">
+        <Attr>donor_visit_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Medication-NodeTable3">
+        <Attr>update_ID</Attr>
+      </From>
+      <To tableref="Visit_Update-NodeTable3">
+        <Attr>update_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Diagnosis-NodeTable3">
+        <Attr>update_ID</Attr>
+      </From>
+      <To tableref="Visit_Update-NodeTable3">
+        <Attr>update_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="Family_History-NodeTable3">
+        <Attr>update_ID</Attr>
+      </From>
+      <To tableref="Visit_Update-NodeTable3">
+        <Attr>update_ID</Attr>
+      </To>
+    </ForeignKey>
+
+
+  </TargetSchema>
+
+  </Schemas>  
+
+  <Mappings>
+
+<!-- TGD M11 captures the evolution of the (source) Biosample-Donor relationship and the introduction of the 
+     (target) relation Donor_Visit.
+     Note that these evolutions also include the creation of new attributes for Biosample, Donor and Donor_Visit.
+     Semantics: a donor may donate multiple samples, but only one in a given date. The following holds for relation
+     Biosample-Donor-EdgeTable: (a) biosample_ID -> donor_ID and (b) donor_ID, date -> biosample_ID
+-->
+ 
+    <Mapping id="M11">
+      <Foreach>
+        <Atom tableref="Biosample-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+        </Atom> 
+        <Atom tableref="Biosample-Donor-EdgeTable">
+          <Var>a</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom> 
+        <Atom tableref="Donor-NodeTable">
+          <Var>e</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="Biosample-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <!-- ** SK31 represents the Visit_ID which depends on donor_ID and date ** -->
+          <SKFunction skname="SK31">
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="Donor_Visit-NodeTable3">
+          <!-- ** SK31 represents the Visit_ID which depends on donor_ID and date ** -->
+          <SKFunction skname="SK31">
+            <Var>e</Var>
+            <Var>f</Var>
+          </SKFunction>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom>
+        <Atom tableref="Donor-NodeTable3">
+          <Var>e</Var>
+          <Var>g</Var>
+          <Var>h</Var>
+          <Var>i</Var>
+          <Var>j</Var>
+          <Var>k</Var>
+          <Var>l</Var>
+          <Var>d</Var>
+        </Atom>  
+      </Exists>
+   </Mapping>
+
+<!-- FULL TGDS M12 and M13 map subtypes Tissue and Cell_Culture to the target. -->
+
+   <Mapping id="M12">
+      <Foreach>
+        <Atom tableref="Tissue-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+         </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="Tissue-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+        </Atom> 
+      </Exists>
+   </Mapping>
+   <Mapping id="M13">
+      <Foreach>
+        <Atom tableref="Cell_Culture-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+         </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="Cell_Culture-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- FULL TGDS M14 and M15 map subtypes Donor_Animal and Donor_Human to the target. -->
+
+   <Mapping id="M14">
+      <Foreach>
+        <Atom tableref="Donor_Human-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+         </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="Donor_Human-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+        </Atom> 
+      </Exists>
+   </Mapping>
+   <Mapping id="M15">
+      <Foreach>
+        <Atom tableref="Donor_Animal-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+         </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="Donor_Animal-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- TGD M16 links relations Donor_Visit and Visit_Update in the target, under the assumption that 
+     all visit update events recorded on donation date ("c") for a given donor ("b") can be linked
+     to the donated sample ("d"). 
+-->
+
+   <Mapping id="M16">
+      <Foreach>
+        <Atom tableref="Visit_Update-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+        </Atom>
+        <Atom tableref="Biosample-Donor-EdgeTable">
+          <Var>d</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+         <Atom tableref="Visit_Update-NodeTable3">
+          <Var>a</Var>
+          <!-- ** SK32 represents the donor_visit_ID which depends on donor_ID and date. -->
+          <!--    This value is used to link the Visit_Update event to the corresponding Donor_Visit tuple  ** -->
+          <SKFunction skname="SK32">
+            <Var>b</Var>
+            <Var>c</Var>
+          </SKFunction>
+          <Var>c</Var>
+         </Atom> 
+         <Atom tableref="Donor_Visit-NodeTable3">
+          <!-- ** SK32 represents the donor_visit_ID which depends on donor_ID and date. -->
+          <SKFunction skname="SK32">
+            <Var>b</Var>
+            <Var>c</Var>
+          </SKFunction>
+          <Var>b</Var>
+          <Var>c</Var>
+         </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- FULL TGDS M17, M18 and M19 map Medication, Diagnosis and Family History. -->
+
+    <Mapping id="M17">
+      <Foreach>
+        <Atom tableref="Medication-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+         <Atom tableref="Medication-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+          <Var>d</Var>
+          <Var>e</Var>
+          <Var>f</Var>
+         </Atom> 
+      </Exists>
+   </Mapping>
+
+   <Mapping id="M18">
+      <Foreach>
+        <Atom tableref="Diagnosis-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+         <Atom tableref="Diagnosis-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+         </Atom> 
+      </Exists>
+   </Mapping>
+
+   <Mapping id="M19">
+      <Foreach>
+        <Atom tableref="Family_History-NodeTable">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+        </Atom>  
+      </Foreach>
+      <Exists>
+         <Atom tableref="Family_History-NodeTable3">
+          <Var>a</Var>
+          <Var>b</Var>
+          <Var>c</Var>
+         </Atom> 
+      </Exists>
+   </Mapping>
+
+  </Mappings>
+
+</this:MappingScenario>

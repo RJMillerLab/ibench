@@ -1,0 +1,136 @@
+################# NAME OF MAPPING ##########################
+Name: AMALGAM SCHEMA 1 to SCHEMA 3
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	InProceedings(inprocID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote);
+	Article(articleID, title, journal, year, month, pages, vol, num, loc, class, note, annote);
+	TechReport(techID, title, inst, year, month, pages, vol, num, loc, class, note, annote);
+	Book(bookID, title, publisher, year, month, pages, vol, num, loc, class, note, annote);
+	InCollection(collID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote);
+	Misc(miscID, title, howpub, confloc, year, month, pages, vol, num, loc, class, note, annote);
+	Manual(manID, title, org, year, month, pages, vol, num, loc, class, note, annote);
+	Author(AuthID, name);
+	InprocPublished(inprocID, AuthID);
+	ArticlePublished(articleID, AuthID);
+	TechPublished(techID, AuthID);
+	BookPublished(bookID, AuthID);
+	InCollPublished(collID, AuthID);
+	MiscPublished(miscID, AuthID);
+	ManualPublished(manID, AuthID);
+Target:
+	article(articleID, title, volume, number, pages, month, year, refkey, note, remarks, refs, xxxrefs, fullxxxrefs, oldkey, abstract, preliminary);
+	author(authorID, name);
+	unpublished(unpubID, title, refkey, note, preliminary, refs);
+	articleAuthor(articleID, authorID);
+	unpubAuthor(unpubID, authorID);
+
+############### MAPPINGS ################################
+
+# --------- Mapping M1 -------
+InProceedings(bookID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote) 
+& InprocPublished(inprocId, authId) 
+& Author(authId, authName) 
+-> 
+article(SK1(bookID), title, vol, num, pages, month, year, SK2(bookID), note, SK3(bookID), SK4(bookID), SK5(bookID), SK6(bookID), SK7(bookID), SK8(bookID), SK9(bookID)) 
+& articleAuthor(SK1(bookID), authId)
+& author(authId, authName) 
+# --------- Mapping M2 -------
+Article(bookID, title, journal, year, month, pages, vol, num, loc, class, note, annote) 
+& ArticlePublished(articleId, authId) 
+& Author(authId, authName) 
+-> 
+article(SK11(bookID), title, vol, num, pages, month, year, SK12(bookID), note, SK13(bookID), SK14(bookID), SK15(bookID), SK16(bookID), SK17(bookID), SK18(bookID), SK19(bookID)) 
+& articleAuthor(SK11(article_ID), authId)
+& author(authId, authName) 
+# --------- Mapping M3 -------
+TechReport(techID, title, inst, year, month, pages, vol, num, loc, class, note, annote) 
+& TechPublished(techId, authId) 
+& Author(authId, authName) 
+-> 
+article(SK21(techID), title, vol, num, pages, month, year, SK22(techID), note, SK23(techID), SK24(techID), SK25(techID), SK26(techID), SK27(techID), SK28(techID), SK29(techID)) 
+& articleAuthor(SK21(techID), authId)
+& author(authId, authName) 
+# --------- Mapping M4 -------
+Book(bookID, title, publisher, year, month, pages, vol, num, loc, class, note, annote) 
+& BookPublished(bookId, authId) 
+& Author(authId, authName) 
+-> 
+article(SK31(bookID), title, vol, num, pages, month, year, SK32(bookID), note, SK33(bookID), SK34(bookID), SK35(bookID), SK36(bookID), SK37(bookID), SK38(bookID), SK39(bookID)) 
+& articleAuthor(SK31(bookID), authId)
+& author(authId, authName) 
+# --------- Mapping M5 -------
+InCollection(colID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote) 
+& InCollPublished(IncollId, authId) 
+& Author(authId, authName) 
+-> 
+article(SK41(colID), title, vol, num, pages, month, year, SK42(colID), note, SK43(colID), SK44(colID), SK45(colID), SK46(colID), SK47(colID), SK48(colID), SK49(colID)) 
+& articleAuthor(SK41(colID)
+# --------- Mapping M6 -------
+Misc(miscID, title, howpub, confloc, year, month, pages, vol, num, loc, class, note, annote) 
+& MiscPublished(miscId, authId) 
+& Author(authId, authName) 
+-> 
+article(SK51(miscID), title, vol, num, pages, month, year, SK52(miscID), note, SK53(miscID), SK54(miscID), SK55(miscID), SK56(miscID), SK57(miscID), SK58(miscID), SK59(miscID)) 
+& articleAuthor(SK51(miscID), authId) 
+& author(authId, authName) 
+# --------- Mapping M7 -------
+Manual(manID, title, org, year, month, pages, vol, num, loc, class, note, annote) 
+& ManualPublished(manId, authId) 
+Author(authId, authName) 
+-> 
+article(SK61(manID), title, vol, num, pages, month, year, SK62(manID), note, SK63(manID), SK64(manID), SK65(manID), SK66(manID), SK67(manID), SK68(manID), SK69(manID)) 
+& articleAuthor(SK61(manID), authId) 
+& author(authId, authName) 
+# --------- Mapping M8 -------
+Author(authId, authName) -> author(authId, authName)
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# InProceedings(inprocID)
+# Article(articleID)
+# TechReport(techID)
+# Book(bookID)
+# InCollection(collID)
+# Misc(miscID)
+# Manual(manID)
+# Author(AuthID)
+# InprocPublished(inprocID, AuthID)
+# ArticlePublished(articleID, AuthID)
+# TechPublished(techID, AuthID)
+# BookPublished(bookID, AuthID)
+# InCollPublished(collID, AuthID)
+# MiscPublished(miscID, AuthID)
+# ManualPublished(manID, AuthID)
+
+## TARGET SCHEMA
+# article(articleID)
+# author(authorID)
+# unpublished(unpubID)
+# articleAuthor(authorID, articleID)
+# unpubAuthor(authorID, unpubID)
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# InprocPublished(inprocID) -> InProceedings(inprocID)
+# InprocPublished(AuthID) -> Author(AuthID)
+# ArticlePublished(articleID) -> Article(articleID)
+# ArticlePublished(AuthID) -> Author(AuthID)
+# TechPublished(techID) -> TechReport(techID)
+# TechPublished(AuthID) -> Author(AuthID)
+# BookPublished(bookID) -> Book(bookID)
+# BookPublished(AuthID) -> Author(AuthID)
+# InCollPublished(collID) -> InCollection(collID)
+# BookPublished(AuthID) -> Author(AuthID)
+# MiscPublished(miscID) -> Misc(miscID)
+# MiscPublished(AuthID) -> Author(AuthID)
+# ManualPublished(manID) -> Manual(manID)
+# ManualPublished(AuthID) -> Author(AuthID)
+
+## TARGET SCHEMA
+# articleAuthor(articleID) -> article(articleID)
+# articleAuthor(authorID) -> author(authorID)
+# unpubAuthor(unpubID) -> unpublished(unpubID)
+# unpubAuthor(authorID) -> author(authorID)
+

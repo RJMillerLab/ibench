@@ -1,0 +1,104 @@
+0    [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam2.xml'>
+892  [main] DEBUG org.vagabond.mapping.model.ModelLoader  - validate mapping scenario
+1095 [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam2.xml'>
+################# NAME OF MAPPING ##########################
+Name: 
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	allBibs(citKey);
+	citForm(citKey, form);
+	authors(citKey, authNm);
+	editors(citKey, edNm);
+	titles(citKey, title);
+	schools(citKey, schoolNm);
+	institutions(citKey, institNm);
+	addresses(citKey, address);
+	types(citKey, type);
+	ISBN(citKey, isbnNum);
+	notes(citKey, note);
+	volumes(citKey, volNum);
+	numbers(citKey, num);
+	months(citKey, mon);
+	years(citKey, yr);
+	pages(citKey, pgRange);
+	abstracts(citKey, txt);
+	publisher(pubNm, pubID);
+	citPublisher(citKey, pubID);
+	journal(jrnlNm, jrnlID);
+	citJournal(citKey, jrnlID);
+	series(seriesNm, seriesID);
+	citSeries(citKey, seriesID);
+	booktitle(bkTitleNm, bktitleID);
+	citBkTitle(citKey, bktitleID);
+	keyWord(word, keyWdID);
+	citKeyWord(citKey, keyWdID);
+Target:
+	Dummy(test);
+
+############### MAPPINGS ################################
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# allBibs(citKey)
+# citForm(citKey)
+# authors(citKey, authNm)
+# editors(citKey, edNm)
+# titles(citKey)
+# schools(citKey)
+# institutions(citKey)
+# addresses(citKey)
+# types(citKey)
+# ISBN(citKey)
+# notes(citKey, Note)
+# volumes(citKey)
+# numbers(citKey)
+# months(citKey)
+# years(citKey)
+# pages(citKey)
+# abstracts(citKey)
+# publisher(pubID)
+# citPublisher(citKey, pubID)
+# journal(jrnlID)
+# citJournal(citKey, jrnlID)
+# series(seriesID)
+# citSeries(citKey, seriesID)
+# booktitle(bktitleID)
+# citBkTitle(citKey, bktitleID)
+# keyWord(keyWdID)
+# citKeyWord(citKey, keyWdID)
+
+## TARGET SCHEMA
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# citForm(citKey) -> allBibs(citKey)
+# authors(citKey) -> allBibs(citKey)
+# editors(citKey) -> allBibs(citKey)
+# titles(citKey) -> allBibs(citKey)
+# schools(citKey) -> allBibs(citKey)
+# institutions(citKey) -> allBibs(citKey)
+# addresses(citKey) -> allBibs(citKey)
+# types(citKey) -> allBibs(citKey)
+# ISBN(citKey) -> allBibs(citKey)
+# notes(citKey) -> allBibs(citKey)
+# volumes(citKey) -> allBibs(citKey)
+# numbers(citKey) -> allBibs(citKey)
+# months(citKey) -> allBibs(citKey)
+# years(citKey) -> allBibs(citKey)
+# pages(citKey) -> allBibs(citKey)
+# abstracts(citKey) -> allBibs(citKey)
+# citPublisher(citKey) -> allBibs(citKey)
+# citPublisher(pubID) -> publisher(pubID)
+# citJournal(citKey) -> allBibs(citKey)
+# citJournal(jrnlID) -> journal(jrnlID)
+# citSeries(citKey) -> allBibs(citKey)
+# citSeries(seriesID) -> series(seriesID)
+# citBkTitle(citKey) -> allBibs(citKey)
+# citBkTitle(bktitleID) -> booktitle(bktitleID)
+# citKeyWord(citKey) -> allBibs(citKey)
+# citKeyWord(keyWdID) -> keyWord(keyWdID)
+
+## TARGET SCHEMA
+

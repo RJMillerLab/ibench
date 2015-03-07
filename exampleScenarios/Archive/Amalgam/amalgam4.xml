@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+<!--  ****************** Publication type tables ************************** -->	
+		<Relation name="author">
+			<Attr><Name>AID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>Name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Affiliations</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>AID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="descriptor">
+			<Attr><Name>DID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>Descriptor</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>DID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="location">
+			<Attr><Name>LID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>CountryPub</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>CountryOrigin</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>LID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="publication">
+			<Attr><Name>PID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>Title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>TitleExt</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Abstract</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AbstractInd</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Language</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Journal</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>JournalAnn</Name><DataType>TEXT</DataType></Attr>			
+			<Attr><Name>ConfInfo</Name><DataType>TEXT</DataType></Attr>			
+			<Attr><Name>Book</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Category</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>PID</Attr></PrimaryKey>
+		</Relation>		
+		
+		<Relation name="record">
+			<Attr><Name>RID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>Availability</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>UpdateCode</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>NumRef</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>ContractNum</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>ISSN</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>ISBN</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Nodes</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Subfile</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Source</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>Series</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AccessionNum</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>RID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="Described">
+			<Attr><Name>PID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>DID</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>PID</Attr><Attr>DID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="Located">
+			<Attr><Name>PID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>LID</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>PID</Attr><Attr>LID</Attr></PrimaryKey>
+		</Relation>		
+
+		<Relation name="Recorded">
+			<Attr><Name>PID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>RID</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>PID</Attr><Attr>RID</Attr></PrimaryKey>
+		</Relation>		
+
+		<Relation name="Written">
+			<Attr><Name>AID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>PID</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>AID</Attr><Attr>PID</Attr></PrimaryKey>
+		</Relation>		
+		
+<!--  ****************** Foreign Keys ************************** -->	
+		<ForeignKey id="DPtoPublication">
+			<From tableref="Described"><Attr>PID</Attr></From>
+			<To tableref="publication"><Attr>PID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="DPtoDescription">
+			<From tableref="Described"><Attr>DID</Attr></From>
+			<To tableref="descriptor"><Attr>DID</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="LPtoPublication">
+			<From tableref="Located"><Attr>PID</Attr></From>
+			<To tableref="publication"><Attr>PID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="DPtoLocation">
+			<From tableref="Located"><Attr>LID</Attr></From>
+			<To tableref="location"><Attr>LID</Attr></To>
+		</ForeignKey>
+		
+		<ForeignKey id="RPtoPublication">
+			<From tableref="Recorded"><Attr>PID</Attr></From>
+			<To tableref="publication"><Attr>PID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="RPtoRecord">
+			<From tableref="Recorded"><Attr>RID</Attr></From>
+			<To tableref="record"><Attr>RID</Attr></To>
+		</ForeignKey>
+		
+		<ForeignKey id="PAtoPublication">
+			<From tableref="Written"><Attr>PID</Attr></From>
+			<To tableref="publication"><Attr>PID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="PAtoAuthor">
+			<From tableref="Written"><Attr>AID</Attr></From>
+			<To tableref="author"><Attr>AID</Attr></To>
+		</ForeignKey>
+							
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="Dummy">
+			<Attr><Name>test</Name><DataType>TEXT</DataType></Attr>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Mappings>
+</Mappings>
+<ConnectionInfo>
+	<Host>localhost</Host>
+	<DB>amalgam</DB>
+	<User>lordpretzel</User>
+	<Password/>
+	<Port>5432</Port>
+</ConnectionInfo>
+</this:MappingScenario>

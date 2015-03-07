@@ -1,0 +1,91 @@
+################# NAME OF MAPPING ##########################
+Name: SDB1 to SDB3
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	Biosample-NodeTable(biosample_ID, biosample_diagnosis, biosample_strain, biosample_source, biosample_category, biosample_organ);
+	Biosample-Donor-EdgeTable(biosample_ID, donor_ID, date);
+	Donor-NodeTable(donor_ID, donor_type, have_clinical, donor_autopsy, euthanasia_method);
+	Medication-NodeTable(medication_ID, generic_name, trade_name, therapeutic, manufacturer, date, donor_ID);
+	Diagnosis-NodeTable(diagnosis_ID, description, date, donor_ID);
+	Family_History-NodeTable(family_history_ID, relatives, date, donor_ID);
+Target:
+	Biosample-NodeTable3(biosample_ID, biosample_category, biosample_source, donor_visit_ID);
+	Tissue-NodeTable3(biosample_ID, biosample_diagnosis, biosample_organ, tissue_grade, time_to_freezing);
+	Cell_Culture-NodeTable3(biosample_ID, biosample_strain, time_after_harvest, cell_number, culture_mode, plating_protocol);
+	Donor_Visit-NodeTable3(donor_visit_ID, donor_ID, visit_date);
+	Donor-NodeTable3(donor_ID, donor_type, have_clinical, donor_strain, donor_autopsy, donor_death_age, donor_death_case, gender);
+	Donor_Human-NodeTable3(donor_ID, donor_human_height, donor_human_weight, smoking_status);
+	Donor_Animal-NodeTable3(donor_ID, euthanasia_method, donor_animal_weight, donor_animal_size);
+	Visit_Update-NodeTable3(update_ID, donor_visit_ID, update_date);
+	Medication-NodeTable3(update_ID, generic_name, trade_name, therapeutic, manufacturer, dose_indication);
+	Diagnosis-NodeTable3(update_ID, description, diagnosis_type);
+	Family_History-NodeTable3(update_ID, relatives, life_style);
+
+############### MAPPINGS ################################
+# --------- Mapping M21 -------
+Biosample-NodeTable(a, b, c, d, e, f) & Biosample-Donor-EdgeTable(a, g, l) & Donor-NodeTable(g, h, i, j, k) -> Biosample-NodeTable3(a, e, SK1(a, e), SK31(g, l)) & Donor_Visit-NodeTable3(SK31(g, l), g, l) & Donor-NodeTable3(g, h, i, SK10(g), j, SK11(g), SK12(j), SK2(a, e))
+# --------- Mapping M22 -------
+Biosample-NodeTable(a, b, c, d, e, f) -> Tissue-NodeTable3(a, b, f, SK3(a, b, f), SK4(a, b, f))
+# --------- Mapping M23 -------
+Biosample-NodeTable(a, b, c, d, e, f) -> Cell_Culture-NodeTable3(a, c, SK5(a), SK6(a), SK7(a), SK8(a))
+# --------- Mapping M24 -------
+Donor-NodeTable(a, b, c, d, e) -> Donor_Human-NodeTable3(a, SK13(a), SK14(a), SK15(a))
+# --------- Mapping M25 -------
+Donor-NodeTable(a, b, c, d, e) -> Donor_Animal-NodeTable3(a, e, SK16(a), SK17(a))
+# --------- Mapping M26 -------
+Donor-NodeTable(a, b, c, d, e) & Medication-NodeTable(f, g, h, i, j, k, a) & Biosample-Donor-EdgeTable(s, a, k) -> Visit_Update-NodeTable3(SK18(f, k, a), SK32(a, k), k) & Donor_Visit-NodeTable3(SK32(a, k), a, k)
+# --------- Mapping M27 -------
+Donor-NodeTable(a, b, c, d, e) & Diagnosis-NodeTable(f, g, h, a) & Biosample-Donor-EdgeTable(s, a, h) -> Visit_Update-NodeTable3(SK19(f, h, a), SK32(a, h), h) & Donor_Visit-NodeTable3(SK32(a, h), a, h)
+# --------- Mapping M28 -------
+Donor-NodeTable(a, b, c, d, e) & Family_History-NodeTable(f, g, h, a) & Biosample-Donor-EdgeTable(s, a, h) -> Visit_Update-NodeTable3(SK20(f, h, a), SK32(a, h), h) & Donor_Visit-NodeTable3(SK32(a, h), a, h)
+# --------- Mapping M29 -------
+Donor-NodeTable(a, b, c, d, e) & Medication-NodeTable(f, g, h, i, j, k, a) & Biosample-Donor-EdgeTable(s, a, k) -> Medication-NodeTable3(SK18(f, k, a), g, h, i, j, SK21(f, g))
+# --------- Mapping M30 -------
+Donor-NodeTable(a, b, c, d, e) & Diagnosis-NodeTable(f, g, h, a) & Biosample-Donor-EdgeTable(s, a, h) -> Diagnosis-NodeTable3(SK19(f, h, a), g, SK22(f, g))
+# --------- Mapping M31 -------
+Donor-NodeTable(a, b, c, d, e) & Family_History-NodeTable(f, g, h, a) & Biosample-Donor-EdgeTable(s, a, h) -> Family_History-NodeTable3(SK20(f, h, a), g, SK23(f, g))
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# Biosample-NodeTable(biosample_ID)
+# Biosample-Donor-EdgeTable(biosample_ID)
+# Donor-NodeTable(donor_ID)
+# Medication-NodeTable(medication_ID)
+# Diagnosis-NodeTable(diagnosis_ID)
+# Family_History-NodeTable(family_history_ID)
+
+## TARGET SCHEMA
+# Biosample-NodeTable3(biosample_ID)
+# Tissue-NodeTable3(biosample_ID)
+# Cell_Culture-NodeTable3(biosample_ID)
+# Donor_Visit-NodeTable3(donor_visit_ID)
+# Donor-NodeTable3(donor_ID)
+# Donor_Human-NodeTable3(donor_ID)
+# Donor_Animal-NodeTable3(donor_ID)
+# Visit_Update-NodeTable3(update_ID)
+# Medication-NodeTable3(update_ID)
+# Diagnosis-NodeTable3(update_ID)
+# Family_History-NodeTable3(update_ID)
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# Biosample-Donor-EdgeTable(biosample_Id) -> Biosample-NodeTable(biosample_ID)
+# Biosample-Donor-EdgeTable(donor_ID) -> Donor-NodeTable(donor_ID)
+# Medication-NodeTable(donor_ID) -> Donor-NodeTable(donor_ID)
+# Diagnosis-NodeTable(donor_ID) -> Donor-NodeTable(donor_ID)
+# Family_History-NodeTable(donor_ID) -> Donor-NodeTable(donor_ID)
+
+## TARGET SCHEMA
+# Biosample-NodeTable3(donor_visit_Id) -> Donor_Visit-NodeTable3(donor_visit_ID)
+# Donor_Visit-NodeTable3(donor_Id) -> Donor-NodeTable3(donor_ID)
+# Tissue-NodeTable3(biosample_Id) -> Biosample-NodeTable3(biosample_ID)
+# Cell_Culture-NodeTable3(biosample_Id) -> Biosample-NodeTable3(biosample_ID)
+# Donor_Human-NodeTable3(donor_ID) -> Donor-NodeTable3(donor_ID)
+# Donor_Animal-NodeTable3(donor_ID) -> Donor-NodeTable3(donor_ID)
+# Visit_Update-NodeTable3(donor_visit_ID) -> Donor_Visit-NodeTable3(donor_visit_ID)
+# Medication-NodeTable3(update_ID) -> Visit_Update-NodeTable3(update_ID)
+# Diagnosis-NodeTable3(update_ID) -> Visit_Update-NodeTable3(update_ID)
+# Family_History-NodeTable3(update_ID) -> Visit_Update-NodeTable3(update_ID)
+

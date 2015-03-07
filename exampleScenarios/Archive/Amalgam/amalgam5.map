@@ -1,0 +1,44 @@
+0    [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam5.xml'>
+363  [main] DEBUG org.vagabond.mapping.model.ModelLoader  - validate mapping scenario
+552  [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam5.xml'>
+################# NAME OF MAPPING ##########################
+Name: 
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	author(author_id, first_name, last_name, affiliation);
+	dates(date_id, year, month);
+	classification(class_id, name);
+	journal(jname, publisher);
+	issue(issue_id, journal, vol, num);
+	publication(title, author_id, date_id, pages, class_id, issue_id);
+	notes(pub_title, pub_author, notetext);
+Target:
+	Dummy(test);
+
+############### MAPPINGS ################################
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# author(author_id)
+# dates(date_id)
+# classification(class_id)
+# journal(jname)
+# issue(issue_id)
+# publication(title, author_id)
+# notes(pub_title, pub_author, notetext)
+
+## TARGET SCHEMA
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# notes(pub_title, pub_author) -> publication(title, author_id)
+# issue(journal) -> journal(jname)
+# publication(author_id) -> author(author_id)
+# publication(date_id) -> dates(date_id)
+# publication(class_id) -> classification(class_id)
+# publication(issue_id) -> issue(issue_id)
+
+## TARGET SCHEMA
+

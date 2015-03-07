@@ -89,7 +89,7 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 144
-RepElementCount = 10
+RepElementCount = 1
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV

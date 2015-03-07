@@ -1,0 +1,75 @@
+################# NAME OF MAPPING ##########################
+Name: GUS to BIO 
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	GUS_Gene(GENE_ID, NAME, GENE_SYMBOL, GENE_CATEGORY_ID, REVIEW_STATUS_ID, DESCRIPTION, REVIEWER_SUMMARY, SEQUENCE_ONTOLOGY_ID);
+	GUS_GeneSynonym(GENE_SYNONYM_ID, GENE_ID, SYNONYM_NAME, REVIEW_STATUS_ID, IS_OBSOLETE);
+	GUS_GORelationship(GO_RELATIONSHIP_ID, PARENT_TERM_ID, CHILD_TERM_ID, GO_RELATIONSHIP_TYPE_ID);
+	GUS_GOSynonym(GO_SYNONYM_ID, EXTERNAL_DATABASE_RELEASE_ID, SOURCE_ID, GO_TERM_ID, TEXT);
+	GUS_GOTerm(GO_TERM_ID, GO_ID, EXTERNAL_DATABASE_RELEASE_ID, SOURCE_ID, NAME, DEFINITION, COMMENT_STRING, MINIMUM_LEVEL, MAXIMUM_LEVEL, NUMBER_OF_LEVELS, ANCESTOR_GO_TERM_ID, IS_OBSOLETE);
+	GUS_Taxon(TAXON_ID, NCBI_TAX_ID, PARENT_ID, RANK, GENETIC_CODE_ID, MITOCHONDRIAL_GENETIC_CODE_ID);
+	GUS_TaxonName(TAXON_NAME_ID, TAXON_ID, NAME, UNIQUE_NAME_VARIANT, NAME_CLASS);
+Target:
+	biosql_BIOENTRY(BIOENTRY_ID, BIODATABASE_ID, TAXON_ID, NAME, ACCESSION, IDENTIFIER, DIVISION, DESCRIPTION, VERSION);
+	biosql_TAXON(TAXON_ID, NCBI_TAXON_ID, PARENT_TAXON_ID, NODE_RANK, GENETIC_CODE, MITO_GENETIC_CODE, LEFT_VALUE, RIGHT_VALUE);
+	biosql_TaxonName(TAXON_ID, NAME, NAME_CLASS);
+	biosql_TERM(TERM_ID, NAME, DEFINITION, IDENTIFIER, IS_OBSOLETE, ONTOLOGY_ID);
+	biosql_TERM_SYNONYM(SYNONYM, TERM_ID);
+	biosql_TERM_RELATIONSHIP(TERM_RELATIONSHIP_ID, SUBJECT_TERM_ID, PREDICATE_TERM_ID, OBJECT_TERM_ID, ONTOLOGY_ID);
+
+############### MAPPINGS ################################
+# --------- Mapping M1 -------
+GUS_TaxonName(x0, x1, x2, x3, x4) & GUS_Taxon(x1, x6, x7, x8, x9, x10) -> biosql_TaxonName(x1, x2, x4) & biosql_TAXON(x1, x6, x7, x8, x9, x10, SK1(x1), SK2(x1))
+# --------- Mapping M2 -------
+GUS_Taxon(x0, x1, x2, x3, x4, x5) -> biosql_TAXON(x0, x1, x2, x3, x4, x5, SK1(x0), SK2(x0))
+# --------- Mapping M3 -------
+GUS_Gene(x0, x1, x2, x3, x4, x5, x6, x7) -> biosql_BIOENTRY(x0, SK3(x2), SK4(x0, x2, x3), x1, x2, x7, x3, x5, SK5(x0, x4)) & biosql_TAXON(SK4(x0, x2, x3), SK6(x0), SK7(x0), SK8(x0), SK9(x0), SK10(x0), SK11(x0), SK12(x0))
+# --------- Mapping M4 -------
+GUS_GeneSynonym(x0, x1, x2, x3, x4) & GUS_Gene(x1, x2, x7, x8, x9, x10, x11, x12) -> biosql_TERM_SYNONYM(x0, x1) & biosql_TERM(x1, x2, x10, SK13(x1), x4, SK14(x12))
+# --------- Mapping M8 -------
+GUS_Gene(x0, x1, x2, x3, x4, x5, x6, x7) -> biosql_TERM(x0, x1, x5, SK13(x0), SK18(x4), SK14(x7))
+# --------- Mapping M5 -------
+GUS_GOTerm(x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11) -> biosql_TERM(x0, x4, x5, x1, x11, SK15(x0))
+# --------- Mapping M6 -------
+GUS_GOSynonym(x0, x1, x2, x3, x4) & GUS_GOTerm(x3, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16) -> biosql_TERM_SYNONYM(x0, x3) & biosql_TERM(x3, x9, x10, x6, x16, SK15(x3))
+# --------- Mapping M7 -------
+GUS_GORelationship(x0, x4, x16, x3) & GUS_GOTerm(x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15) & GUS_GOTerm(x16, x17, x18, x19, x20, x21, x22, x23, x24, x25, x26, x27) -> biosql_TERM_RELATIONSHIP(x0, x4, x3, x4, SK20(x0)) & biosql_TERM(x4, x8, x9, x5, x15, SK21(x4)) & biosql_TERM(x16, x20, x21, x17, x27, SK22(x16))
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# GUS_Gene(GENE_ID)
+# GUS_GeneSynonym(GENE_SYNONYM_ID)
+# GUS_GORelationship(GO_RELATIONSHIP_ID)
+# GUS_GOSynonym(GO_SYNONYM_ID)
+# GUS_GOTerm(GO_TERM_ID)
+# GUS_Taxon(TAXON_ID)
+# GUS_TaxonName(TAXON_NAME_ID)
+
+## TARGET SCHEMA
+# biosql_BIOENTRY(BIOENTRY_ID)
+# biosql_TAXON(TAXON_ID)
+# biosql_TaxonName(TAXON_ID)
+# biosql_TERM(TERM_ID)
+# biosql_TERM_SYNONYM(SYNONYM, TERM_ID)
+# biosql_TERM_RELATIONSHIP(TERM_RELATIONSHIP_ID)
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# GUS_GeneSynonym(GENE_ID) -> GUS_Gene(GENE_ID)
+# GUS_GORelationship(PARENT_TERM_ID) -> GUS_GOTerm(GO_TERM_ID)
+# GUS_GORelationship(CHILD_TERM_ID) -> GUS_GOTerm(GO_TERM_ID)
+# GUS_GOSynonym(GO_TERM_ID) -> GUS_GOTerm(GO_TERM_ID)
+# GUS_GOTerm(ANCESTOR_GO_TERM_ID) -> GUS_GOTerm(GO_TERM_ID)
+# GUS_Taxon(PARENT_ID) -> GUS_Taxon(TAXON_ID)
+# GUS_TaxonName(TAXON_ID) -> GUS_Taxon(TAXON_ID)
+
+## TARGET SCHEMA
+# biosql_BIOENTRY(TAXON_ID) -> biosql_TAXON(TAXON_ID)
+# GUS_TaxonName(TAXON_ID) -> biosql_TAXON(TAXON_ID)
+# biosql_TERM_RELATIONSHIP(SUBJECT_TERM_ID) -> biosql_TERM(TERM_ID)
+# biosql_TERM_RELATIONSHIP(PREDICATE_TERM_ID) -> biosql_TERM(TERM_ID)
+# biosql_TERM_RELATIONSHIP(OBJECT_TERM_ID) -> biosql_TERM(TERM_ID)
+# biosql_TERM_SYNONYM(TERM_ID) -> biosql_TERM(TERM_ID)
+

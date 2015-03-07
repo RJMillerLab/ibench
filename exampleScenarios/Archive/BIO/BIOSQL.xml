@@ -1,0 +1,137 @@
+<!-- GUS-BIOSQL REAL DATASET SCENARIO: BIOSQL Database Schema              -->
+<!-- Schema provided by Bodgan Alexe [SIGMOD 2011] - http://www.biosql.org -->
+<xml:MappingScenario xmlns:xml="org/vagabond/xmlmodel">
+<Schemas>
+  <SourceSchema>
+
+		<Relation name="biosql_BIOENTRY" >
+      <Attr> <Name>BIOENTRY_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>BIODATABASE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>ACCESSION</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>IDENTIFIER</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>DIVISION</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>DESCRIPTION</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>VERSION</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>BIOENTRY_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="biosql_TAXON" >
+      <Attr> <Name>TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NCBI_TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>PARENT_TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NODE_RANK</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GENETIC_CODE</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>MITO_GENETIC_CODE</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>LEFT_VALUE</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>RIGHT_VALUE</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>TAXON_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="biosql_TaxonName" >
+      <Attr> <Name>TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME_CLASS</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>TAXON_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="biosql_TERM" >
+      <Attr> <Name>TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>DEFINITION</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>IDENTIFIER</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>IS_OBSOLETE</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>ONTOLOGY_ID</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>TERM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="biosql_TERM_SYNONYM" >
+      <Attr> <Name>SYNONYM</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>TERM_ID</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>SYNONYM</Attr>
+        <Attr>TERM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="biosql_TERM_RELATIONSHIP" >
+      <Attr> <Name>TERM_RELATIONSHIP_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>SUBJECT_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>PREDICATE_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>OBJECT_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>ONTOLOGY_ID</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>TERM_RELATIONSHIP_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <ForeignKey>
+      <From tableref="biosql_BIOENTRY">
+        <Attr>TAXON_ID</Attr>
+      </From>
+      <To tableref="biosql_TAXON">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_TaxonName">
+        <Attr>TAXON_ID</Attr>
+      </From>
+      <To tableref="biosql_TAXON">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_RELATIONSHIP">
+        <Attr>SUBJECT_TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_RELATIONSHIP">
+        <Attr>PREDICATE_TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_RELATIONSHIP">
+        <Attr>OBJECT_TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_SYNONYM">
+        <Attr>TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+
+
+  </SourceSchema>
+
+</Schemas>  
+
+</xml:MappingScenario>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+		<Relation name="article">
+			<Attr><Name>articleID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>volume</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>number</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>refkey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>remarks</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>refs</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>xxxrefs</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>fullxxxrefs</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>oldkey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>abstract</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>preliminary</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>articleID</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="author">
+			<Attr><Name>authorID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>authorID</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="unpublished">
+			<Attr><Name>unpubID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>refkey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>preliminary</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>refs</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>unpubID</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="articleAuthor">
+			<Attr><Name>articleID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authorID</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>authorID</Attr><Attr>articleID</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="unpubAuthor">
+			<Attr><Name>unpubID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>authorID</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>authorID</Attr><Attr>unpubID</Attr></PrimaryKey>
+		</Relation>
+
+		<ForeignKey id="AAtoArticle">
+			<From tableref="articleAuthor"><Attr>articleID</Attr></From>
+			<To tableref="article"><Attr>articleID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="AAtoAuthor">
+			<From tableref="articleAuthor"><Attr>authorID</Attr></From>
+			<To tableref="author"><Attr>authorID</Attr></To>
+		</ForeignKey>	
+
+		<ForeignKey id="UAtoUnpub">
+			<From tableref="unpubAuthor"><Attr>unpubID</Attr></From>
+			<To tableref="unpublished"><Attr>unpubID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="UAtoAuthor">
+			<From tableref="unpubAuthor"><Attr>authorID</Attr></From>
+			<To tableref="author"><Attr>authorID</Attr></To>
+		</ForeignKey>	
+							
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="Dummy">
+			<Attr><Name>test</Name><DataType>TEXT</DataType></Attr>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Mappings>
+</Mappings>
+<ConnectionInfo>
+	<Host>localhost</Host>
+	<DB>amalgam</DB>
+	<User>lordpretzel</User>
+	<Password/>
+	<Port>5432</Port>
+</ConnectionInfo>
+</this:MappingScenario>
