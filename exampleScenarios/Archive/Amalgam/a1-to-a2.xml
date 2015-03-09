@@ -524,6 +524,10 @@
 
 	</TargetSchema>
 </Schemas>
+
+
+<Correspondences/>
+
 <Mappings>
 <!-- 
 InProceedings(inprocID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote) & InprocPublished(inprocID, authId) & Author(authId, authName) 
@@ -532,6 +536,7 @@ authors(SK1(inprocID), authName) & allBibs(SK1(inprocID)) & addresses(SK1(inproc
 -->
 
 	<Mapping id="M1">
+<Uses/>
 		<Foreach>
 			<Atom tableref="InProceedings">
 			  <Var>inprocID</Var>
@@ -664,6 +669,7 @@ authors(SK3(articleID), authName) & allBibs(SK3(articleID)) & addresses(SK3(arti
 -->
 
 	<Mapping id="M2">
+<Uses/>
 		<Foreach>
 			<Atom tableref="Article">
 			  <Var>articleID</Var>
@@ -796,6 +802,7 @@ authors(SK5(techID), authName) & allBibs(SK5(techID)) & addresses(SK5(techID), l
 -->
 
 	<Mapping id="M3">
+<Uses/>
 		<Foreach>
 			<Atom tableref="TechReport">
 			  <Var>techID</Var>
@@ -918,6 +925,7 @@ authors(SK6(bookID), authName) & allBibs(SK6(bookID)) & addresses(SK6(bookID), l
 -->
 
 	<Mapping id="M4">
+<Uses/>
 		<Foreach>
 			<Atom tableref="Book">
 			<Var>bookID</Var>
@@ -1050,6 +1058,7 @@ authors(SK8(IncollID), authName) & allBibs(SK8(IncollID)) & addresses(SK8(Incoll
 -->
 
 	<Mapping id="M5">
+<Uses/>
 		<Foreach>
 			<Atom tableref="InCollection">
 			<Var>IncollID</Var>
@@ -1182,6 +1191,7 @@ Misc(miscID, title, howpub, confloc, year, month, pages, vol, num, loc, class, n
 authors(SK10(miscID), authName) & allBibs(SK10(miscID)) & titles(SK10(miscID), title) & addresses(SK10(miscID), confloc) & years(SK10(miscID), year) & months(SK10(miscID), month) & pages(SK10(miscID), pages) & volumes(SK10(miscID), vol) & numbers(SK10(miscID), num) & notes(SK10(miscID), note) & notes(SK10(miscID), annote)
 -->
 	<Mapping id="M6">
+<Uses/>
 		<Foreach>
 			<Atom tableref="Misc">
 			  <Var>miscID</Var>
@@ -1297,6 +1307,7 @@ Manual(manID, title, org, year, month, pages, vol, num, loc, class, note, annote
 authors(SK11(manID), authName) & allBibs(SK11(manID)) & titles(SK11(manID), title) & addresses(SK11(manID), loc) & years(SK11(manID), year) & months(SK11(manID), month) & pages(SK11(manID), pages) & volumes(SK11(manID), vol) & numbers(SK11(manID), num) & notes(SK11(manID), note) & notes(SK11(manID), annote)
 -->
 	<Mapping id="M7">
+<Uses/>
 		<Foreach>
 			<Atom tableref="Manual">
 			  <Var>manID</Var>
@@ -1413,6 +1424,7 @@ Author(authId, authName)
 authors(SK0(authId), authName)
 -->
     <Mapping id="M8" >
+<Uses/>
       <Foreach>
         <Atom tableref="Author">
 	  <Var>authId</Var>

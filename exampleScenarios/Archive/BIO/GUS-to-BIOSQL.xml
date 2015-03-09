@@ -288,6 +288,8 @@
   </TargetSchema>
   </Schemas>  
 
+<Correspondences/>
+
   <Mappings>
 
 <!-- GUS_TaxonName(x0,x1,x2,x2,x4) & GUS_Taxon(x1,x6,x7,x8,x9,x10) 
@@ -295,6 +297,7 @@
 -->
 
     <Mapping id="M1">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_TaxonName">
           <Var>x0</Var>
@@ -340,6 +343,7 @@
 <!-- GUS_Taxon(x0,x1,x2,x3,x4,x5) -> biosql_TAXON(x0,x1,x2,x3,x4,x5,x12,x13) -->
 
    <Mapping id="M2">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_Taxon">
           <Var>x0</Var>
@@ -375,6 +379,7 @@
 -->
 
    <Mapping id="M3">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_Gene">
           <Var>x0</Var>
@@ -449,6 +454,7 @@
 -->
 
    <Mapping id="M4">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_GeneSynonym">
           <Var>x0</Var>
@@ -493,6 +499,7 @@
 <!-- GUS_GOTerm(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11) -> biosql_TERM(x0,x4,x5,x1,x11,x17) -->
 
    <Mapping id="M5">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_GOTerm">
           <Var>x0</Var>
@@ -529,6 +536,7 @@
 -->
 
    <Mapping id="M6">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_GOSynonym">
           <Var>x0</Var>
@@ -578,6 +586,7 @@
      & biosql_TERM(x4,x8,x9,x5,x15,x38) & biosql_TERM(x16,x20,x21,x17,x27,x50) -->
 
    <Mapping id="M7">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_GORelationship">
           <Var>x0</Var>
@@ -650,6 +659,7 @@
 <!-- GUS_Gene(x0,x1,x2,x3,x4,x5,x6,x7) -> biosql_TERM(x0,x1,x5,x11,x12,x13) -->
 
    <Mapping id="M8">
+<Uses/>
       <Foreach>
         <Atom tableref="GUS_Gene">
           <Var>x0</Var>

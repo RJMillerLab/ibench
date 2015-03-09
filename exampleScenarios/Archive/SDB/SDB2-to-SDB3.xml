@@ -437,6 +437,8 @@
 
   </Schemas>  
 
+<Correspondences/>
+
   <Mappings>
 
 <!-- TGD M11 captures the evolution of the (source) Biosample-Donor relationship and the introduction of the 
@@ -447,6 +449,7 @@
 -->
  
     <Mapping id="M11">
+<Uses/>
       <Foreach>
         <Atom tableref="Biosample-NodeTable">
           <Var>a</Var>
@@ -505,6 +508,7 @@
 <!-- FULL TGDS M12 and M13 map subtypes Tissue and Cell_Culture to the target. -->
 
    <Mapping id="M12">
+<Uses/>
       <Foreach>
         <Atom tableref="Tissue-NodeTable">
           <Var>a</Var>
@@ -525,6 +529,7 @@
       </Exists>
    </Mapping>
    <Mapping id="M13">
+<Uses/>
       <Foreach>
         <Atom tableref="Cell_Culture-NodeTable">
           <Var>a</Var>
@@ -550,6 +555,7 @@
 <!-- FULL TGDS M14 and M15 map subtypes Donor_Animal and Donor_Human to the target. -->
 
    <Mapping id="M14">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor_Human-NodeTable">
           <Var>a</Var>
@@ -568,6 +574,7 @@
       </Exists>
    </Mapping>
    <Mapping id="M15">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor_Animal-NodeTable">
           <Var>a</Var>
@@ -592,6 +599,7 @@
 -->
 
    <Mapping id="M16">
+<Uses/>
       <Foreach>
         <Atom tableref="Visit_Update-NodeTable">
           <Var>a</Var>
@@ -630,6 +638,7 @@
 <!-- FULL TGDS M17, M18 and M19 map Medication, Diagnosis and Family History. -->
 
     <Mapping id="M17">
+<Uses/>
       <Foreach>
         <Atom tableref="Medication-NodeTable">
           <Var>a</Var>
@@ -653,6 +662,7 @@
    </Mapping>
 
    <Mapping id="M18">
+<Uses/>
       <Foreach>
         <Atom tableref="Diagnosis-NodeTable">
           <Var>a</Var>
@@ -670,6 +680,7 @@
    </Mapping>
 
    <Mapping id="M19">
+<Uses/>
       <Foreach>
         <Atom tableref="Family_History-NodeTable">
           <Var>a</Var>

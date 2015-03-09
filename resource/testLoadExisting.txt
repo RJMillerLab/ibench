@@ -5,21 +5,21 @@ SchemaPathPrefix=test2
 InstancePathPrefix=test2
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 1
-Scenarios.HORIZPARTITION = 0
-Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
-Scenarios.FUSION = 0
-Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 0
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 0
-Scenarios.VERTPARTITIONISAAUTHORITY = 0
+Scenarios.COPY = 15
+Scenarios.HORIZPARTITION = 15
+Scenarios.SURROGATEKEY = 15
+Scenarios.MERGING = 15
+Scenarios.FUSION = 15
+Scenarios.SELFJOINS = 15
+Scenarios.VERTPARTITION = 15
+Scenarios.ADDATTRIBUTE = 15
+Scenarios.DELATTRIBUTE = 15
+Scenarios.ADDDELATTRIBUTE = 15
+Scenarios.VERTPARTITIONISA = 15
+Scenarios.VERTPARTITIONHASA = 15
+Scenarios.VERTPARTITIONNTOM = 15
+Scenarios.MERGEADD = 15
+Scenarios.VERTPARTITIONISAAUTHORITY = 15
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -32,12 +32,12 @@ Scenarios.VALUEMANAGEMENT = 0
 # number of such scenarios to load
 LoadScenarios.NumScenarios = 1
 # these scenarios are numbered and for each we require the name, the XML file, and how many instances we should create
-LoadScenarios.0.File = /Users/lord_pretzel/Documents/Research/Projects/Vagabond/Experiments/Workloads/2015-02-RealDataSets/Amalgam/a1-to-a3.xml
+LoadScenarios.0.File = /home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/a1-to-a3.xml
 LoadScenarios.0.Name = simpleTest
-LoadScenarios.0.Inst = 2
+LoadScenarios.0.Inst = 1
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 5
+ConfigOptions.NumOfSubElements = 3
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 1
 ConfigOptions.JoinSize = 1
@@ -54,13 +54,13 @@ ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 100
 ConfigOptions.SourceInclusionDependencyPerc = 0
-ConfigOptions.SourceInclusionDependencyFKPerc = 0
+ConfigOptions.SourceInclusionDependencyFKPerc = 20
 ConfigOptions.TargetInclusionDependencyPerc = 0
-ConfigOptions.TargetInclusionDependencyFKPerc = 0
+ConfigOptions.TargetInclusionDependencyFKPerc = 20
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 0
+ConfigOptions.SourceCircularInclusionDependency = 1
 ConfigOptions.SourceCircularFK = 0
-ConfigOptions.TargetCircularInclusionDependency = 0
+ConfigOptions.TargetCircularInclusionDependency = 1
 ConfigOptions.TargetCircularFK = 0
 
 # Deviations for each of the parameters
@@ -88,7 +88,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 144
+RandomSeed = 14491
 RepElementCount = 1
 MaxStringLength = 100
 MaxNumValue = 1000
@@ -106,6 +106,6 @@ OutputOption.ErrorsAndExplanations = false
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true
 TrampXMLOutput.Transformations = false
-TrampXMLOutput.Data = true
+TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = false

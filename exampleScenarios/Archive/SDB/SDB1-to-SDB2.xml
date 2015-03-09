@@ -349,6 +349,8 @@
 
   </Schemas>  
 
+<Correspondences/>
+
   <Mappings>
 
 <!-- TGDS M1, M2 and M3 map Biosample to the supertype Biosample and its subtypes, Tissue and Cell_Culture.
@@ -356,6 +358,7 @@
 -->
 
     <Mapping id="M1">
+<Uses/>
       <Foreach>
         <Atom tableref="Biosample-NodeTable">
           <Var>a</Var>
@@ -382,6 +385,7 @@
       </Exists>
    </Mapping>
    <Mapping id="M2">
+<Uses/>
       <Foreach>
         <Atom tableref="Biosample-NodeTable">
           <Var>a</Var>
@@ -411,6 +415,7 @@
       </Exists>
    </Mapping>
    <Mapping id="M3">
+<Uses/>
       <Foreach>
         <Atom tableref="Biosample-NodeTable">
           <Var>a</Var>
@@ -444,6 +449,7 @@
 <!-- FULL TGD M4 maps relation Biosample-Donor to the target -->
    
    <Mapping id="M4">
+<Uses/>
       <Foreach>
         <Atom tableref="Biosample-Donor-EdgeTable">
           <Var>a</Var>
@@ -465,6 +471,7 @@
 -->
 
    <Mapping id="M5">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor-NodeTable">
           <Var>a</Var>
@@ -493,6 +500,7 @@
       </Exists>
    </Mapping>
    <Mapping id="M6">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor-NodeTable">
           <Var>a</Var>
@@ -518,6 +526,7 @@
       </Exists>
    </Mapping>
    <Mapping id="M7">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor-NodeTable">
           <Var>a</Var>
@@ -547,6 +556,7 @@
 -->
 
    <Mapping id="M8">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor-NodeTable">
           <Var>a</Var>
@@ -599,6 +609,7 @@
    </Mapping>
 
    <Mapping id="M9">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor-NodeTable">
           <Var>a</Var>
@@ -645,6 +656,7 @@
    </Mapping>
 
    <Mapping id="M10">
+<Uses/>
       <Foreach>
         <Atom tableref="Donor-NodeTable">
           <Var>a</Var>

@@ -522,11 +522,15 @@
 
 	</TargetSchema>
 </Schemas>
+
+<Correspondences/>
+
 <Mappings>
 <!-- DInProceedings(pid, title, pages, booktitle, url, cdrom, month, year) -> 
 	 InProceedings(inprocid, title, booktitle, year, month, pages, vol, num, loc, class, note, annote); -->
 
 	<Mapping id="M1">
+<Uses/>
 		<Foreach>
 			<Atom tableref="InProceedings">
 			  <Var>inprocID</Var>
