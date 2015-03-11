@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+		<Relation name="flight">
+			<Attr><Name>fid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>src</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>dest</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>fid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="hotel">
+			<Attr><Name>fid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>hid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>hid</Attr></PrimaryKey>
+		</Relation>
+		<ForeignKey id="fid_fk">
+			<From tableref="hotel"><Attr>fid</Attr></From>
+			<To tableref="flight"><Attr>fid</Attr></To>
+		</ForeignKey>
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="flightsTo">
+			<Attr><Name>subject</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>object</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>subject</Attr><Attr>object</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="hasHotel">
+			<Attr><Name>subject</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>object</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>subject</Attr><Attr>object</Attr></PrimaryKey>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Correspondences>
+	<Correspondence id="c1">
+		<From tableref="flight"><Attr>src</Attr></From>
+		<To tableref="flightsTo"><Attr>subject</Attr></To>
+	</Correspondence>
+	 <Correspondence id="c2">
+		<From tableref="flight"><Attr>dest</Attr></From>
+		<To tableref="flightsTo"><Attr>object</Attr></To>
+	</Correspondence> 
+	<Correspondence id="c3">
+		<From tableref="hotel"><Attr>hid</Attr></From>
+		<To tableref="hasHotel"><Attr>object</Attr></To>
+	</Correspondence>
+</Correspondences>
+<Mappings>
+	<Mapping id="M1">
+		<Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c3" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="flight"><Var>a</Var><Var>b</Var><Var>c</Var></Atom>
+			<Atom tableref="hotel"><Var>a</Var><Var>d</Var></Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="flightsTo">
+				<Var>b</Var>
+				<SKFunction skname="SK1"><Var>b</Var><Var>c</Var></SKFunction>
+			</Atom>
+		 	<Atom tableref="flightsTo">
+				<SKFunction skname="SK1"><Var>b</Var><Var>c</Var></SKFunction>
+				<Var>c</Var>
+			</Atom>
+			<Atom tableref="hasHotel">
+				<SKFunction skname="SK1"><Var>b</Var><Var>c</Var></SKFunction>
+				<Var>d</Var>
+			</Atom>
+		</Exists>
+	</Mapping>
+</Mappings>
+</this:MappingScenario>

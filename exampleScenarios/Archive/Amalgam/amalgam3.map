@@ -1,0 +1,38 @@
+0    [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam3.xml'>
+315  [main] DEBUG org.vagabond.mapping.model.ModelLoader  - validate mapping scenario
+469  [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam3.xml'>
+################# NAME OF MAPPING ##########################
+Name: 
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	article(articleID, title, volume, number, pages, month, year, refkey, note, remarks, refs, xxxrefs, fullxxxrefs, oldkey, abstract, preliminary);
+	author(authorID, name);
+	unpublished(unpubID, title, refkey, note, preliminary, refs);
+	articleAuthor(articleID, authorID);
+	unpubAuthor(unpubID, authorID);
+Target:
+	Dummy(test);
+
+############### MAPPINGS ################################
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# article(articleID)
+# author(authorID)
+# unpublished(unpubID)
+# articleAuthor(authorID, articleID)
+# unpubAuthor(authorID, unpubID)
+
+## TARGET SCHEMA
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# articleAuthor(articleID) -> article(articleID)
+# articleAuthor(authorID) -> author(authorID)
+# unpubAuthor(unpubID) -> unpublished(unpubID)
+# unpubAuthor(authorID) -> author(authorID)
+
+## TARGET SCHEMA
+

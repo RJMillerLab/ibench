@@ -1,0 +1,1924 @@
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>]
+445  [main] DEBUG tresc.benchmark.schemaGen.AbstractScenarioGenerator  - Repetition <1>
+464  [main] DEBUG tresc.benchmark.schemaGen.AbstractScenarioGenerator  - 
+
+GENERATED SCHEMAS: 
+SOURCE:
+[<xml-fragment name="nut_le_1_nl0_ce0_inproceedings" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_inprocid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_bktitle</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_inprocid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_article" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_articleid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_journal</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_techreport" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_techid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_inst</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_techid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_book" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_bookid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_publisher</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_bookid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_incollection" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_colid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_bktitle</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_colid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_misc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_miscid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_howpub</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_confloc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_miscid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_manual" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_manid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_org</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_vol</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_num</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_loc</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_class</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_annote</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_manid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_author" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_name</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_inprocpublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_inprocid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_inprocid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_articlepublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_articleid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_techpublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_techid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_techid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_bookpublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_bookid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_bookid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_incollpublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_colid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_colid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_miscpublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_miscid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_miscid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_manualpublished" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_manid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_manid</Attr>
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </PrimaryKey>
+</xml-fragment>]
+
+TARGET:
+[<xml-fragment name="nut_le_1_nl0_ce0_tarticle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_articleid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_title</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_volume</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_number</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_pages</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_month</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_year</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_refkey</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_note</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_remarks</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_refs</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_xxxrefs</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_fullxxxrefs</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_oldkey</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_abstract</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_preliminary</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_auth" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authorid</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_name</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </PrimaryKey>
+</xml-fragment>, <xml-fragment name="nut_le_1_nl0_ce0_articleauthor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_articleid</Name>
+    <DataType>TEXT</DataType>
+  </Attr>
+  <Attr>
+    <Name>nut_le_1_nl0_ce0_authorid</Name>
+    <DataType>INT</DataType>
+  </Attr>
+  <PrimaryKey>
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </PrimaryKey>
+</xml-fragment>]
+491  [main] DEBUG tresc.benchmark.schemaGen.AbstractScenarioGenerator  - 
+
+GENERATED CORRS: 
+[<xml-fragment id="nut_le_1_nl0_ce0_c1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_author">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_auth">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_author">
+    <Attr>nut_le_1_nl0_ce0_name</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_auth">
+    <Attr>nut_le_1_nl0_ce0_name</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c11" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_inproceedings">
+    <Attr>nut_le_1_nl0_ce0_inprocid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_inproceedings">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c13" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_inproceedings">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c14" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_inproceedings">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_inproceedings">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c16" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_inprocpublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c21" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_article">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c22" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_article">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c23" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_article">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c24" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_article">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c25" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_article">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c26" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_articlepublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c31" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_techreport">
+    <Attr>nut_le_1_nl0_ce0_techid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c32" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_techreport">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c33" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_techreport">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c34" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_techreport">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c35" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_techreport">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c36" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_techpublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c41" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_book">
+    <Attr>nut_le_1_nl0_ce0_bookid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c42" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_book">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c43" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_book">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c44" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_book">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c45" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_book">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c46" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_bookpublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c51" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_incollection">
+    <Attr>nut_le_1_nl0_ce0_colid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c52" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_incollection">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c53" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_incollection">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c54" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_incollection">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c55" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_incollection">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c56" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_incollpublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c61" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_misc">
+    <Attr>nut_le_1_nl0_ce0_miscid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c62" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_misc">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c63" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_misc">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_misc">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c65" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_misc">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c66" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_miscpublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c71" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_manual">
+    <Attr>nut_le_1_nl0_ce0_manid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_articleid</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c72" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_manual">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_title</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c73" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_manual">
+    <Attr>nut_le_1_nl0_ce0_vol</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_volume</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c74" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_manual">
+    <Attr>nut_le_1_nl0_ce0_num</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_number</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c75" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_manual">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_tarticle">
+    <Attr>nut_le_1_nl0_ce0_note</Attr>
+  </To>
+  <To/>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_c76" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <From tableref="nut_le_1_nl0_ce0_manualpublished">
+    <Attr>nut_le_1_nl0_ce0_authid</Attr>
+  </From>
+  <To tableref="nut_le_1_nl0_ce0_articleauthor">
+    <Attr>nut_le_1_nl0_ce0_authorid</Attr>
+  </To>
+  <To/>
+</xml-fragment>]
+512  [main] DEBUG tresc.benchmark.schemaGen.AbstractScenarioGenerator  - 
+
+GENERATED MAPS: 
+[<xml-fragment id="nut_le_1_nl0_ce0_M1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c11"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c12"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c13"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c14"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c15"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c16"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_inproceedings">
+      <Var>inprocid</Var>
+      <Var>title</Var>
+      <Var>bktitle</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_inprocpublished">
+      <Var>inprocId</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <!--SK1 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK1">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK2 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK2">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK3 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK3">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <!--SK4 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK4">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <!--SK5 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK5">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <!--SK6 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK6">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <!--SK7 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK7">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <!--SK8 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK8">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <!--SK9 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK9">
+        <Var>inprocid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK1 represents inprocid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK1">
+        <Var>inprocid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c21"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c22"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c23"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c24"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c25"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c26"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_article">
+      <Var>bookid</Var>
+      <Var>title</Var>
+      <Var>journal</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articlepublished">
+      <Var>bookId</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <!--SK11 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK11">
+        <Var>bookid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK12 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK12">
+        <Var>bookid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK13 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK13">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK14 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK14">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK15 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK15">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK16 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK16">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK17 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK17">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK18 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK18">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK19 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK19">
+        <Var>bookid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK11 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK11">
+        <Var>bookid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c31"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c32"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c33"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c34"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c35"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c36"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_techreport">
+      <Var>techid</Var>
+      <Var>title</Var>
+      <Var>inst</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_techpublished">
+      <Var>techId</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <!--SK21 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK21">
+        <Var>techid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK22 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK22">
+        <Var>techid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK23 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK23">
+        <Var>techid</Var>
+      </SKFunction>
+      <!--SK24 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK24">
+        <Var>techid</Var>
+      </SKFunction>
+      <!--SK25 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK25">
+        <Var>techid</Var>
+      </SKFunction>
+      <!--SK26 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK26">
+        <Var>techid</Var>
+      </SKFunction>
+      <!--SK27 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK27">
+        <Var>techid</Var>
+      </SKFunction>
+      <!--SK28 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK28">
+        <Var>techid</Var>
+      </SKFunction>
+      <!--SK29 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK29">
+        <Var>techid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK21 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK21">
+        <Var>techid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c41"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c42"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c43"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c44"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c45"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c46"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_book">
+      <Var>bookid</Var>
+      <Var>title</Var>
+      <Var>publisher</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_bookpublished">
+      <Var>bookId</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <!--SK31 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK31">
+        <Var>bookid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK32 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK32">
+        <Var>bookid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK33 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK33">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK34 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK34">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK35 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK35">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK36 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK36">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK37 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK37">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK38 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK38">
+        <Var>bookid</Var>
+      </SKFunction>
+      <!--SK39 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK39">
+        <Var>bookid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK31 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK31">
+        <Var>bookid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c51"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c52"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c53"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c54"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c55"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c56"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_incollection">
+      <Var>colid</Var>
+      <Var>title</Var>
+      <Var>bktitle</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_incollpublished">
+      <Var>colid</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <!--SK41 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK41">
+        <Var>colid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK42 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK42">
+        <Var>colid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK43 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK43">
+        <Var>colid</Var>
+      </SKFunction>
+      <!--SK44 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK44">
+        <Var>colid</Var>
+      </SKFunction>
+      <!--SK45 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK45">
+        <Var>colid</Var>
+      </SKFunction>
+      <!--SK46 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK46">
+        <Var>colid</Var>
+      </SKFunction>
+      <!--SK47 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK47">
+        <Var>colid</Var>
+      </SKFunction>
+      <!--SK48 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK48">
+        <Var>colid</Var>
+      </SKFunction>
+      <!--SK49 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK49">
+        <Var>colid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK41 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK41">
+        <Var>colid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c61"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c62"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c63"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c64"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c65"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c66"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_misc">
+      <Var>miscid</Var>
+      <Var>title</Var>
+      <Var>howpub</Var>
+      <Var>confloc</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_miscpublished">
+      <Var>miscId</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <!--SK51 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK51">
+        <Var>miscid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK52 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK52">
+        <Var>miscid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK53 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK53">
+        <Var>miscid</Var>
+      </SKFunction>
+      <!--SK54 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK54">
+        <Var>miscid</Var>
+      </SKFunction>
+      <!--SK55 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK55">
+        <Var>miscid</Var>
+      </SKFunction>
+      <!--SK56 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK56">
+        <Var>miscid</Var>
+      </SKFunction>
+      <!--SK57 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK57">
+        <Var>miscid</Var>
+      </SKFunction>
+      <!--SK58 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK58">
+        <Var>miscid</Var>
+      </SKFunction>
+      <!--SK59 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK59">
+        <Var>miscid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK51 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK51">
+        <Var>miscid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c71"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c72"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c73"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c74"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c75"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c76"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_manual">
+      <Var>manid</Var>
+      <Var>title</Var>
+      <Var>org</Var>
+      <Var>year</Var>
+      <Var>month</Var>
+      <Var>pages</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>loc</Var>
+      <Var>class</Var>
+      <Var>note</Var>
+      <Var>annote</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_manualpublished">
+      <Var>manid</Var>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <!--SK61 represents bookid-->
+    <Atom tableref="nut_le_1_nl0_ce0_tarticle">
+      <SKFunction skname="nut_le_1_nl0_ce0_SK61">
+        <Var>manid</Var>
+      </SKFunction>
+      <Var>title</Var>
+      <Var>vol</Var>
+      <Var>num</Var>
+      <Var>pages</Var>
+      <Var>month</Var>
+      <Var>year</Var>
+      <!--SK62 represents refkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK62">
+        <Var>manid</Var>
+      </SKFunction>
+      <Var>note</Var>
+      <!--SK63 represents remarks-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK63">
+        <Var>manid</Var>
+      </SKFunction>
+      <!--SK64 represents refs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK64">
+        <Var>manid</Var>
+      </SKFunction>
+      <!--SK65 represents xxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK65">
+        <Var>manid</Var>
+      </SKFunction>
+      <!--SK66 represents fullxxxrefs-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK66">
+        <Var>manid</Var>
+      </SKFunction>
+      <!--SK67 represents oldkey-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK67">
+        <Var>manid</Var>
+      </SKFunction>
+      <!--SK68 represents abstract-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK68">
+        <Var>manid</Var>
+      </SKFunction>
+      <!--SK69 represents preliminary-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK69">
+        <Var>manid</Var>
+      </SKFunction>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_articleauthor">
+      <!--SK61 represents bookid-->
+      <SKFunction skname="nut_le_1_nl0_ce0_SK61">
+        <Var>manid</Var>
+      </SKFunction>
+      <Var>authId</Var>
+    </Atom>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>, <xml-fragment id="nut_le_1_nl0_ce0_M8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="org/vagabond/xmlmodel">
+  <Uses>
+    <Correspondence ref="nut_le_1_nl0_ce0_c1"/>
+    <Correspondence ref="nut_le_1_nl0_ce0_c2"/>
+  </Uses>
+  <Foreach>
+    <Atom tableref="nut_le_1_nl0_ce0_author">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Foreach>
+  <Exists>
+    <Atom tableref="nut_le_1_nl0_ce0_auth">
+      <Var>authId</Var>
+      <Var>authName</Var>
+    </Atom>
+  </Exists>
+</xml-fragment>]
+515  [main] DEBUG tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator  - Attempting to Generate Random Source Inclusion Dependencies
+516  [main] DEBUG tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator  - Attempting to Generate Random Target Inclusion Dependencies
+517  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - Attempting to Generate Source FDs
+517  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - Generating PK FDs for those Relations with PKs
+520  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+520  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_inproceedings
+520  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_inprocid]
+520  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_bktitle, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_article
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_articleid]
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_journal, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_techreport
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_techid]
+521  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_inst, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+522  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+522  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_book
+522  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_bookid]
+522  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_publisher, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+522  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+523  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_incollection
+523  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_colid]
+523  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_bktitle, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_misc
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_miscid]
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_howpub, test_le_0_nl0_ce0_confloc, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_manual
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_manid]
+524  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_title, test_le_0_nl0_ce0_org, test_le_0_nl0_ce0_year, test_le_0_nl0_ce0_month, test_le_0_nl0_ce0_pages, test_le_0_nl0_ce0_vol, test_le_0_nl0_ce0_num, test_le_0_nl0_ce0_loc, test_le_0_nl0_ce0_class, test_le_0_nl0_ce0_note, test_le_0_nl0_ce0_annote]
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_author
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_authid]
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [test_le_0_nl0_ce0_name]
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_inprocpublished
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_inprocid, test_le_0_nl0_ce0_authid]
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_articlepublished
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_articleid, test_le_0_nl0_ce0_authid]
+525  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_techpublished
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_techid, test_le_0_nl0_ce0_authid]
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_bookpublished
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_bookid, test_le_0_nl0_ce0_authid]
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_incollpublished
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_colid, test_le_0_nl0_ce0_authid]
+526  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_miscpublished
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_miscid, test_le_0_nl0_ce0_authid]
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: test_le_0_nl0_ce0_manualpublished
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [test_le_0_nl0_ce0_manid, test_le_0_nl0_ce0_authid]
+527  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_inproceedings
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_inprocid]
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_bktitle, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_article
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_articleid]
+528  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_journal, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+529  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+529  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_techreport
+529  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_techid]
+529  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_inst, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+529  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+529  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_book
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_bookid]
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_publisher, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_incollection
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_colid]
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_bktitle, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+530  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_misc
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_miscid]
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_howpub, nut_le_1_nl0_ce0_confloc, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_manual
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_manid]
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_title, nut_le_1_nl0_ce0_org, nut_le_1_nl0_ce0_year, nut_le_1_nl0_ce0_month, nut_le_1_nl0_ce0_pages, nut_le_1_nl0_ce0_vol, nut_le_1_nl0_ce0_num, nut_le_1_nl0_ce0_loc, nut_le_1_nl0_ce0_class, nut_le_1_nl0_ce0_note, nut_le_1_nl0_ce0_annote]
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_author
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_authid]
+531  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_name]
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_inprocpublished
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_inprocid, nut_le_1_nl0_ce0_authid]
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_articlepublished
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_articleid, nut_le_1_nl0_ce0_authid]
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_techpublished
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_techid, nut_le_1_nl0_ce0_authid]
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+532  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_bookpublished
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_bookid, nut_le_1_nl0_ce0_authid]
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_incollpublished
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_colid, nut_le_1_nl0_ce0_authid]
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_miscpublished
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_miscid, nut_le_1_nl0_ce0_authid]
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - ---------GENERATING PRIMARY KEY FD---------
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_manualpublished
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_manid, nut_le_1_nl0_ce0_authid]
+533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
+534  [main] DEBUG tresc.benchmark.STBenchmark  - Printing results !
+534  [main] DEBUG tresc.benchmark.STBenchmark  - instance path: out0
+534  [main] DEBUG tresc.benchmark.STBenchmark  - schema path: out0
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:33)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:63)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:79)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:33)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:57)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:29)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.VObject.toString(VObject.java:81)
+	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
+	at smark.support.MappingScenario.toString(MappingScenario.java:281)
+	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
+	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
+	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
+	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+Caused by: java.lang.NullPointerException
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	... 46 more
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:33)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:57)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:29)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.VObject.toString(VObject.java:81)
+	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
+	at smark.support.MappingScenario.toString(MappingScenario.java:281)
+	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
+	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
+	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
+	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+Caused by: java.lang.RuntimeException: This point should have never been reached. 
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:33)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:63)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:79)
+	... 37 more
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:33)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:57)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:29)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.VObject.toString(VObject.java:81)
+	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
+	at smark.support.MappingScenario.toString(MappingScenario.java:281)
+	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
+	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
+	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
+	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+Caused by: java.lang.RuntimeException: This point should have never been reached. 
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	... 30 more
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:29)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.VObject.toString(VObject.java:81)
+	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
+	at smark.support.MappingScenario.toString(MappingScenario.java:281)
+	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
+	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
+	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
+	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+Caused by: java.lang.RuntimeException: This point should have never been reached. 
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:33)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:57)
+	at vtools.dataModel.types.StringPrinter.visit(StringPrinter.java:71)
+	... 21 more
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:55)
+	at java.lang.reflect.Method.invoke(Method.java:613)
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:50)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.VObject.toString(VObject.java:81)
+	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
+	at smark.support.MappingScenario.toString(MappingScenario.java:281)
+	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
+	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
+	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
+	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+Caused by: java.lang.RuntimeException: This point should have never been reached. 
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
+	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:29)
+	... 13 more
+Exception in thread "main" java.lang.RuntimeException: This point should have never been reached. 
+	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
+	at vtools.VObject.accept(VObject.java:87)
+	at vtools.VObject.toString(VObject.java:81)
+	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
+	at smark.support.MappingScenario.toString(MappingScenario.java:281)
+	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
+	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
+	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
+	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+

@@ -20,6 +20,8 @@ import tresc.benchmark.dataGen.TrampXMLinlineGen;
 
 //MN added new sceanrio newVP - 23 June 2014
 //PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
+//PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
 
 public class Constants
 {
@@ -49,7 +51,9 @@ public class Constants
         SourceCircularInclusionDependency,
         SourceCircularFK,
         TargetCircularInclusionDependency,
-        TargetCircularFK
+        TargetCircularFK,
+        // PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+        VPAuthorityComplexity
         
     };
 
@@ -84,6 +88,10 @@ public class Constants
     	defaultParameterValues.put(ParameterName.SourceCircularFK, 1);
     	defaultParameterValues.put(ParameterName.TargetCircularInclusionDependency, 1);
     	defaultParameterValues.put(ParameterName.TargetCircularFK, 1);
+    	
+    	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+    	defaultParameterValues.put(ParameterName.VPAuthorityComplexity, 2);
+    	
     }
     
     public static final Map<ParameterName, Integer> defaultParameterDeviation
@@ -117,6 +125,9 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.SourceCircularFK, 0);
     	defaultParameterDeviation.put(ParameterName.TargetCircularInclusionDependency, 0);
     	defaultParameterDeviation.put(ParameterName.TargetCircularFK, 0);
+    	
+    	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+    	defaultParameterDeviation.put(ParameterName.VPAuthorityComplexity, 0);
     }
     
     public enum JoinKind {
@@ -193,7 +204,8 @@ public class Constants
     	HTMLMapping,
     	TrampXML,
     	ErrorsAndExplanations,
-    	XSML
+    	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
+    	Clio
     }
     
     public static final Map<OutputOption, Boolean> defaultOutputOptionValues
@@ -206,7 +218,8 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.Data, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.TrampXML, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
-    	defaultOutputOptionValues.put(OutputOption.XSML, Boolean.FALSE);
+    	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
+    	defaultOutputOptionValues.put(OutputOption.Clio, Boolean.FALSE);
     }
     
   

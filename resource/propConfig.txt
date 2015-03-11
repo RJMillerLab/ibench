@@ -29,41 +29,45 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3
-ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumofAttributestoDelete = 1
-ConfigOptions.JoinSize = 2
-ConfigOptions.NumOfParamsInFunctions = 1
-ConfigOptions.PrimaryKeySize = 1
+ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfNewAttributes = 3
+ConfigOptions.NumOfAttributesToDelete = 3
+ConfigOptions.JoinSize = 3
+ConfigOptions.NumOfParamsInFunctions = 3
+ConfigOptions.PrimaryKeySize = 2
 ConfigOptions.NumOfJoinAttributes = 1
+ConfigOptions.JoinKind = 1 
+
 # Star is 0 , chain is 1
 ConfigOptions.JoinKind = 0 
 ConfigOptions.SkolemKind = 0
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 25
-ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 20
-ConfigOptions.SourceInclusionDependencyFKPerc = 20
-ConfigOptions.TargetInclusionDependencyPerc = 20
-ConfigOptions.TargetInclusionDependencyFKPerc = 20
+ConfigOptions.ReuseSourcePerc = 0
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 100
+ConfigOptions.SourceInclusionDependencyPerc = 0
+ConfigOptions.SourceInclusionDependencyFKPerc = 0
+ConfigOptions.TargetInclusionDependencyPerc = 0
+ConfigOptions.TargetInclusionDependencyFKPerc = 0
+
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 1
-ConfigOptions.SourceCircularFK = 1
-ConfigOptions.TargetCircularInclusionDependency = 1
-ConfigOptions.TargetCircularFK = 1
+ConfigOptions.SourceCircularInclusionDependency = 0
+ConfigOptions.SourceCircularFK = 0
+ConfigOptions.TargetCircularInclusionDependency = 0
+ConfigOptions.TargetCircularFK = 0
+ConfigOptions.VPAuthorityComplexity = 9
 
 
 # Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 2
-ConfigOptionsDeviation.NumOfNewAttributes = 0
-ConfigOptionsDeviation.NumOfAttributesToDelete = 0
-ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 0
-ConfigOptionsDeviation.PrimaryKeySize = 0
-ConfigOptionsDeviation.NumOfJoinAttributes = 0
+ConfigOptionsDeviation.NumOfSubElements = 5
+ConfigOptionsDeviation.NumOfNewAttributes = 1
+ConfigOptionsDeviation.NumOfAttributesToDelete = 1
+ConfigOptionsDeviation.JoinSize = 1
+ConfigOptionsDeviation.NumOfParamsInFunctions = 1
+ConfigOptionsDeviation.PrimaryKeySize = 1
+ConfigOptionsDeviation.NumOfJoinAttributes = 1
 ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.ReuseSourcePerc = 0
@@ -79,6 +83,7 @@ ConfigOptionsDeviation.TargetCircularInclusionDependency = 0
 ConfigOptionsDeviation.TargetCircularFK = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
+ConfigOptionsDeviation.VPAuthorityComplexity = 7
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 1230918
@@ -90,11 +95,12 @@ MappingLanguage = FOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = true
+OutputOption.Data = false
 OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
+OutputOption.Clio = false
 OutputOption.XSML = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document

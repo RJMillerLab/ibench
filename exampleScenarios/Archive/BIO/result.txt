@@ -1,0 +1,62 @@
+*** GUS-BIOSQL REAL DATA SET SCENARIO STATS 
+*** AUTHOR: PRG
+*** LAST UPDATED: FEB 20, 2013
+
+
+-- Two main schemas: GUS.xml and BIOSQL.xml
+
+-- Number of Relations per Schema
+   GUS    = 7 
+   BIOSQL = 6
+
+-- Average arity: 5.5
+
+-- Number of TGDS: 8
+
+-- Rewriting Results
+ 
+                    
+   NBM          =  0  =   0 %
+   Linearize    =  4  =  50 %
+   LinearizeFDs =  7  =  87 %
+
+   Plain Min
+   + NBM        =  0  
+   
+   Plain Min
+   + Linearize  =  4  =  50 % 
+
+   Note a. Plain Min + NBM means we first minimize all Skolem terms based on source FDs, and then 
+   we check the NBM condition
+
+   Note b. Plain Min + Linearize means we first minimize all Skolem terms based on source FDs, and then
+   we check the Linerize condition
+
+-- Details
+
+   NBM succeeds on TGDS none
+   Plain Min + NBM succeeds on TGDS none
+
+   Linearize succeeds on TGDS M1 and M2, M5 and M6 
+   Plain Min + Linearize succeeds on TGDS M1 and M2, M5 and M6 
+
+   LinearizeFDs succeeds on TGDS M1 and M2, M3, M4 and M8, M5 and M6
+
+
+-- Special Notes
+
+LinearizeFDs cannot handle M7 which has disjoint argument sets!
+
+M7: GUS_GORelationship(x0,x4,x16,x3) 
+    & GUS_GOTerm(x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15) 
+    & GUS_GOTerm(x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27) 
+    -> biosql_TERM_RELATIONSHIP(x0,x4,x3,x16,SK20(x0)) & 
+       biosql_TERM(x4,x8,x9,x5,x15,SK21(x4)) & biosql_TERM(x16,x20,x21,x17,x27,SK22(x16)) 
+
+NOTE THAT IMPLIED FDS DOESN'T HELP HERE!
+There's nothing we can do to linearize SK21 and SK22 as their arguments are disjoint and they do not imply each other.
+
+We could redefine SK21(x0,x4) and SK22(x0,x16) ... Then LinearizeFDs would work, and so would Plain Min + Linearize.
+If we choose this option, then the stats would be the following:
+
+

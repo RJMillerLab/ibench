@@ -1,0 +1,76 @@
+*** Biological Sample Database (SDB) DATA SET STATS 
+*** AUTHOR: PRG
+*** LAST UPDATED: FEB 18, 2013
+
+
+-- Three main schemas: SDB1.xml, SDB2.xml, and SDB3.xml
+
+-- Number of Relations per Schema
+   SDB1 =  6 
+   SDB2 = 11
+   SDB3 = 11
+
+-- Average arity: 4.4
+
+-- Number of TGDS per Mapping
+   (1) SDB1-to-SDB2.xml = 10
+   (2) SDB2-to-SDB3.xml =  9
+   (3) SDB1-to-SDB3.xml = 11
+   
+-- Rewriting Results
+ 
+                    (1)   (2)   (3)   Total over 30 TGDS
+
+   NBM          =    4     7     2     13   =  43 %
+   Linearize    =    6     9     4     19   =  63 %
+   LinearizeFDs =   10     9    11     30   = 100 %
+
+   Plain Min
+   + NBM        =    2     7     1     10   =  33 %
+   Plain Min
+   + Linearize  =    9     9     4     22   =  73 %  
+
+   Note a. Plain Min + NBM means we first minimize all Skolem terms based on source FDs, and then 
+   we check the NBM condition
+
+   Note b. Plain Min + Linearize means we first minimize all Skolem terms based on source FDs, and then
+   we check the Linerize condition
+
+-- Details
+
+   NBM succeeds on (1) TGDS M1, M2, M4, and M6 
+   NBM succeeds on (2) TGDS M12, M13, M14, M15, M17, M18, and M19
+   NBM succeeds on (3) TGDS M22 and M24 
+
+   Linearize succeeds on (1) TGDS M1, M2, M3, M4, M6 and M7
+   Linearize succeeds on (2) TGDS M11 to M19 (all of them)
+   Linearize succeeds on (3) TGDS M22, M23, M24, and M25
+
+
+   LinearizeFDs succeeds on (1) TGDS M1 to M10 (all of them)
+   LinearizeFDs succeeds on (2) TGDS M11 to M19 (all of them)
+   LinearizeFDs succeeds on (3) TGDS M21 to M30 (all of them)
+
+-- Special Notes
+ 
+   ** Rewriting M21 with the following implied FDs: 
+   donor_ID (var g) -> all attributes of Donor-NodeTable (var h,i,j, and k)
+   biosample_ID (var a) -> donor_ID (var g), date (var l), and all other variables, and  
+   donor_ID (var g), date (var l) -> biosample_ID (var a), and all other variables.
+
+   SK1(a,e) = SK1(args(a,e)+) = SK1(all vars) and ditto for SK2
+   SK31(g,l) = SK31(args(g,l)+) = SK31(all vars)
+   SK10(g) = SK10(args(g)+) = SK10(g,h,i,j,k) and ditto for SK11
+   SK12(j) = SK12(args(j)+) = SK12(j)
+   That is, SK12 \subsetOf \SK10 \subsetOf SK11 \subsetOf \SK1 \subsetOf SK2 \subsetOf \SK31
+
+   ** Rewriting of M26 together with M29 (shared Skolems) with the following implied FDs:
+   medicationId (var f) -> donor_ID (var a), date (var k) and all other variables
+   donorID (var a), date (var k) -> biosample_ID (var s) 
+
+   SK18(f,k,a) = SK18(args(f,k,a)+) = SK18(all)
+   SK32(a,k) = SK32(args(a,k)+) = SK32(s,a,k)
+   SK21(f,g) = SK21(args(f,g)+) = SK21(all)
+
+   ** Ditto for Rewriting of M27 and M30, and M28 with M31
+

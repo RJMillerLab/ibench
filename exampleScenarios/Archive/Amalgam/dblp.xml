@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+<!--  ****************** Publication type tables ************************** -->	
+		<Relation name="DInProceedings">
+			<Attr><Name>pid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>booktitle</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>url</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>cdrom</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>			
+			<PrimaryKey><Attr>pid</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="DArticle">
+			<Attr><Name>pid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>cdrom</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>volume</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>journal</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>number</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>url</Name><DataType>TEXT</DataType></Attr>									
+			<PrimaryKey><Attr>pid</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="DBook">
+			<Attr><Name>pid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>editor</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>publisher</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>isbn</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>cdrom</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>citel</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>url</Name><DataType>TEXT</DataType></Attr>									
+			<PrimaryKey><Attr>pid</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="MasterThesis">
+			<Attr><Name>author</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>school</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>author</Attr><Attr>title</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="PhDThesis">
+			<Attr><Name>author</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>series</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>number</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>school</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>publisher</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>isbn</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>author</Attr><Attr>title</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="WWW">
+			<Attr><Name>pid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>url</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>pid</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="PubAuthors">
+			<Attr><Name>pid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>author</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>pid</Attr><Attr>author</Attr></PrimaryKey>
+		</Relation>
+				
+		
+<!--  ****************** Foreign Keys ************************** -->	
+
+<!-- Pub author references one of the publication types, but this cannot be expressed as a foreign key. -->
+
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="Dummy">
+			<Attr><Name>test</Name><DataType>TEXT</DataType></Attr>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Mappings>
+</Mappings>
+<ConnectionInfo>
+	<Host>localhost</Host>
+	<DB>amalgam</DB>
+	<User>lordpretzel</User>
+	<Password/>
+	<Port>5432</Port>
+</ConnectionInfo>
+</this:MappingScenario>

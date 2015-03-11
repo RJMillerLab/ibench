@@ -1,0 +1,1672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AMALGAM REAL DATASET SCENARIO                                                       -->
+<!-- AMALGAM SCHEMA 1 to SCHEMA 3                                                        -->
+<!-- Mappings created by PRG according to material provided by Bodgan Alexe [ICDE 2008]  -->
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+
+<!--  ****************** Publication type tables ************************** -->	
+		<Relation name="inproceedings">
+			<Attr><Name>inprocid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>bktitle</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>inprocid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="article">
+			<Attr><Name>articleid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>journal</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>articleid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="techreport">
+			<Attr><Name>techid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>inst</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>techid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="book">
+			<Attr><Name>bookid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>publisher</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>bookid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="incollection">
+			<Attr><Name>colid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>bktitle</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>colid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="misc">
+			<Attr><Name>miscid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>howpub</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>confloc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>miscid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="manual">
+			<Attr><Name>manid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>org</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>manid</Attr></PrimaryKey>
+		</Relation>
+		
+<!--  ****************** author table ************************** -->		
+		
+		<Relation name="author">
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>authid</Attr></PrimaryKey>
+		</Relation>
+		
+<!--  ****************** Relationship tables ************************** -->		
+		<Relation name="inprocpublished">
+			<Attr><Name>inprocid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>inprocid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="articlepublished">
+			<Attr><Name>articleid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>articleid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="techpublished">
+			<Attr><Name>techid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>techid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="bookpublished">
+			<Attr><Name>bookid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>bookid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="incollpublished">
+			<Attr><Name>colid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>colid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="miscpublished">
+			<Attr><Name>miscid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>miscid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="manualpublished">
+			<Attr><Name>manid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authid</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>manid</Attr><Attr>authid</Attr></PrimaryKey>
+		</Relation>		
+
+<!--  ****************** Foreign Keys ************************** -->	
+		<ForeignKey id="inprocPub">
+			<From tableref="inprocpublished"><Attr>inprocid</Attr></From>
+			<To tableref="inproceedings"><Attr>inprocid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="inprocauthor">
+			<From tableref="inprocpublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="articlePub">
+			<From tableref="articlepublished"><Attr>articleid</Attr></From>
+			<To tableref="article"><Attr>articleid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="articleauthor">
+			<From tableref="articlepublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="techPub">
+			<From tableref="techpublished"><Attr>techid</Attr></From>
+			<To tableref="techreport"><Attr>techid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="techauthor">
+			<From tableref="techpublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="bookPub">
+			<From tableref="bookpublished"><Attr>bookid</Attr></From>
+			<To tableref="book"><Attr>bookid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="bookauthor">
+			<From tableref="bookpublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>		
+		
+		<ForeignKey id="incollPub">
+			<From tableref="incollpublished"><Attr>colid</Attr></From>
+			<To tableref="incollection"><Attr>colid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="incollauthor">
+			<From tableref="bookpublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>		
+				
+		<ForeignKey id="miscPub">
+			<From tableref="miscpublished"><Attr>miscid</Attr></From>
+			<To tableref="misc"><Attr>miscid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="miscauthor">
+			<From tableref="miscpublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>				
+
+		<ForeignKey id="manualPub">
+			<From tableref="manualpublished"><Attr>manid</Attr></From>
+			<To tableref="manual"><Attr>manid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="manualauthor">
+			<From tableref="manualpublished"><Attr>authid</Attr></From>
+			<To tableref="author"><Attr>authid</Attr></To>
+		</ForeignKey>					
+
+	</SourceSchema>
+
+	<TargetSchema>
+
+<!--  ****************** Publication type tables ************************** -->	
+
+		<Relation name="tarticle">
+			<Attr><Name>articleid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>volume</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>number</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>refkey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>remarks</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>refs</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>xxxrefs</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>fullxxxrefs</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>oldkey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>abstract</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>preliminary</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>articleid</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="auth">
+			<Attr><Name>authorid</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>authorid</Attr></PrimaryKey>
+		</Relation>
+		
+		<!-- <Relation name="unpublished"> -->
+		<!-- 	<Attr><Name>unpubid</Name><DataType>INT</DataType></Attr> -->
+		<!-- 	<Attr><Name>title</Name><DataType>TEXT</DataType></Attr> -->
+		<!-- 	<Attr><Name>refkey</Name><DataType>TEXT</DataType></Attr> -->
+		<!-- 	<Attr><Name>note</Name><DataType>TEXT</DataType></Attr> -->
+		<!-- 	<Attr><Name>preliminary</Name><DataType>TEXT</DataType></Attr> -->
+		<!-- 	<Attr><Name>refs</Name><DataType>TEXT</DataType></Attr> -->
+		<!-- 	<PrimaryKey><Attr>unpubid</Attr></PrimaryKey> -->
+		<!-- </Relation> -->
+
+<!--  ****************** Relationship tables ************************** -->	
+
+		<Relation name="articleauthor">
+			<Attr><Name>articleid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authorid</Name><DataType>INT</DataType></Attr>
+			<PrimaryKey><Attr>authorid</Attr><Attr>articleid</Attr></PrimaryKey>
+		</Relation>
+		
+		<!-- <Relation name="unpubauthor"> -->
+		<!-- 	<Attr><Name>unpubid</Name><DataType>INT</DataType></Attr> -->
+		<!-- 	<Attr><Name>authorid</Name><DataType>INT</DataType></Attr> -->
+		<!-- 	<PrimaryKey><Attr>authorid</Attr><Attr>unpubid</Attr></PrimaryKey> -->
+		<!-- </Relation> -->
+
+<!--  ****************** Foreign Keys ************************** -->	
+
+		<ForeignKey id="AAtoarticle">
+			<From tableref="articleauthor"><Attr>bookid</Attr></From>
+			<To tableref="tarticle"><Attr>bookid</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="AAtoauthor">
+			<From tableref="articleauthor"><Attr>authorid</Attr></From>
+			<To tableref="auth"><Attr>authorid</Attr></To>
+		</ForeignKey>	
+
+		<!-- <ForeignKey id="UAtoUnpub"> -->
+		<!-- 	<From tableref="unpubauthor"><Attr>unpubid</Attr></From> -->
+		<!-- 	<To tableref="unpublished"><Attr>unpubid</Attr></To> -->
+		<!-- </ForeignKey> -->
+		<!-- <ForeignKey id="UAtoauthor"> -->
+		<!-- 	<From tableref="unpubauthor"><Attr>authorid</Attr></From> -->
+		<!-- 	<To tableref="author"><Attr>authorid</Attr></To> -->
+		<!-- </ForeignKey>	 -->
+							
+	</TargetSchema>
+</Schemas>
+<Correspondences>
+  <!-- AUTHOR -->
+    <Correspondence id="c1">
+		<From tableref="author"><Attr>authid</Attr></From>
+		<To tableref="auth"><Attr>authorid</Attr></To>
+	</Correspondence>
+    <Correspondence id="c2">
+		<From tableref="author"><Attr>name</Attr></From>
+		<To tableref="auth"><Attr>name</Attr></To>
+	</Correspondence>	
+
+	<!-- INPROC -->
+    <Correspondence id="c11">
+		<From tableref="inproceedings"><Attr>inprocid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c12">
+		<From tableref="inproceedings"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c13">
+		<From tableref="inproceedings"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c14">
+		<From tableref="inproceedings"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c15">
+		<From tableref="inproceedings"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c16">
+		<From tableref="inprocpublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+	
+	<!-- ARTICLE -->
+    <Correspondence id="c21">
+		<From tableref="article"><Attr>articleid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c22">
+		<From tableref="article"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c23">
+		<From tableref="article"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c24">
+		<From tableref="article"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c25">
+		<From tableref="article"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c26">
+		<From tableref="articlepublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+
+	<!-- TECH REPORT -->
+    <Correspondence id="c31">
+		<From tableref="techreport"><Attr>techid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c32">
+		<From tableref="techreport"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c33">
+		<From tableref="techreport"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c34">
+		<From tableref="techreport"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c35">
+		<From tableref="techreport"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c36">
+		<From tableref="techpublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+
+	<!-- BOOK -->
+    <Correspondence id="c41">
+		<From tableref="book"><Attr>bookid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c42">
+		<From tableref="book"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c43">
+		<From tableref="book"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c44">
+		<From tableref="book"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c45">
+		<From tableref="book"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c46">
+		<From tableref="bookpublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+
+	<!-- INCOLLECTION -->
+    <Correspondence id="c51">
+		<From tableref="incollection"><Attr>colid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c52">
+		<From tableref="incollection"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c53">
+		<From tableref="incollection"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c54">
+		<From tableref="incollection"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c55">
+		<From tableref="incollection"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c56">
+		<From tableref="incollpublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+
+	<!-- MISC -->
+    <Correspondence id="c61">
+		<From tableref="misc"><Attr>miscid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c62">
+		<From tableref="misc"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c63">
+		<From tableref="misc"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c64">
+		<From tableref="misc"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c65">
+		<From tableref="misc"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c66">
+		<From tableref="miscpublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+
+	<!-- MANUAL -->
+    <Correspondence id="c71">
+		<From tableref="manual"><Attr>manid</Attr></From>
+		<To tableref="tarticle"><Attr>articleid</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c72">
+		<From tableref="manual"><Attr>title</Attr></From>
+		<To tableref="tarticle"><Attr>title</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c73">
+		<From tableref="manual"><Attr>vol</Attr></From>
+		<To tableref="tarticle"><Attr>volume</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c74">
+		<From tableref="manual"><Attr>num</Attr></From>
+		<To tableref="tarticle"><Attr>number</Attr></To>
+	</Correspondence>
+  	<Correspondence id="c75">
+		<From tableref="manual"><Attr>note</Attr></From>
+		<To tableref="tarticle"><Attr>note</Attr></To>
+	</Correspondence>
+
+	<Correspondence id="c76">
+		<From tableref="manualpublished"><Attr>authid</Attr></From>
+		<To tableref="articleauthor"><Attr>authorid</Attr></To>
+	</Correspondence>
+</Correspondences>
+<Mappings>
+
+<!-- 
+inproceedings(bookid, title, bktitle, year, month, pages, vol, num, loc, class, note, annote) 
+& inprocpublished(inprocId, authId) 
+& author(authId, authName) 
+-> 
+article(SK1(bookid), title, vol, num, pages, month, year, SK2(bookid), note, SK3(bookid), SK4(bookid), SK5(bookid), SK6(bookid), SK7(bookid), SK8(bookid), SK9(bookid)) 
+& articleauthor(SK1(bookid), authId)
+& author(authId, authName) 
+-->
+
+    <Mapping id="M1">
+  		<Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c11" />
+			<Correspondence ref="c12" />
+			<Correspondence ref="c13" />
+			<Correspondence ref="c14" />
+			<Correspondence ref="c15" />
+			<Correspondence ref="c16" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="inproceedings">
+			  <Var>inprocid</Var>
+			  <Var>title</Var>
+			  <Var>bktitle</Var>
+			  <Var>year</Var>
+			  <Var>month</Var>
+			  <Var>pages</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>loc</Var>
+			  <Var>class</Var>
+			  <Var>note</Var>
+			  <Var>annote</Var>
+			</Atom>
+			<Atom tableref="inprocpublished">
+			  <Var>inprocId</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="tarticle">
+        <!-- SK1 represents bookid -->
+        <SKFunction skname="SK1">
+					<Var>inprocid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK2 represents refkey -->
+        <SKFunction skname="SK2">
+					<Var>inprocid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK3 represents remarks -->
+        <SKFunction skname="SK3">
+					<Var>inprocid</Var>
+				</SKFunction>
+        <!-- SK4 represents refs -->
+        <SKFunction skname="SK4">
+					<Var>inprocid</Var>
+				</SKFunction>
+        <!-- SK5 represents xxxrefs -->
+        <SKFunction skname="SK5">
+					<Var>inprocid</Var>
+				</SKFunction>
+        <!-- SK6 represents fullxxxrefs -->
+        <SKFunction skname="SK6">
+					<Var>inprocid</Var>
+				</SKFunction>
+        <!-- SK7 represents oldkey -->
+        <SKFunction skname="SK7">
+					<Var>inprocid</Var>
+				</SKFunction>
+        <!-- SK8 represents abstract -->
+        <SKFunction skname="SK8">
+					<Var>inprocid</Var>
+				</SKFunction>
+        <!-- SK9 represents preliminary -->
+        <SKFunction skname="SK9">
+					<Var>inprocid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK1 represents inprocid -->
+        <SKFunction skname="SK1">
+					<Var>inprocid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+		</Exists>
+	</Mapping>
+
+<!-- 
+article(bookid, title, journal, year, month, pages, vol, num, loc, class, note, annote) 
+& articlepublished(articleId, authId) 
+& author(authId, authName) 
+-> 
+article(SK11(bookid), title, vol, num, pages, month, year, SK12(bookid), note, SK13(bookid), SK14(bookid), SK15(bookid), SK16(bookid), SK17(bookid), SK18(bookid), SK19(bookid)) 
+& articleauthor(SK11(article_id), authId)
+& author(authId, authName) 
+-->
+
+	<Mapping id="M2">
+  		<Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c21" />
+			<Correspondence ref="c22" />
+			<Correspondence ref="c23" />
+			<Correspondence ref="c24" />
+			<Correspondence ref="c25" />
+			<Correspondence ref="c26" />
+		</Uses>
+	  <Foreach>
+			<Atom tableref="article">
+			  <Var>bookid</Var>
+			  <Var>title</Var>
+			  <Var>journal</Var>
+			  <Var>year</Var>
+			  <Var>month</Var>
+			  <Var>pages</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>loc</Var>
+			  <Var>class</Var>
+			  <Var>note</Var>
+			  <Var>annote</Var>
+			</Atom>
+			<Atom tableref="articlepublished">
+			  <Var>bookId</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="tarticle">
+        <!-- SK11 represents bookid -->
+        <SKFunction skname="SK11">
+					<Var>bookid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK12 represents refkey -->
+        <SKFunction skname="SK12">
+					<Var>bookid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK13 represents remarks -->
+        <SKFunction skname="SK13">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK14 represents refs -->
+        <SKFunction skname="SK14">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK15 represents xxxrefs -->
+        <SKFunction skname="SK15">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK16 represents fullxxxrefs -->
+        <SKFunction skname="SK16">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK17 represents oldkey -->
+        <SKFunction skname="SK17">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK18 represents abstract -->
+        <SKFunction skname="SK18">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK19 represents preliminary -->
+        <SKFunction skname="SK19">
+					<Var>bookid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK11 represents bookid -->
+        <SKFunction skname="SK11">
+					<Var>bookid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+    </Exists>
+	</Mapping>
+
+<!--
+techreport(techid, title, inst, year, month, pages, vol, num, loc, class, note, annote) 
+& techpublished(techId, authId) 
+& author(authId, authName) 
+-> 
+article(SK21(techid), title, vol, num, pages, month, year, SK22(techid), note, SK23(techid), SK24(techid), SK25(techid), SK26(techid), SK27(techid), SK28(techid), SK29(techid)) 
+& articleauthor(SK21(techid), authId)
+& author(authId, authName) 
+-->
+
+    <Mapping id="M3">
+         <Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c31" />
+			<Correspondence ref="c32" />
+			<Correspondence ref="c33" />
+			<Correspondence ref="c34" />
+			<Correspondence ref="c35" />
+			<Correspondence ref="c36" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="techreport">
+			  <Var>techid</Var>
+			  <Var>title</Var>
+			  <Var>inst</Var>
+			  <Var>year</Var>
+			  <Var>month</Var>
+			  <Var>pages</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>loc</Var>
+			  <Var>class</Var>
+			  <Var>note</Var>
+			  <Var>annote</Var>
+			</Atom>
+			<Atom tableref="techpublished">
+			  <Var>techId</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="tarticle">
+        <!-- SK21 represents bookid -->
+        <SKFunction skname="SK21">
+					<Var>techid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK22 represents refkey -->
+        <SKFunction skname="SK22">
+					<Var>techid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK23 represents remarks -->
+        <SKFunction skname="SK23">
+					<Var>techid</Var>
+				</SKFunction>
+        <!-- SK24 represents refs -->
+        <SKFunction skname="SK24">
+					<Var>techid</Var>
+				</SKFunction>
+        <!-- SK25 represents xxxrefs -->
+        <SKFunction skname="SK25">
+					<Var>techid</Var>
+				</SKFunction>
+        <!-- SK26 represents fullxxxrefs -->
+        <SKFunction skname="SK26">
+					<Var>techid</Var>
+				</SKFunction>
+        <!-- SK27 represents oldkey -->
+        <SKFunction skname="SK27">
+					<Var>techid</Var>
+				</SKFunction>
+        <!-- SK28 represents abstract -->
+        <SKFunction skname="SK28">
+					<Var>techid</Var>
+				</SKFunction>
+        <!-- SK29 represents preliminary -->
+        <SKFunction skname="SK29">
+					<Var>techid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK21 represents bookid -->
+        <SKFunction skname="SK21">
+					<Var>techid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+    </Exists>
+	</Mapping>
+
+<!--
+book(bookid, title, publisher, year, month, pages, vol, num, loc, class, note, annote) 
+& bookpublished(bookId, authId) 
+& author(authId, authName) 
+-> 
+article(SK31(bookid), title, vol, num, pages, month, year, SK32(bookid), note, SK33(bookid), SK34(bookid), SK35(bookid), SK36(bookid), SK37(bookid), SK38(bookid), SK39(bookid)) 
+& articleauthor(SK31(bookid), authId)
+& author(authId, authName) 
+-->
+
+    <Mapping id="M4">
+        <Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c41" />
+			<Correspondence ref="c42" />
+			<Correspondence ref="c43" />
+			<Correspondence ref="c44" />
+			<Correspondence ref="c45" />
+			<Correspondence ref="c46" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="book">
+			<Var>bookid</Var>
+			<Var>title</Var>
+			<Var>publisher</Var>
+			<Var>year</Var>
+			<Var>month</Var>
+			<Var>pages</Var>
+			<Var>vol</Var>
+			<Var>num</Var>
+			<Var>loc</Var>
+			<Var>class</Var>
+			<Var>note</Var>
+			<Var>annote</Var>
+			</Atom>
+			<Atom tableref="bookpublished">
+			  <Var>bookId</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="tarticle">
+        <!-- SK31 represents bookid -->
+        <SKFunction skname="SK31">
+					<Var>bookid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK32 represents refkey -->
+        <SKFunction skname="SK32">
+					<Var>bookid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK33 represents remarks -->
+        <SKFunction skname="SK33">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK34 represents refs -->
+        <SKFunction skname="SK34">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK35 represents xxxrefs -->
+        <SKFunction skname="SK35">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK36 represents fullxxxrefs -->
+        <SKFunction skname="SK36">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK37 represents oldkey -->
+        <SKFunction skname="SK37">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK38 represents abstract -->
+        <SKFunction skname="SK38">
+					<Var>bookid</Var>
+				</SKFunction>
+        <!-- SK39 represents preliminary -->
+        <SKFunction skname="SK39">
+					<Var>bookid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK31 represents bookid -->
+        <SKFunction skname="SK31">
+					<Var>bookid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+		</Exists>
+	</Mapping>
+
+<!--
+
+incollection(colid, title, bktitle, year, month, pages, vol, num, loc, class, note, annote) 
+& incollpublished(IncollId, authId) 
+& author(authId, authName) 
+-> 
+article(SK41(colid), title, vol, num, pages, month, year, SK42(colid), note, SK43(colid), SK44(colid), SK45(colid), SK46(colid), SK47(colid), SK48(colid), SK49(colid)) 
+& articleauthor(SK41(colid), authId) 
+& author(authId, authName) 
+-->
+
+<Mapping id="M5">
+  		<Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c51" />
+			<Correspondence ref="c52" />
+			<Correspondence ref="c53" />
+			<Correspondence ref="c54" />
+			<Correspondence ref="c55" />
+			<Correspondence ref="c56" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="incollection">
+			<Var>colid</Var>
+			<Var>title</Var>
+			<Var>bktitle</Var>
+			<Var>year</Var>
+			<Var>month</Var>
+			<Var>pages</Var>
+			<Var>vol</Var>
+			<Var>num</Var>
+			<Var>loc</Var>
+			<Var>class</Var>
+			<Var>note</Var>
+			<Var>annote</Var>
+			</Atom>
+			<Atom tableref="incollpublished">
+			  <Var>colid</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="tarticle">
+        <!-- SK41 represents bookid -->
+        <SKFunction skname="SK41">
+					<Var>colid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK42 represents refkey -->
+        <SKFunction skname="SK42">
+					<Var>colid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK43 represents remarks -->
+        <SKFunction skname="SK43">
+					<Var>colid</Var>
+				</SKFunction>
+        <!-- SK44 represents refs -->
+        <SKFunction skname="SK44">
+					<Var>colid</Var>
+				</SKFunction>
+        <!-- SK45 represents xxxrefs -->
+        <SKFunction skname="SK45">
+					<Var>colid</Var>
+				</SKFunction>
+        <!-- SK46 represents fullxxxrefs -->
+        <SKFunction skname="SK46">
+					<Var>colid</Var>
+				</SKFunction>
+        <!-- SK47 represents oldkey -->
+        <SKFunction skname="SK47">
+					<Var>colid</Var>
+				</SKFunction>
+        <!-- SK48 represents abstract -->
+        <SKFunction skname="SK48">
+					<Var>colid</Var>
+				</SKFunction>
+        <!-- SK49 represents preliminary -->
+        <SKFunction skname="SK49">
+					<Var>colid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK41 represents bookid -->
+        <SKFunction skname="SK41">
+					<Var>colid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+    </Exists>
+	</Mapping>
+
+<!--
+misc(miscid, title, howpub, confloc, year, month, pages, vol, num, loc, class, note, annote) 
+& miscpublished(miscId, authId) 
+& author(authId, authName) 
+-> 
+article(SK51(miscid), title, vol, num, pages, month, year, SK52(miscid), note, SK53(miscid), SK54(miscid), SK55(miscid), SK56(miscid), SK57(miscid), SK58(miscid), SK59(miscid)) 
+& articleauthor(SK51(miscid), authId) 
+& author(authId, authName) 
+-->
+    <Mapping id="M6">
+        <Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c61" />
+			<Correspondence ref="c62" />
+			<Correspondence ref="c63" />
+			<Correspondence ref="c64" />
+			<Correspondence ref="c65" />
+			<Correspondence ref="c66" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="misc">
+			  <Var>miscid</Var>
+			  <Var>title</Var>
+			  <Var>howpub</Var>
+			  <Var>confloc</Var>
+			  <Var>year</Var>
+			  <Var>month</Var>
+			  <Var>pages</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>loc</Var>
+			  <Var>class</Var>
+			  <Var>note</Var>
+			  <Var>annote</Var>
+			</Atom>
+			<Atom tableref="miscpublished">
+			  <Var>miscId</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+		  <Atom tableref="tarticle">
+        <!-- SK51 represents bookid -->
+        <SKFunction skname="SK51">
+					<Var>miscid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK52 represents refkey -->
+        <SKFunction skname="SK52">
+					<Var>miscid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK53 represents remarks -->
+        <SKFunction skname="SK53">
+					<Var>miscid</Var>
+				</SKFunction>
+        <!-- SK54 represents refs -->
+        <SKFunction skname="SK54">
+					<Var>miscid</Var>
+				</SKFunction>
+        <!-- SK55 represents xxxrefs -->
+        <SKFunction skname="SK55">
+					<Var>miscid</Var>
+				</SKFunction>
+        <!-- SK56 represents fullxxxrefs -->
+        <SKFunction skname="SK56">
+					<Var>miscid</Var>
+				</SKFunction>
+        <!-- SK57 represents oldkey -->
+        <SKFunction skname="SK57">
+					<Var>miscid</Var>
+				</SKFunction>
+        <!-- SK58 represents abstract -->
+        <SKFunction skname="SK58">
+					<Var>miscid</Var>
+				</SKFunction>
+        <!-- SK59 represents preliminary -->
+        <SKFunction skname="SK59">
+					<Var>miscid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK51 represents bookid -->
+        <SKFunction skname="SK51">
+					<Var>miscid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+		</Exists>
+	</Mapping>
+
+<!--
+manual(manid, title, org, year, month, pages, vol, num, loc, class, note, annote) 
+& manualpublished(manId, authId) 
+author(authId, authName) 
+-> 
+article(SK61(manid), title, vol, num, pages, month, year, SK62(manid), note, SK63(manid), SK64(manid), SK65(manid), SK66(manid), SK67(manid), SK68(manid), SK69(manid)) 
+& articleauthor(SK61(manid), authId) 
+& author(authId, authName) 
+
+-->
+    <Mapping id="M7">
+        <Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c71" />
+			<Correspondence ref="c72" />
+			<Correspondence ref="c73" />
+			<Correspondence ref="c74" />
+			<Correspondence ref="c75" />
+			<Correspondence ref="c76" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="manual">
+			  <Var>manid</Var>
+			  <Var>title</Var>
+			  <Var>org</Var>
+			  <Var>year</Var>
+			  <Var>month</Var>
+			  <Var>pages</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>loc</Var>
+			  <Var>class</Var>
+			  <Var>note</Var>
+			  <Var>annote</Var>
+			</Atom>
+			<Atom tableref="manualpublished">
+			  <Var>manid</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+          <!-- SK61 represents bookid -->
+		  <Atom tableref="tarticle">
+        <SKFunction skname="SK61">
+					<Var>manid</Var>
+				</SKFunction>
+			  <Var>title</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>pages</Var>
+			  <Var>month</Var>
+			  <Var>year</Var>
+        <!-- SK62 represents refkey -->
+        <SKFunction skname="SK62">
+					<Var>manid</Var>
+				</SKFunction>
+			  <Var>note</Var>
+        <!-- SK63 represents remarks -->
+        <SKFunction skname="SK63">
+					<Var>manid</Var>
+				</SKFunction>
+        <!-- SK64 represents refs -->
+        <SKFunction skname="SK64">
+					<Var>manid</Var>
+				</SKFunction>
+        <!-- SK65 represents xxxrefs -->
+        <SKFunction skname="SK65">
+					<Var>manid</Var>
+				</SKFunction>
+        <!-- SK66 represents fullxxxrefs -->
+        <SKFunction skname="SK66">
+					<Var>manid</Var>
+				</SKFunction>
+        <!-- SK67 represents oldkey -->
+        <SKFunction skname="SK67">
+					<Var>manid</Var>
+				</SKFunction>
+        <!-- SK68 represents abstract -->
+        <SKFunction skname="SK68">
+					<Var>manid</Var>
+				</SKFunction>
+        <!-- SK69 represents preliminary -->
+        <SKFunction skname="SK69">
+					<Var>manid</Var>
+				</SKFunction>
+			</Atom>
+			<Atom tableref="articleauthor">
+        <!-- SK61 represents bookid -->
+        <SKFunction skname="SK61">
+					<Var>manid</Var>
+				</SKFunction>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="auth">
+        <Var>authId</Var>
+        <Var>authName</Var>
+			</Atom>
+    </Exists>
+	</Mapping>
+
+<!--
+author(authId, authName) 
+-> 
+author(authId, authName)
+-->
+   <Mapping id="M8" >
+      <Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+		</Uses>
+     <Foreach>
+       <Atom tableref="author">
+	       <Var>authId</Var>
+	       <Var>authName</Var>
+	     </Atom>
+     </Foreach>
+     <Exists>
+       <Atom tableref="auth">
+	       <Var>authId</Var>
+	  	   <Var>authName</Var>
+       </Atom>
+     </Exists>
+   </Mapping>
+
+ </Mappings>
+ <Transformations>
+   <!-- ******************************************************************************** -->
+   <!-- * ARTICLE                                                                        -->
+   <!-- ******************************************************************************** -->
+ 	<Transformation id="T1" creates="tarticle">
+		<Implements><Mapping ref="M1" /><Mapping ref="M2" /><Mapping ref="M3" /><Mapping ref="M4" /><Mapping ref="M5" /><Mapping ref="M6" /><Mapping ref="M7" /></Implements>
+		<Code>
+		  SELECT i.tid || '|' || ip.tid || '|' || a.tid AS tid,
+		         'SK1' || i.inprocid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK2' || i.inprocid AS refkey,
+				 note,
+				 'SK3' || i.inprocid AS remarks,
+				 'SK4' || i.inprocid AS refs,
+				 'SK5' || i.inprocid AS xxxrefs,
+				 'SK6' || i.inprocid AS fullxxxrefs,
+				 'SK7' || i.inprocid AS oldkey,
+				 'SK8' || i.inprocid AS abstract,
+				 'SK9' || i.inprocid AS preliminary
+		  FROM source.inproceedings ANNOT('M1') i,
+		       source.inprocpublished ANNOT('M1') ip,
+			   source.author ANNOT('M1') a
+		  WHERE i.inprocid=ip.inprocid AND ip.authid = a.authid
+		  UNION
+		  SELECT at.tid || '|' || ap.tid || '|' || a.tid AS tid,
+		         'SK11' || at.articleid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK12' || at.articleid AS refkey,
+				 note,
+				 'SK13' || at.articleid AS remarks,
+				 'SK14' || at.articleid AS refs,
+				 'SK15' || at.articleid AS xxxrefs,
+				 'SK16' || at.articleid AS fullxxxrefs,
+				 'SK17' || at.articleid AS oldkey,
+				 'SK18' || at.articleid AS abstract,
+				 'SK19' || at.articleid AS preliminary
+		  FROM source.article  ANNOT('M2') at,
+		       source.articlepublished ANNOT('M2') ap,
+			   source.author ANNOT('M2') a
+			   WHERE at.articleid=ap.articleid AND ap.authid = a.authid
+		  UNION
+		  SELECT t.tid || '|' || tp.tid || '|' || a.tid AS tid,
+		         'SK21' || t.techid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK22' || t.techid AS refkey,
+				 note,
+				 'SK23' || t.techid AS remarks,
+				 'SK24' || t.techid AS refs,
+				 'SK25' || t.techid AS xxxrefs,
+				 'SK26' || t.techid AS fullxxxrefs,
+				 'SK27' || t.techid AS oldkey,
+				 'SK28' || t.techid AS abstract,
+				 'SK29' || t.techid AS preliminary
+		  FROM source.techreport  ANNOT('M3') t,
+		       source.techpublished ANNOT('M3') tp,
+			   source.author ANNOT('M3') a
+			   WHERE t.techid=tp.techid AND tp.authid = a.authid
+		  UNION
+		  SELECT b.tid || '|' || bp.tid || '|' || a.tid AS tid,
+		         'SK31' || b.bookid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK32' || b.bookid AS refkey,
+				 note,
+				 'SK33' || b.bookid AS remarks,
+				 'SK34' || b.bookid AS refs,
+				 'SK35' || b.bookid AS xxxrefs,
+				 'SK36' || b.bookid AS fullxxxrefs,
+				 'SK37' || b.bookid AS oldkey,
+				 'SK38' || b.bookid AS abstract,
+				 'SK39' || b.bookid AS preliminary
+		  FROM source.book  ANNOT('M4') b,
+		       source.bookpublished ANNOT('M4') bp,
+			   source.author ANNOT('M4') a
+			   WHERE b.bookid=bp.bookid AND bp.authid = a.authid
+		  UNION
+		  SELECT i.tid || '|' || ip.tid || '|' || a.tid AS tid,
+		         'SK41' || i.colid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK42' || i.colid AS refkey,
+				 note,
+				 'SK43' || i.colid AS remarks,
+				 'SK44' || i.colid AS refs,
+				 'SK45' || i.colid AS xxxrefs,
+				 'SK46' || i.colid AS fullxxxrefs,
+				 'SK47' || i.colid AS oldkey,
+				 'SK48' || i.colid AS abstract,
+				 'SK49' || i.colid AS preliminary
+		  FROM source.incollection  ANNOT('M5') i,
+		       source.incollpublished ANNOT('M5') ip,
+			   source.author ANNOT('M5') a
+			   WHERE i.colid=ip.colid AND ip.authid = a.authid
+		  UNION
+		  SELECT m.tid || '|' || mp.tid || '|' || a.tid AS tid,
+		         'SK51' || m.miscid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK52' || m.miscid AS refkey,
+				 note,
+				 'SK53' || m.miscid AS remarks,
+				 'SK54' || m.miscid AS refs,
+				 'SK55' || m.miscid AS xxxrefs,
+				 'SK56' || m.miscid AS fullxxxrefs,
+				 'SK57' || m.miscid AS oldkey,
+				 'SK58' || m.miscid AS abstract,
+				 'SK59' || m.miscid AS preliminary
+		  FROM source.misc  ANNOT('M6') m,
+		       source.miscpublished ANNOT('M6') mp,
+			   source.author ANNOT('M6') a
+			   WHERE m.miscid=mp.miscid AND mp.authid = a.authid
+		  UNION
+		  SELECT m.tid || '|' || mp.tid || '|' || a.tid AS tid,
+		         'SK61' || m.manid AS articleid,
+		         title,
+				 vol AS volume,
+				 num AS number,
+				 pages,
+				 month,
+				 year,
+				 'SK62' || m.manid AS refkey,
+				 note,
+				 'SK63' || m.manid AS remarks,
+				 'SK64' || m.manid AS refs,
+				 'SK65' || m.manid AS xxxrefs,
+				 'SK66' || m.manid AS fullxxxrefs,
+				 'SK67' || m.manid AS oldkey,
+				 'SK68' || m.manid AS abstract,
+				 'SK69' || m.manid AS preliminary
+		  FROM source.manual  ANNOT('M7') m,
+		       source.manualpublished ANNOT('M7') mp,
+			   source.author ANNOT('M7') a
+			   WHERE m.manid=mp.manid AND mp.authid = a.authid
+		</Code>
+	</Transformation>
+   <!-- ******************************************************************************** -->
+   <!-- * AUTHOR                                                                         -->
+   <!-- ******************************************************************************** -->
+ 	<Transformation id="T2" creates="auth">
+		<Implements><Mapping ref="M1" /><Mapping ref="M2" /><Mapping ref="M3" /><Mapping ref="M4" /><Mapping ref="M5" /><Mapping ref="M6" /><Mapping ref="M7" /><Mapping ref="M8" /></Implements>
+		<Code>
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.inproceedings ANNOT('M1') i,
+		       source.inprocpublished ANNOT('M1') ip,
+			   source.author ANNOT('M1') a
+		  WHERE i.inprocid=ip.inprocid AND ip.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.article  ANNOT('M2') at,
+		       source.articlepublished ANNOT('M2') ap,
+			   source.author ANNOT('M2') a
+	      WHERE at.articleid=ap.articleid AND ap.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.techreport  ANNOT('M3') t,
+		       source.techpublished ANNOT('M3') tp,
+			   source.author ANNOT('M3') a
+		  WHERE t.techid=tp.techid AND tp.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.book  ANNOT('M4') b,
+		       source.bookpublished ANNOT('M4') bp,
+			   source.author ANNOT('M4') a
+		  WHERE b.bookid=bp.bookid AND bp.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.incollection  ANNOT('M5') i,
+		       source.incollpublished ANNOT('M5') ip,
+			   source.author ANNOT('M5') a
+		  WHERE i.colid=ip.colid AND ip.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.misc  ANNOT('M6') m,
+		       source.miscpublished ANNOT('M6') mp,
+			   source.author ANNOT('M6') a
+		  WHERE m.miscid=mp.miscid AND mp.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.manual  ANNOT('M7') m,
+		       source.manualpublished ANNOT('M7') mp,
+			   source.author ANNOT('M7') a
+	      WHERE m.manid=mp.manid AND mp.authid = a.authid
+		  UNION
+		  SELECT a.tid AS tid,
+		         a.authid AS authorid,
+				 name AS name
+		  FROM source.author ANNOT('M8') a
+		</Code>
+	</Transformation>
+   <!-- ******************************************************************************** -->
+   <!-- * UNPUBLISHED                                                                    -->
+   <!-- ******************************************************************************** -->
+   <!-- <Transformation id="T3" creates="unpublished"> -->
+   <!-- 	  -->
+   <!-- 		<Implements><Mapping ref="M9"/></Implements> -->
+   <!-- 		<Code> -->
+   <!-- 		  SELECT 1 AS tid, -->
+   <!-- 		         1 AS unpubid, -->
+   <!-- 				 1 AS title, -->
+   <!-- 				 1 AS refkey, -->
+   <!-- 				 1 AS note, -->
+   <!-- 				 1 AS preliminary, -->
+   <!-- 				 1 AS refs -->
+   <!-- 		  WHERE false; -->
+   <!-- 		</Code> -->
+   <!-- 	</Transformation> -->
+<!-- ******************************************************************************** -->
+<!-- * ARTICLEAUTHOR                                                                  -->
+<!-- ******************************************************************************** -->
+ 	<Transformation id="T4" creates="articleauthor">
+		<Implements><Mapping ref="M1" /><Mapping ref="M2" /><Mapping ref="M3" /><Mapping ref="M4" /><Mapping ref="M5" /><Mapping ref="M6" /><Mapping ref="M7" /></Implements>
+		<Code>
+		  SELECT i.tid || '|' || ip.tid || '|' || a.tid AS tid,
+		         'SK1' || i.inprocid AS articleid,
+		         a.authid AS authorid
+		  FROM source.inproceedings ANNOT('M1') i,
+		       source.inprocpublished ANNOT('M1') ip,
+			   source.author ANNOT('M1') a
+		  WHERE i.inprocid=ip.inprocid AND ip.authid = a.authid
+		  UNION
+		  SELECT at.tid || '|' || ap.tid || '|' || a.tid AS tid,
+		         'SK11' || at.articleid AS articleid,
+		         a.authid AS authorid
+		  FROM source.article  ANNOT('M2') at,
+		       source.articlepublished ANNOT('M2') ap,
+			   source.author ANNOT('M2') a
+			   WHERE at.articleid=ap.articleid AND ap.authid = a.authid
+		  UNION
+		  SELECT t.tid || '|' || tp.tid || '|' || a.tid AS tid,
+		         'SK21' || t.techid AS articleid,
+		         a.authid AS authorid
+		  FROM source.techreport  ANNOT('M3') t,
+		       source.techpublished ANNOT('M3') tp,
+			   source.author ANNOT('M3') a
+			   WHERE t.techid=tp.techid AND tp.authid = a.authid
+		  UNION
+		  SELECT b.tid || '|' || bp.tid || '|' || a.tid AS tid,
+		         'SK31' || b.bookid AS articleid,
+		         a.authid AS authorid
+		  FROM source.book  ANNOT('M4') b,
+		       source.bookpublished ANNOT('M4') bp,
+			   source.author ANNOT('M4') a
+			   WHERE b.bookid=bp.bookid AND bp.authid = a.authid
+		  UNION
+		  SELECT i.tid || '|' || ip.tid || '|' || a.tid AS tid,
+		         'SK41' || i.colid AS articleid,
+		         a.authid AS authorid
+		  FROM source.incollection  ANNOT('M5') i,
+		       source.incollpublished ANNOT('M5') ip,
+			   source.author ANNOT('M5') a
+			   WHERE i.colid=ip.colid AND ip.authid = a.authid
+		  UNION
+		  SELECT m.tid || '|' || mp.tid || '|' || a.tid AS tid,
+		         'SK51' || m.miscid AS articleid,
+		         a.authid AS authorid
+		  FROM source.misc  ANNOT('M6') m,
+		       source.miscpublished ANNOT('M6') mp,
+			   source.author ANNOT('M6') a
+			   WHERE m.miscid=mp.miscid AND mp.authid = a.authid
+		  UNION
+		  SELECT m.tid || '|' || mp.tid || '|' || a.tid AS tid,
+		         'SK61' || m.manid AS articleid,
+		         a.authid AS authorid
+		  FROM source.manual  ANNOT('M7') m,
+		       source.manualpublished ANNOT('M7') mp,
+			   source.author ANNOT('M7') a
+			   WHERE m.manid=mp.manid AND mp.authid = a.authid
+		</Code>
+	</Transformation>
+   <!-- ******************************************************************************** -->
+   <!-- * UNPUBAUTHOR                                                                    -->
+   <!-- ******************************************************************************** -->
+ 	<!-- <Transformation id="T5" creates="unpubauthor"> -->
+	<!-- 	<Implements><Mapping ref="M1" /></Implements> -->
+	<!-- 	<Code> -->
+	<!-- 	  SELECT 1 AS tid, 1 AS unpubid, 1 AS authorid -->
+	<!-- 	  WHERE false -->
+	<!-- 	</Code> -->
+	<!-- </Transformation> -->
+ </Transformations>
+<ConnectionInfo>
+	<Host>localhost</Host>
+	<DB>amalgam</DB>
+	<User>lordpretzel</User>
+	<Password/>
+	<Port>5432</Port>
+</ConnectionInfo>
+ <Data>
+	<InstanceFile name="article">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>article.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="articlepublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>articleRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="author">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>author.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="book">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>book.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="bookpublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>bookRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="incollection">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>incollection.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="incollpublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>incollectionRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="inproceedings">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>inproceedings.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="inprocpublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>inproceedingsRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="manual">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>manual.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="manualpublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>manualRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>	
+	<InstanceFile name="misc">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>misc.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="miscpublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>miscRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="techreport">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>techreport.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+	<InstanceFile name="techpublished">
+		<Path>resource/exampleScenarios/Amalgam/data1</Path>
+		<FileName>techreportRel.txt</FileName>
+		<ColumnDelim>|</ColumnDelim>
+	</InstanceFile>
+</Data>
+</this:MappingScenario>

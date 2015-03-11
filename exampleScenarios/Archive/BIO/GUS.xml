@@ -1,0 +1,162 @@
+<!-- GUS-BIOSQL REAL DATASET SCENARIO: GUS Database Schema  -->
+<!-- Schema provided by Bodgan Alexe [SIGMOD 2011]          -->
+<xml:MappingScenario xmlns:xml="org/vagabond/xmlmodel">
+<Schemas>
+  <SourceSchema>
+
+		<Relation name="GUS_Gene" >
+      <Attr> <Name>GENE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GENE_SYMBOL</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GENE_CATEGORY_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>REVIEW_STATUS_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>DESCRIPTION</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>REVIEWER_SUMMARY</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>SEQUENCE_ONTOLOGY_ID</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>GENE_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="GUS_GeneSynonym" >
+      <Attr> <Name>GENE_SYNONYM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GENE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>SYNONYM_NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>REVIEW_STATUS_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>IS_OBSOLETE</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>GENE_SYNONYM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_GORelationship" >
+      <Attr> <Name>GO_RELATIONSHIP_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>PARENT_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>CHILD_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GO_RELATIONSHIP_TYPE_ID</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>GO_RELATIONSHIP_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_GOSynonym" >
+      <Attr> <Name>GO_SYNONYM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>EXTERNAL_DATABASE_RELEASE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>SOURCE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GO_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>TEXT</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>GO_SYNONYM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="GUS_GOTerm" >
+      <Attr> <Name>GO_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GO_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>EXTERNAL_DATABASE_RELEASE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>SOURCE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>DEFINITION</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>COMMENT_STRING</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>MINIMUM_LEVEL</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>MAXIMUM_LEVEL</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NUMBER_OF_LEVELS</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>ANCESTOR_GO_TERM_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>IS_OBSOLETE</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>GO_TERM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="GUS_TAXON" >
+      <Attr> <Name>TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NCBI_TAX_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>PARENT_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>RANK</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>GENETIC_CODE_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>MITOCHONDRIAL_GENETIC_CODE_ID</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>TAXON_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+		<Relation name="GUS_TaxonName" >
+      <Attr> <Name>TAXON_NAME_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>TAXON_ID</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>UNIQUE_NAME_VARIANT</Name> <DataType> TEXT </DataType>
+      <Attr> <Name>NAME_CLASS</Name> <DataType> TEXT </DataType>
+      <PrimaryKey> 
+        <Attr>TAXON_NAME_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <ForeignKey>
+      <From tableref="GUS_GeneSynonym">
+        <Attr>GENE_ID</Attr>
+      </From>
+      <To tableref="GUS_Gene">
+        <Attr>GENE_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GORelationship">
+        <Attr>PARENT_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GORelationship">
+        <Attr>CHILD_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GOSynonym">
+        <Attr>GO_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GOTerm">
+        <Attr>ANCESTOR_GO_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_TAXON">
+        <Attr>PARENT_ID</Attr>
+      </From>
+      <To tableref="GUS_TAXON">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_TaxonName">
+        <Attr>TAXON_ID</Attr>
+      </From>
+      <To tableref="GUS_TAXON">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+
+  </SourceSchema>
+
+</Schemas>  
+
+</xml:MappingScenario>

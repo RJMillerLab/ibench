@@ -13,11 +13,14 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.xmlbeans.XmlOptions;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.vagabond.benchmark.model.TrampXMLModel;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
-import tresc.benchmark.configGen.ConfigGenerator;
+import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SchemaType;
 
+import tresc.benchmark.configGen.ConfigGenerator;
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
@@ -37,6 +40,8 @@ import vtools.xml.XSMLWriter;
 // PRG Removed redundant output and also replaced code to avoid generating string if it is not going to be output - Oct 5, 2012
 // MN  ADD two methods to generate random source and target inclusion dependencies, print results as mapjob, xsml and xsd files - 3 April 2014
 // PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
+// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
+// PRG ADD Computing Metadata Stats - 25 FEB 2015
 
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);
@@ -44,6 +49,9 @@ public class STBenchmark {
 	private static Configuration _configuration;
 	// PRG ADD Instance Variable to hold the schema mapping currently being generated
 	private MappingScenario _scenario;
+	
+	// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
+	private double _elapsedTime = 0;
 
 	public STBenchmark() {
 		_configuration = new Configuration();
@@ -62,6 +70,12 @@ public class STBenchmark {
     {
         return _scenario;
     }
+	
+	// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
+	public double getMappingGenerationTime()
+    {
+        return _elapsedTime;
+    }	
 	
 	public void parseArgs (String[] args) throws CmdLineException {
 		CmdLineParser parser;
@@ -135,10 +149,6 @@ public class STBenchmark {
 	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
 	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
 			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
-		
-		if(!_configuration.getOutputOption(OutputOption.XSML))
-			return;
-		
 		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
 		
 		File xsmlDir = new File("./out0");
@@ -243,7 +253,7 @@ public class STBenchmark {
 		// PRG - Replaced to avoid generating string if it is not going to be output - Oct 5, 2012
 		// scenario.prettyPrint(buf, 0);
 		// if (log.isDebugEnabled()) {log.debug(buf);};
-		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
+//		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
 
 		// print scenario on file
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
@@ -352,7 +362,7 @@ public class STBenchmark {
 		if (_configuration.configurationFile != null) {
 			//parseConfigFile(_configuration.configurationFile);
 			//MN changed the code - 21 April 2014
-			System.out.print(_configuration.configurationFile);
+//			System.out.print(_configuration.configurationFile);
 			PropertyWrapper props = new PropertyWrapper(_configuration.configurationFile);
 			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);
@@ -361,7 +371,7 @@ public class STBenchmark {
 			runConfig();
 		}
 		else if (_configuration.propertyFileName != null) {
-			System.out.print(_configuration.propertyFileName);
+//			System.out.print(_configuration.propertyFileName);
 			PropertyWrapper props = new PropertyWrapper(_configuration.propertyFileName);
 			if (log.isDebugEnabled()) {log.debug(props.toString());};
 			_configuration.readFromProperties(props);
@@ -382,6 +392,9 @@ public class STBenchmark {
 	
 	public void runConfig() throws Exception {
 		
+		// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
+		long startTime = System.currentTimeMillis();
+		
 		Modules.scenarioGenerator = new Generator(_configuration);
 		// PRG MODIFY next lines to use instance variable instead of local variable
 		// PRG REPLACED "scenario" with "_scenario" in runConfig() source code
@@ -393,6 +406,9 @@ public class STBenchmark {
 		ArrayList<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
 		ArrayList<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
 		
+		// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
+		_elapsedTime = 1. * (System.currentTimeMillis() - startTime) / 1000;
+				
 		// log.debug("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 
 		// At last, STBenchmark must output and/or write to disk the generated output in TrampXML format
@@ -402,19 +418,27 @@ public class STBenchmark {
 				     _configuration.getMappingFileName(),
 				     _configuration.getSchemaFile());
 		
+		if (_configuration.getOutputOption(OutputOption.Clio)) {
 		//MN prints results in Mapjob, XSML and XSD formats for the purpose of evaluating MapMerge
 		printResultsMapjobAndXSMLAndXSD(_scenario, 
 			     _configuration.getSourceSchemaFile(), 
 			     _configuration.getTargetSchemaFile(),
 			     _configuration.getMappingFileName(),
 			     _configuration.getSchemaFile(), randomSourceInclusionDependencies, randomTargetInclusionDependencies);
-		
+		}
 		
 		
 		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(_scenario);
 		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))
 			Modules.explGen.genearteExpls(_scenario, _configuration);
+		
+		// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
+		System.out.println("\niBench - Mapping Generation Time: " + _elapsedTime + " seconds");
+		
+		// PRG ADD Computing Metadata Stats - 25 FEB 2015
+		computeMetadataStats();
+		
 	}
 
 	public void run(String configLine) throws Exception {
@@ -432,4 +456,45 @@ public class STBenchmark {
 	//	benchmark.run(args);
 		
 	//}
+	
+	// PRG ADD Computing Metadata Stats - 25 FEB 2015
+	private void computeMetadataStats() throws Exception {
+		
+		long startTime = System.currentTimeMillis();
+		
+		TrampXMLModel txModel = _scenario.getDoc();
+		
+		SchemaType source = txModel.getSchema(true);
+		SchemaType target = txModel.getSchema(false);
+		
+		int numOfSourceRelations = source.sizeOfRelationArray();
+		
+		int numOfSourceAttributes = 0;
+		for (int relIndex = 0; relIndex < numOfSourceRelations; relIndex++) {
+			numOfSourceAttributes = numOfSourceAttributes + source.getRelationArray(relIndex).sizeOfAttrArray();
+		}
+		
+		int numOfTargetRelations = target.sizeOfRelationArray();
+		
+		int numOfTargetAttributes = 0;
+		for (int relIndex = 0; relIndex < numOfTargetRelations; relIndex++) {
+			numOfTargetAttributes = numOfTargetAttributes + target.getRelationArray(relIndex).sizeOfAttrArray();
+		}
+		
+		int numOfTotalMappings = txModel.getMappings().length;
+		
+		double elapsedTime = 1. * (System.currentTimeMillis() - startTime) / 1000;
+		
+		System.out.println("\niBench - Stats Computation Time: " + elapsedTime + " seconds");
+		
+		System.out.println("\nSource Schema Stats: " + numOfSourceRelations + "(relations) " + numOfSourceAttributes + "(attributes)");
+		
+		System.out.println("\nTarget Schema Stats: " + numOfTargetRelations + "(relations) " + numOfTargetAttributes + "(attributes)");
+		
+		System.out.println("\nTotal Schema Stats: " + (numOfSourceRelations+numOfTargetRelations) + "(relations) " 
+		                    + (numOfSourceAttributes+numOfTargetAttributes) + "(attributes)");
+		
+		System.out.println("\nTotal Mappings Stats: " + numOfTotalMappings + "(mappings)"); 		
+		
+	}
 }

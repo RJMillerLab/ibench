@@ -1,0 +1,6 @@
+top: 1, prec: 1.000000, rec: 1.000000
+top: 2, prec: 0.333333, rec: 1.000000
+top: 3, prec: 0.076923, rec: 1.000000
+top: 4, prec: 0.043478, rec: 1.000000
+top: 5, prec: 0.043478, rec: 1.000000
+Total: 3.66 secs
