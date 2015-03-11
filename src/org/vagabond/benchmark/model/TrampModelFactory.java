@@ -237,10 +237,12 @@ public class TrampModelFactory {
 		}
 		
 		SchemaType s = doc.getSchema(source);
-		s.addNewRelation();
-		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
+		RelationType newR = s.addNewRelation();
+		newR.set(r);
+//		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
 		
-		doc.indexRel(s.getRelationArray()[s.sizeOfRelationArray() - 1], source);
+//		doc.indexRel(s.getRelationArray()[s.sizeOfRelationArray() - 1], source);
+		doc.indexRel(newR, source);
 		addSTRelation(hook, r.getName(), attr, dTypes, source);
 		addToIndex(r, source);
 		

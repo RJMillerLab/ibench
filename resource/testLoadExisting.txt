@@ -1,8 +1,8 @@
 # Configuration File for STBenchmark
 
 # Output Path Prefixes
-SchemaPathPrefix=test2
-InstancePathPrefix=test2
+SchemaPathPrefix=test3
+InstancePathPrefix=test3
 
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 15
@@ -32,9 +32,10 @@ Scenarios.VALUEMANAGEMENT = 0
 # number of such scenarios to load
 LoadScenarios.NumScenarios = 1
 # these scenarios are numbered and for each we require the name, the XML file, and how many instances we should create
-LoadScenarios.0.File = /home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/a1-to-a3.xml
+#LoadScenarios.0.File =  exampleScenarios/a1-to-a3.xml
+LoadScenarios.0.File = /Users/lord_pretzel/Documents/Research/Projects/Vagabond/Experiments/Workloads/2015-02-RealDataSets/Amalgam/a1-to-a2.xml
 LoadScenarios.0.Name = simpleTest
-LoadScenarios.0.Inst = 1
+LoadScenarios.0.Inst = 1000
 
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 3
