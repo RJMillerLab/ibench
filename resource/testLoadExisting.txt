@@ -35,7 +35,7 @@ LoadScenarios.NumScenarios = 1
 #LoadScenarios.0.File =  exampleScenarios/a1-to-a3.xml
 LoadScenarios.0.File = /Users/lord_pretzel/Documents/Research/Projects/Vagabond/Experiments/Workloads/2015-02-RealDataSets/Amalgam/a1-to-a2.xml
 LoadScenarios.0.Name = simpleTest
-LoadScenarios.0.Inst = 1000
+LoadScenarios.0.Inst = 250
 
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 3

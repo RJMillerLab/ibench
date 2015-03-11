@@ -189,7 +189,7 @@ public class Configuration {
 			int numInst = prop.getInt(i + ".Inst", 0);
 			File scenFile = new File(fileName);
 			if (!scenFile.exists())
-				throw new Exception("scenario file " + scenFile + " does not exist");
+				throw new Exception("scenario file <" + scenFile + "> from <" + fileName + "> does not exist");
 			numLoadScenarioInsts[i] = numInst;
 			loadScenarios.add(scenFile);
 			loadScenarioNames.add(name);
