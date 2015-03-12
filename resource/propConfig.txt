@@ -1,17 +1,17 @@
 # Configuration File for STBenchmark
 
 # Output Path Prefixes
-SchemaPathPrefix=test1
-InstancePathPrefix=test1
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 3
+Scenarios.COPY = 10
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
 Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 1
+Scenarios.VERTPARTITION = 0
 Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
@@ -37,10 +37,8 @@ ConfigOptions.NumOfParamsInFunctions = 3
 ConfigOptions.PrimaryKeySize = 2
 ConfigOptions.NumOfJoinAttributes = 1
 ConfigOptions.JoinKind = 1 
-
 # Star is 0 , chain is 1
-ConfigOptions.JoinKind = 0 
-ConfigOptions.SkolemKind = 0
+ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
@@ -51,14 +49,12 @@ ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
 ConfigOptions.TargetInclusionDependencyFKPerc = 0
-
 # exists is 1 and not exists is 0
 ConfigOptions.SourceCircularInclusionDependency = 0
 ConfigOptions.SourceCircularFK = 0
 ConfigOptions.TargetCircularInclusionDependency = 0
 ConfigOptions.TargetCircularFK = 0
 ConfigOptions.VPAuthorityComplexity = 9
-
 
 # Deviations for each of the parameters
 ConfigOptionsDeviation.NumOfSubElements = 5
@@ -86,12 +82,12 @@ ConfigOptionsDeviation.SourceFDPerc = 0
 ConfigOptionsDeviation.VPAuthorityComplexity = 7
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 1230918
-RepElementCount = 10
+#RandomSeed = 917289912
+RepElementCount = 1000
 MaxStringLength = 100
-MaxNumValue = 100000
+MaxNumValue = 1000
 DataGenerator = TrampCSV
-MappingLanguage = FOtgds
+MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
@@ -100,12 +96,11 @@ OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
-OutputOption.Clio = false
-OutputOption.XSML = false
+OutputOption.Clio = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
-TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = true
-TrampXMLOutput.Data = true
-TrampXMLOutput.ConnectionInfo = true
-TrampXMLOutput.FDs = false
+TrampXMLOutput.Correspondences = false
+TrampXMLOutput.Transformations = false
+TrampXMLOutput.Data = false
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = true

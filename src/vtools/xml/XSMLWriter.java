@@ -85,45 +85,46 @@ public class XSMLWriter {
 //		int corrsIndexBegin = sScenario.indexOf("<Correspondences");
 //		int corrsIndexEnd = sScenario.indexOf("</Correspondences");
 //		String correspondences = sScenario.substring(corrsIndexBegin+28, corrsIndexEnd-3);
-		
-		for(CorrespondenceType c: scenario.getDoc().getDocument().
-				getMappingScenario().getCorrespondences().
-				getCorrespondenceArray())
+		if (scenario.getDoc().getDocument().getMappingScenario().isSetCorrespondences())
 		{
-//		while (!correspondences.equals("")){
-//			String nameCorr = correspondences.split("=")[1].split(">")[0];
-			//MN removing the name of correspondences - 6 August 2014
-			buf.append("    <valueMapping>\n");
-			
-//			int corrIndexEnd = correspondences.indexOf("</Correspondence>");
-
-//			String correspondence = correspondences.substring(0, corrIndexEnd+17);
-//			String fromRel = ((correspondence.split("="))[2].split(">"))[0];
-//			String fromRelAttr = (((correspondence.split("="))[2].split("<Attr>"))[1].split("</Attr>"))[0];
-//			String toRel = ((correspondence.split("="))[3].split(">"))[0];
-//			String toRelAttr = (((correspondence.split("="))[3].split("<Attr>"))[1].split("</Attr>"))[0];
-//TODO works only for one attribute correspondences?			
-//			fromRel = fromRel.substring(1, fromRel.length()-1);
-			//fromRelAttr = fromRelAttr.substring(0, fromRelAttr.length()-1);
-//			toRel = toRel.substring(1, toRel.length()-1);
-			//toRelAttr = toRelAttr.substring(0, toRelAttr.length()-1);
+			for(CorrespondenceType c: scenario.getDoc().getDocument().
+					getMappingScenario().getCorrespondences().
+					getCorrespondenceArray())
+			{
+	//		while (!correspondences.equals("")){
+	//			String nameCorr = correspondences.split("=")[1].split(">")[0];
+				//MN removing the name of correspondences - 6 August 2014
+				buf.append("    <valueMapping>\n");
+				
+	//			int corrIndexEnd = correspondences.indexOf("</Correspondence>");
 	
-			String fromRel = c.getFrom().getTableref();
-			String toRel = c.getTo().getTableref();
-			String fromRelAttr = c.getFrom().getAttrArray(0);
-			String toRelAttr = c.getTo().getAttrArray(0);
-			
-			buf.append("      <source value=\"" + "$" + name + "_Src0" + "/" + fromRel + "/" + fromRelAttr + "\"/>\n");
-			buf.append("      <target value=\"" + "$" + name + "_Trg0" + "/" + toRel   + "/" + toRelAttr   + "\"/>\n");
-			
-//			if(correspondences.length()>corrIndexEnd+17)
-//			    correspondences = correspondences.substring(corrIndexEnd+18);
-//			else
-//				break;
-			
-			buf.append("    </valueMapping>\n");
-		}
+	//			String correspondence = correspondences.substring(0, corrIndexEnd+17);
+	//			String fromRel = ((correspondence.split("="))[2].split(">"))[0];
+	//			String fromRelAttr = (((correspondence.split("="))[2].split("<Attr>"))[1].split("</Attr>"))[0];
+	//			String toRel = ((correspondence.split("="))[3].split(">"))[0];
+	//			String toRelAttr = (((correspondence.split("="))[3].split("<Attr>"))[1].split("</Attr>"))[0];
+	//TODO works only for one attribute correspondences?			
+	//			fromRel = fromRel.substring(1, fromRel.length()-1);
+				//fromRelAttr = fromRelAttr.substring(0, fromRelAttr.length()-1);
+	//			toRel = toRel.substring(1, toRel.length()-1);
+				//toRelAttr = toRelAttr.substring(0, toRelAttr.length()-1);
 		
+				String fromRel = c.getFrom().getTableref();
+				String toRel = c.getTo().getTableref();
+				String fromRelAttr = c.getFrom().getAttrArray(0);
+				String toRelAttr = c.getTo().getAttrArray(0);
+				
+				buf.append("      <source value=\"" + "$" + name + "_Src0" + "/" + fromRel + "/" + fromRelAttr + "\"/>\n");
+				buf.append("      <target value=\"" + "$" + name + "_Trg0" + "/" + toRel   + "/" + toRelAttr   + "\"/>\n");
+				
+	//			if(correspondences.length()>corrIndexEnd+17)
+	//			    correspondences = correspondences.substring(corrIndexEnd+18);
+	//			else
+	//				break;
+				
+				buf.append("    </valueMapping>\n");
+			}
+		}
 //		buf.append("    </valueMapping>\n");
 		buf.append("  </componentMappings>\n");
 		//just for testing only correspondences
