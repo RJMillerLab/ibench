@@ -89,7 +89,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 14491
+RandomSeed = 14493
 RepElementCount = 1
 MaxStringLength = 100
 MaxNumValue = 1000
