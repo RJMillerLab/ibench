@@ -45,10 +45,10 @@ ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 100
-ConfigOptions.SourceInclusionDependencyPerc = 40
-ConfigOptions.SourceInclusionDependencyFKPerc = 40
-ConfigOptions.TargetInclusionDependencyPerc = 40
-ConfigOptions.TargetInclusionDependencyFKPerc = 40
+ConfigOptions.SourceInclusionDependencyPerc = 30
+ConfigOptions.SourceInclusionDependencyFKPerc = 30
+ConfigOptions.TargetInclusionDependencyPerc = 30
+ConfigOptions.TargetInclusionDependencyFKPerc = 30
 # exists is 1 and not exists is 0
 ConfigOptions.SourceCircularInclusionDependency = 1
 ConfigOptions.SourceCircularFK = 1
@@ -80,7 +80,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 14
+RandomSeed = 10
 RepElementCount = 100
 MaxStringLength = 100
 MaxNumValue = 1000
