@@ -5,21 +5,21 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
-Scenarios.HORIZPARTITION = 0
-Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
-Scenarios.FUSION = 0
-Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 10
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 10
-Scenarios.VERTPARTITIONHASA = 10
-Scenarios.VERTPARTITIONNTOM = 10
-Scenarios.MERGEADD = 0
-Scenarios.VERTPARTITIONISAAUTHORITY = 0
+Scenarios.COPY = 10000
+Scenarios.HORIZPARTITION = 2000
+Scenarios.SURROGATEKEY = 200
+Scenarios.MERGING = 2000
+Scenarios.FUSION = 200
+Scenarios.SELFJOINS = 200
+Scenarios.VERTPARTITION = 15000
+Scenarios.ADDATTRIBUTE = 5000
+Scenarios.DELATTRIBUTE = 5000
+Scenarios.ADDDELATTRIBUTE = 1000
+Scenarios.VERTPARTITIONISA = 1500
+Scenarios.VERTPARTITIONHASA = 1500
+Scenarios.VERTPARTITIONNTOM = 1500
+Scenarios.MERGEADD = 500
+Scenarios.VERTPARTITIONISAAUTHORITY = 200
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -29,14 +29,14 @@ Scenarios.VALUEGEN = 0
 Scenarios.VALUEMANAGEMENT = 0
 
 # Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 5
-ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumOfAttributesToDelete = 1
-ConfigOptions.JoinSize = 1
-ConfigOptions.NumOfParamsInFunctions = 1
-ConfigOptions.PrimaryKeySize = 1
+ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfNewAttributes = 3
+ConfigOptions.NumOfAttributesToDelete = 3
+ConfigOptions.JoinSize = 3
+ConfigOptions.NumOfParamsInFunctions = 3
+ConfigOptions.PrimaryKeySize = 2
 ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 0 
+ConfigOptions.JoinKind = 1 
 # Star is 0 , chain is 1
 ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
@@ -45,24 +45,25 @@ ConfigOptions.NestingDepth = 0
 ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 100
-ConfigOptions.SourceInclusionDependencyPerc = 30
-ConfigOptions.SourceInclusionDependencyFKPerc = 30
-ConfigOptions.TargetInclusionDependencyPerc = 30
-ConfigOptions.TargetInclusionDependencyFKPerc = 30
+ConfigOptions.SourceInclusionDependencyPerc = 0
+ConfigOptions.SourceInclusionDependencyFKPerc = 0
+ConfigOptions.TargetInclusionDependencyPerc = 0
+ConfigOptions.TargetInclusionDependencyFKPerc = 0
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 1
-ConfigOptions.SourceCircularFK = 1
-ConfigOptions.TargetCircularInclusionDependency = 1
-ConfigOptions.TargetCircularFK = 1
+ConfigOptions.SourceCircularInclusionDependency = 0
+ConfigOptions.SourceCircularFK = 0
+ConfigOptions.TargetCircularInclusionDependency = 0
+ConfigOptions.TargetCircularFK = 0
+ConfigOptions.VPAuthorityComplexity = 9
 
 # Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 2
-ConfigOptionsDeviation.NumOfNewAttributes = 0
-ConfigOptionsDeviation.NumOfAttributesToDelete = 0
-ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 0
-ConfigOptionsDeviation.PrimaryKeySize = 0
-ConfigOptionsDeviation.NumOfJoinAttributes = 0
+ConfigOptionsDeviation.NumOfSubElements = 5
+ConfigOptionsDeviation.NumOfNewAttributes = 1
+ConfigOptionsDeviation.NumOfAttributesToDelete = 1
+ConfigOptionsDeviation.JoinSize = 1
+ConfigOptionsDeviation.NumOfParamsInFunctions = 1
+ConfigOptionsDeviation.PrimaryKeySize = 1
+ConfigOptionsDeviation.NumOfJoinAttributes = 1
 ConfigOptionsDeviation.JoinKind = 0
 ConfigOptionsDeviation.SkolemKind = 0
 ConfigOptionsDeviation.ReuseSourcePerc = 0
@@ -78,10 +79,11 @@ ConfigOptionsDeviation.TargetCircularInclusionDependency = 0
 ConfigOptionsDeviation.TargetCircularFK = 0
 ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
+ConfigOptionsDeviation.VPAuthorityComplexity = 7
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 10
-RepElementCount = 100
+#RandomSeed = 917289912
+RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
@@ -89,15 +91,16 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = true
+OutputOption.Data = false
 OutputOption.XMLSchemas = false
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
+OutputOption.Clio = false
 
 # Optional activation/deactivation of output parts of the Tramp XML document
-TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = true
-TrampXMLOutput.Data = true
+TrampXMLOutput.Correspondences = false
+TrampXMLOutput.Transformations = false
+TrampXMLOutput.Data = false
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = true
