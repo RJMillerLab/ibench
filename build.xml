@@ -1,4 +1,4 @@
-<project name="STBenchmarkPlus" default="Deploy" basedir=".">
+<project name="iBench" default="Deploy" basedir=".">
 	<description>
 
 	</description>
@@ -69,11 +69,11 @@
 	<target name="Deploy" depends="Jar">
 		<var name="deployto" value="${binmacdir}" />
 		<antcall target="DeployOne" />
-		<copy todir="${binmacdir}" file="${buildresdir}/stBenchmark.sh" />
+		<copy todir="${binmacdir}" file="${buildresdir}/iBench.sh" />
 
 		<var name="deployto" value="${binwindir}" />
 		<antcall target="DeployOne" />
-		<copy todir="${binwindir}" file="${buildresdir}/stBenchmark.bat" />
+		<copy todir="${binwindir}" file="${buildresdir}/iBench.bat" />
 	</target>
 
 	<target name="DeployOne">
@@ -99,15 +99,15 @@
 	<target name="Jar" depends="Compile">
 		<mkdir dir="${binmacdir}"/>
 		<mkdir dir="${binwindir}"/>
-		<jar destfile="${binmacdir}/stbenchmark.jar" basedir="${binarydir}">
+		<jar destfile="${binmacdir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${mainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
 		</jar>
-		<copy todir="${builddir}" file="${binmacdir}/stbenchmark.jar" />
-		<jar destfile="${binwindir}/stbenchmark.jar" basedir="${binarydir}">
+		<copy todir="${builddir}" file="${binmacdir}/iBench.jar" />
+		<jar destfile="${binwindir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${mainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
