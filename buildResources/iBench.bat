@@ -1,1 +1,1 @@
-java -Xmx2048m -jar iBench.jar
+java -Xmx2048m -classpath .:~/iBench/codebase/build/lib/ -jar iBench.jar
