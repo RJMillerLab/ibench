@@ -24,7 +24,8 @@
   <property name="binwindir" location="${builddir}/win"/> -->
 
 	<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />
-	<property name="mainClass" value="tresc.benchmark.STBenchmark" />
+  <!-- <property name="mainClass" value="tresc.benchmark.STBenchmark" /> -->
+  <property name="mainClass" value="tresc.benchmark.iBenchDriver" />
 
 	<!-- ClassPath Setup -->
 
