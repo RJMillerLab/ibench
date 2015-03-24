@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.AttrRefType;
@@ -15,6 +16,7 @@ import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.FunctionType;
+import org.vagabond.xmlmodel.MappingScenarioDocument;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.MappingType.Uses;
 import org.vagabond.xmlmodel.RelAtomType;
@@ -22,6 +24,7 @@ import org.vagabond.xmlmodel.RelInstanceFileType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.SchemaType;
+import org.vagabond.xmlmodel.SchemasType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
@@ -59,6 +62,7 @@ public class TrampModelFactory {
 	private MappingScenario stScen;
 	private Configuration conf;
 	private PartialMapping p;
+	private MappingScenarioDocument oDoc;
 
 	public enum FuncParamType {
 		Var,
@@ -68,9 +72,20 @@ public class TrampModelFactory {
 	public TrampModelFactory(MappingScenario stScen) {
 		this.setStScen(stScen);
 		this.doc = stScen.getDoc();
+		initODoc();
 		initIdGen();
 	}
 	
+	/**
+	 * 
+	 */
+	private void initODoc() {
+		oDoc = MappingScenarioDocument.Factory.newInstance();
+		SchemasType schemas = oDoc.addNewMappingScenario().addNewSchemas();
+		schemas.addNewSourceSchema();
+		schemas.addNewTargetSchema();
+	}
+
 	public TrampModelFactory(TrampXMLModel doc) {
 		this.doc = doc;
 		initIdGen();
@@ -371,8 +386,8 @@ public class TrampModelFactory {
 	public void addForeignKey (String fromRel, String[] fromA, String toRel, 
 			String[] toA, boolean source) {
 		Schema s = source ? stScen.getSource() : stScen.getTarget();
-		SchemaType st = source ? doc.getScenario().getSchemas().getSourceSchema() :
-			doc.getScenario().getSchemas().getTargetSchema();
+		SchemaType st = source ? oDoc.getMappingScenario().getSchemas().getSourceSchema() :
+			oDoc.getMappingScenario().getSchemas().getTargetSchema();
 		
 		ForeignKeyType fk = st.addNewForeignKey();
 		AttrRefType from = fk.addNewFrom();
@@ -655,5 +670,23 @@ public class TrampModelFactory {
 		}
 	}
 
-
+	public void copyFKsToRealDoc () {
+		SchemaType oSource, oTarget, source, target;
+		source = doc.getSchema(true);
+		oSource = oDoc.getMappingScenario().getSchemas().getSourceSchema();
+		target = doc.getSchema(false);
+		oTarget = oDoc.getMappingScenario().getSchemas().getTargetSchema();
+		
+		for(ForeignKeyType fk: oSource.getForeignKeyArray())
+		{
+			ForeignKeyType fkNew = source.addNewForeignKey();
+			fkNew.set(fk);
+		}
+		
+		for(ForeignKeyType fk: oTarget.getForeignKeyArray())
+		{
+			ForeignKeyType fkNew = target.addNewForeignKey();
+			fkNew.set(fk);
+		}
+	}
 }

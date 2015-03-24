@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
+import org.vagabond.benchmark.model.TrampModelFactory;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.xmlmodel.MappingScenarioDocument;
@@ -188,6 +189,9 @@ public class Generator {
 					loadScenarioGenerators[i].generateNextScenario(scenario, configuration);
 			}
 		}
+		
+		// create FKs
+		scenario.getDocFac().copyFKsToRealDoc();
 		
 		//MN generates Random Source Inclusion Dependencies
 		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
