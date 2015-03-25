@@ -100,7 +100,6 @@ public class iBenchDriver
 			renameSchemaFile(0, j, schemaFile);
 			
 			printIterationStats(j, benchmark);
-			
 		}
 		
 		printExperimentStats();
