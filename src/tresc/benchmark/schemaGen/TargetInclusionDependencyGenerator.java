@@ -129,13 +129,13 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 				int max_tries = 10;
 				while(!done && (max_tries>0)){
 					//we roll dice to choose from and to relations for generating foreign keys
-					int fromRelIndex = _generator.nextInt(rels.length-1);
+					int fromRelIndex = _generator.nextInt(rels.length);
 					int toRelIndex = -1;
 					
 					int max_triesIn = 10;
 					boolean doneIn = false;
 					while(max_triesIn>0 && ! doneIn){
-						toRelIndex = _generator.nextInt(rels.length-1);
+						toRelIndex = _generator.nextInt(rels.length);
 						//self-referring inclusion dependencies are not allowed - 
 						//note that I considered isSetPrimaryKey for generating foreign key
 						//MN size of foreign key should be equal to size of primary key; 
@@ -187,7 +187,7 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 					while(max_triesAttr>0 && !doneAttr){
 						
 						for(int j=0; j<toPKAttrs.length; j++){
-							int fromRelAttrIndex = _generator.nextInt(rels[fromRelIndex].sizeOfAttrArray()-1);
+							int fromRelAttrIndex = _generator.nextInt(rels[fromRelIndex].sizeOfAttrArray());
 							boolean same =false;
 							for(int g=0; g<j; g++)
 								if(fromAttrsPos[g] == fromRelAttrIndex)
