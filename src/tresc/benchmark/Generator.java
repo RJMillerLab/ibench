@@ -193,17 +193,22 @@ public class Generator {
 		// create FKs
 		scenario.getDocFac().copyFKsToRealDoc();
 		
-		//MN generates Random Source Inclusion Dependencies
-		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
-		srcIDGen.generateScenario(scenario, configuration);
-		//MN to inject random source inclusion dependencies into mappings - 14 April 2014
-		randomSourceInclusionDependencies = srcIDGen.getRandomSourceIDs();
-				
-		//MN generates Random Target Inclusion Dependencies
-		TargetInclusionDependencyGenerator trgIDGen = new TargetInclusionDependencyGenerator();
-		trgIDGen.generateScenario(scenario, configuration);
-		//MN to inject random target inclusion dependencies into mappings - 14 April 2014
-		randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
+		if (configuration.getParam(ParameterName.SourceInclusionDependencyPerc) > 0) {
+			//MN generates Random Source Inclusion Dependencies
+			SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
+			srcIDGen.generateScenario(scenario, configuration);
+			//MN to inject random source inclusion dependencies into mappings - 14 April 2014
+			randomSourceInclusionDependencies = srcIDGen.getRandomSourceIDs();
+		}
+		
+		
+		if (configuration.getParam(ParameterName.TargetInclusionDependencyPerc) > 0) {		
+			//MN generates Random Target Inclusion Dependencies
+			TargetInclusionDependencyGenerator trgIDGen = new TargetInclusionDependencyGenerator();
+			trgIDGen.generateScenario(scenario, configuration);
+			//MN to inject random target inclusion dependencies into mappings - 14 April 2014
+			randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
+		}
 		
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))
