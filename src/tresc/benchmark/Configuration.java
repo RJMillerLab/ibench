@@ -184,12 +184,12 @@ public class Configuration {
 		numLoadScenarioInsts = new int[numLoadScenarios];
 		
 		for (int i = 0; i < getNumLoadScenarios(); i++) {
-			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/fh.xml"; //prop.getProperty(i + ".File", "");
+			String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/fh.xml"; //prop.getProperty(i + ".File", "");
 			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/BIO/GUS-to-BIOSQL.xml";
 			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/Amalgam/a2-to-a1.xml";
-			String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/SDB/SDB2-to-SDB3.xml";
+			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/SDB/SDB2-to-SDB3.xml";
 			String name = "simpleTest"; //prop.getProperty(i + ".Name", "");
-			int numInst = 1000; //prop.getInt(i + ".Inst", 0);
+			int numInst = 1; //prop.getInt(i + ".Inst", 0);
 			File scenFile = new File(fileName);
 			if (!scenFile.exists())
 				throw new Exception("scenario file <" + scenFile + "> from <" + fileName + "> does not exist");
