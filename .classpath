@@ -17,8 +17,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/toxgene.jar"/>
-	<classpathentry kind="lib" path="lib/trampexgen.jar"/>
+	<classpathentry kind="lib" path="lib/trampexgen.jar" sourcepath="/TrampExGen/xbeans/src"/>
 	<classpathentry kind="lib" path="lib/ant-contrib.jar"/>
-	<classpathentry kind="lib" path="lib/xbean.jar"/>
+	<classpathentry kind="lib" path="lib/xbean.jar" sourcepath="/Users/lord_pretzel/Documents/software/xmlbeans-2.2.0/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

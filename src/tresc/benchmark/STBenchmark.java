@@ -42,6 +42,7 @@ import vtools.xml.XSMLWriter;
 // PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
 // PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
 // PRG ADD Computing Metadata Stats - 25 FEB 2015
+// PRG ADD Instance Variables and Public Methods to hold/get Metadata Stats - 15 MAR 2015
 
 public class STBenchmark {
 	static Logger log = Logger.getLogger(STBenchmark.class);
@@ -52,6 +53,13 @@ public class STBenchmark {
 	
 	// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
 	private double _elapsedTime = 0;
+	// PRG ADD Instance Variables to hold Metadata Stats - 15 MAR 2015
+	private int numOfSourceRelations = 0;
+	private int numOfSourceAttributes = 0;
+	private int numOfTargetRelations = 0;
+	private int numOfTargetAttributes = 0;
+	private int numOfTotalMappings = 0;
+	// PRG END ADD Instance Variables to hold Metadata Stats - 15 MAR 2015
 
 	public STBenchmark() {
 		_configuration = new Configuration();
@@ -76,6 +84,26 @@ public class STBenchmark {
     {
         return _elapsedTime;
     }	
+	
+	public int getNumOfSourceRelations() {
+		return numOfSourceRelations;
+	}
+	
+	public int getNumOfTargetRelations() {
+		return numOfTargetRelations;
+	}
+	
+	public int getNumOfSourceAttributes() {
+		return numOfSourceAttributes;
+	}
+	
+	public int getNumOfTargetAttributes() {
+		return numOfTargetAttributes;
+	}
+	
+	public int getNumOfTotalMappings() {
+		return numOfTotalMappings;
+	}
 	
 	public void parseArgs (String[] args) throws CmdLineException {
 		CmdLineParser parser;
@@ -467,21 +495,19 @@ public class STBenchmark {
 		SchemaType source = txModel.getSchema(true);
 		SchemaType target = txModel.getSchema(false);
 		
-		int numOfSourceRelations = source.sizeOfRelationArray();
+		numOfSourceRelations = source.sizeOfRelationArray();
 		
-		int numOfSourceAttributes = 0;
 		for (int relIndex = 0; relIndex < numOfSourceRelations; relIndex++) {
 			numOfSourceAttributes = numOfSourceAttributes + source.getRelationArray(relIndex).sizeOfAttrArray();
 		}
 		
-		int numOfTargetRelations = target.sizeOfRelationArray();
+		numOfTargetRelations = target.sizeOfRelationArray();
 		
-		int numOfTargetAttributes = 0;
 		for (int relIndex = 0; relIndex < numOfTargetRelations; relIndex++) {
 			numOfTargetAttributes = numOfTargetAttributes + target.getRelationArray(relIndex).sizeOfAttrArray();
 		}
 		
-		int numOfTotalMappings = txModel.getMappings().length;
+		numOfTotalMappings = txModel.getMappings().length;
 		
 		double elapsedTime = 1. * (System.currentTimeMillis() - startTime) / 1000;
 		
