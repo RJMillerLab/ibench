@@ -232,7 +232,7 @@ public class TargetInclusionDependencyGenerator implements ScenarioGenerator {
 						max_tries--;
 					}
 					else{
-						if(((int)(configuration.getParam(Constants.ParameterName.SourceCircularFK)) == 0) &&
+						if(((int)(configuration.getParam(Constants.ParameterName.SourceCircularFK)) != 0) &&
 								isCircularInclusionDependencyFK(scenario, ids, rels[fromRelIndex].getName(), 
 										rels[toRelIndex].getName(), fromAttrs, toPKAttrs)){
 							max_tries--;
