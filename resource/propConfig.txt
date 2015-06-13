@@ -42,9 +42,9 @@ ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 50
-ConfigOptions.NoReuseScenPerc = 50
+ConfigOptions.ReuseSourcePerc = 0
+ConfigOptions.ReuseTargetPerc = 20
+ConfigOptions.NoReuseScenPerc = 60
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
@@ -80,7 +80,7 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 2
+RandomSeed = 220
 RepElementCount = 100
 MaxStringLength = 100
 MaxNumValue = 1000
