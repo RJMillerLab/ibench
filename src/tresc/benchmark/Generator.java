@@ -15,6 +15,7 @@ import smark.support.MappingScenario;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.dataGen.DataGenerator;
+import tresc.benchmark.rename.RenameDriver;
 import tresc.benchmark.schemaGen.AbstractScenarioGenerator;
 import tresc.benchmark.schemaGen.AddAttributeScenarioGenerator;
 import tresc.benchmark.schemaGen.AddDeleteScenarioGenerator;
@@ -54,6 +55,7 @@ public class Generator {
 	private ScenarioGenerator fdGen;
 	private DataGenerator dataGenerator;
 	private RandomSourceSkolemToMappingGenerator skGen;
+	private RenameDriver renamer;
 	
 	//MN two attributes for random source and target 
 	private ArrayList<String> randomSourceInclusionDependencies;
@@ -126,6 +128,9 @@ public class Generator {
 	
 		// create an generator for source attribute skolem functions
 		skGen = new RandomSourceSkolemToMappingGenerator();
+		
+		// create a rename driver
+		renamer = new RenameDriver();
 		
 		// create a data generator
 		dataGenerator =  instDataGen(config);
@@ -205,6 +210,9 @@ public class Generator {
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))
 			fdGen.generateScenario(scenario, configuration);
 
+		// do renaming?
+		renamer.applyRenaming(scenario, configuration);
+		
 		// do the source attr with skolem trick
 		if (configuration.getParam(Constants.ParameterName.SourceSkolemPerc) != 0)
 			skGen.generateScenario(scenario, configuration);
