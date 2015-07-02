@@ -10,7 +10,7 @@ package tresc.benchmark.rename;
  */
 public interface IRenamer {
 
-	public String renameSource (String oldName, String targetName);
-	public String renameTarget (String oldSourceName, String oldName);
+	public String renameSource (String tableName, String oldName, String targetName);
+	public String renameTarget (String tableName, String oldSourceName, String oldName);
 	
 }

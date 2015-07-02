@@ -19,17 +19,23 @@ public class RenameDriver {
 	IRenamer nameSelector;
 	
 	public RenameDriver () {
-		
+		nameSelector = new DummyRenamer();
 	}
 	
 	public void applyRenaming (MappingScenario scen, Configuration conf) {
 		SchemaType source = scen.getDoc().getSchema(true);
 		
 		RelationType[] sRels = source.getRelationArray();
-		AttrDefType a = sRels[0].getAttrArray()[0];
-		String targetName = null;
-		a.setName(nameSelector.renameSource(a.getName(), targetName));
-
+		
+		for(RelationType r: sRels) {
+			String relName = r.getName();
+			for(AttrDefType a: r.getAttrArray()) {
+				String oldName = a.getName();
+				String newName = nameSelector.renameSource(relName, oldName, null);
+				a.setName(newName);
+			}
+		}
+		
 //		scen.
 		
 	}
