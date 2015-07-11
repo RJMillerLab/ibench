@@ -184,10 +184,19 @@ public class Configuration {
 		numLoadScenarioInsts = new int[numLoadScenarios];
 		
 		for (int i = 0; i < getNumLoadScenarios(); i++) {
-			String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/fh.xml"; //prop.getProperty(i + ".File", "");
-			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/BIO/GUS-to-BIOSQL.xml";
+			// Amalgam 1, 2, 3
+			String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/Amalgam/a1-to-a3.xml";
+			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/Amalgam/a1-to-a2.xml";
 			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/Amalgam/a2-to-a1.xml";
-			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/SDB/SDB2-to-SDB3.xml";
+			
+			// Bio 1, 2, 3
+			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/BIO/GUS-to-BIOSQL.xml";
+			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/SDB/SDB1-to-SDB2.xml";
+			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/Archive/SDB/SDB2-to-SDB3.xml";			
+			
+			// FH 
+			//String fileName = "/home/user/millercode/iBench/branches/2525-Mehrnaz/exampleScenarios/fh.xml"; //prop.getProperty(i + ".File", "");
+						
 			String name = "simpleTest"; //prop.getProperty(i + ".Name", "");
 			int numInst = 1; //prop.getInt(i + ".Inst", 0);
 			File scenFile = new File(fileName);
