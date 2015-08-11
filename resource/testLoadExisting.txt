@@ -5,21 +5,21 @@ SchemaPathPrefix=test3
 InstancePathPrefix=test3
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 15
-Scenarios.HORIZPARTITION = 15
-Scenarios.SURROGATEKEY = 15
-Scenarios.MERGING = 15
-Scenarios.FUSION = 15
-Scenarios.SELFJOINS = 15
-Scenarios.VERTPARTITION = 15
-Scenarios.ADDATTRIBUTE = 15
-Scenarios.DELATTRIBUTE = 15
-Scenarios.ADDDELATTRIBUTE = 15
-Scenarios.VERTPARTITIONISA = 15
-Scenarios.VERTPARTITIONHASA = 15
-Scenarios.VERTPARTITIONNTOM = 15
-Scenarios.MERGEADD = 15
-Scenarios.VERTPARTITIONISAAUTHORITY = 15
+Scenarios.COPY = 0
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 0
+Scenarios.MERGING = 0
+Scenarios.FUSION = 0
+Scenarios.SELFJOINS = 0
+Scenarios.VERTPARTITION = 0
+Scenarios.ADDATTRIBUTE = 0
+Scenarios.DELATTRIBUTE = 0
+Scenarios.ADDDELATTRIBUTE = 0
+Scenarios.VERTPARTITIONISA = 0
+Scenarios.VERTPARTITIONHASA = 0
+Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.MERGEADD = 0
+Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
 # These should always be zero
 Scenarios.FLATTENING = 0
@@ -30,10 +30,11 @@ Scenarios.VALUEMANAGEMENT = 0
 
 # define additional scenarios to be loaded from Scenario XML files
 # number of such scenarios to load
-LoadScenarios.NumScenarios = 600
+LoadScenarios.NumScenarios = 1
 # these scenarios are numbered and for each we require the name, the XML file, and how many instances we should create
 #LoadScenarios.0.File =  exampleScenarios/a1-to-a3.xml
-LoadScenarios.0.File = /Users/lord_pretzel/Documents/Research/Projects/Vagabond/Experiments/Workloads/2015-02-RealDataSets/Amalgam/a1-to-a2.xml
+#LoadScenarios.0.File = /Users/lord_pretzel/Documents/Research/Projects/Vagabond/Experiments/Workloads/2015-02-RealDataSets/Amalgam/a1-to-a2.xml
+LoadScenarios.0.File =  exampleScenarios/personaddress.xml
 LoadScenarios.0.Name = simpleTest
 LoadScenarios.0.Inst = 1
 
@@ -55,13 +56,13 @@ ConfigOptions.ReuseSourcePerc = 0
 ConfigOptions.ReuseTargetPerc = 0
 ConfigOptions.NoReuseScenPerc = 100
 ConfigOptions.SourceInclusionDependencyPerc = 0
-ConfigOptions.SourceInclusionDependencyFKPerc = 20
+ConfigOptions.SourceInclusionDependencyFKPerc = 0
 ConfigOptions.TargetInclusionDependencyPerc = 0
-ConfigOptions.TargetInclusionDependencyFKPerc = 20
+ConfigOptions.TargetInclusionDependencyFKPerc = 0
 # exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 1
+ConfigOptions.SourceCircularInclusionDependency = 0
 ConfigOptions.SourceCircularFK = 0
-ConfigOptions.TargetCircularInclusionDependency = 1
+ConfigOptions.TargetCircularInclusionDependency = 0
 ConfigOptions.TargetCircularFK = 0
 
 # Deviations for each of the parameters
