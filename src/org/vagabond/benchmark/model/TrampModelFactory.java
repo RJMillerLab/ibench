@@ -254,12 +254,14 @@ public class TrampModelFactory {
 		SchemaType s = doc.getSchema(source);
 		RelationType newR = s.addNewRelation();
 		newR.set(r);
-//		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
 		
-//		doc.indexRel(s.getRelationArray()[s.sizeOfRelationArray() - 1], source);
 		doc.indexRel(newR, source);
 		addSTRelation(hook, r.getName(), attr, dTypes, source);
 		addToIndex(r, source);
+		
+		// create PK for STBench
+		if (r.isSetPrimaryKey())
+			addSTBenchKey(r.getName(), r.getPrimaryKey().getAttrArray(), source);
 		
 		if (source)
 			p.addSourceRel(r);
@@ -345,13 +347,19 @@ public class TrampModelFactory {
 		for (String a : attrs)
 			k.addAttr(a);
 
+		Key key = addSTBenchKey(relName, attrs, source);
+
+		return key;
+	}
+
+	private Key addSTBenchKey(String relName, String[] attrs, boolean source) {
+		Schema s = source ? stScen.getSource() : stScen.getTarget();
 		Key key = new Key();
 		key.addLeftTerm(new Variable("X"), new Projection(Path.ROOT, relName));
 		key.setEqualElement(new Variable("X"));
 		s.addConstraint(key);
 		for (String a : attrs)
 			key.addKeyAttr(new Projection(new Variable("X"), a));
-
 		return key;
 	}
 	

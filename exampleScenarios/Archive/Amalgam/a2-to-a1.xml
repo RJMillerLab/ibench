@@ -11,11 +11,11 @@
 			<Attr><Name>inprocID</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>bktitle</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -26,11 +26,11 @@
 			<Attr><Name>articleID</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>journal</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -41,11 +41,11 @@
 			<Attr><Name>techID</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>inst</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -56,11 +56,11 @@
 			<Attr><Name>bookID</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>publisher</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -71,11 +71,11 @@
 			<Attr><Name>collID</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>bktitle</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -87,11 +87,11 @@
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>howpub</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>confloc</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -102,11 +102,11 @@
 			<Attr><Name>manID</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>org</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
-			<Attr><Name>num</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
@@ -332,61 +332,61 @@
 
 		<Relation name="publisher">
 			<Attr><Name>pubNm</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>pubID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>pubID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>pubID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="citPublisher">
 			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>pubID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>pubID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>citKey</Attr><Attr>pubID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="journal">
 			<Attr><Name>jrnlNm</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>jrnlID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>jrnlID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>jrnlID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="citJournal">
 			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>jrnlID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>jrnlID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>citKey</Attr><Attr>jrnlID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="series">
 			<Attr><Name>seriesNm</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>seriesID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>seriesID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>seriesID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="citSeries">
 			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>seriesID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>seriesID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>citKey</Attr><Attr>seriesID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="booktitle">
 			<Attr><Name>bkTitleNm</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>bktitleID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>bktitleID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>bktitleID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="citBkTitle">
 			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>bktitleID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>bktitleID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>citKey</Attr><Attr>bktitleID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="keyWord">
 			<Attr><Name>word</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>keyWdID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>keyWdID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>keyWdID</Attr></PrimaryKey>
 		</Relation>
 
 		<Relation name="citKeyWord">
 			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>keyWdID</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>keyWdID</Name><DataType>TEXT</DataType></Attr>
 			<PrimaryKey><Attr>citKey</Attr><Attr>keyWdID</Attr></PrimaryKey>
 		</Relation>
 		

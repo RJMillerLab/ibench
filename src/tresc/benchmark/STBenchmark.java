@@ -175,90 +175,90 @@ public class STBenchmark {
 
 	//MN prints results as mapjob, xsml and xsd files
 	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
-	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
-			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
-		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
-		
-		File xsmlDir = new File("./out0");
-		if (!xsmlDir.exists())
-			xsmlDir.mkdirs();
-		
-		if (log.isDebugEnabled()) {log.debug("mapjob, xsml and xsd schema path: " + xsmlDir.toString());};
-		
-		String mapjob = S.substring(0, S.length()-8);
-		//prints as map job file
-		try{
-		    
-		    StringBuffer bufMapjob = new StringBuffer ();
-		    bufMapjob.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
-		    bufMapjob.append("<job:Job xmlns:job=\"http://com.ibm.clio.model/job/1.0\">\n");
-		    bufMapjob.append("<mapping>"+mapjob+".xsml#/</mapping>\n");
-		    bufMapjob.append("</job:Job>");
-		    
-			BufferedWriter bufWriterMapjob =
-					new BufferedWriter(new FileWriter(new File(
-							"./out0", mapjob + ".mapjob")));
-			bufWriterMapjob.write(bufMapjob.toString());
-			bufWriterMapjob.close();
-		}
-		catch (Exception e) {
-			LoggerUtil.logException(e, log);
-			throw e;
-		}
-		
-		//prints as XSML file
-		XSMLWriter xsmlPrinter = new XSMLWriter();
-		
-		StringBuffer bufXSML = new StringBuffer();
-		//////print schemas
-		xsmlPrinter.print(bufXSML, mapjob);
-		/////print correspondences
-		xsmlPrinter.print(bufXSML, mapjob, scenario);
-		////print logical mappings (for first experiment)
-		xsmlPrinter.print(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
-		try {
-			BufferedWriter bufWriterXSML =
-					new BufferedWriter(new FileWriter(new File(
-							"./out0", mapjob + ".xsml")));
-			bufWriterXSML.write(bufXSML.toString());
-			bufWriterXSML.close();
-			System.out.print(".xsml file done!\n");
-		}
-		catch (Exception e) {
-			LoggerUtil.logException(e, log);
-			throw e;
-		}
-		
-		//prints as XSD file
-		XSDWriter xsdPrinter = new XSDWriter();
-		
-		StringBuffer bufSourceXSD = new StringBuffer();
-		///print source schema (schema.getLabel())
-		xsdPrinter.printSource(bufSourceXSD, scenario, mapjob + "_Src", 0);
-		
-		StringBuffer bufTargetXSD = new StringBuffer();
-		///print target schema (schema.getLabel())
-		xsdPrinter.printTarget(bufTargetXSD, scenario, mapjob + "_Trg", 0);
-		try {
-			BufferedWriter bufWriterXSD =
-					new BufferedWriter(new FileWriter(new File(
-							"./out0", S)));
-			bufWriterXSD.write(bufSourceXSD.toString());
-			bufWriterXSD.close();
-			System.out.print("source .xsd file done!\n");
-
-			bufWriterXSD =
-					new BufferedWriter(new FileWriter(new File(
-							"./out0", T.substring(0, T.length()-7) + "Trg.xsd")));
-			bufWriterXSD.write(bufTargetXSD.toString());
-			bufWriterXSD.close();
-			System.out.print("target .xsd file done!\n");
-		}
-		catch (Exception e) {
-			LoggerUtil.logException(e, log);
-			throw e;
-		}
-	}
+//	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
+//			String M, String S1, ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
+//		if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
+//		
+//		File xsmlDir = new File("./out0");
+//		if (!xsmlDir.exists())
+//			xsmlDir.mkdirs();
+//		
+//		if (log.isDebugEnabled()) {log.debug("mapjob, xsml and xsd schema path: " + xsmlDir.toString());};
+//		
+//		String mapjob = S.substring(0, S.length()-8);
+//		//prints as map job file
+//		try{
+//		    
+//		    StringBuffer bufMapjob = new StringBuffer ();
+//		    bufMapjob.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
+//		    bufMapjob.append("<job:Job xmlns:job=\"http://com.ibm.clio.model/job/1.0\">\n");
+//		    bufMapjob.append("<mapping>"+mapjob+".xsml#/</mapping>\n");
+//		    bufMapjob.append("</job:Job>");
+//		    
+//			BufferedWriter bufWriterMapjob =
+//					new BufferedWriter(new FileWriter(new File(
+//							"./out0", mapjob + ".mapjob")));
+//			bufWriterMapjob.write(bufMapjob.toString());
+//			bufWriterMapjob.close();
+//		}
+//		catch (Exception e) {
+//			LoggerUtil.logException(e, log);
+//			throw e;
+//		}
+//		
+//		//prints as XSML file
+//		XSMLWriter xsmlPrinter = new XSMLWriter();
+//		
+//		StringBuffer bufXSML = new StringBuffer();
+//		//////print schemas
+//		xsmlPrinter.print(bufXSML, mapjob);
+//		/////print correspondences
+//		xsmlPrinter.print(bufXSML, mapjob, scenario);
+//		////print logical mappings (for first experiment)
+//		xsmlPrinter.print(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+//		try {
+//			BufferedWriter bufWriterXSML =
+//					new BufferedWriter(new FileWriter(new File(
+//							"./out0", mapjob + ".xsml")));
+//			bufWriterXSML.write(bufXSML.toString());
+//			bufWriterXSML.close();
+//			System.out.print(".xsml file done!\n");
+//		}
+//		catch (Exception e) {
+//			LoggerUtil.logException(e, log);
+//			throw e;
+//		}
+//		
+//		//prints as XSD file
+//		XSDWriter xsdPrinter = new XSDWriter();
+//		
+//		StringBuffer bufSourceXSD = new StringBuffer();
+//		///print source schema (schema.getLabel())
+//		xsdPrinter.printSource(bufSourceXSD, scenario, mapjob + "_Src", 0);
+//		
+//		StringBuffer bufTargetXSD = new StringBuffer();
+//		///print target schema (schema.getLabel())
+//		xsdPrinter.printTarget(bufTargetXSD, scenario, mapjob + "_Trg", 0);
+//		try {
+//			BufferedWriter bufWriterXSD =
+//					new BufferedWriter(new FileWriter(new File(
+//							"./out0", S)));
+//			bufWriterXSD.write(bufSourceXSD.toString());
+//			bufWriterXSD.close();
+//			System.out.print("source .xsd file done!\n");
+//
+//			bufWriterXSD =
+//					new BufferedWriter(new FileWriter(new File(
+//							"./out0", T.substring(0, T.length()-7) + "Trg.xsd")));
+//			bufWriterXSD.write(bufTargetXSD.toString());
+//			bufWriterXSD.close();
+//			System.out.print("target .xsd file done!\n");
+//		}
+//		catch (Exception e) {
+//			LoggerUtil.logException(e, log);
+//			throw e;
+//		}
+//	}
 	
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
@@ -273,7 +273,7 @@ public class STBenchmark {
 		if (log.isDebugEnabled()) {log.debug("instance path: " + instDir.toString());};
 		if (log.isDebugEnabled()) {log.debug("schema path: " + schemDir.toString());};
 		
-		XSDWriter schemaPrinter = new XSDWriter();
+//		XSDWriter schemaPrinter = new XSDWriter();
 //		XMLWriter schemaWriter = new XMLWriter();
 
 		// print scenario on the screen if required
@@ -283,26 +283,54 @@ public class STBenchmark {
 		// if (log.isDebugEnabled()) {log.debug(buf);};
 //		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
 
-		// print scenario on file
-		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
-			StringBuffer sourceSchemaBuffer = new StringBuffer();
-			schemaPrinter.print(sourceSchemaBuffer, scenario.getSource(), 0);
-			
-			StringBuffer targetSchemaBuffer = new StringBuffer();
-			schemaPrinter.print(targetSchemaBuffer, scenario.getTarget(), 0);
-			
-			try {
-				BufferedWriter bufWriter =
-						new BufferedWriter(new FileWriter(new File(
-								Configuration.schemaPathPrefix, S)));
-				bufWriter.write(sourceSchemaBuffer.toString());
-				bufWriter.close();
+		//********************************************************************************
+		// PRINT CLIO INPUTS IF REQUESTED
+		if (_configuration.getOutputOption(OutputOption.Clio)) {
+			if (log.isDebugEnabled()) {log.debug("Printing results in Mapjob, XSML and XSD formats !");};
 
-				bufWriter =
+			//MN returns random source and target inclusion dependencies - 14 April 2014
+			ArrayList<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
+			ArrayList<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
+
+			if (log.isDebugEnabled()) {log.debug("mapjob, xsml and xsd schema path: " + schemDir.toString());};
+
+			String mapjob = S.substring(0, S.length()-8);
+			//prints as map job file
+			try{
+
+				StringBuffer bufMapjob = new StringBuffer ();
+				bufMapjob.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
+				bufMapjob.append("<job:Job xmlns:job=\"http://com.ibm.clio.model/job/1.0\">\n");
+				bufMapjob.append("<mapping>"+mapjob+".xsml#/</mapping>\n");
+				bufMapjob.append("</job:Job>");
+
+				BufferedWriter bufWriterMapjob =
+						new BufferedWriter(new FileWriter(new File(schemDir, mapjob + ".mapjob")));
+				bufWriterMapjob.write(bufMapjob.toString());
+				bufWriterMapjob.close();
+			}
+			catch (Exception e) {
+				LoggerUtil.logException(e, log);
+				throw e;
+			}
+
+			//prints as XSML file
+			XSMLWriter xsmlPrinter = new XSMLWriter();
+
+			StringBuffer bufXSML = new StringBuffer();
+			//////print schemas
+			xsmlPrinter.print(bufXSML, mapjob);
+			/////print correspondences
+			xsmlPrinter.print(bufXSML, mapjob, scenario);
+			////print logical mappings (for first experiment)
+			xsmlPrinter.print(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+			try {
+				BufferedWriter bufWriterXSML =
 						new BufferedWriter(new FileWriter(new File(
-								Configuration.schemaPathPrefix, T)));
-				bufWriter.write(targetSchemaBuffer.toString());
-				bufWriter.close();
+								schemDir, mapjob + ".xsml")));
+				bufWriterXSML.write(bufXSML.toString());
+				bufWriterXSML.close();
+				System.out.print(".xsml file done!\n");
 			}
 			catch (Exception e) {
 				LoggerUtil.logException(e, log);
@@ -310,6 +338,65 @@ public class STBenchmark {
 			}
 		}
 		
+		//********************************************************************************
+		// print XML schemas for source and target if requested
+		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
+			XSDWriter xsdPrinter = new XSDWriter();
+			String mapjob = S.substring(0, S.length()-8);
+			
+			StringBuffer bufSourceXSD = new StringBuffer();
+			///print source schema (schema.getLabel())
+			xsdPrinter.printSource(bufSourceXSD, scenario, mapjob + "_Src", 0);
+			
+			StringBuffer bufTargetXSD = new StringBuffer();
+			///print target schema (schema.getLabel())
+			xsdPrinter.printTarget(bufTargetXSD, scenario, mapjob + "_Trg", 0);
+			try {
+				BufferedWriter bufWriterXSD =
+						new BufferedWriter(new FileWriter(new File(
+								schemDir, S)));
+				bufWriterXSD.write(bufSourceXSD.toString());
+				bufWriterXSD.close();
+				System.out.print("source .xsd file done!\n");
+
+				bufWriterXSD =
+						new BufferedWriter(new FileWriter(new File(
+								schemDir, T.substring(0, T.length()-7) + "Trg.xsd")));
+				bufWriterXSD.write(bufTargetXSD.toString());
+				bufWriterXSD.close();
+				System.out.print("target .xsd file done!\n");
+			}
+			catch (Exception e) {
+				LoggerUtil.logException(e, log);
+				throw e;
+			}
+//			StringBuffer sourceSchemaBuffer = new StringBuffer();
+//			schemaPrinter.print(sourceSchemaBuffer, scenario.getSource(), 0);
+//			
+//			StringBuffer targetSchemaBuffer = new StringBuffer();
+//			schemaPrinter.print(targetSchemaBuffer, scenario.getTarget(), 0);
+//			
+//			try {
+//				BufferedWriter bufWriter =
+//						new BufferedWriter(new FileWriter(new File(
+//								Configuration.schemaPathPrefix, S)));
+//				bufWriter.write(sourceSchemaBuffer.toString());
+//				bufWriter.close();
+//
+//				bufWriter =
+//						new BufferedWriter(new FileWriter(new File(
+//								Configuration.schemaPathPrefix, T)));
+//				bufWriter.write(targetSchemaBuffer.toString());
+//				bufWriter.close();
+//			}
+//			catch (Exception e) {
+//				LoggerUtil.logException(e, log);
+//				throw e;
+//			}
+		}
+		
+		//********************************************************************************
+		// PRINT TRAMP XML FORMAT OUTPUT
 		if (_configuration.getOutputOption(OutputOption.TrampXML)) {
 //			StringBuffer mappingScenarioXMLBuffer = new StringBuffer();
 			
@@ -335,7 +422,9 @@ public class STBenchmark {
 				throw e;
 			}
 		}
-
+		
+		//********************************************************************************
+		// PRINT HTML SCHEMAS
 		if (_configuration.getOutputOption(OutputOption.HTMLSchemas)) {
 			// print the src schema in an HTML file
 			buf = new StringBuffer();
@@ -364,7 +453,8 @@ public class STBenchmark {
 							+ ".html");
 		}
 
-		// and finally the transformation
+		//********************************************************************************
+		// PRINT HTML MAPPINGS 
 		if (_configuration.getOutputOption(OutputOption.HTMLMapping)) {
 			buf = new StringBuffer();
 			Object[] o = new Object[10];
@@ -430,10 +520,6 @@ public class STBenchmark {
 		_scenario = 
 				Modules.scenarioGenerator.generateScenario(_configuration);
 		
-		//MN returns random source and target inclusion dependencies - 14 April 2014
-		ArrayList<String> randomSourceInclusionDependencies = Modules.scenarioGenerator.getRandomSourceInlcusionDependencies();
-		ArrayList<String> randomTargetInclusionDependencies = Modules.scenarioGenerator.getRandomTargetInclusionDependencies();
-		
 		// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
 		_elapsedTime = 1. * (System.currentTimeMillis() - startTime) / 1000;
 				
@@ -446,14 +532,14 @@ public class STBenchmark {
 				     _configuration.getMappingFileName(),
 				     _configuration.getSchemaFile());
 		
-		if (_configuration.getOutputOption(OutputOption.Clio)) {
-		//MN prints results in Mapjob, XSML and XSD formats for the purpose of evaluating MapMerge
-		printResultsMapjobAndXSMLAndXSD(_scenario, 
-			     _configuration.getSourceSchemaFile(), 
-			     _configuration.getTargetSchemaFile(),
-			     _configuration.getMappingFileName(),
-			     _configuration.getSchemaFile(), randomSourceInclusionDependencies, randomTargetInclusionDependencies);
-		}
+//		if (_configuration.getOutputOption(OutputOption.Clio)) {
+//		//MN prints results in Mapjob, XSML and XSD formats for the purpose of evaluating MapMerge
+//		printResultsMapjobAndXSMLAndXSD(_scenario, 
+//			     _configuration.getSourceSchemaFile(), 
+//			     _configuration.getTargetSchemaFile(),
+//			     _configuration.getMappingFileName(),
+//			     _configuration.getSchemaFile(), randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+//		}
 		
 		
 		if (_configuration.getOutputOption(OutputOption.Data))
