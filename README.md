@@ -19,7 +19,7 @@ in the main directory. This will build a jar file and create a build folder. The
 The input to iBench is a configuration file (a text file with key value pairs, i.e., a Java Properties file) that determines the structure and characteristics of the scenario to be created. Some of the parameters control the structure of the generated schemas, mappings, and metadata, some parameters determine which mapping primitives the integration scenario should be composed of, and finally there are parameters that control what metadata is outputted and in which format.
 
 * The tech report mentioned below explains the available primitives and parameters
-* The [https://bitbucket.org/ibencher/ibench/wiki/ConfigurationFile](Wiki) also has a page describing the configuration file format and parameters 
+* The [Wiki - Configuration File](https://bitbucket.org/ibencher/ibench/wiki/ConfigurationFile) also has a page describing the configuration file format and parameters 
 
 ### Example Configuration Files and UDPs ###
 
@@ -27,7 +27,7 @@ We maintain a [https://bitbucket.org/ibencher/ibenchconfigurationsandscenarios](
 
 ### Wiki ###
 
-More detailed explanations of the configuration file format and how to use user-defined primitives (UDPs) will be added to the [https://bitbucket.org/ibencher/ibench/wiki/Home](Wiki) in the future.
+More detailed explanations of the configuration file format and how to use user-defined primitives (UDPs) will be added to the [Wiki](https://bitbucket.org/ibencher/ibench/wiki/Home) in the future.
 
 ### Publications ###
 
