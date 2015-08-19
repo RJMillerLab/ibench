@@ -54,9 +54,6 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
 	private SkolemKind sk;
 	
-	
-	
-	
     public MergeAddScenarioGenerator()
     {		;		}
     
@@ -731,15 +728,15 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		//Query q;
+		Query q;
 		String creates = m.getRelName(0, false);
-		//String mapping = m.getMapIds()[0];
+		String mapping = m.getMapIds()[0];
 		
-		//q = genQueries();
-		//q.storeCode(q.toTrampStringOneMap(mapping));
-		//q = addQueryOrUnion(creates, q);
+		q = genQueries();
+		q.storeCode(q.toTrampStringOneMap(mapping));
+		q = addQueryOrUnion(creates, q);
 		
-		//fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 		//MN BEGIN 16 August 2014
 		fac.addTransformation("", m.getMapIds(), creates);
 		//MN END

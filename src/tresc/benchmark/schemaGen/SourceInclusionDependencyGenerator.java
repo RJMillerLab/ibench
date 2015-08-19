@@ -131,7 +131,7 @@ public class SourceInclusionDependencyGenerator implements ScenarioGenerator {
 	private void generateRandomForeignKey(int numIDFKs, MappingScenario scenario, Configuration configuration, Random _generator,
 			Map<String, Map<String, InclusionDependency>> ids) throws Exception {
 		Set<String[]> notPossible = new HashSet<String[]> ();
-		boolean sourceCircluarFKs = configuration.getParam(Constants.ParameterName.SourceCircularFK) == 0;
+		boolean sourceCircluarFKs = configuration.getParam(Constants.ParameterName.SourceCircularFK) != 0;
 		
 		for(int i=0; i<numIDFKs; i++) {
 			RelationType[] rels = scenario.getDoc().getSchema(true).getRelationArray();

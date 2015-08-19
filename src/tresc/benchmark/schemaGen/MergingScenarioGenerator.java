@@ -603,6 +603,9 @@ public class MergingScenarioGenerator extends AbstractScenarioGenerator {
 			}
 		}
 		
+		if (log.isDebugEnabled())
+			log.debug("normal attrs are: " + attrs.toString());
+		
 		numNormalAttrs = attrs.size();
 		
 		// then copy join attributes

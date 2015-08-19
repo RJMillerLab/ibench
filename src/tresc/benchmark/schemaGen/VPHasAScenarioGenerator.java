@@ -64,6 +64,11 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         attsPerTargetRel = numOfSrcTblAttr / numOfTgtTables;
         attrRemainder = numOfSrcTblAttr % numOfTgtTables; 
         
+        log.debug("number of src attrs: " + numOfSrcTblAttr
+        		+ "\nnumber of trg tables: " + numOfTgtTables
+        		+ "\nattributes per target rel: " + attsPerTargetRel
+        		+ "\nattributes last target rel:" + attrRemainder);
+        		
         
         jk = JoinKind.values()[joinKind];
         if (jk == JoinKind.VARIABLE)
@@ -532,16 +537,16 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		//SPJQuery q;
-		//SPJQuery genQuery = genQuery(new SPJQuery());
+		SPJQuery q;
+		SPJQuery genQuery = genQuery(new SPJQuery());
 		
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String creates = m.getTargetRels().get(i).getName();
-			//q = (SPJQuery) genQuery.getSelect().getTerm(i);
+			q = (SPJQuery) genQuery.getSelect().getTerm(i);
 			
-			//fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
 			//MN BEGIN 16 August 2014
-			fac.addTransformation("", m.getMapIds(), creates);
+//			fac.addTransformation("", m.getMapIds(), creates);
 			//MN END
 		}
 	}

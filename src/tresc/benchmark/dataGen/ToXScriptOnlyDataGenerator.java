@@ -444,7 +444,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		buf.append("<simpleType name=\"bench_string\">\n");
 		buf.append("<restriction base=\"string\">\n");
 		// buf.append("<tox-string type=\"xmrk_text\" maxLength=\""+maxStringLength+"\"/>\n");
-		buf.append("<tox-string type=\"word\" maxLength=\"" + maxStringLength
+		buf.append("<tox-string type=\"multiword\" maxLength=\"" + maxStringLength
 				+ "\"/>\n");
 		buf.append("</restriction>\n");
 		buf.append("</simpleType>\n");

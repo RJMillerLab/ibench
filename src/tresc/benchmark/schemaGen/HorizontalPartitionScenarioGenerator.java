@@ -22,7 +22,6 @@ import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.values.IntegerValue;
 
-
 //PRG FIXED Omission, must generate source relation with at least 2 elements (this was causing empty Skolem terms and PK FDs with empty RHS!)- Sep 19, 2012
 //MN  FIXED tries++ in chooseSourceRels() - 28 April 2014
 //MN  ENHANCED genTargetRels to pass types of attributes as argument to addRelation - 5 May 2014
@@ -313,19 +312,19 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		//Query q;
+		Query q;
 		
 		for(int i = 0; i < randomFragments; i++) {
 			String targetName = m.getTargetRels().get(i).getName();
 			String map = m.getMapIds()[i];
 			
-			//q = genQuery(i);
-			//q.storeCode(q.toTrampString(m.getMapIds()[i]));
-			//q = addQueryOrUnion(targetName, q);
+			q = genQuery(i);
+			q.storeCode(q.toTrampString(m.getMapIds()[i]));
+			q = addQueryOrUnion(targetName, q);
 
-			//fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
+			fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
 			//MN BEGIN 16 August 2014
-			fac.addTransformation("", new String[] {map}, targetName);
+//			fac.addTransformation("", new String[] {map}, targetName);
 			//MN END
 		}
 	}
