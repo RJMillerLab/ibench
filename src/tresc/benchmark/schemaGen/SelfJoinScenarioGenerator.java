@@ -15,6 +15,7 @@ import vtools.dataModel.expression.AND;
 import vtools.dataModel.expression.EQ;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -440,19 +441,25 @@ public class SelfJoinScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTransformations() throws Exception {
 		SPJQuery genQuery = new SPJQuery();
-		SPJQuery q;
+		Query q;
 		String mapId;
 		genQueries(genQuery);
-		
-		q = (SPJQuery) genQuery.getSelect().getTerm(0);
+		String creates;
+		//TODO check
+		creates = m.getRelName(0, false);
+		q = (Query) genQuery.getSelect().getTerm(0);
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
 		mapId = m.getMaps().get(0).getId();
-		fac.addTransformation(q.toTrampStringOneMap(mapId), mapId, 
-				m.getRelName(0, false));
+		fac.addTransformation(q.toTrampStringOneMap(mapId), mapId, creates);
 		
-		q = (SPJQuery) genQuery.getSelect().getTerm(1);
+		
+		creates = m.getRelName(1, false);
+		q = (Query) genQuery.getSelect().getTerm(1);
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
 		mapId = m.getMaps().get(1).getId();
-		fac.addTransformation(q.toTrampStringOneMap(mapId), mapId, 
-				m.getRelName(1, false));
+		fac.addTransformation(q.toTrampStringOneMap(mapId), mapId, creates);
 	}
 	
 	

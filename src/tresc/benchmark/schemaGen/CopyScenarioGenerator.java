@@ -134,7 +134,6 @@ public class CopyScenarioGenerator extends AbstractScenarioGenerator {
 		q = addQueryOrUnion(creates, q);
 		
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
-//		fac.addTransformation("", m.getMapIds(), creates);
 	}
 	
 	private Query genQuery () {

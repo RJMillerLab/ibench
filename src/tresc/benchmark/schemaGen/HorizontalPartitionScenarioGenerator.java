@@ -323,9 +323,6 @@ public class HorizontalPartitionScenarioGenerator extends AbstractScenarioGenera
 			q = addQueryOrUnion(targetName, q);
 
 			fac.addTransformation(q.getStoredCode(), new String[] {map}, targetName);
-			//MN BEGIN 16 August 2014
-//			fac.addTransformation("", new String[] {map}, targetName);
-			//MN END
 		}
 	}
 	

@@ -229,9 +229,6 @@ public class DeleteAttributeScenarioGenerator extends AbstractScenarioGenerator
 		q.storeCode(q.toTrampString(m.getMapIds()));
 		q = addQueryOrUnion(creates, q);
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
-		//MN BEGIN 16 August 2014
-//		fac.addTransformation("", m.getMapIds(), creates);
-		//MN END
 	}
 	
 	private Query genQueries() throws Exception {

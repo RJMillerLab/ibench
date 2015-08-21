@@ -738,7 +738,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 		
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 		//MN BEGIN 16 August 2014
-		fac.addTransformation("", m.getMapIds(), creates);
+//		fac.addTransformation("", m.getMapIds(), creates);
 		//MN END
 	}
 	

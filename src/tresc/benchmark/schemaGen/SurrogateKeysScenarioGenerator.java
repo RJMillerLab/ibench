@@ -15,6 +15,7 @@ import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -393,14 +394,13 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
+		Query q;
 		String creates = m.getRelName(0, false);
 		
 		q = genQueries();
-		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), creates);
-		//MN BEGIN 16 August 2014
-//		fac.addTransformation("", m.getMapIds(), creates);
-		//MN END
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 	}
 	
 	private SPJQuery genQueries() throws Exception {

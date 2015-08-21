@@ -15,6 +15,7 @@ import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -537,14 +538,17 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
+		Query q;
 		SPJQuery genQuery = genQuery(new SPJQuery());
 		
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String creates = m.getTargetRels().get(i).getName();
 			q = (SPJQuery) genQuery.getSelect().getTerm(i);
-			
-			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			q.storeCode(q.toTrampString(m.getMapIds()));
+			q = addQueryOrUnion(creates, q);
+			fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+
+//			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
 			//MN BEGIN 16 August 2014
 //			fac.addTransformation("", m.getMapIds(), creates);
 			//MN END
@@ -690,15 +694,15 @@ public class VPHasAScenarioGenerator extends AbstractScenarioGenerator {
         
         // add the partial queries to the parent query
         // to form the whole transformation
-        SelectClauseList pselect = pquery.getSelect();
+//        SelectClauseList pselect = pquery.getSelect();
         SelectClauseList gselect = generatedQuery.getSelect();
         for (int i = 0; i < numOfTgtTables; i++)
         {
             String tblTrgName = m.getRelName(i, false);
-            pselect.add(tblTrgName, queries[i]);
+//            pselect.add(tblTrgName, queries[i]);
             gselect.add(tblTrgName, queries[i]);
         }
-        pquery.setSelect(pselect);
+//        pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
 		return generatedQuery;
 	} 

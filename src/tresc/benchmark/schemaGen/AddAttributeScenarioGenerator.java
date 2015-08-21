@@ -391,10 +391,8 @@ public class AddAttributeScenarioGenerator extends AbstractScenarioGenerator {
 		q = genQueries();
 		q.storeCode(q.toTrampString(m.getMapIds()));
 		q = addQueryOrUnion(creates, q);
-//		MN BEGIN 16 August 2014 
+
 		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
-//		fac.addTransformation("", m.getMapIds(), creates);
-		//MN END 16 August 2014
 	}
 	
 	private Query genQueries() throws Exception {

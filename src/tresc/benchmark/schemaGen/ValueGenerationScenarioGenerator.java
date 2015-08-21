@@ -77,11 +77,11 @@ public class ValueGenerationScenarioGenerator extends AbstractScenarioGenerator 
 
 		// add everything to the final query
 		query.setSelect(select);
-		SelectClauseList pselect = pquery.getSelect();
+//		SelectClauseList pselect = pquery.getSelect();
 		SelectClauseList gselect = generatedQuery.getSelect();
-		pselect.add(nameT, query);
+//		pselect.add(nameT, query);
 		gselect.add(nameT, query);
-		pquery.setSelect(pselect);
+//		pquery.setSelect(pselect);
 		generatedQuery.setSelect(gselect);
 		
 		// gen trans

@@ -13,6 +13,7 @@ import vtools.dataModel.expression.ConstantAtomicValue;
 import vtools.dataModel.expression.Function;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -237,16 +238,19 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTransformations() throws Exception {
 		String creates = m.getRelName(0, false);
-		SPJQuery q;
+		Query q;
 		
 		q = genQueries();
-		
-		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), 
-				creates);
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+
+//		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), 
+//				creates);
 	}
 	
 	private SPJQuery genQueries() {
-		String targetName = m.getRelName(0, false);
+//		String targetName = m.getRelName(0, false);
 		String sourceName = m.getRelName(0, true);
 		String[] sAttrs = m.getAttrIds(0, true);
 		String[] tAttrs = m.getAttrIds(0, false);
@@ -301,9 +305,9 @@ public class ValueManagementScenarioGenerator extends AbstractScenarioGenerator
         
         // add the subquery to the final transformation query
         query.setSelect(select);
-        SelectClauseList pselect = pquery.getSelect();
-        pselect.add(targetName, query);
-        pquery.setSelect(pselect);
+//        SelectClauseList pselect = pquery.getSelect();
+//        pselect.add(targetName, query);
+//        pquery.setSelect(pselect);
         
         return query;
 	}
