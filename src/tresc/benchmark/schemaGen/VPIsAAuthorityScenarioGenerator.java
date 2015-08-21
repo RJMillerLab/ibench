@@ -637,7 +637,7 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 	private SPJQuery genQuery(SPJQuery generatedQuery) throws Exception {
 		String sourceRelName = m.getSourceRels().get(0).getName();
 		SPJQuery[] queries = new SPJQuery[numOfTgtTables];
-		MappingType m1 = m.getMaps().get(0);
+		MappingType m1; 
 		
 		String joinAttName;
 		String joinAttNameRef;
@@ -683,7 +683,8 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 				String name;
 				int numVar;
 				int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
-
+				m1 = m.getMaps().get(i / complexityScen);
+				
 				if (mapLang.equals(MappingLanguageType.SOtgds)) {
 					SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
 			 		name = sk.getSkname();
@@ -717,9 +718,11 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
             	String name;
             	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
             	int numVar;
+            	int mapNum = i / complexityScen;
             	
-            	if (mapLang.equals(MappingLanguageType.SOtgds)) {
-			 		SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr - 1); //TODO -1 is ok?
+				m1 = m.getMaps().get(mapNum);
+            	if (mapLang.equals(MappingLanguageType.SOtgds)) { //TODO what is the pattern 
+			 		SKFunction sk = m.getSkolemFromAtom(m1, false, i % 2, numAttr - 1); //TODO -1 is ok?
 			 		name = sk.getSkname();
 			 		numVar = sk.getVarArray().length;
             	}

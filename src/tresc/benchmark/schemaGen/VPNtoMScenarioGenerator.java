@@ -596,13 +596,13 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 
 			if(i == 0)
 			{
-				seli.add(joinAtt1, stSK);
-				sel2.add(joinAtt1, stSK);
+				seli.add(joinAtt1 + i, stSK); //TODO ok to disambiguate here?
+				sel2.add(joinAtt1 + i, stSK);
 			}
 			else
 			{
-				seli.add(joinAtt2, stSK);
-				sel2.add(joinAtt2, stSK);
+				seli.add(joinAtt2 + i, stSK);
+				sel2.add(joinAtt2 + i, stSK);
 			}
 		}
         

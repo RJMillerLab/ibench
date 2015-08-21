@@ -479,9 +479,9 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		
 		// add the subquery to the final transformation query
 		query.setSelect(select);
-		SelectClauseList pselect = pquery.getSelect();
-		pselect.add(targetName, query);
-		pquery.setSelect(pselect);
+//		SelectClauseList pselect = pquery.getSelect();
+//		pselect.add(targetName, query);
+//		pquery.setSelect(pselect);
 		
 		return query;
 	}
