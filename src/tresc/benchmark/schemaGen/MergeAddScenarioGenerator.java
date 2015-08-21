@@ -92,7 +92,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
         sk = SkolemKind.values()[typeOfSkolem];
         
         //MN BEGIN - 13 May 2014
-        targetReuse = false;
+        targetReuse = false;//TODO deactivated because of bug?
         //MN END
     }
     
@@ -166,7 +166,7 @@ public class MergeAddScenarioGenerator extends MergingScenarioGenerator {
 			createChainConstraints(attrs);
 		
 		//MN BEGIN - 13 May 2014
-		targetReuse = false;
+		targetReuse = false; //TODO why reset here again?
 		//MN END
 	}
 

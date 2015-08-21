@@ -683,10 +683,12 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
 				String name;
 				int numVar;
 				int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
-				m1 = m.getMaps().get(i / complexityScen);
+            	int mapNum = i / complexityScen;
+            	int subNum = i % 2;
+				m1 = m.getMaps().get(mapNum);
 				
 				if (mapLang.equals(MappingLanguageType.SOtgds)) {
-					SKFunction sk = m.getSkolemFromAtom(m1, false, i, numAttr);
+					SKFunction sk = m.getSkolemFromAtom(m1, false, subNum, numAttr);
 			 		name = sk.getSkname();
 			 		numVar = sk.getVarArray().length;
             	}
@@ -719,10 +721,11 @@ public class VPIsAAuthorityScenarioGenerator extends AbstractScenarioGenerator{
             	int numAttr = (i < numOfTgtTables - 1) ? attsPerTargetRel : attsPerTargetRel + attrRemainder;
             	int numVar;
             	int mapNum = i / complexityScen;
+            	int subNum = i % 2;
             	
 				m1 = m.getMaps().get(mapNum);
             	if (mapLang.equals(MappingLanguageType.SOtgds)) { //TODO what is the pattern 
-			 		SKFunction sk = m.getSkolemFromAtom(m1, false, i % 2, numAttr - 1); //TODO -1 is ok?
+			 		SKFunction sk = m.getSkolemFromAtom(m1, false, subNum, numAttr - 1); //TODO -1 is ok?
 			 		name = sk.getSkname();
 			 		numVar = sk.getVarArray().length;
             	}
