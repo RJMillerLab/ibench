@@ -248,8 +248,8 @@ public class XSDWriter
         buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         buf.append("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n");
         Rcd rcd = (Rcd)scenario.getSource().getType();
-        buf.append("<xs:element name=\"Source\">\n");
-//        buf.append("<xs:element name=\"" + name + "\">\n");
+        //        buf.append("<xs:element name=\"Source\">\n");
+        buf.append("<xs:element name=\"" + name + "\">\n");
         print(buf, rcd, 1);
         //MN ADD two methods to print source primary and foreign keys in XSD file - 3 April 2014
         printSourcePK(buf, scenario);
@@ -264,8 +264,8 @@ public class XSDWriter
         buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         buf.append("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n");
         Rcd rcd = (Rcd)mapping.getTarget().getType();
-        buf.append("<xs:element name=\"Target\">\n");
-//        buf.append("<xs:element name=\"" + name + "\">\n");
+//        buf.append("<xs:element name=\"Target\">\n");
+        buf.append("<xs:element name=\"" + name + "\">\n");
         print(buf, rcd, 1);
         //MN ADD two methods to print target primary and foreign keys in XSD file - 3 April 2014
         printTargetPK(buf, mapping);

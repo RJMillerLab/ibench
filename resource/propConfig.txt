@@ -1,23 +1,23 @@
 # Configuration File for STBenchmark
 
 # Output Path Prefixes
-SchemaPathPrefix=fusion1
-InstancePathPrefix=fusion1
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 0
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
-Scenarios.FUSION = 1
+Scenarios.FUSION = 0
 Scenarios.SELFJOINS = 0
 Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 0
+Scenarios.ADDATTRIBUTE = 10
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.VERTPARTITIONISA = 10
+Scenarios.VERTPARTITIONHASA = 10
+Scenarios.VERTPARTITIONNTOM = 10
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -42,8 +42,8 @@ ConfigOptions.SkolemKind = 1
 ConfigOptions.SourceSkolemPerc = 0
 ConfigOptions.SourceFDPerc = 0
 ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 0
-ConfigOptions.ReuseTargetPerc = 20
+ConfigOptions.ReuseSourcePerc = 25
+ConfigOptions.ReuseTargetPerc = 25
 ConfigOptions.NoReuseScenPerc = 60
 ConfigOptions.SourceInclusionDependencyPerc = 0
 ConfigOptions.SourceInclusionDependencyFKPerc = 0
@@ -80,8 +80,8 @@ ConfigOptionsDeviation.SourceSkolemPerc = 0
 ConfigOptionsDeviation.SourceFDPerc = 0
 
 # Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = 220
-RepElementCount = 100
+RandomSeed = 601
+RepElementCount = 1000
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
@@ -90,10 +90,11 @@ MappingLanguage = SOtgds
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
 OutputOption.Data = true
-OutputOption.XMLSchemas = false
+OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
 OutputOption.ErrorsAndExplanations = false
+OutputOption.Clio = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true
