@@ -21,6 +21,11 @@ public class Utils
 		return center + (generator.nextInt(2 * deviation)) - deviation;
 	}
 	
+	public static int getRandomNumberAroundSomethingCapped(Random generator, int center, int deviation, int min, int max) {
+		int result = getRandomNumberAroundSomething(generator, center, deviation);
+		return (result < min ? min : (result > max ? max : result));
+	}
+	
     /*
      * Returns a random number (positive one) around some specific number given
      * as argument Note that the Random generator is provided so that this

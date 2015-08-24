@@ -944,7 +944,7 @@ public class VerticalPartitionScenarioGenerator extends AbstractScenarioGenerato
             	}
             	else {
             		name = fac.getNextId("SK");
-            		numVar = Utils.getRandomNumberAroundSomething(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 4);
+            		numVar = Utils.getRandomNumberAroundSomethingCapped(_generator, numOfSrcTblAttr / 2, numOfSrcTblAttr / 4, 1, numOfSrcTblAttr - 1);
             	}
 		 		
 		 		vtools.dataModel.expression.SKFunction stSK = new vtools.dataModel.expression.SKFunction(name);
