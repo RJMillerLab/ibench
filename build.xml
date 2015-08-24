@@ -20,12 +20,13 @@
 	<property name="librarydir" location="${basedir}/lib" />
 	<property name="resourcedir" location="${basedir}/resource" />
 	<property name="sourcedir" location="${basedir}/src" />
-  <!-- <property name="binmacdir" location="${builddir}/mac" />
-  <property name="binwindir" location="${builddir}/win"/> -->
-
+   	<property name="binmacdir" location="${builddir}/mac" />
+  	<property name="binwindir" location="${builddir}/win"/>
+	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
+	
 	<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />
-  <!-- <property name="mainClass" value="tresc.benchmark.STBenchmark" /> -->
-  <property name="mainClass" value="tresc.benchmark.iBenchDriver" />
+  	<property name="mainClass" value="tresc.benchmark.STBenchmark" />
+  	<property name="expMainClass" value="tresc.benchmark.iBenchDriver" />
 
 	<!-- ClassPath Setup -->
 
@@ -68,15 +69,17 @@
 	</target>
 
 	<target name="Deploy" depends="Jar">
-    <!-- <var name="deployto" value="${binmacdir}" /> -->
-    <var name="deployto" value="${builddir}" />
-    <antcall target="DeployOne" />
-    <!-- <copy todir="${binmacdir}" file="${buildresdir}/iBench.sh" /> -->
-    <copy todir="${builddir}" file="${buildresdir}/iBench.sh" />
-
-    <!-- <var name="deployto" value="${binwindir}" />
+		<var name="deployto" value="${binexpdriverdir}" />
 		<antcall target="DeployOne" />
-    <copy todir="${binwindir}" file="${buildresdir}/iBench.bat" /> -->
+		<copy todir="${binexpdriverdir}" file="${buildresdir}/iBench.sh" />
+		
+		<var name="deployto" value="${binmacdir}" />
+    	<antcall target="DeployOne" />
+    	<copy todir="${binmacdir}" file="${buildresdir}/iBench.sh" />
+    	
+		<var name="deployto" value="${binwindir}" />
+		<antcall target="DeployOne" />
+    	<copy todir="${binwindir}" file="${buildresdir}/iBench.bat" />
 	</target>
 
 	<target name="DeployOne">
@@ -100,7 +103,8 @@
 	</target>
 
 	<target name="Jar" depends="Compile">
-    <!-- <mkdir dir="${binmacdir}"/>
+		<mkdir dir="${builddir}"/>
+    	<mkdir dir="${binmacdir}"/>
 		<mkdir dir="${binwindir}"/>
 		<jar destfile="${binmacdir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
@@ -115,12 +119,12 @@
 				<attribute name="Main-Class" value="${mainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
-      </manifest> -->
-    <mkdir dir="${builddir}"/>
-		<echo message="${jarClasspath}" />
+      		</manifest>
+		</jar>
+    	<echo message="${jarClasspath}" />
 		<jar destfile="${builddir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
-				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Main-Class" value="${expMainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
