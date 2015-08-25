@@ -189,6 +189,10 @@ public class Generator {
 			}
 		}
 		
+		// create FKs
+		scenario.getDocFac().copyFKsToRealDoc();
+		
+		
 		//MN generates Random Source Inclusion Dependencies
 		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
 		srcIDGen.generateScenario(scenario, configuration);
