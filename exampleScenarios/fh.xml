@@ -9,12 +9,12 @@
 			<PrimaryKey><Attr>fid</Attr></PrimaryKey>
 		</Relation>
 		<Relation name="hotel">
-			<Attr><Name>fid</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>flid</Name><DataType>TEXT</DataType></Attr>
 			<Attr><Name>hid</Name><DataType>TEXT</DataType></Attr>
-			<PrimaryKey><Attr>hid</Attr></PrimaryKey>
+			<PrimaryKey><Attr>flid</Attr><Attr>hid</Attr></PrimaryKey>
 		</Relation>
 		<ForeignKey id="fid_fk">
-			<From tableref="hotel"><Attr>fid</Attr></From>
+			<From tableref="hotel"><Attr>flid</Attr></From>
 			<To tableref="flight"><Attr>fid</Attr></To>
 		</ForeignKey>
 	</SourceSchema>
@@ -25,9 +25,9 @@
 			<PrimaryKey><Attr>subject</Attr><Attr>object</Attr></PrimaryKey>
 		</Relation>
 		<Relation name="hasHotel">
-			<Attr><Name>subject</Name><DataType>TEXT</DataType></Attr>
-			<Attr><Name>object</Name><DataType>TEXT</DataType></Attr>
-			<PrimaryKey><Attr>subject</Attr><Attr>object</Attr></PrimaryKey>
+			<Attr><Name>subject2</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>object2</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>subject2</Attr><Attr>object2</Attr></PrimaryKey>
 		</Relation>
 	</TargetSchema>
 </Schemas>
@@ -42,7 +42,7 @@
 	</Correspondence> 
 	<Correspondence id="c3">
 		<From tableref="hotel"><Attr>hid</Attr></From>
-		<To tableref="hasHotel"><Attr>object</Attr></To>
+		<To tableref="hasHotel"><Attr>object2</Attr></To>
 	</Correspondence>
 </Correspondences>
 <Mappings>

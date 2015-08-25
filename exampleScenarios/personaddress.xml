@@ -67,7 +67,7 @@
 		</Foreach>
 		<Exists>
 			<Atom tableref="livesAt">
-				<SKFunction skname="SK1"><Var>b</Var><Var>c</Var></SKFunction><Var>a</Var><Var>b</Var>
+				<SKFunction skname="SK1"><Var>a</Var><Var>b</Var></SKFunction><Var>a</Var><Var>b</Var>
 			</Atom>
 		</Exists>
 	</Mapping>
