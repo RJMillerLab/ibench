@@ -318,12 +318,7 @@ public class STBenchmark {
 			XSMLWriter xsmlPrinter = new XSMLWriter();
 
 			StringBuffer bufXSML = new StringBuffer();
-			//////print schemas
-			xsmlPrinter.print(bufXSML, mapjob);
-			/////print correspondences
-			xsmlPrinter.print(bufXSML, mapjob, scenario);
-			////print logical mappings (for first experiment)
-			xsmlPrinter.print(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+			xsmlPrinter.printAll(bufXSML, scenario, mapjob, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
 			try {
 				BufferedWriter bufWriterXSML =
 						new BufferedWriter(new FileWriter(new File(

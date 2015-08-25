@@ -2,6 +2,8 @@
 #log4j.rootLogger=DEBUG, A1
 log4j.rootLogger=INFO, A1
 
+log4j.logger.tresc.benchmark.dataGen.toxgenewrap=ERROR
+
 # A1 is set to be a ConsoleAppender.
 log4j.appender.A1=org.apache.log4j.ConsoleAppender
 

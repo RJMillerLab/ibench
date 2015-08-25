@@ -14,6 +14,7 @@ import org.vagabond.util.LoggerUtil;
 import toxgene.core.Engine;
 import toxgene.core.ToXgeneErrorException;
 import toxgene.interfaces.ToXgeneDocumentCollection;
+import toxgene.interfaces.ToXgeneReporter;
 import toxgene.interfaces.ToXgeneSession;
 import toxgene.util.ToXgeneReporterImpl;
 
@@ -29,7 +30,7 @@ public class ToXGeneWrapper {
 	 * parsing and generation of documents. These messages include warnings,
 	 * notification of errors, or simply progress report messages.
 	 */
-	private ToXgeneReporterImpl tgReporter;
+	private Log4jToxGeneReporter tgReporter;
 //	private String toxGenPath;
 
 	public ToXGeneWrapper(String toxGenePath) {
@@ -50,11 +51,11 @@ public class ToXGeneWrapper {
 		
 		try {
 			tgEngine = new Engine();
-			boolean verbose = true; /*
-									 * useful for debugging templates
-									 */
-			boolean showWarnings = true;
-			tgReporter = new ToXgeneReporterImpl(verbose, showWarnings);
+//			boolean verbose = true; /*
+//									 * useful for debugging templates
+//									 */
+//			boolean showWarnings = true;
+			tgReporter = new Log4jToxGeneReporter(log);
 
 			/*
 			 * The ToXgeneSession specifies all parameters the engine needs for
@@ -106,11 +107,11 @@ public class ToXGeneWrapper {
 
 		tgEngine.endSession();
 
-		int nWarnings = tgReporter.warnings();
-		if (nWarnings > 0) {
-			log.warn("There were " + nWarnings + " warning(s).");
-			tgReporter.printAllWarnings();
-		}
+//		int nWarnings = tgReporter.warnings();
+//		if (nWarnings > 0) {
+//			log.warn("There were " + nWarnings + " warning(s).");
+//			tgReporter.printAllWarnings();
+//		}
 		
 		return name;
 	}

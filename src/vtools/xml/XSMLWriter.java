@@ -62,25 +62,41 @@ public class XSMLWriter {
 
 	};
 
-	
-	//MN prints the schemas (source and target)
-	public void print (StringBuffer buf, String name){
+	public void printAll (StringBuffer buf, MappingScenario scenario, String name,
+			ArrayList<String> randomSourceInclusionDependencies, 
+			ArrayList<String> randomTargetInclusionDependencies) throws Exception {
 		buf.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
 		buf.append("<xsml:schemaMapping xmlns:xsml=\"http://com.ibm.clio.model/xsml/2.0\">\n");
 		
+		//////print schemas
+		print(buf, name);
+		/////print correspondences
+		print(buf, name, scenario);
+		////print logical mappings (for first experiment)
+		print(buf, scenario, name, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+
+		buf.append("</xsml:schemaMapping>");
+	}
+	
+	
+	//MN prints the schemas (source and target)
+	public void print (StringBuffer buf, String name){
 		buf.append("  <schemas>\n");
-		
 		buf.append("    <source name=\"" + name + "_Src0\"" + " rootName=\"" + name + "_Src\"" + " schemaLocation=\"" + name + "_Src.xsd\"" + "/>\n");
-		
 		buf.append("    <target name=\"" + name + "_Trg0\"" + " rootName=\"" + name + "_Trg\"" + " schemaLocation=\"" + name + "_Trg.xsd\"" + "/>\n");
-		
 		buf.append("  </schemas>\n");
 	}
 	
 	//MN prints the correspondences (from source to target)
 	public void print (StringBuffer buf, String name, MappingScenario scenario) throws Exception{
+		if (!scenario.getDoc().getDocument().getMappingScenario()
+				.isSetCorrespondences())
+			return;
+		if (scenario.getDoc().getDocument().getMappingScenario()
+				.getCorrespondences().sizeOfCorrespondenceArray() == 0)
+			return;
 		buf.append("  <componentMappings>\n");
-		
+
 //		String sScenario = scenario.getDoc().getDocument().toString();
 //		int corrsIndexBegin = sScenario.indexOf("<Correspondences");
 //		int corrsIndexEnd = sScenario.indexOf("</Correspondences");
@@ -225,6 +241,9 @@ public class XSMLWriter {
 	//MN modifying the method to support injection of random source and target inclusion dependencies into mappings - 14 April 2014
 	public void print (StringBuffer buf, MappingScenario scenario, String name,
 			ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies){
+		if (scenario.getDoc().getDocument().getMappingScenario().getMappings().sizeOfMappingArray() == 0)
+			return;
+		//TODO logical mappings section required?
 		buf.append("  <logicalMappings>\n");
 		
 		String sScenario = scenario.getDoc().getDocument().toString();
@@ -527,8 +546,6 @@ public class XSMLWriter {
 			    break;}
 		}
 		buf.append("  </logicalMappings>\n");
-		buf.append("</xsml:schemaMapping>");
-		//System.out.print(buf.toString());
 	}
 	
 	//MN prints random source regular inclusion dependencies - 14 April 2014
