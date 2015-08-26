@@ -1,4 +1,4 @@
-# Configuration File for STBenchmark
+# Configuration File for iBench
 
 # Output Path Prefixes
 SchemaPathPrefix=test3
@@ -20,13 +20,6 @@ Scenarios.VERTPARTITIONHASA = 0
 Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
-
-# These should always be zero
-Scenarios.FLATTENING = 0
-Scenarios.GLAV = 0
-Scenarios.NESTING = 0
-Scenarios.VALUEGEN = 0
-Scenarios.VALUEMANAGEMENT = 0
 
 # define additional scenarios to be loaded from Scenario XML files
 # number of such scenarios to load

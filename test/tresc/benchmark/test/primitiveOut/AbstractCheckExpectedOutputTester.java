@@ -29,7 +29,7 @@ import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.STBenchmark;
+import tresc.benchmark.iBench;
 
 
 
@@ -40,7 +40,7 @@ public abstract class AbstractCheckExpectedOutputTester {
 	protected String confName;
 	protected Configuration conf; 
 	protected File expectedPath;
-	protected STBenchmark b;
+	protected iBench b;
 	
 	@BeforeClass
 	public static void setUpLogger() {
@@ -49,7 +49,7 @@ public abstract class AbstractCheckExpectedOutputTester {
 	
 	@Before
 	public void readConf () throws Exception {
-		b = new STBenchmark();
+		b = new iBench();
 		setPaths();
 		PropertyWrapper prop = new PropertyWrapper("testresource/" + confName);
 		conf = new Configuration();

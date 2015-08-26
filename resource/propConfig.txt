@@ -1,83 +1,40 @@
-# Configuration File for STBenchmark
+# Configuration File for iBench
 
 # Output Path Prefixes
-SchemaPathPrefix=alex
-InstancePathPrefix=alex
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
-Scenarios.HORIZPARTITION = 0
-Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
-Scenarios.FUSION = 0
-Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 0
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 1
-Scenarios.VERTPARTITIONISAAUTHORITY = 0
+Scenarios.COPY = 10
+Scenarios.HORIZPARTITION = 10
+Scenarios.SURROGATEKEY = 10
+Scenarios.MERGING = 10
+Scenarios.FUSION = 10
+Scenarios.SELFJOINS = 10
+Scenarios.VERTPARTITION = 10
+Scenarios.ADDATTRIBUTE = 10
+Scenarios.DELATTRIBUTE = 10
+Scenarios.ADDDELATTRIBUTE = 10
+Scenarios.VERTPARTITIONISA = 10
+Scenarios.VERTPARTITIONHASA = 10
+Scenarios.VERTPARTITIONNTOM = 10
+Scenarios.MERGEADD = 10
+Scenarios.VERTPARTITIONISAAUTHORITY = 10
 
-# These should always be zero
-Scenarios.FLATTENING = 0
-Scenarios.GLAV = 0
-Scenarios.NESTING = 0
-Scenarios.VALUEGEN = 0
-Scenarios.VALUEMANAGEMENT = 0
 
-# Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 3
-ConfigOptions.NumOfNewAttributes = 0
-ConfigOptions.NumOfAttributesToDelete = 0
-ConfigOptions.JoinSize = 1
-ConfigOptions.NumOfParamsInFunctions = 1
-ConfigOptions.PrimaryKeySize = 1
-ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 0 
-# Star is 0 , chain is 1
-ConfigOptions.SkolemKind = 1
-ConfigOptions.SourceSkolemPerc = 0
-ConfigOptions.SourceFDPerc = 0
-ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 50
-ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 0
-ConfigOptions.SourceInclusionDependencyFKPerc = 0
-ConfigOptions.TargetInclusionDependencyPerc = 0
-ConfigOptions.TargetInclusionDependencyFKPerc = 0
-# exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 0
-ConfigOptions.SourceCircularFK = 0
-ConfigOptions.TargetCircularInclusionDependency = 0
-ConfigOptions.TargetCircularFK = 0
+#ConfigOptions.ReuseSourcePerc = 25
+#ConfigOptions.ReuseTargetPerc = 25
+#ConfigOptions.NoReuseScenPerc = 80
 
-# Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 2
-ConfigOptionsDeviation.NumOfNewAttributes = 0
-ConfigOptionsDeviation.NumOfAttributesToDelete = 0
-ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 0
-ConfigOptionsDeviation.PrimaryKeySize = 0
-ConfigOptionsDeviation.NumOfJoinAttributes = 0
-ConfigOptionsDeviation.JoinKind = 0
-ConfigOptionsDeviation.SkolemKind = 0
-ConfigOptionsDeviation.ReuseSourcePerc = 0
-ConfigOptionsDeviation.ReuseTargetPerc = 0
-ConfigOptionsDeviation.NoReuseScenPerc = 0
-ConfigOptionsDeviation.SourceInclusionDependencyPerc = 0
-ConfigOptionsDeviation.SourceInclusionDependencyFKPerc = 0
-ConfigOptionsDeviation.TargetInclusionDependencyPerc = 0
-ConfigOptionsDeviation.TargetInclusionDependencyFKPerc = 0
-ConfigOptionsDeviation.SourceCircularInclusionDependency = 0
-ConfigOptionsDeviation.SourceCircularFK = 0
-ConfigOptionsDeviation.TargetCircularInclusionDependency = 0
-ConfigOptionsDeviation.TargetCircularFK = 0
-ConfigOptionsDeviation.SourceSkolemPerc = 0
-ConfigOptionsDeviation.SourceFDPerc = 0
+#ConfigOptions.SourceInclusionDependencyPerc = 40
+#ConfigOptions.SourceInclusionDependencyFKPerc = 100
+#ConfigOptions.TargetInclusionDependencyPerc = 40
+#ConfigOptions.TargetInclusionDependencyFKPerc = 100
+
+LoadScenarios.NumScenarios = 1
+LoadScenarios.0.File =  exampleScenarios/fh.xml
+LoadScenarios.0.Name = simpleTest
+LoadScenarios.0.Inst = 10
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 2
@@ -89,11 +46,11 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = true
-OutputOption.XMLSchemas = false
+OutputOption.Data = false
+OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
-OutputOption.ErrorsAndExplanations = false
+OutputOption.Clio = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true

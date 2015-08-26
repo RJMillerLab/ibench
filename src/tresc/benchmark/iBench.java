@@ -44,8 +44,8 @@ import vtools.xml.XSMLWriter;
 // PRG ADD Computing Metadata Stats - 25 FEB 2015
 // PRG ADD Instance Variables and Public Methods to hold/get Metadata Stats - 15 MAR 2015
 
-public class STBenchmark {
-	static Logger log = Logger.getLogger(STBenchmark.class);
+public class iBench {
+	static Logger log = Logger.getLogger(iBench.class);
 
 	private static Configuration _configuration;
 	// PRG ADD Instance Variable to hold the schema mapping currently being generated
@@ -61,7 +61,7 @@ public class STBenchmark {
 	private int numOfTotalMappings = 0;
 	// PRG END ADD Instance Variables to hold Metadata Stats - 15 MAR 2015
 
-	public STBenchmark() {
+	public iBench() {
 		_configuration = new Configuration();
 		// PRG ADD Initialization of instance variable
 		_scenario = new MappingScenario();
@@ -160,7 +160,7 @@ public class STBenchmark {
 	public static void main(String[] args) throws Exception {
 		PropertyConfigurator.configure("resource/log4jproperties.txt");
 
-		STBenchmark benchmark = new STBenchmark();
+		iBench benchmark = new iBench();
 		//MN added lines to make connection with random config file generator - 21 April 2014
 		//MN the following lines should be enabled - 26 April 2014
 		//ConfigGenerator cg = new ConfigGenerator();
@@ -498,7 +498,7 @@ public class STBenchmark {
 	}
 	
 	public void runConfig (Configuration conf) throws Exception {
-		STBenchmark._configuration = conf;
+		iBench._configuration = conf;
 		_configuration.sanityCheck();
 		runConfig();
 	}

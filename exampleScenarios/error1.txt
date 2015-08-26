@@ -1728,9 +1728,9 @@ GENERATED MAPS:
 533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_manualpublished
 533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_manid, nut_le_1_nl0_ce0_authid]
 533  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: []
-534  [main] DEBUG tresc.benchmark.STBenchmark  - Printing results !
-534  [main] DEBUG tresc.benchmark.STBenchmark  - instance path: out0
-534  [main] DEBUG tresc.benchmark.STBenchmark  - schema path: out0
+534  [main] DEBUG tresc.benchmark.iBench  - Printing results !
+534  [main] DEBUG tresc.benchmark.iBench  - instance path: out0
+534  [main] DEBUG tresc.benchmark.iBench  - schema path: out0
 java.lang.reflect.InvocationTargetException
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:88)
@@ -1774,10 +1774,10 @@ java.lang.reflect.InvocationTargetException
 	at vtools.VObject.toString(VObject.java:81)
 	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
 	at smark.support.MappingScenario.toString(MappingScenario.java:281)
-	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.printResults(iBench.java:242)
+	at tresc.benchmark.iBench.runConfig(iBench.java:395)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 Caused by: java.lang.NullPointerException
 	at vtools.dataModel.schema.StringPrinter.visit(StringPrinter.java:20)
 	... 46 more
@@ -1815,10 +1815,10 @@ java.lang.reflect.InvocationTargetException
 	at vtools.VObject.toString(VObject.java:81)
 	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
 	at smark.support.MappingScenario.toString(MappingScenario.java:281)
-	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.printResults(iBench.java:242)
+	at tresc.benchmark.iBench.runConfig(iBench.java:395)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 Caused by: java.lang.RuntimeException: This point should have never been reached. 
 	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
 	at vtools.VObject.accept(VObject.java:87)
@@ -1853,10 +1853,10 @@ java.lang.reflect.InvocationTargetException
 	at vtools.VObject.toString(VObject.java:81)
 	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
 	at smark.support.MappingScenario.toString(MappingScenario.java:281)
-	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.printResults(iBench.java:242)
+	at tresc.benchmark.iBench.runConfig(iBench.java:395)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 Caused by: java.lang.RuntimeException: This point should have never been reached. 
 	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
 	at vtools.VObject.accept(VObject.java:87)
@@ -1880,10 +1880,10 @@ java.lang.reflect.InvocationTargetException
 	at vtools.VObject.toString(VObject.java:81)
 	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
 	at smark.support.MappingScenario.toString(MappingScenario.java:281)
-	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.printResults(iBench.java:242)
+	at tresc.benchmark.iBench.runConfig(iBench.java:395)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 Caused by: java.lang.RuntimeException: This point should have never been reached. 
 	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
 	at vtools.VObject.accept(VObject.java:87)
@@ -1901,10 +1901,10 @@ java.lang.reflect.InvocationTargetException
 	at vtools.VObject.toString(VObject.java:81)
 	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
 	at smark.support.MappingScenario.toString(MappingScenario.java:281)
-	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.printResults(iBench.java:242)
+	at tresc.benchmark.iBench.runConfig(iBench.java:395)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 Caused by: java.lang.RuntimeException: This point should have never been reached. 
 	at vtools.visitor.VisitorImpl.dispatch(VisitorImpl.java:57)
 	at vtools.VObject.accept(VObject.java:87)
@@ -1917,8 +1917,8 @@ Exception in thread "main" java.lang.RuntimeException: This point should have ne
 	at vtools.VObject.toString(VObject.java:81)
 	at smark.support.MappingScenario.prettyPrint(MappingScenario.java:243)
 	at smark.support.MappingScenario.toString(MappingScenario.java:281)
-	at tresc.benchmark.STBenchmark.printResults(STBenchmark.java:242)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:395)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.printResults(iBench.java:242)
+	at tresc.benchmark.iBench.runConfig(iBench.java:395)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 

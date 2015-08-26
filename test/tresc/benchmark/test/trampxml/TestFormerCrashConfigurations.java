@@ -17,13 +17,13 @@ import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.STBenchmark;
+import tresc.benchmark.iBench;
 
 public class TestFormerCrashConfigurations {
 
 	static Logger log = Logger.getLogger(TestCreationReusingSchemas.class);
 	
-	private STBenchmark b = new STBenchmark();
+	private iBench b = new iBench();
 	private Configuration conf;
 	private static final String OUT_DIR = "./testout";
 

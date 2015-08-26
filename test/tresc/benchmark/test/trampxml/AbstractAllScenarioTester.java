@@ -12,7 +12,7 @@ import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.JoinKind;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
-import tresc.benchmark.STBenchmark;
+import tresc.benchmark.iBench;
 
 public abstract class AbstractAllScenarioTester {
 
@@ -21,7 +21,7 @@ public abstract class AbstractAllScenarioTester {
 	protected static String OUT_DIR="./testout";
 	protected static ScenarioName[] scens = AllTrampXMLTests.workingScen;
 	
-	protected STBenchmark b = new STBenchmark();
+	protected iBench b = new iBench();
 	public Configuration conf;
 	
 	@BeforeClass

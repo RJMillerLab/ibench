@@ -1,7 +1,7 @@
-0    [main] DEBUG tresc.benchmark.STBenchmark  - Command line args are: <'-p','/home/user/millercode/iBench/branches/2525-Mehrnaz/resource/testLoadExisting.txt'>
-4    [main] DEBUG tresc.benchmark.STBenchmark  - {TrampXMLOutput.FDs=true, MaxStringLength=100, ConfigOptionsDeviation.SourceInclusionDependencyPerc=0, ConfigOptionsDeviation.SourceCircularInclusionDependency=0, ConfigOptions.SourceInclusionDependencyFKPerc=0, InstancePathPrefix=out0, ConfigOptions.TargetInclusionDependencyFKPerc=0, ConfigOptions.NumOfAttributesToDelete=1, ConfigOptions.JoinKind=0 , OutputOption.TrampXML=true, Scenarios.VERTPARTITIONISAAUTHORITY=0, ConfigOptions.NoReuseScenPerc=100, ConfigOptionsDeviation.NumOfNewAttributes=0, ConfigOptions.TargetInclusionDependencyPerc=0, Scenarios.FUSION=0, OutputOption.XMLSchemas=true, Scenarios.ADDDELATTRIBUTE=0, ConfigOptions.NumOfSubElements=5, RandomSeed=144, ConfigOptionsDeviation.SourceSkolemPerc=0, ConfigOptions.NestingDepth=0, Scenarios.VERTPARTITIONHASA=0, Scenarios.VALUEGEN=0, ConfigOptionsDeviation.TargetCircularInclusionDependency=0, Scenarios.DELATTRIBUTE=0, Scenarios.SURROGATEKEY=0, TrampXMLOutput.Correspondences=true, Scenarios.MERGEADD=0, TrampXMLOutput.ConnectionInfo=false, ConfigOptions.JoinSize=1, ConfigOptions.SourceFDPerc=0, ConfigOptions.SourceCircularFK=0, ConfigOptionsDeviation.JoinKind=0, Scenarios.VERTPARTITIONNTOM=0, LoadScenarios.0.Inst=2, ConfigOptions.NumOfJoinAttributes=1, ConfigOptions.TargetCircularFK=0, OutputOption.HTMLMapping=false, ConfigOptions.PrimaryKeySize=1, ConfigOptionsDeviation.PrimaryKeySize=0, ConfigOptions.SkolemKind=1, Scenarios.VERTPARTITIONISA=0, ConfigOptions.SourceInclusionDependencyPerc=0, Scenarios.GLAV=0, ConfigOptions.SourceCircularInclusionDependency=0, Scenarios.HORIZPARTITION=0, SchemaPathPrefix=out0, ConfigOptionsDeviation.ReuseTargetPerc=0, ConfigOptionsDeviation.NumOfJoinAttributes=0, ConfigOptionsDeviation.ReuseSourcePerc=0, ConfigOptions.NumOfNewAttributes=1, LoadScenarios.NumScenarios=1, Scenarios.NESTING=0, OutputOption.Data=true, OutputOption.ErrorsAndExplanations=false, ConfigOptionsDeviation.JoinSize=0, ConfigOptionsDeviation.NumOfSubElements=2, ConfigOptions.TargetCircularInclusionDependency=0, ConfigOptionsDeviation.TargetInclusionDependencyPerc=0, RepElementCount=1, ConfigOptionsDeviation.NumOfAttributesToDelete=0, LoadScenarios.0.File=exampleScenarios/simpleTest.xml, Scenarios.MERGING=0, TrampXMLOutput.Data=true, Scenarios.VALUEMANAGEMENT=0, Scenarios.FLATTENING=0, ConfigOptions.ReuseTargetPerc=0, DataGenerator=TrampCSV, ConfigOptions.ReuseSourcePerc=0, ConfigOptions.SourceSkolemPerc=0, MappingLanguage=SOtgds, ConfigOptionsDeviation.SourceCircularFK=0, OutputOption.HTMLSchemas=false, ConfigOptionsDeviation.TargetCircularFK=0, ConfigOptionsDeviation.SkolemKind=0, ConfigOptionsDeviation.SourceInclusionDependencyFKPerc=0, Scenarios.COPY=0, ConfigOptionsDeviation.TargetInclusionDependencyFKPerc=0, Scenarios.SELFJOINS=0, ConfigOptions.NumOfParamsInFunctions=1, MaxNumValue=1000, ConfigOptionsDeviation.NoReuseScenPerc=0, ConfigOptionsDeviation.NumOfParamsInFunctions=0, Scenarios.VERTPARTITION=0, ConfigOptionsDeviation.SourceFDPerc=0, TrampXMLOutput.Transformations=false, LoadScenarios.0.Name=simpleTest, Scenarios.ADDATTRIBUTE=0}
-8    [main] DEBUG tresc.benchmark.STBenchmark  - Command line args are: <'-p','/home/user/millercode/iBench/branches/2525-Mehrnaz/resource/testLoadExisting.txt'>
-8    [main] DEBUG tresc.benchmark.STBenchmark  - ---- PATHS ----
+0    [main] DEBUG tresc.benchmark.iBench  - Command line args are: <'-p','/home/user/millercode/iBench/branches/2525-Mehrnaz/resource/testLoadExisting.txt'>
+4    [main] DEBUG tresc.benchmark.iBench  - {TrampXMLOutput.FDs=true, MaxStringLength=100, ConfigOptionsDeviation.SourceInclusionDependencyPerc=0, ConfigOptionsDeviation.SourceCircularInclusionDependency=0, ConfigOptions.SourceInclusionDependencyFKPerc=0, InstancePathPrefix=out0, ConfigOptions.TargetInclusionDependencyFKPerc=0, ConfigOptions.NumOfAttributesToDelete=1, ConfigOptions.JoinKind=0 , OutputOption.TrampXML=true, Scenarios.VERTPARTITIONISAAUTHORITY=0, ConfigOptions.NoReuseScenPerc=100, ConfigOptionsDeviation.NumOfNewAttributes=0, ConfigOptions.TargetInclusionDependencyPerc=0, Scenarios.FUSION=0, OutputOption.XMLSchemas=true, Scenarios.ADDDELATTRIBUTE=0, ConfigOptions.NumOfSubElements=5, RandomSeed=144, ConfigOptionsDeviation.SourceSkolemPerc=0, ConfigOptions.NestingDepth=0, Scenarios.VERTPARTITIONHASA=0, Scenarios.VALUEGEN=0, ConfigOptionsDeviation.TargetCircularInclusionDependency=0, Scenarios.DELATTRIBUTE=0, Scenarios.SURROGATEKEY=0, TrampXMLOutput.Correspondences=true, Scenarios.MERGEADD=0, TrampXMLOutput.ConnectionInfo=false, ConfigOptions.JoinSize=1, ConfigOptions.SourceFDPerc=0, ConfigOptions.SourceCircularFK=0, ConfigOptionsDeviation.JoinKind=0, Scenarios.VERTPARTITIONNTOM=0, LoadScenarios.0.Inst=2, ConfigOptions.NumOfJoinAttributes=1, ConfigOptions.TargetCircularFK=0, OutputOption.HTMLMapping=false, ConfigOptions.PrimaryKeySize=1, ConfigOptionsDeviation.PrimaryKeySize=0, ConfigOptions.SkolemKind=1, Scenarios.VERTPARTITIONISA=0, ConfigOptions.SourceInclusionDependencyPerc=0, Scenarios.GLAV=0, ConfigOptions.SourceCircularInclusionDependency=0, Scenarios.HORIZPARTITION=0, SchemaPathPrefix=out0, ConfigOptionsDeviation.ReuseTargetPerc=0, ConfigOptionsDeviation.NumOfJoinAttributes=0, ConfigOptionsDeviation.ReuseSourcePerc=0, ConfigOptions.NumOfNewAttributes=1, LoadScenarios.NumScenarios=1, Scenarios.NESTING=0, OutputOption.Data=true, OutputOption.ErrorsAndExplanations=false, ConfigOptionsDeviation.JoinSize=0, ConfigOptionsDeviation.NumOfSubElements=2, ConfigOptions.TargetCircularInclusionDependency=0, ConfigOptionsDeviation.TargetInclusionDependencyPerc=0, RepElementCount=1, ConfigOptionsDeviation.NumOfAttributesToDelete=0, LoadScenarios.0.File=exampleScenarios/simpleTest.xml, Scenarios.MERGING=0, TrampXMLOutput.Data=true, Scenarios.VALUEMANAGEMENT=0, Scenarios.FLATTENING=0, ConfigOptions.ReuseTargetPerc=0, DataGenerator=TrampCSV, ConfigOptions.ReuseSourcePerc=0, ConfigOptions.SourceSkolemPerc=0, MappingLanguage=SOtgds, ConfigOptionsDeviation.SourceCircularFK=0, OutputOption.HTMLSchemas=false, ConfigOptionsDeviation.TargetCircularFK=0, ConfigOptionsDeviation.SkolemKind=0, ConfigOptionsDeviation.SourceInclusionDependencyFKPerc=0, Scenarios.COPY=0, ConfigOptionsDeviation.TargetInclusionDependencyFKPerc=0, Scenarios.SELFJOINS=0, ConfigOptions.NumOfParamsInFunctions=1, MaxNumValue=1000, ConfigOptionsDeviation.NoReuseScenPerc=0, ConfigOptionsDeviation.NumOfParamsInFunctions=0, Scenarios.VERTPARTITION=0, ConfigOptionsDeviation.SourceFDPerc=0, TrampXMLOutput.Transformations=false, LoadScenarios.0.Name=simpleTest, Scenarios.ADDATTRIBUTE=0}
+8    [main] DEBUG tresc.benchmark.iBench  - Command line args are: <'-p','/home/user/millercode/iBench/branches/2525-Mehrnaz/resource/testLoadExisting.txt'>
+8    [main] DEBUG tresc.benchmark.iBench  - ---- PATHS ----
 schemaPathPrefix: <out0>
 instancePathPrefix: <out0>
 
@@ -441,10 +441,10 @@ GENERATED MAPS:
 172  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - relName: nut_le_1_nl0_ce0_hotel
 172  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - LHS: [nut_le_1_nl0_ce0_hid]
 172  [main] DEBUG tresc.benchmark.schemaGen.SourceFDGenerator  - RHS: [nut_le_1_nl0_ce0_fid]
-172  [main] DEBUG tresc.benchmark.STBenchmark  - Printing results !
-172  [main] DEBUG tresc.benchmark.STBenchmark  - instance path: out0
-172  [main] DEBUG tresc.benchmark.STBenchmark  - schema path: out0
-194  [main] DEBUG tresc.benchmark.STBenchmark  - 
+172  [main] DEBUG tresc.benchmark.iBench  - Printing results !
+172  [main] DEBUG tresc.benchmark.iBench  - instance path: out0
+172  [main] DEBUG tresc.benchmark.iBench  - schema path: out0
+194  [main] DEBUG tresc.benchmark.iBench  - 
 ==========================================================================================
 ==========================================================================================
 Source Schema:
@@ -1027,9 +1027,9 @@ toxgene.core.genes.CreateGeneException: cannot find list: test_le_0_nl0_ce0_flig
 	at tresc.benchmark.dataGen.ToXDataGenerator.generateData(ToXDataGenerator.java:37)
 	at tresc.benchmark.dataGen.TrampCSVGen.generateData(TrampCSVGen.java:64)
 	at tresc.benchmark.Generator.generateSourceData(Generator.java:219)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:412)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.runConfig(iBench.java:412)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 
 toxgene.core.Engine.parseTemplate(Engine.java:136)
 tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper.generate(ToXGeneWrapper.java:80)
@@ -1037,9 +1037,9 @@ tresc.benchmark.dataGen.ToXDataGenerator.generateInstanceXML(ToXDataGenerator.ja
 tresc.benchmark.dataGen.ToXDataGenerator.generateData(ToXDataGenerator.java:37)
 tresc.benchmark.dataGen.TrampCSVGen.generateData(TrampCSVGen.java:64)
 tresc.benchmark.Generator.generateSourceData(Generator.java:219)
-tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:412)
-tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+tresc.benchmark.iBench.runConfig(iBench.java:412)
+tresc.benchmark.iBench.run(iBench.java:366)
+tresc.benchmark.iBench.main(iBench.java:131)
 
 393  [main] FATAL tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper  - 
 ***** ERROR: UNRECOGNIZED ERROR: An unrecognized error has occurred.
@@ -1058,9 +1058,9 @@ toxgene.core.genes.CreateGeneException: cannot find list: test_le_0_nl0_ce0_flig
 	at tresc.benchmark.dataGen.ToXDataGenerator.generateData(ToXDataGenerator.java:37)
 	at tresc.benchmark.dataGen.TrampCSVGen.generateData(TrampCSVGen.java:64)
 	at tresc.benchmark.Generator.generateSourceData(Generator.java:219)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:412)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.runConfig(iBench.java:412)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 
 Exception in thread "main" toxgene.core.ToXgeneErrorException: UNRECOGNIZED ERROR: An unrecognized error has occurred.
 Please report the following debug information to toxgene-bugs@cs.toronto.edu
@@ -1078,9 +1078,9 @@ toxgene.core.genes.CreateGeneException: cannot find list: test_le_0_nl0_ce0_flig
 	at tresc.benchmark.dataGen.ToXDataGenerator.generateData(ToXDataGenerator.java:37)
 	at tresc.benchmark.dataGen.TrampCSVGen.generateData(TrampCSVGen.java:64)
 	at tresc.benchmark.Generator.generateSourceData(Generator.java:219)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:412)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.runConfig(iBench.java:412)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 
 	at toxgene.core.Engine.parseTemplate(Engine.java:136)
 	at tresc.benchmark.dataGen.toxgenewrap.ToXGeneWrapper.generate(ToXGeneWrapper.java:80)
@@ -1088,7 +1088,7 @@ toxgene.core.genes.CreateGeneException: cannot find list: test_le_0_nl0_ce0_flig
 	at tresc.benchmark.dataGen.ToXDataGenerator.generateData(ToXDataGenerator.java:37)
 	at tresc.benchmark.dataGen.TrampCSVGen.generateData(TrampCSVGen.java:64)
 	at tresc.benchmark.Generator.generateSourceData(Generator.java:219)
-	at tresc.benchmark.STBenchmark.runConfig(STBenchmark.java:412)
-	at tresc.benchmark.STBenchmark.run(STBenchmark.java:366)
-	at tresc.benchmark.STBenchmark.main(STBenchmark.java:131)
+	at tresc.benchmark.iBench.runConfig(iBench.java:412)
+	at tresc.benchmark.iBench.run(iBench.java:366)
+	at tresc.benchmark.iBench.main(iBench.java:131)
 
