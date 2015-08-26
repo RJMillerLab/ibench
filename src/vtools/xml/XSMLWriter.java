@@ -551,7 +551,7 @@ public class XSMLWriter {
 			MapExprType source = m.getForeach();
 			MapExprType target = m.getExists();
 			
-			buf.append("    <logicalMapping "+ "name=" + m.getId() + ">\n");
+			buf.append("    <logicalMapping "+ "name=\"" + m.getId() + "\">\n");
 			
 			// deal with LHS
 			buf.append("      <source>\n");
