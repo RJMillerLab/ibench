@@ -31,6 +31,6 @@ public class iBenchOptions {
 	@Option(name="-noout", usage="do not write the generated XML mapping scenarios to disk")
 	public boolean noOutput = false;
 	
-	//@Option(name="-map", usage="run with a fixed mapping XML file instead of using STBenchmark")
+	//@Option(name="-map", usage="run with a fixed mapping XML file instead of using iBench")
 	//public File mapFile = null;
 }

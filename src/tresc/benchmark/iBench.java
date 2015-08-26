@@ -36,7 +36,7 @@ import vtools.xml.XSMLWriter;
 
 // PRG ADD July 5, 2011
 // PRG ADD Instance Variable to hold the schema mapping currently being generated
-// PRG ADD STBenchmark's to-be generated schema mapping is called "Mapping Scenario"
+// PRG ADD iBench's to-be generated schema mapping is called "Mapping Scenario"
 // PRG Removed redundant output and also replaced code to avoid generating string if it is not going to be output - Oct 5, 2012
 // MN  ADD two methods to generate random source and target inclusion dependencies, print results as mapjob, xsml and xsd files - 3 April 2014
 // PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
@@ -520,7 +520,7 @@ public class iBench {
 				
 		// log.debug("---- GENERATED SCENARIO -----\n\n\n" + _scenario.toString());
 
-		// At last, STBenchmark must output and/or write to disk the generated output in TrampXML format
+		// At last, iBench must output and/or write to disk the generated output in TrampXML format
 		printResults(_scenario, 
 				     _configuration.getSourceSchemaFile(), 
 				     _configuration.getTargetSchemaFile(),
@@ -560,7 +560,6 @@ public class iBench {
 	
 	//	PropertyConfigurator.configure("resource/log4jproperties.txt");
 
-	//	STBenchmark benchmark = new STBenchmark();
 	//	benchmark.parseArgs(args);
 	//	benchmark.run(args);
 		

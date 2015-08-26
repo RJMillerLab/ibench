@@ -98,9 +98,9 @@ public class TrampXMLModel extends MapScenarioHolder {
 	}
 	
 	/** 
-	 * Retrieves all mappings generated as part of STBenchmark's current mapping scenario (a.k.a. schema mapping). 
-	 * Two important notes. (1) When running STBenchmark with "MappingLanguage = FOtgds", the returned array of mappings
-	 * (MappingType[]) represents a set of s-t tgds. (2) On the contrary, when running STBenchmark with 
+	 * Retrieves all mappings generated as part of iBench's current mapping scenario (a.k.a. schema mapping). 
+	 * Two important notes. (1) When running iBench with "MappingLanguage = FOtgds", the returned array of mappings
+	 * (MappingType[]) represents a set of s-t tgds. (2) On the contrary, when running iBench with 
 	 * "MappingLanguage = SOtgds", the returned array of mappings models a single SO tgd. Thus, in this case, 
 	 * each element in the array can be treated as a SO Clause.
 	 *  

@@ -21,9 +21,9 @@ import tresc.benchmark.configGen.Constants.TrampXMLOutputSwitch;
 
 // MN there are no parameters with respect to .mapjob, .xsml and.xsd files - 21 April 2014
 // PRG FIX Removed generation of random seed config line in method generateRandomsAndMappingLang() - Sep 12, 2012
-// The random seed is what forces StBenchmark to generate the same schema schema mappings (minus variations in 
+// The random seed is what forces iBench to generate the same schema schema mappings (minus variations in 
 // the name of elements in the source/target schemas) during any iteration of a given configuration. We now can
-// generate random config files without imposing any particular seed. StBench 2.0 supplies a random seem on demand.
+// generate random config files without imposing any particular seed. iBench supplies a random seem on demand.
 
 // PRG ADDED + 1 to ensure that max repetition value is also taken into consideration in the random draw - Sep 22, 2012
 
@@ -90,7 +90,7 @@ public class ConfigGenerator {
 
 		configWriter.write("\n# These should always be zero\n");
 		
-		// certain scenarios cannot be run in STBenchmark 2.0 so ensure that they are disabled
+		// certain scenarios cannot be run in iBench so ensure that they are disabled
 		//MN How do we disable these two scenarios i.e., fusion and self joins? - 21 April 2014
 		for (DisabledScenarios name : Constants.DisabledScenarios.values())
 			configWriter.write("Scenarios." + name + " = " + 0 + "\n");

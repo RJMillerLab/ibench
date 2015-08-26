@@ -25,7 +25,7 @@
 	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
 	
 	<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />
-  	<property name="mainClass" value="tresc.benchmark.STBenchmark" />
+  	<property name="mainClass" value="tresc.benchmark.iBench" />
   	<property name="expMainClass" value="tresc.benchmark.iBenchDriver" />
 
 	<!-- ClassPath Setup -->
