@@ -92,7 +92,7 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = false
+OutputOption.Data = true
 OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
@@ -101,7 +101,7 @@ OutputOption.Clio = true
 
 # Optional activation/deactivation of output parts of the Tramp XML document
 TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = false
-TrampXMLOutput.Data = false
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = false

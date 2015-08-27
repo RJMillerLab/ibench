@@ -263,6 +263,11 @@ public class TrampModelFactory {
 		if (r.isSetPrimaryKey())
 			addiBenchKey(r.getName(), r.getPrimaryKey().getAttrArray(), source);
 		
+		// create data element
+		if (source && conf.getOutputOption(OutputOption.Data)
+				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
+			addDataElement(newR.getName());
+		
 		if (source)
 			p.addSourceRel(r);
 		else

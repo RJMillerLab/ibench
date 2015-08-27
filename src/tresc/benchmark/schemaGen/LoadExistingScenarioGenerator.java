@@ -71,7 +71,7 @@ public class LoadExistingScenarioGenerator extends AbstractScenarioGenerator {
 				i++;
 			}
 
-			newC.addNewTo();
+//			newC.addNewTo();
 			newC.getTo().setTableref(namingPrefix + newC.getTo().getTableref());
 			i = 0;
 			for (String a : newC.getTo().getAttrArray()) {
