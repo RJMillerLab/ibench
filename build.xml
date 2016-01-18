@@ -19,6 +19,8 @@
 	<property name="docdir" location="${basedir}/doc" />
 	<property name="librarydir" location="${basedir}/lib" />
 	<property name="resourcedir" location="${basedir}/resource" />
+	<property name="examplescendir" location="${basedir}/exampleScenarios" />
+<!--	<property name="exampledatadir" location="${basedir}/exampleData" /> -->
 	<property name="sourcedir" location="${basedir}/src" />
    	<property name="binmacdir" location="${builddir}/mac" />
   	<property name="binwindir" location="${builddir}/win"/>
@@ -90,6 +92,12 @@
 			</fileset>
 		</copy>
 		<copy tofile="${deployto}/toxgene.jar" file="${librarydir}/toxgene.jar" />
+		<mkdir dir="${deployto}/exampleScenarios" />
+		<copy todir="${deployto}/exampleScenarios">
+			<fileset dir="${examplescendir}">
+				<exclude name=".svn"/>
+			</fileset>
+		</copy>
 		<mkdir dir="${deployto}/resource"/>
 		<copy todir="${deployto}/resource">
 			<fileset dir="${resourcedir}">
