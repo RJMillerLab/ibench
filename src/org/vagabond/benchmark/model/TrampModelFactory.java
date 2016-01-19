@@ -16,6 +16,7 @@ import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.FunctionType;
+import org.vagabond.xmlmodel.IDType;
 import org.vagabond.xmlmodel.MappingScenarioDocument;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.MappingType.Uses;
@@ -122,6 +123,7 @@ public class TrampModelFactory {
 		idGen.createIdType("FK", "FK");
 		idGen.createIdType("SK", "SK");
 		idGen.createIdType("FD", "FD");
+		idGen.createIdType("ID", "ID");
 		idGen.createIdType("R", "");
 	}
 
@@ -210,6 +212,25 @@ public class TrampModelFactory {
 		
 		return fd;
 	}
+	
+	public IDType addID (String fromRel, String[] fromAttrs, String toRel, String[] toAttrs, boolean source) {
+		SchemaType s = source ? doc.getScenario().getSchemas().getSourceSchema() : doc.getScenario().getSchemas().getTargetSchema();
+		IDType id = s.addNewID();
+		
+		id.setId(getNextId("ID"));
+		
+		AttrRefType from = id.addNewFrom();
+		from.setTableref(fromRel);
+		for(String a: fromAttrs)
+			from.addAttr(a);
+		AttrRefType to = id.addNewTo();
+		to.setTableref(toRel);
+		for(String a: toAttrs)
+			to.addAttr(a);
+		
+		return id;
+	}
+	
 
 	public RelationType addRelation(String hook, String name, String[] attrs,
 			String[] dTypes, boolean source) {
