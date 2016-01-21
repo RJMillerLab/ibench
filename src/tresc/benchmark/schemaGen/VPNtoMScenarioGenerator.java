@@ -187,9 +187,9 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         //MN END
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
-		String joinAtt1 = randomAttrName(0, 0);
+		String joinAtt1 = randomAttrName(0, 0) + "0";
 		String joinAtt1Ref = joinAtt1 + "Ref";
-        String joinAtt2 = randomAttrName(1, 0);
+        String joinAtt2 = randomAttrName(1, 0) + "1";
         String joinAtt2Ref = joinAtt2 + "Ref";
 		
         for (int i = 0; i < numOfTgtTables; i++)
@@ -518,10 +518,14 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 	
 		String joinAtt1;
 		String joinAtt2;
+		String joinAtt1Ref;
+		String joinAtt2Ref;
 		
 		joinAtt1 = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
         joinAtt2 = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
-
+        joinAtt1Ref = m.getAttrId(2, 0, false);
+        joinAtt2Ref = m.getAttrId(2, 1, false);
+        
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) 
 		{
@@ -594,15 +598,25 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 				stSK.addArg(att);
 			}
 
+//			if(i == 0)
+//			{
+//				seli.add(joinAtt1 + i, stSK); //TODO ok to disambiguate here?
+//				sel2.add(joinAtt1 + i, stSK);
+//			}
+//			else
+//			{
+//				seli.add(joinAtt2 + i, stSK);
+//				sel2.add(joinAtt2 + i, stSK);
+//			}
 			if(i == 0)
 			{
-				seli.add(joinAtt1 + i, stSK); //TODO ok to disambiguate here?
-				sel2.add(joinAtt1 + i, stSK);
+				seli.add(joinAtt1, stSK); //TODO ok to disambiguate here?
+				sel2.add(joinAtt1Ref, stSK);
 			}
 			else
 			{
-				seli.add(joinAtt2 + i, stSK);
-				sel2.add(joinAtt2 + i, stSK);
+				seli.add(joinAtt2, stSK);
+				sel2.add(joinAtt2Ref, stSK);
 			}
 		}
         
