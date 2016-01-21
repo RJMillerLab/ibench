@@ -189,9 +189,6 @@ public class Generator {
 			}
 		}
 		
-		// create FKs
-		scenario.getDocFac().copyFKsToRealDoc();
-		
 		
 		//MN generates Random Source Inclusion Dependencies
 		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
@@ -204,6 +201,9 @@ public class Generator {
 		trgIDGen.generateScenario(scenario, configuration);
 		//MN to inject random target inclusion dependencies into mappings - 14 April 2014
 		randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
+
+		// create FKs
+		scenario.getDocFac().copyFKsToRealDoc();
 		
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))
