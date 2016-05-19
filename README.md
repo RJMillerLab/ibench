@@ -23,7 +23,7 @@ The input to iBench is a configuration file (a text file with key value pairs, i
 
 ### Example Configuration Files and UDPs ###
 
-We maintain a [https://bitbucket.org/ibencher/ibenchconfigurationsandscenarios](public repository) with example configuration files and integration scenarios (which can be used as UDPs). Additions to this repository from the community are highly encouraged.
+We maintain a [public repository](https://bitbucket.org/ibencher/ibenchconfigurationsandscenarios) with example configuration files and integration scenarios (which can be used as UDPs). Additions to this repository from the community are highly encouraged.
 
 ### Wiki ###
 
