@@ -48,114 +48,97 @@ import tresc.benchmark.schemaGen.VPIsAAuthorityScenarioGenerator;
 
 public class Generator {
 	static Logger log = Logger.getLogger(Generator.class);
-	
+
 	private AbstractScenarioGenerator[] scenarioGenerators;
 	private AbstractScenarioGenerator[] loadScenarioGenerators;
 	private ScenarioGenerator fdGen;
 	private DataGenerator dataGenerator;
 	private RandomSourceSkolemToMappingGenerator skGen;
-	
-	//MN two attributes for random source and target 
+
+	// MN two attributes for random source and target
 	private ArrayList<String> randomSourceInclusionDependencies;
 	private ArrayList<String> randomTargetInclusionDependencies;
-	
+
 	public Generator(Configuration config) throws XmlException, IOException {
 		int numOfScenarios = Constants.ScenarioName.values().length - 1;
-		
-		//TODO if you creates new primitives from existing mapping files then add these here
-		
+
+		// TODO if you creates new primitives from existing mapping files then
+		// add these here
+
 		scenarioGenerators = new AbstractScenarioGenerator[numOfScenarios];
-		
+
 		for (int i = 0; i < numOfScenarios; i++)
 			scenarioGenerators[i] = null;
 
-		scenarioGenerators[Constants.ScenarioName.COPY.ordinal()] =
-				new CopyScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.VALUEGEN.ordinal()] =
-				new ValueGenerationScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.HORIZPARTITION.ordinal()] =
-				new HorizontalPartitionScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.SURROGATEKEY.ordinal()] =
-				new SurrogateKeysScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.MERGING.ordinal()] =
-				new MergingScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.VALUEMANAGEMENT.ordinal()] =
-				new ValueManagementScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.FUSION.ordinal()] =
-				new FusionScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.FLATTENING.ordinal()] =
-				new FlatteningScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.NESTING.ordinal()] =
-				new NestingScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.SELFJOINS.ordinal()] =
-				new SelfJoinScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.VERTPARTITION.ordinal()] =
-				new VerticalPartitionScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.GLAV.ordinal()] =
-				new GLAVScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.ADDATTRIBUTE.ordinal()] =
-				new AddAttributeScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.DELATTRIBUTE.ordinal()] =
-				new DeleteAttributeScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISA.ordinal()] =
-				new VPIsAScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONHASA.ordinal()] =
-				new VPHasAScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONNTOM.ordinal()] =
-				new VPNtoMScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.ADDDELATTRIBUTE.ordinal()] =
-				new AddDeleteScenarioGenerator();
-		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] =
-				new MergeAddScenarioGenerator();
-		//MN added new vertical partitioning - 23 June 2014
-		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISAAUTHORITY.ordinal()] =
-				new VPIsAAuthorityScenarioGenerator();
-		
+		scenarioGenerators[Constants.ScenarioName.COPY.ordinal()] = new CopyScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VALUEGEN.ordinal()] = new ValueGenerationScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.HORIZPARTITION
+				.ordinal()] = new HorizontalPartitionScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.SURROGATEKEY.ordinal()] = new SurrogateKeysScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.MERGING.ordinal()] = new MergingScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VALUEMANAGEMENT.ordinal()] = new ValueManagementScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.FUSION.ordinal()] = new FusionScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.FLATTENING.ordinal()] = new FlatteningScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.NESTING.ordinal()] = new NestingScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.SELFJOINS.ordinal()] = new SelfJoinScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITION.ordinal()] = new VerticalPartitionScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.GLAV.ordinal()] = new GLAVScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.ADDATTRIBUTE.ordinal()] = new AddAttributeScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.DELATTRIBUTE.ordinal()] = new DeleteAttributeScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISA.ordinal()] = new VPIsAScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONHASA.ordinal()] = new VPHasAScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONNTOM.ordinal()] = new VPNtoMScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.ADDDELATTRIBUTE.ordinal()] = new AddDeleteScenarioGenerator();
+		scenarioGenerators[Constants.ScenarioName.MERGEADD.ordinal()] = new MergeAddScenarioGenerator();
+		// MN added new vertical partitioning - 23 June 2014
+		scenarioGenerators[Constants.ScenarioName.VERTPARTITIONISAAUTHORITY
+				.ordinal()] = new VPIsAAuthorityScenarioGenerator();
+
 		// add new scenario generators for load scenarios
 		int numLoad = config.getNumLoadScenarios();
 		loadScenarioGenerators = new AbstractScenarioGenerator[numLoad];
-		for(int i = 0; i < numLoad; i++) {
+		for (int i = 0; i < numLoad; i++) {
 			String name = config.getLoadScenarioNames().get(i);
-			MapScenarioHolder h = new MapScenarioHolder(); 
+			MapScenarioHolder h = new MapScenarioHolder();
 			h.setDocument(MappingScenarioDocument.Factory.parse(config.getExistingScenarios().get(i)));
 			loadScenarioGenerators[i] = new LoadExistingScenarioGenerator(h, name);
 		}
-		
+
 		// create an FD generator
 		fdGen = new SourceFDGenerator();
-	
+
 		// create an generator for source attribute skolem functions
 		skGen = new RandomSourceSkolemToMappingGenerator();
-		
+
 		// create a data generator
-		dataGenerator =  instDataGen(config);
+		dataGenerator = instDataGen(config);
 	};
 
 	private DataGenerator instDataGen(Configuration conf) {
 		DataGenType type = conf.getDataGen();
-		Class<? extends DataGenerator> clazz =
-				(Class<? extends DataGenerator>) Constants.dataGens.get(type);
+		Class<? extends DataGenerator> clazz = (Class<? extends DataGenerator>) Constants.dataGens.get(type);
 		DataGenerator result;
 		Constructor<? extends DataGenerator> c;
 		try {
 			c = clazz.getConstructor(Configuration.class);
 			result = c.newInstance(conf);
 			return result;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LoggerUtil.logException(e, log);
 			System.exit(1);
 		}
 		return null; // keep compiler quiet
 	}
-	
-	//MN this method returns random source inclusion dependencies (only regular ones) - 14 April 2014
-	public ArrayList<String> getRandomSourceInlcusionDependencies (){
+
+	// MN this method returns random source inclusion dependencies (only regular
+	// ones) - 14 April 2014
+	public ArrayList<String> getRandomSourceInlcusionDependencies() {
 		return randomSourceInclusionDependencies;
 	}
-	
-	//MN this method returns random target inclusion dependencies (only regular ones) - 14 April 2014
-	public ArrayList<String> getRandomTargetInclusionDependencies(){
+
+	// MN this method returns random target inclusion dependencies (only regular
+	// ones) - 14 April 2014
+	public ArrayList<String> getRandomTargetInclusionDependencies() {
 		return randomTargetInclusionDependencies;
 	}
 
@@ -179,32 +162,33 @@ public class Generator {
 				scenarioGenerators[i].init(configuration, scenario);
 			for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
 				loadScenarioGenerators[i].init(configuration, scenario);
-			
+
 			// do one scenario of each until we are done
-			while(scenario.getNumBasicScen() < configuration.getTotalNumScen()) {
+			while (scenario.getNumBasicScen() < configuration.getTotalNumScen()) {
 				for (int i = 0, imax = scenarioGenerators.length; i < imax; i++)
 					scenarioGenerators[i].generateNextScenario(scenario, configuration);
 				for (int i = 0, imax = loadScenarioGenerators.length; i < imax; i++)
 					loadScenarioGenerators[i].generateNextScenario(scenario, configuration);
 			}
 		}
-		
-		
-		//MN generates Random Source Inclusion Dependencies
+
+		// MN generates Random Source Inclusion Dependencies
 		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
 		srcIDGen.generateScenario(scenario, configuration);
-		//MN to inject random source inclusion dependencies into mappings - 14 April 2014
+		// MN to inject random source inclusion dependencies into mappings - 14
+		// April 2014
 		randomSourceInclusionDependencies = srcIDGen.getRandomSourceIDs();
-				
-		//MN generates Random Target Inclusion Dependencies
+
+		// MN generates Random Target Inclusion Dependencies
 		TargetInclusionDependencyGenerator trgIDGen = new TargetInclusionDependencyGenerator();
 		trgIDGen.generateScenario(scenario, configuration);
-		//MN to inject random target inclusion dependencies into mappings - 14 April 2014
+		// MN to inject random target inclusion dependencies into mappings - 14
+		// April 2014
 		randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
 
 		// create FKs
 		scenario.getDocFac().copyFKsToRealDoc();
-		
+
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))
 			fdGen.generateScenario(scenario, configuration);
@@ -212,13 +196,22 @@ public class Generator {
 		// do the source attr with skolem trick
 		if (configuration.getParam(Constants.ParameterName.SourceSkolemPerc) != 0)
 			skGen.generateScenario(scenario, configuration);
-		
+
 		return scenario;
 	}
 
 	public void generateSourceData(MappingScenario scenario) throws Exception {
-		dataGenerator.setSchema(scenario.getSource());
+		dataGenerator.setSchema(scenario.getSource());		
 		dataGenerator.setConstraints(scenario.getSrcConstraints());
+		dataGenerator.setScenario(scenario);
+		dataGenerator.generateData();
+	}
+
+	public void generateTargetData(MappingScenario scenario) throws Exception {
+		// new method not sure if anything works at all
+		dataGenerator.setSchema(scenario.getTarget());		
+		// to be tested \/
+		dataGenerator.setConstraints(scenario.getTgtConstraints());
 		dataGenerator.setScenario(scenario);
 		dataGenerator.generateData();
 	}

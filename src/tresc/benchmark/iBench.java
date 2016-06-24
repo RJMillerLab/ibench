@@ -537,8 +537,10 @@ public class iBench {
 //		}
 		
 		
-		if (_configuration.getOutputOption(OutputOption.Data))
+		if (_configuration.getOutputOption(OutputOption.Data)){
 			Modules.scenarioGenerator.generateSourceData(_scenario);
+			Modules.scenarioGenerator.generateTargetData(_scenario);
+		}
 		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))
 			Modules.explGen.genearteExpls(_scenario, _configuration);
 		
