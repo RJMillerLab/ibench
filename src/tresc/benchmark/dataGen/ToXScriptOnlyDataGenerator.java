@@ -86,7 +86,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		initBuffers();
 
 		String schemaName = schema.getLabel();
-
+		
+		
 		generateToxTypes();
 
 		generateDocumentOpening(documentName, schemaName, documentBuffer);
@@ -95,7 +96,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 			generateListIterationConstruct(rootSetElt.getLabel(), documentBuffer);
 
-			generateToxList(rootSetElt, repElemCount);
+			generateToxList(rootSetElt, repElemCount, schemaName);
 		}
 
 		generateDocumentClosing(schemaName, documentBuffer);
@@ -118,6 +119,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		}
 		;
 
+		
 		BufferedWriter bufWriter = new BufferedWriter(
 				new FileWriter(new File(Configuration.getInstancePathPrefix(), config.getSourceInstanceFile())));
 		bufWriter.write(templateBuffer.toString());
@@ -214,7 +216,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		return null;
 	}
 
-	private void generateToxList(SMarkElement schemaElement, int eltCount) throws Exception {
+	private void generateToxList(SMarkElement schemaElement, int eltCount, String schemaName) throws Exception {
 		StringBuffer listBuf = new StringBuffer();
 
 		String label = schemaElement.getLabel();
@@ -222,7 +224,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		// Type type = schemaElement.getType();
 
 		if (!hasSelfFK(schemaElement)) {
-			String unique = generateUnique(schemaElement);
+			String unique = generateUnique(schemaElement, schemaName);
 			generateListOpening(label, listBuf, eltCount, unique, "");
 
 			for (int i = 0; i < schemaElement.size(); i++)
@@ -307,8 +309,10 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	// generate primary key constraints
-	private String generateUnique(SMarkElement schemaElement) throws Exception {
-		RelationType rel = scen.getDoc().getRelForName(schemaElement.getLabel().toLowerCase(), false);
+	private String generateUnique(SMarkElement schemaElement, String schemaName) throws Exception {
+		boolean isTarget = schemaName.equalsIgnoreCase("Source") ? false : true;
+		
+		RelationType rel = scen.getDoc().getRelForName(schemaElement.getLabel().toLowerCase(), isTarget);
 
 		if (!rel.isSetPrimaryKey())
 			return "";
