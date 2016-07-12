@@ -2,7 +2,9 @@ package tresc.benchmark;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -19,6 +21,8 @@ import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
+import vtools.dataModel.types.DataType;
+
 
 public class Configuration {
 	private int[] _repetitions;
@@ -78,8 +82,12 @@ public class Configuration {
 	private int numLoadScenarios = 0;
 	private int[] numLoadScenarioInsts;
 	
+	private Map<Integer, DataType> dataTypeMapper;
+	private int numDataTypes = 0;
+	
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
+	
 
 	public Configuration() {
 		initArrays();
@@ -194,6 +202,24 @@ public class Configuration {
 			loadScenarios.add(scenFile);
 			loadScenarioNames.add(name);
 		}
+		prop.resetPrefix();
+		
+		// Reading user's data type and distribution
+		prop.setPrefix("DataType");
+		dataTypeMapper = new HashMap<Integer, DataType>();
+		setNumDataTypes(prop.getInt("NumDataType"));
+		DataType data;
+		
+		for (int i = 0; i < getNumDataTypes(); i++) {
+			data = new DataType(
+					prop.getProperty(i + ".Name"), 
+					prop.getProperty(i + ".ClassPath"), 
+					prop.getFloat(i + ".Percentage")
+			);
+			
+			getDataTypeMapper().put(i, data);
+		}
+		
 		prop.resetPrefix();
 		
 		// read remaining and optional parameters
@@ -750,6 +776,23 @@ public class Configuration {
 
 	public int[] getNumLoadScenarioInsts() {
 		return numLoadScenarioInsts;
+	}
+
+	public int getNumDataTypes() {
+		return numDataTypes;
+	}
+
+	public void setNumDataTypes(int numDataTypes) {
+		this.numDataTypes = numDataTypes;
+	}
+
+
+	public Map<Integer, DataType> getDataTypeMapper() {
+		return dataTypeMapper;
+	}
+
+	public void setDataTypeMapper(Map<Integer, DataType> dataTypeMapper) {
+		this.dataTypeMapper = dataTypeMapper;
 	}
 
 }

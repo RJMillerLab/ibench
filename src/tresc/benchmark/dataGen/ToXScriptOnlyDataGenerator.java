@@ -52,7 +52,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		super(config);
 		initBuffers();
 	}
-
+	
 	public ToXScriptOnlyDataGenerator(Schema schema, Configuration config) {
 		super(schema, config);
 		initBuffers();
@@ -87,7 +87,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		initBuffers();
 
 		String schemaName = schema.getLabel();
-
+		
 		generateToxTypes();
 
 		generateDocumentOpening(documentName, schemaName, documentBuffer);
@@ -105,7 +105,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		// ///////////////////////////////////////
 
 		generateTemplateOpening(templateBuffer);
-
+		
+		
 		for (StringBuffer typeBuf : toxTypes)
 			templateBuffer.append(typeBuf);
 
@@ -138,6 +139,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateToxTypes() {
+		
 		StringBuffer benchStringTypeBuf = new StringBuffer();
 		generateBenchStringType(benchStringTypeBuf);
 		toxTypes.add(benchStringTypeBuf);
@@ -145,14 +147,13 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		StringBuffer intTypeBuf = new StringBuffer();
 		generateBenchIntType(intTypeBuf);
 		toxTypes.add(intTypeBuf);
-
 	}
 
 	private void
 			visitSchemaElement(SMarkElement schemaElement, StringBuffer buf) {
 		String label = schemaElement.getLabel();
 		Type type = schemaElement.getType();
-
+		
 		if (type instanceof Set) {
 			generateComplexElementOpening(label, buf, repElemCount);
 			for (int i = 0; i < schemaElement.size(); i++)
@@ -220,7 +221,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		String label = schemaElement.getLabel();
 		String listName = label + LIST_NAME_SUFFIX;
-//		Type type = schemaElement.getType();
+		
+		
 		
 		if (!hasSelfFK(schemaElement)) {
 			String unique = generateUnique(schemaElement);
@@ -267,6 +269,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		generateListOpening(keyLabel, listBuf, eltCount, 
 				getUniqueCode(keyLabel, keyAttrs[0].getName()), "");
 //TODO right now unique in one attribute as a workaround unil clear how to do uniqueness over multiple attrs
+		
+		
 		for(int i = 0; i < keyAttrs.length;i ++) {
 			keyAttrNames[i] = keyAttrs[i].getName();
 			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
@@ -363,16 +367,38 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	private void generateAtomicElementConstruct(String eltName,
 			StringBuffer buf, Atomic atomicType) {
-		String typeString =
-				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		
+		
+		//test
+		String typeString = null;
+		if (atomicType == Atomic.INTEGER) {
+			typeString = "bench_int";
+		} else if (atomicType == Atomic.STRING) {
+			typeString = "bench_email"; // string
+		} else {
+			typeString = "bench_email";
+		}
+				
+		//String typeString =
+		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
 				+ "\"/>\n");
 	}
 	
 	private void generateAtomicFromPathConstruct (String eltName,
 			StringBuffer buf, Atomic atomicType, String path, String expr) {
-		String typeString =
-				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		//Defines the type by element
+		String typeString = null;
+		if (atomicType == Atomic.INTEGER) {
+			typeString = "bench_int";
+		} else if (atomicType == Atomic.STRING) {
+			typeString = "bench_email"; //string
+		} else {
+			typeString = "bench_email";
+		}
+		
+		//String typeString =
+		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\">\n");
 		buf.append("\t<simpleType>\n" + 
@@ -386,10 +412,23 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	
 	private void generateAtomicFromSamplePathConstruct (String eltName,
 			StringBuffer buf, Atomic atomicType, String path, String expr) {
-		String typeString =
-				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		
+		
+		String typeString = null;
+		if (atomicType == Atomic.INTEGER) {
+			typeString = "bench_int";
+		} else if (atomicType == Atomic.STRING) {
+			typeString = "bench_email"; //bench_string
+		} else {
+			typeString = "bench_email";
+		}
+		
+		//String typeString =
+		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\">\n");
+		
 		buf.append("\t<simpleType>\n" + 
 				"\t\t<restriction base=\"string\">\n");
 		buf.append("\t\t\t<tox-scan path=\"[" + path + "]\">\n");		
@@ -441,16 +480,23 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateBenchStringType(StringBuffer buf) {
-		buf.append("<simpleType name=\"bench_string\">\n");
-		buf.append("<restriction base=\"string\">\n");
-		// buf.append("<tox-string type=\"xmrk_text\" maxLength=\""+maxStringLength+"\"/>\n");
-		buf.append("<tox-string type=\"multiword\" maxLength=\"" + maxStringLength
-				+ "\"/>\n");
-		buf.append("</restriction>\n");
-		buf.append("</simpleType>\n");
+		String[] benchStringTypes = {
+				"gibberish", "text", "xmrk_text", "email", "fname", 
+				"lname", "city", "country", "province", "domain", "word",
+				"multiword"
+				};
+		
+		for (int i = 0; i < benchStringTypes.length; i++) {
+			buf.append("<simpleType name=\"bench_" + benchStringTypes[i] + "\">\n");
+			buf.append("<restriction base=\"string\">\n");
+			buf.append("<tox-string type=\"" + benchStringTypes[i] + "\" maxLength=\"" + maxStringLength
+					+ "\"/>\n");
+			buf.append("</restriction>\n");
+			buf.append("</simpleType>\n");
+		}
 
 	}
-
+		
 	private void generateToxSampleConstruct(SMarkElement[][] constraint,
 			StringBuffer buf) {
 		// we get the set of the target and generate the tox-sample header

@@ -43,6 +43,7 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
+import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.Set;
 
 /**
@@ -303,11 +304,43 @@ public class TrampModelFactory {
 		doc.getRelPos().put("");
 	}
 	
-	public RelationType addRelation(String hook, String name, String[] attrs,
+	/*public RelationType addRelation(String hook, String name, String[] attrs,
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
 		Arrays.fill(dTypes, "TEXT");
 		return addRelation(hook, name, attrs, dTypes, source);
+		
+	}*/
+	public RelationType addRelation(String hook, String name, String[] attrs,
+			boolean source) {
+		String[] dTypes = new String[attrs.length];
+		Arrays.fill(dTypes, null);
+		DataType data;
+		int percentage = 0;
+		int k = 0;
+		for (int i = 0; i < conf.getDataTypeMapper().size(); i++)
+		{
+			data = conf.getDataTypeMapper().get(i);
+			percentage = Integer.parseInt(String.valueOf(
+					dTypes.length * (Double.parseDouble(
+							String.valueOf(data.getPercentage() / 100)
+							))));
+			
+			for (int j = 0; j < percentage; j++) {
+				dTypes[k] = data.getName();
+				k++;
+			}
+		}
+		// if the distribution informed by the user doesn't 
+		// fulfill all the array, fill it with text
+		if (k != dTypes.length) {
+			for (int i = k; i < dTypes.length; i++) {
+				dTypes[i] = "TEXT";
+			}
+		}
+
+		return addRelation(hook, name, attrs, dTypes, source);
+		
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -354,6 +387,7 @@ public class TrampModelFactory {
 			return "INT8";
 		if (dt == Atomic.STRING)
 			return "TEXT";
+		
 		return null;
 	}
 	

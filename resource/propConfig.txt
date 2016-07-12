@@ -31,10 +31,16 @@ Scenarios.VERTPARTITIONISAAUTHORITY = 0
 #ConfigOptions.TargetInclusionDependencyPerc = 0
 #ConfigOptions.TargetInclusionDependencyFKPerc = 100
 
+
 # LoadScenarios.NumScenarios = 0
 # LoadScenarios.0.File =  exampleScenarios/fh.xml
 # LoadScenarios.0.Name = simpleTest
 # LoadScenarios.0.Inst = 10
+
+DataType.NumDataType = 1
+DataType.1.Name = Email
+DataType.1.ClassPath = toxgene.util.cdata.xmark.email
+DataType.1.Percentage = 20.0
 
 ConfigOptions.NumOfSubElements = 10
 ConfigOptions.NumOfNewAttributes = 1
@@ -46,7 +52,6 @@ ConfigOptions.NumOfJoinAttributes = 2
 ConfigOptions.JoinKind = 0 
 # Star is 0 , chain is 1
 
-
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 2
 RepElementCount = 100
@@ -57,7 +62,7 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = false
+OutputOption.Data = true
 OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true
