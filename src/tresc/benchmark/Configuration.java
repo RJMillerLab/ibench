@@ -790,6 +790,10 @@ public class Configuration {
 	public Map<Integer, DataType> getDataTypeMapper() {
 		return dataTypeMapper;
 	}
+	
+	public DataType getDataType (int pos) {
+		return dataTypeMapper.get(pos);
+	}
 
 	public void setDataTypeMapper(Map<Integer, DataType> dataTypeMapper) {
 		this.dataTypeMapper = dataTypeMapper;

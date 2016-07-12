@@ -321,10 +321,7 @@ public class TrampModelFactory {
 		for (int i = 0; i < conf.getDataTypeMapper().size(); i++)
 		{
 			data = conf.getDataTypeMapper().get(i);
-			percentage = Integer.parseInt(String.valueOf(
-					dTypes.length * (Double.parseDouble(
-							String.valueOf(data.getPercentage() / 100)
-							))));
+			percentage = (int) ((float) dTypes.length * (data.getPercentage() / 100.0));
 			
 			for (int j = 0; j < percentage; j++) {
 				dTypes[k] = data.getName();
@@ -387,6 +384,14 @@ public class TrampModelFactory {
 			return "INT8";
 		if (dt == Atomic.STRING)
 			return "TEXT";
+		if (dt instanceof DataType)
+		{
+			DataType dataT = (DataType) dt;
+			String dbType = dataT.getDbType();
+			if (dbType != null)
+				return dbType;
+			return "TEXT";
+		}
 		
 		return null;
 	}
@@ -396,6 +401,7 @@ public class TrampModelFactory {
 			return Atomic.STRING;
 		if (string.equals("INT8"))
 			return Atomic.INTEGER;
+		//access the map
 		return null;
 	}
 	

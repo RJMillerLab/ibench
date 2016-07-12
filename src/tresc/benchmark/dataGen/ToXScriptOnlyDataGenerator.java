@@ -21,6 +21,7 @@ import tresc.benchmark.Configuration;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
+import vtools.dataModel.types.DataTypeHandler;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Type;
 

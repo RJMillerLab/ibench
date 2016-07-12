@@ -8,11 +8,20 @@ public class DataType extends Atomic implements Visitable, Cloneable {
 	private String name;
 	private String classPath;
 	private float percentage;
+	private String dbType;
+
+	public DataType(String name, String classPath, float percentage, String dbType) {
+		this.name = name;
+		this.classPath = classPath;
+		this.percentage = percentage;
+		this.dbType = dbType;
+	}
 	
 	public DataType(String name, String classPath, float percentage) {
 		this.name = name;
 		this.classPath = classPath;
 		this.percentage = percentage;
+		this.dbType = null;
 	}
 	
 	public DataType() { 
@@ -65,5 +74,13 @@ public class DataType extends Atomic implements Visitable, Cloneable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDbType() {
+		return dbType;
+	}
+
+	public void setDbType(String dbType) {
+		this.dbType = dbType;
 	}
 }
