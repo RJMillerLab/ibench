@@ -23,7 +23,7 @@ import tresc.benchmark.data.NamingPolicy;
 public class Configuration {
 	private int[] _repetitions;
 	private int[] _numExplsForType;
-	
+
 	// private long[] _seeds;
 	private long _seed;
 	private Random randomGenerator;
@@ -34,24 +34,18 @@ public class Configuration {
 	private int[] _groundTruthDev;
 	private boolean[] _trampXMLoutputOpts;
 	private String[] _dbOptions;
-	
-	@Option(name = "-sourceSchemaFile",
-			usage = "name for the source schema file")
+
+	@Option(name = "-sourceSchemaFile", usage = "name for the source schema file")
 	String sourceSchemaFile;
-	@Option(name = "-targetSchemaFile",
-			usage = "name for the target schema file")
+	@Option(name = "-targetSchemaFile", usage = "name for the target schema file")
 	String targetSchemaFile;
-	@Option(name = "-sourceInstanceFile",
-			usage = "name for the source instance file")
+	@Option(name = "-sourceInstanceFile", usage = "name for the source instance file")
 	String sourceInstanceFile;
-	@Option(name = "-sourceDocumentName",
-			usage = "name for the source document")
+	@Option(name = "-sourceDocumentName", usage = "name for the source document")
 	String sourceDocumentName;
-	@Option(name = "-mappingFile",
-			usage = "name for file to store the mappings")
+	@Option(name = "-mappingFile", usage = "name for file to store the mappings")
 	String mappingFile;
-	@Option(name = "-schemaFile",
-			usage = "name for Vagabond mapping scenarion XML file to generate")
+	@Option(name = "-schemaFile", usage = "name for Vagabond mapping scenarion XML file to generate")
 	String schemaFile;
 
 	@Option(name = "-schemaPrefix", usage = "schema path prefix")
@@ -70,22 +64,25 @@ public class Configuration {
 	int maxStringLength;
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
-
+	
+	int targetTableNumRows;
+	boolean exchangeTargetData;
+	
 	int namingPolicy;
 
 	List<File> loadScenarios;
 	private List<String> loadScenarioNames;
 	private int numLoadScenarios = 0;
 	private int[] numLoadScenarioInsts;
-	
+
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 
 	public Configuration() {
 		initArrays();
 		setDefaultConfiguration();
-		loadScenarios = new ArrayList<File> ();
-		loadScenarioNames = new ArrayList<String> ();
+		loadScenarios = new ArrayList<File>();
+		loadScenarioNames = new ArrayList<String>();
 	}
 
 	public Configuration(PropertyWrapper prop) throws Exception {
@@ -113,8 +110,7 @@ public class Configuration {
 		// read the scenario configuration parameters
 		prop.setPrefix("ConfigOptions");
 		for (ParameterName p : Constants.ParameterName.values()) {
-			int value = prop.getInt(p.toString(), 
-					Constants.defaultParameterValues.get(p));
+			int value = prop.getInt(p.toString(), Constants.defaultParameterValues.get(p));
 			_configurations[p.ordinal()][0] = value;
 			fileNameSuffix += "_" + value;
 		}
@@ -123,8 +119,7 @@ public class Configuration {
 		// read the standard derivations for the configuration parameters
 		prop.setPrefix("ConfigOptionsDeviation");
 		for (ParameterName p : Constants.ParameterName.values()) {
-			int value = prop.getInt(p.toString(), 
-					Constants.defaultParameterDeviation.get(p));
+			int value = prop.getInt(p.toString(), Constants.defaultParameterDeviation.get(p));
 			_configurations[p.ordinal()][1] = value;
 		}
 		prop.resetPrefix();
@@ -136,38 +131,37 @@ public class Configuration {
 			_outputOpts[o.ordinal()] = b;
 		}
 		prop.resetPrefix();
-		
+
 		prop.setPrefix("GroundTruthValues");
 		for (DESErrorType v : Constants.DESErrorType.values()) {
 			int b = prop.getInt(v.toString(), _groundTruthValues[v.ordinal()]);
 			_groundTruthValues[v.ordinal()] = b;
 		}
 		prop.resetPrefix();
-		
+
 		prop.setPrefix("GroundTruthDev");
 		for (DESErrorType v : Constants.DESErrorType.values()) {
 			int b = prop.getInt(v.toString(), _groundTruthDev[v.ordinal()]);
 			_groundTruthDev[v.ordinal()] = b;
 		}
 		prop.resetPrefix();
-		
+
 		// read switches for omitting parts of the Tramp XML document
 		prop.setPrefix("TrampXMLOutput");
 		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values()) {
-			boolean b =
-					prop.getBool(s.toString(), _trampXMLoutputOpts[s.ordinal()]);
+			boolean b = prop.getBool(s.toString(), _trampXMLoutputOpts[s.ordinal()]);
 			_trampXMLoutputOpts[s.ordinal()] = b;
 		}
 		prop.resetPrefix();
 
 		// read how many explanations to generate
 		prop.setPrefix("ExplGenNum");
-		for(DESErrorType e: Constants.DESErrorType.values()) {
+		for (DESErrorType e : Constants.DESErrorType.values()) {
 			int val = prop.getInt(e.toString(), 0);
 			_numExplsForType[e.ordinal()] = val;
 		}
 		prop.resetPrefix();
-		
+
 		// database connection options
 		prop.setPrefix("DB");
 		for (DBOption o : Constants.DBOption.values()) {
@@ -175,14 +169,14 @@ public class Configuration {
 			_dbOptions[o.ordinal()] = val;
 		}
 		prop.resetPrefix();
-		
+
 		// explgen options like percentage of errors to add
-		
+
 		// options for loading existing scenarios as new primitives
 		prop.setPrefix("LoadScenarios");
 		setNumLoadScenarios(prop.getInt("NumScenarios", 0));
 		numLoadScenarioInsts = new int[numLoadScenarios];
-		
+
 		for (int i = 0; i < getNumLoadScenarios(); i++) {
 			String fileName = prop.getProperty(i + ".File", "");
 			String name = prop.getProperty(i + ".Name", "");
@@ -195,7 +189,7 @@ public class Configuration {
 			loadScenarioNames.add(name);
 		}
 		prop.resetPrefix();
-		
+
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);
 		if (_seed == 0L)
@@ -206,24 +200,19 @@ public class Configuration {
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);
 		maxNumValue = prop.getInt("MaxNumValue", 100);
-
+		targetTableNumRows = prop.getInt("TargetTableNumRows", 100);
+		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
 		// data generator and type of mapping language
-		dataGen =
-				(DataGenType) prop.getEnumProperty("DataGenerator",
-						DataGenType.class, dataGen);
-		mapType =
-				(MappingLanguageType) prop.getEnumProperty("MappingLanguage",
-						MappingLanguageType.class, mapType);
+		dataGen = (DataGenType) prop.getEnumProperty("DataGenerator", DataGenType.class, dataGen);
+		mapType = (MappingLanguageType) prop.getEnumProperty("MappingLanguage", MappingLanguageType.class, mapType);
 		// read optional parameters
 		genFileNames(fileNameSuffix);
 
 		prop.setPrefix("FileNames");
 		sourceSchemaFile = prop.getProperty("SourceSchema", sourceSchemaFile);
 		targetSchemaFile = prop.getProperty("TargetSchema", targetSchemaFile);
-		sourceInstanceFile =
-				prop.getProperty("SourceInstance", sourceInstanceFile);
-		sourceDocumentName =
-				prop.getProperty("SourceDocumentName", sourceDocumentName);
+		sourceInstanceFile = prop.getProperty("SourceInstance", sourceInstanceFile);
+		sourceDocumentName = prop.getProperty("SourceDocumentName", sourceDocumentName);
 		schemaFile = prop.getProperty("Schemas", schemaFile);
 		prop.resetPrefix();
 	}
@@ -246,31 +235,31 @@ public class Configuration {
 		// INSTANCE_FILE SOURCE_DOC_NAME MAPPING_FILE_NAME
 
 		StringTokenizer st = new StringTokenizer(configLine, " \t");
-		
+
 		// read the number of repetitions for each scenario
 		for (int i = 0; i < Constants.ScenarioName.values().length; i++) {
-			ScenarioName scen = Constants.ScenarioName.values()[i]; 
+			ScenarioName scen = Constants.ScenarioName.values()[i];
 			int numScen = Integer.valueOf(st.nextToken());
 
 			_repetitions[i] = numScen;
 			if (numScen != 0)
 				fileNameSuffix += Constants.nameForScenarios.get(scen);
 		}
-		
+
 		// read the parameters
-		for(int i = 0; i < Constants.ParameterName.values().length; i++) {
-			int val= Integer.valueOf(st.nextToken());
+		for (int i = 0; i < Constants.ParameterName.values().length; i++) {
+			int val = Integer.valueOf(st.nextToken());
 			_configurations[i][0] = val;
 			fileNameSuffix += "_" + val;
 		}
 
 		// read the deviations
-		for(int i = 0; i < Constants.ParameterName.values().length; i++) {
-			int val= Integer.valueOf(st.nextToken());
+		for (int i = 0; i < Constants.ParameterName.values().length; i++) {
+			int val = Integer.valueOf(st.nextToken());
 			_configurations[i][1] = val;
 			fileNameSuffix += "_" + val;
 		}
-		
+
 		// generate the output file names
 		genFileNames(fileNameSuffix);
 
@@ -318,35 +307,29 @@ public class Configuration {
 		_outputOpts = new boolean[Constants.OutputOption.values().length];
 		_groundTruthValues = new int[Constants.DESErrorType.values().length];
 		_groundTruthDev = new int[Constants.DESErrorType.values().length];
-		_trampXMLoutputOpts =
-				new boolean[Constants.TrampXMLOutputSwitch.values().length];
+		_trampXMLoutputOpts = new boolean[Constants.TrampXMLOutputSwitch.values().length];
 		_numExplsForType = new int[Constants.DESErrorType.values().length];
 		_dbOptions = new String[Constants.DBOption.values().length];
-		
+
 		randomGenerator = new Random();
 		initOptionsDefaults();
 	}
 
 	private void initOptionsDefaults() {
 		for (OutputOption o : Constants.OutputOption.values())
-			_outputOpts[o.ordinal()] =
-					Constants.defaultOutputOptionValues.get(o);
-		
+			_outputOpts[o.ordinal()] = Constants.defaultOutputOptionValues.get(o);
+
 		for (DESErrorType v : Constants.DESErrorType.values())
-			_groundTruthValues[v.ordinal()] = 
-					Constants.defaultGroundTruthValues.get(v);
-		
+			_groundTruthValues[v.ordinal()] = Constants.defaultGroundTruthValues.get(v);
+
 		for (DESErrorType v : Constants.DESErrorType.values())
-			_groundTruthDev[v.ordinal()] = 
-					Constants.defaultGroundTruthDeviation.get(v);
-		
+			_groundTruthDev[v.ordinal()] = Constants.defaultGroundTruthDeviation.get(v);
+
 		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values())
-			_trampXMLoutputOpts[s.ordinal()] =
-					Constants.trampXmlOutDefaults.get(s);
-		
+			_trampXMLoutputOpts[s.ordinal()] = Constants.trampXmlOutDefaults.get(s);
+
 		for (DBOption o : Constants.DBOption.values())
-			_dbOptions[o.ordinal()] =
-					Constants.dbOptionDefaults.get(o);
+			_dbOptions[o.ordinal()] = Constants.dbOptionDefaults.get(o);
 	}
 
 	private void setDefaultConfiguration() {
@@ -387,16 +370,12 @@ public class Configuration {
 		randomGenerator.setSeed(_seed);
 
 		// Set the parameters
-		_configurations[Constants.ParameterName.NumOfSubElements.ordinal()][0] =
-				3;
+		_configurations[Constants.ParameterName.NumOfSubElements.ordinal()][0] = 3;
 		_configurations[Constants.ParameterName.NestingDepth.ordinal()][0] = 5;
 		_configurations[Constants.ParameterName.JoinSize.ordinal()][0] = 3;
-		_configurations[Constants.ParameterName.JoinKind.ordinal()][0] =
-				Constants.JoinKind.CHAIN.ordinal();
-		_configurations[Constants.ParameterName.NumOfJoinAttributes.ordinal()][0] =
-				2;
-		_configurations[Constants.ParameterName.NumOfParamsInFunctions
-				.ordinal()][0] = 0;
+		_configurations[Constants.ParameterName.JoinKind.ordinal()][0] = Constants.JoinKind.CHAIN.ordinal();
+		_configurations[Constants.ParameterName.NumOfJoinAttributes.ordinal()][0] = 2;
+		_configurations[Constants.ParameterName.NumOfParamsInFunctions.ordinal()][0] = 0;
 
 		// Set the default deviation to be the half of the corresponding param
 		for (int i = 0, imax = _configurations.length; i < imax; i++) {
@@ -442,11 +421,11 @@ public class Configuration {
 	public int getScenarioRepetitions(int scenario) {
 		return _repetitions[scenario];
 	}
-	
+
 	public void setScenarioRepetitions(ScenarioName n, int value) {
 		setScenarioRepetitions(n.ordinal(), value);
 	}
-	
+
 	public void setScenarioRepetitions(int scenario, int value) {
 		_repetitions[scenario] = value;
 	}
@@ -454,19 +433,19 @@ public class Configuration {
 	public boolean getOutputOption(OutputOption o) {
 		return _outputOpts[o.ordinal()];
 	}
-	
+
 	public int getGroundTruthValues(DESErrorType v) {
 		return _groundTruthValues[v.ordinal()];
 	}
-	
+
 	public int getGroundTruthDev(DESErrorType v) {
 		return _groundTruthDev[v.ordinal()];
 	}
 
-	public boolean getTrampXMLOutputOption (TrampXMLOutputSwitch s) {
+	public boolean getTrampXMLOutputOption(TrampXMLOutputSwitch s) {
 		return _trampXMLoutputOpts[s.ordinal()];
 	}
-	
+
 	/*
 	 * public long getScenarioSeeds(int scenario) { return _seeds[scenario]; }
 	 */
@@ -478,7 +457,7 @@ public class Configuration {
 	public Random getRandomGenerator() {
 		return randomGenerator;
 	}
-	
+
 	public void resetRandomGenerator() {
 		randomGenerator = new Random(_seed);
 	}
@@ -568,25 +547,25 @@ public class Configuration {
 		result.append("_seed: <" + _seed + ">\n");
 		result.append("mapType: <" + mapType + ">\n");
 		result.append("dataGen: <" + dataGen + ">\n");
-		
+
 		result.append("\n\n---- OUTPUT OPTIONS ----\n");
 		for (OutputOption p : Constants.OutputOption.values()) {
 			boolean val = _outputOpts[p.ordinal()];
 			result.append(p.toString() + ": <" + val + ">\n");
 		}
-		
+
 		result.append("\n\n---- GROUND TRUTH VALUES ----\n");
 		for (DESErrorType v : Constants.DESErrorType.values()) {
 			int val = _groundTruthValues[v.ordinal()];
 			result.append(v.toString() + ": <" + val + ">\n");
 		}
-		
+
 		result.append("\n\n---- TRAMP XML OUTPUT OPTIONS ----\n");
 		for (TrampXMLOutputSwitch p : Constants.TrampXMLOutputSwitch.values()) {
 			boolean val = _trampXMLoutputOpts[p.ordinal()];
 			result.append(p.toString() + ": <" + val + ">\n");
 		}
-		
+
 		return result.toString();
 	}
 
@@ -597,8 +576,8 @@ public class Configuration {
 	public static String getInstancePathPrefix() {
 		return instancePathPrefix;
 	}
-	
-	public static String getAbsoluteInstancePath () {
+
+	public static String getAbsoluteInstancePath() {
 		return new File(instancePathPrefix).getAbsolutePath();
 	}
 
@@ -617,17 +596,16 @@ public class Configuration {
 	public void setMapType(MappingLanguageType mapType) {
 		this.mapType = mapType;
 	}
-	
-	public String getDBOption (DBOption o) {
+
+	public String getDBOption(DBOption o) {
 		return _dbOptions[o.ordinal()];
 	}
-	
-	public int getReuseThreshold () {
+
+	public int getReuseThreshold() {
 		int totalNumScen = getTotalNumScen();
-		int thresh =  (int) Math.floor(totalNumScen * 0.01 * 
-				_configurations[Constants.ParameterName.
-				                NoReuseScenPerc.ordinal()][0]);
-		
+		int thresh = (int) Math
+				.floor(totalNumScen * 0.01 * _configurations[Constants.ParameterName.NoReuseScenPerc.ordinal()][0]);
+
 		return thresh;
 	}
 
@@ -636,15 +614,13 @@ public class Configuration {
 	}
 
 	public void sanityCheck() {
-		/* check that variations are valid: 
-		 * 		1) parameter value < 0
-		 * 				set param = 0
-		 * 		2) parameter value - deviation >= 0
-		 * 				set deviation= parameter value  
+		/*
+		 * check that variations are valid: 1) parameter value < 0 set param = 0
+		 * 2) parameter value - deviation >= 0 set deviation= parameter value
 		 */
-		for(ParameterName p: Constants.ParameterName.values())
+		for (ParameterName p : Constants.ParameterName.values())
 			checkParameterRange(p, 0, 1.0);
-		
+
 		/* check specific parameter derivations */
 		checkParameterRange(ParameterName.PrimaryKeySize, 0, 0.5);
 		checkParameterRange(ParameterName.JoinSize, 1, 0.5);
@@ -653,57 +629,54 @@ public class Configuration {
 		checkParameterRange(ParameterName.NumOfNewAttributes, 1, 0.5);
 		checkParameterRange(ParameterName.NumOfParamsInFunctions, 1, 0.5);
 		checkParameterRange(ParameterName.PrimaryKeyFDs, 0, 1);
-		
-		/* check that number of elements including variation is large enough. If number of elements is
-		 * not sufficiently large we increase the number of elements 
-		 * 2 x primary key size
-		 * 2 x NumOfJoinAttributes
-		 * 3 x NumOfParamsInFunctions
-		 * 2 x NumOfNewAttributes
-		 * 3 x NumOfAttributesToDelete
-		 * 2 x PrimaryKeySize
+
+		/*
+		 * check that number of elements including variation is large enough. If
+		 * number of elements is not sufficiently large we increase the number
+		 * of elements 2 x primary key size 2 x NumOfJoinAttributes 3 x
+		 * NumOfParamsInFunctions 2 x NumOfNewAttributes 3 x
+		 * NumOfAttributesToDelete 2 x PrimaryKeySize
 		 */
 		int minNumElem = _configurations[ParameterName.NumOfSubElements.ordinal()][0];
-		
-		minNumElem = CollectionUtils.max(minNumElem,
-				2 * paramMax(ParameterName.PrimaryKeySize),
-				2 * paramMax(ParameterName.NumOfJoinAttributes),
-				2 * paramMax(ParameterName.NumOfNewAttributes),
+
+		minNumElem = CollectionUtils.max(minNumElem, 2 * paramMax(ParameterName.PrimaryKeySize),
+				2 * paramMax(ParameterName.NumOfJoinAttributes), 2 * paramMax(ParameterName.NumOfNewAttributes),
 				3 * paramMax(ParameterName.NumOfParamsInFunctions),
 				3 * paramMax(ParameterName.NumOfAttributesToDelete));
 		// add deviation of NumOfSubElements
 		minNumElem += getDeviation(ParameterName.NumOfSubElements);
 		setParam(ParameterName.NumOfSubElements, minNumElem);
-		
-		
+
 	}
 
-	private void checkParameterRange(ParameterName p, int min, int max) {//TODO log warnings?
+	private void checkParameterRange(ParameterName p, int min, int max) {// TODO
+																			// log
+																			// warnings?
 		int pValue = _configurations[p.ordinal()][0];
 		int pDev = _configurations[p.ordinal()][1];
-		
+
 		if (pValue < min)
 			pValue = min;
 		if (pValue > max)
 			pValue = max;
-		
+
 		if (pValue - pDev < min)
 			pDev = (pValue - min);
 		if (pValue + pDev < max)
 			pDev = (max - pValue);
-		
+
 		_configurations[p.ordinal()][0] = pValue;
 		_configurations[p.ordinal()][1] = pDev;
 	}
-	
-//	private void checkParameterRange(ParameterName p, int min) {
-//		checkParameterRange(p, min, 1.0);
-//	}
-	
+
+	// private void checkParameterRange(ParameterName p, int min) {
+	// checkParameterRange(p, min, 1.0);
+	// }
+
 	private void checkParameterRange(ParameterName p, int min, double dev) {
 		int pValue = _configurations[p.ordinal()][0];
 		int pDev = _configurations[p.ordinal()][1];
-		
+
 		if (pValue < min)
 			pValue = min;
 		if (pDev > pValue * dev)
@@ -713,13 +686,13 @@ public class Configuration {
 		_configurations[p.ordinal()][0] = pValue;
 		_configurations[p.ordinal()][1] = pDev;
 	}
-	
+
 	public int paramMin(ParameterName p) {
-		return _configurations[p.ordinal()][0] - _configurations[p.ordinal()][1]; 
+		return _configurations[p.ordinal()][0] - _configurations[p.ordinal()][1];
 	}
-	
+
 	public int paramMax(ParameterName p) {
-		return _configurations[p.ordinal()][0] + _configurations[p.ordinal()][1]; 
+		return _configurations[p.ordinal()][0] + _configurations[p.ordinal()][1];
 	}
 
 	public void setSchemaFile(String schemaFile) {
@@ -737,8 +710,6 @@ public class Configuration {
 	public List<String> getLoadScenarioNames() {
 		return loadScenarioNames;
 	}
-
-	
 
 	public int getNumLoadScenarios() {
 		return numLoadScenarios;

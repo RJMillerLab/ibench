@@ -54,6 +54,9 @@ MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
+TargetTableNumRows = 100
+ExchangeTargetData = false
+
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
