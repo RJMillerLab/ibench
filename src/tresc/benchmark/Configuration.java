@@ -64,10 +64,10 @@ public class Configuration {
 	int maxStringLength;
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
-	
+
 	int targetTableNumRows;
 	boolean exchangeTargetData;
-	
+
 	int namingPolicy;
 
 	List<File> loadScenarios;
@@ -496,6 +496,14 @@ public class Configuration {
 
 	public int getMaxNumValue() {
 		return maxNumValue;
+	}
+
+	public int getTargetNumRows() {
+		return targetTableNumRows;
+	}
+
+	public boolean getExchangeTargetData() {
+		return exchangeTargetData;
 	}
 
 	public void setSchemaPathPrefix(String __schemaPathPrefix) {
