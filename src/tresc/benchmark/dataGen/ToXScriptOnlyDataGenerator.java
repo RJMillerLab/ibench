@@ -151,7 +151,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void
-			visitSchemaElement(SMarkElement schemaElement, StringBuffer buf) {
+			visitSchemaElement(SMarkElement schemaElement, StringBuffer buf, int index) {
 		String label = schemaElement.getLabel();
 		Type type = schemaElement.getType();
 		
@@ -159,7 +159,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			generateComplexElementOpening(label, buf, repElemCount);
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
-						(SMarkElement) schemaElement.getSubElement(i), buf);
+						(SMarkElement) schemaElement.getSubElement(i), buf, i);
 			generateComplexElementClosing(buf);
 		}
 
@@ -173,7 +173,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 				// we need to sample from the list that is being generated now)
 				if ((srcConstraint == null) || referencesSameSet(srcConstraint)) {
 					Atomic atomicType = (Atomic) type;
-					generateAtomicElementConstruct(label, buf, atomicType);
+					generateAtomicElementConstruct(label, buf, atomicType, index);
 					coveredAtomicElements.add(schemaElement);
 				}
 				else {
@@ -231,7 +231,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
-						(SMarkElement) schemaElement.getSubElement(i), listBuf);
+						(SMarkElement) schemaElement.getSubElement(i), listBuf, i);
 
 			generateListClosing(listBuf);
 			
@@ -272,10 +272,10 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 //TODO right now unique in one attribute as a workaround unil clear how to do uniqueness over multiple attrs
 		
 		
-		for(int i = 0; i < keyAttrs.length;i ++) {
+		for(int i = 0; i < keyAttrs.length; i++) {
 			keyAttrNames[i] = keyAttrs[i].getName();
 			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
-					scen.getDocFac().getDT(keyAttrs[i].getDataType()));
+					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);
 		}
 		
 		generateListClosing(listBuf);
@@ -291,14 +291,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		generateListOpening(label, listBuf, eltCount, "", "");
 		String keyListPath = keyLabel + LIST_NAME_SUFFIX + "/" + keyLabel;
 		
+		int index = 0;
 		// loop through attributes and 
 		for(AttrDefType a: attrs) {
 			Atomic dt = scen.getDocFac().getDT(a.getDataType());
-			
 			// is a key attr
 			int pos = CollectionUtils.searchPos(keyAttrs, a);
 			int fkPos = CollectionUtils.searchPos(fkAttrs, a);
-			
+			index++; // to save the last position
 			if (pos != -1) {
 				String expr = a.getName();
 				generateAtomicFromSamplePathConstruct(a.getName(), listBuf, dt, keyListPath, expr);
@@ -310,7 +310,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			} 
 			// normal attr
 			else {
-				generateAtomicElementConstruct(a.getName(), listBuf, dt);
+				generateAtomicElementConstruct(a.getName(), listBuf, dt, index);
 			}
 		}
 		generateListClosing(listBuf);
@@ -367,17 +367,19 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateAtomicElementConstruct(String eltName,
-			StringBuffer buf, Atomic atomicType) {
+			StringBuffer buf, Atomic atomicType, int index) {
 		
+		
+		String typeName = DataTypeHandler.getInst().getTypes().get(index).getName();
 		
 		//test
 		String typeString = null;
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_email"; // string
+			typeString = "bench_" + typeName.toLowerCase(); // string
 		} else {
-			typeString = "bench_email";
+			typeString = "bench_" + typeName.toLowerCase();
 		}
 				
 		//String typeString =

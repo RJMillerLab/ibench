@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.vagabond.mapping.model.MapScenarioHolder;
@@ -44,6 +45,7 @@ import vtools.dataModel.expression.Variable;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
 import vtools.dataModel.types.DataType;
+import vtools.dataModel.types.DataTypeHandler;
 import vtools.dataModel.types.Set;
 
 /**
@@ -316,17 +318,14 @@ public class TrampModelFactory {
 		String[] dTypes = new String[attrs.length];
 		Arrays.fill(dTypes, null);
 		DataType data;
-		int percentage = 0;
+		
 		int k = 0;
-		for (int i = 0; i < conf.getDataTypeMapper().size(); i++)
+		for (int i = 0; i < DataTypeHandler.getInst().getTypes().size(); i++)
 		{
-			data = conf.getDataTypeMapper().get(i);
-			percentage = (int) ((float) dTypes.length * (data.getPercentage() / 100.0));
-			
-			for (int j = 0; j < percentage; j++) {
-				dTypes[k] = data.getName();
-				k++;
-			}
+			Random randGen = new Random();
+			data = (DataType) DataTypeHandler.getInst().getRandomDT(randGen);
+			dTypes[i] = data.getName().toUpperCase();
+			k++;
 		}
 		// if the distribution informed by the user doesn't 
 		// fulfill all the array, fill it with text

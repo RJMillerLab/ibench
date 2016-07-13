@@ -31,11 +31,43 @@ public class DataTypeHandler {
 	public Atomic getRandomDT (Random randGen) {
 		float r = randGen.nextFloat();
 		
-		for(int i = 0; i < numDTs; i++) {
-			if (r < percentages[i])
-				return types.get(i);
+		for(int i = 0; i < getNumDTs(); i++) {
+			if (r < getPercentages()[i])
+				return getTypes().get(i);
 		}
 		return Atomic.STRING;
+	}
+
+	public List<DataType> getTypes() {
+		return types;
+	}
+
+	public void setTypes(List<DataType> types) {
+		this.types = types;
+	}
+
+	public Map<String,DataType> getNameToDTMap() {
+		return nameToDTMap;
+	}
+
+	public void setNameToDTMap(Map<String,DataType> nameToDTMap) {
+		this.nameToDTMap = nameToDTMap;
+	}
+
+	public float[] getPercentages() {
+		return percentages;
+	}
+
+	public void setPercentages(float[] percentages) {
+		this.percentages = percentages;
+	}
+
+	public int getNumDTs() {
+		return numDTs;
+	}
+
+	public void setNumDTs(int numDTs) {
+		this.numDTs = numDTs;
 	}
 	
 	
