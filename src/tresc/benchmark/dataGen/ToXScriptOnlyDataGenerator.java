@@ -95,8 +95,9 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			SMarkElement rootSetElt = (SMarkElement) schema.getSubElement(i);
 
 			generateListIterationConstruct(rootSetElt.getLabel(), documentBuffer);
-
-			generateToxList(rootSetElt, repElemCount, schemaName);
+			
+			//repElemCount for Source data, targetTableNumRows for Target data
+			generateToxList(rootSetElt, schemaName.equalsIgnoreCase("source") ? repElemCount : targetTableNumRows, schemaName);
 		}
 
 		generateDocumentClosing(schemaName, documentBuffer);
@@ -156,7 +157,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		Type type = schemaElement.getType();
 
 		if (type instanceof Set) {
-			generateComplexElementOpening(label, buf, repElemCount);
+			//repElemCount for Source data, targetTableNumRows for Target data
+			generateComplexElementOpening(label, buf, label.equalsIgnoreCase("source") ? repElemCount : targetTableNumRows);
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement((SMarkElement) schemaElement.getSubElement(i), buf);
 			generateComplexElementClosing(buf);
