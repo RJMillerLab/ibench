@@ -200,7 +200,7 @@ public class Configuration {
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);
 		maxNumValue = prop.getInt("MaxNumValue", 100);
-		targetTableNumRows = prop.getInt("TargetTableNumRows", 100);
+		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
 		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
 		// data generator and type of mapping language
 		dataGen = (DataGenType) prop.getEnumProperty("DataGenerator", DataGenType.class, dataGen);
