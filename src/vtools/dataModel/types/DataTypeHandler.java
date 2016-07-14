@@ -17,6 +17,7 @@ public class DataTypeHandler {
 	private Map<String,DataType> nameToDTMap;
 	private float[] percentages;
 	private int numDTs;
+	private float[] probabilities;
 	
 	private static DataTypeHandler inst = new DataTypeHandler();
 	
@@ -28,11 +29,18 @@ public class DataTypeHandler {
 		
 	}
 	
+	public void setProbabilities() {
+		probabilities[0] = percentages[0]/100;
+		for (int k = 0; k < numDTs; k++) {
+			probabilities[k] = probabilities[k-1] + percentages[k]/100;
+		}
+	}
+	
 	public Atomic getRandomDT (Random randGen) {
+		setProbabilities();
 		float r = randGen.nextFloat();
-		
-		for(int i = 0; i < getNumDTs(); i++) {
-			if (r < getPercentages()[i])
+		for(int i = 0; i < probabilities.length; i++) {
+			if (r < probabilities[i])
 				return getTypes().get(i);
 		}
 		return Atomic.STRING;
