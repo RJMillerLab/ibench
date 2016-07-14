@@ -317,24 +317,18 @@ public class TrampModelFactory {
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
 		Arrays.fill(dTypes, null);
-		DataType data;
+		Atomic data;
 		
-		int k = 0;
-		for (int i = 0; i < DataTypeHandler.getInst().getTypes().size(); i++)
-		{
+		for (int k = 0; k < dTypes.length; k++) {
 			Random randGen = new Random();
-			data = (DataType) DataTypeHandler.getInst().getRandomDT(randGen);
-			dTypes[i] = data.getName().toUpperCase();
-			k++;
-		}
-		// if the distribution informed by the user doesn't 
-		// fulfill all the array, fill it with text
-		if (k != dTypes.length) {
-			for (int i = k; i < dTypes.length; i++) {
-				dTypes[i] = "TEXT";
+			data = DataTypeHandler.getInst().getRandomDT(randGen);
+			if (!(data instanceof DataType)) {
+				dTypes[k] = "TEXT";
+			}
+			else {
+				dTypes[k] = ((DataType)data).getName().toUpperCase();
 			}
 		}
-
 		return addRelation(hook, name, attrs, dTypes, source);
 		
 	}

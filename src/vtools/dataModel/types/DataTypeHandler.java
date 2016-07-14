@@ -30,8 +30,9 @@ public class DataTypeHandler {
 	}
 	
 	public void setProbabilities() {
+		probabilities = new float[numDTs];
 		probabilities[0] = percentages[0]/100;
-		for (int k = 0; k < numDTs; k++) {
+		for (int k = 1; k < numDTs; k++) {
 			probabilities[k] = probabilities[k-1] + percentages[k]/100;
 		}
 	}
