@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.vagabond.mapping.model.MapScenarioHolder;
@@ -43,6 +44,8 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
+import vtools.dataModel.types.DataType;
+import vtools.dataModel.types.DataTypeHandler;
 import vtools.dataModel.types.Set;
 
 /**
@@ -248,6 +251,7 @@ public class TrampModelFactory {
 			a.setDataType(dTypes[i]);
 		}
 
+		log.debug(Arrays.toString(dTypes));
 		addSTRelation(hook, name, attrs, dTypes, source);
 
 		if (source && conf.getOutputOption(OutputOption.Data)
@@ -303,11 +307,31 @@ public class TrampModelFactory {
 		doc.getRelPos().put("");
 	}
 	
-	public RelationType addRelation(String hook, String name, String[] attrs,
+	/*public RelationType addRelation(String hook, String name, String[] attrs,
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
 		Arrays.fill(dTypes, "TEXT");
 		return addRelation(hook, name, attrs, dTypes, source);
+		
+	}*/
+	public RelationType addRelation(String hook, String name, String[] attrs,
+			boolean source) {
+		String[] dTypes = new String[attrs.length];
+		Arrays.fill(dTypes, null);
+		Atomic data;
+		
+		for (int k = 0; k < dTypes.length; k++) {
+			Random randGen = new Random();
+			data = DataTypeHandler.getInst().getRandomDT(randGen);
+			if (!(data instanceof DataType)) {
+				dTypes[k] = "TEXT";
+			}
+			else {
+				dTypes[k] = ((DataType)data).getName().toUpperCase();
+			}
+		}
+		return addRelation(hook, name, attrs, dTypes, source);
+		
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -354,6 +378,15 @@ public class TrampModelFactory {
 			return "INT8";
 		if (dt == Atomic.STRING)
 			return "TEXT";
+		if (dt instanceof DataType)
+		{
+			DataType dataT = (DataType) dt;
+			String dbType = dataT.getDbType();
+			if (dbType != null)
+				return dbType;
+			return "TEXT";
+		}
+		
 		return null;
 	}
 	
@@ -362,7 +395,9 @@ public class TrampModelFactory {
 			return Atomic.STRING;
 		if (string.equals("INT8"))
 			return Atomic.INTEGER;
-		return null;
+		//access the map
+		log.error("SHOULD HAVE NEVER COME HERE");
+		return Atomic.STRING;
 	}
 	
 	public Key addPrimaryKey(String relName, String[] attrs, boolean source)
