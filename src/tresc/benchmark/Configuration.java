@@ -22,6 +22,7 @@ import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
 import vtools.dataModel.types.DataType;
+import vtools.dataModel.types.DataTypeHandler;
 
 
 public class Configuration {
@@ -81,9 +82,6 @@ public class Configuration {
 	private List<String> loadScenarioNames;
 	private int numLoadScenarios = 0;
 	private int[] numLoadScenarioInsts;
-	
-	private Map<Integer, DataType> dataTypeMapper;
-	private int numDataTypes = 0;
 	
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
@@ -206,20 +204,30 @@ public class Configuration {
 		
 		// Reading user's data type and distribution
 		prop.setPrefix("DataType");
-		dataTypeMapper = new HashMap<Integer, DataType>();
-		setNumDataTypes(prop.getInt("NumDataType"));
+		DataTypeHandler.getInst().setNumDTs(prop.getInt("NumDataType"));
 		DataType data;
 		
-		for (int i = 0; i < getNumDataTypes(); i++) {
-			data = new DataType(
-					prop.getProperty(i + ".Name"), 
-					prop.getProperty(i + ".ClassPath"), 
-					prop.getFloat(i + ".Percentage")
-			);
-			
-			getDataTypeMapper().put(i, data);
-		}
+		List<DataType> types = new ArrayList<>();
+		float[] percentages = new float[DataTypeHandler.getInst().getNumDTs()];
+		Map<String, DataType> typesMap = new HashMap<>();
 		
+		for (int i = 0; i < DataTypeHandler.getInst().getNumDTs(); i++) {
+			data = new DataType();
+			data.setName(prop.getProperty(i + ".Name")); 
+			data.setClassPath(prop.getProperty(i + ".ClassPath"));
+			data.setPercentage(prop.getFloat(i + ".Percentage"));
+			data.setDbType(prop.getProperty(i + ".DBType"));
+			
+			percentages[i] = data.getPercentage();
+			typesMap.put(data.getName(), data);
+			
+			//DataTypeHandler.getInst().getNameToDTMap().put(data.getDbType(), data);
+			types.add(data);
+			
+		}
+		DataTypeHandler.getInst().setNameToDTMap(typesMap);
+		DataTypeHandler.getInst().setTypes(types);
+		DataTypeHandler.getInst().setPercentages(percentages);
 		prop.resetPrefix();
 		
 		// read remaining and optional parameters
@@ -764,8 +772,6 @@ public class Configuration {
 		return loadScenarioNames;
 	}
 
-	
-
 	public int getNumLoadScenarios() {
 		return numLoadScenarios;
 	}
@@ -778,25 +784,5 @@ public class Configuration {
 		return numLoadScenarioInsts;
 	}
 
-	public int getNumDataTypes() {
-		return numDataTypes;
-	}
-
-	public void setNumDataTypes(int numDataTypes) {
-		this.numDataTypes = numDataTypes;
-	}
-
-
-	public Map<Integer, DataType> getDataTypeMapper() {
-		return dataTypeMapper;
-	}
-	
-	public DataType getDataType (int pos) {
-		return dataTypeMapper.get(pos);
-	}
-
-	public void setDataTypeMapper(Map<Integer, DataType> dataTypeMapper) {
-		this.dataTypeMapper = dataTypeMapper;
-	}
 
 }
