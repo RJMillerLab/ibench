@@ -9,7 +9,9 @@ public abstract class Type extends VObject implements Visitable, Cloneable
     public static Int INTEGER = new Int();
 
     public static Str STRING = new Str();
-
+    
+    public static DataType USERCLASSTYPE = new DataType(); // here
+    
     public static Any ANY = new Any();
 
 

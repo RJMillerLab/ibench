@@ -88,6 +88,7 @@ public class Configuration {
 
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
+	
 
 	public Configuration() {
 		initArrays();
@@ -210,7 +211,7 @@ public class Configuration {
 		DataType data;
 		
 		List<DataType> types = new ArrayList<>();
-		double[] percentages = new double[DataTypeHandler.getInst().getNumDTs()];
+		float[] percentages = new float[DataTypeHandler.getInst().getNumDTs()];
 		Map<String, DataType> typesMap = new HashMap<>();
 		
 		for (int i = 0; i < DataTypeHandler.getInst().getNumDTs(); i++) {
@@ -793,5 +794,6 @@ public class Configuration {
 	public int[] getNumLoadScenarioInsts() {
 		return numLoadScenarioInsts;
 	}
+
 
 }
