@@ -173,7 +173,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 				// we need to sample from the list that is being generated now)
 				if ((srcConstraint == null) || referencesSameSet(srcConstraint)) {
 					Atomic atomicType = (Atomic) type;
-					generateAtomicElementConstruct(label, buf, atomicType, index);
+					generateAtomicElementConstruct(label, buf, atomicType);
 					coveredAtomicElements.add(schemaElement);
 				}
 				else {
@@ -275,7 +275,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		for(int i = 0; i < keyAttrs.length; i++) {
 			keyAttrNames[i] = keyAttrs[i].getName();
 			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
-					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);
+					scen.getDocFac().getDT(keyAttrs[i].getDataType()));
 		}
 		
 		generateListClosing(listBuf);
@@ -310,7 +310,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			} 
 			// normal attr
 			else {
-				generateAtomicElementConstruct(a.getName(), listBuf, dt, index);
+				generateAtomicElementConstruct(a.getName(), listBuf, dt);
 			}
 		}
 		generateListClosing(listBuf);
@@ -367,23 +367,10 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateAtomicElementConstruct(String eltName,
-			StringBuffer buf, Atomic atomicType, int index) {
-		
-		
-		String typeName = DataTypeHandler.getInst().getTypes().get(index).getName();
-		
-		//test
-		String typeString = null;
-		if (atomicType == Atomic.INTEGER) {
-			typeString = "bench_int";
-		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_" + typeName.toLowerCase(); // string
-		} else {
-			typeString = "bench_" + typeName.toLowerCase();
-		}
-				
-		//String typeString =
-		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+			StringBuffer buf, Atomic atomicType) {
+	
+		String typeString =
+				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
 				+ "\"/>\n");
 	}

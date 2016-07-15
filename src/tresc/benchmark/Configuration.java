@@ -221,7 +221,6 @@ public class Configuration {
 			percentages[i] = data.getPercentage();
 			typesMap.put(data.getName(), data);
 			
-			//DataTypeHandler.getInst().getNameToDTMap().put(data.getDbType(), data);
 			types.add(data);
 			
 		}

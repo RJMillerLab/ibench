@@ -40,12 +40,12 @@ LoadScenarios.0.Inst = 10
 DataType.NumDataType = 1
 DataType.0.Name = Email
 DataType.0.ClassPath = toxgene.util.cdata.xmark.email
-DataType.0.Percentage = 20.0
+DataType.0.Percentage = 0.20
 DataType.0.DBType = TEXT
 
 # DataType.1.Name = Age
 # DataType.1.ClassPath = toxgene.util.cdata.xmark.age
-# DataType.1.Percentage = 20.0
+# DataType.1.Percentage = 0.20
 # DataType.1.DBType = INT8
 
 

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author lord_pretzel
  *
@@ -18,6 +20,8 @@ public class DataTypeHandler {
 	private float[] percentages;
 	private int numDTs;
 	
+	static Logger log = Logger.getLogger(DataTypeHandler.class);
+	
 	private static DataTypeHandler inst = new DataTypeHandler();
 	
 	public static DataTypeHandler getInst () {
@@ -28,15 +32,17 @@ public class DataTypeHandler {
 		
 	}
 	
-	public Atomic getRandomDT (Random randGen) {
+	public String getRandomDT (Random randGen) {
 		float r = randGen.nextFloat();
 		
 		for(int i = 0; i < getNumDTs(); i++) {
 			if (r < getPercentages()[i])
-				return getTypes().get(i);
+				return getTypes().get(i).getName();
+			
 		}
-		return Atomic.STRING;
+		return "TEXT";
 	}
+	
 
 	public List<DataType> getTypes() {
 		return types;

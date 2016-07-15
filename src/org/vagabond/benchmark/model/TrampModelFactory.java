@@ -317,24 +317,12 @@ public class TrampModelFactory {
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
 		Arrays.fill(dTypes, null);
-		DataType data;
-		
-		int k = 0;
-		for (int i = 0; i < DataTypeHandler.getInst().getTypes().size(); i++)
+
+		for (int i = 0; i < dTypes.length; i++) 
 		{
 			Random randGen = new Random();
-			data = (DataType) DataTypeHandler.getInst().getRandomDT(randGen);
-			dTypes[i] = data.getName().toUpperCase();
-			k++;
+			dTypes[i] = DataTypeHandler.getInst().getRandomDT(randGen);
 		}
-		// if the distribution informed by the user doesn't 
-		// fulfill all the array, fill it with text
-		if (k != dTypes.length) {
-			for (int i = k; i < dTypes.length; i++) {
-				dTypes[i] = "TEXT";
-			}
-		}
-
 		return addRelation(hook, name, attrs, dTypes, source);
 		
 	}
@@ -401,7 +389,8 @@ public class TrampModelFactory {
 		if (string.equals("INT8"))
 			return Atomic.INTEGER;
 		//access the map
-		return null;
+		log.error("USED DEFAULT FOR: " + string);
+		return Atomic.STRING;
 	}
 	
 	public Key addPrimaryKey(String relName, String[] attrs, boolean source)

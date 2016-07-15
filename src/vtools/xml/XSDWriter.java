@@ -8,6 +8,7 @@ import org.vagabond.xmlmodel.RelationType;
 import smark.support.MappingScenario;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
+import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.Int;
 import vtools.dataModel.types.Rcd;
 import vtools.dataModel.types.Set;
@@ -96,7 +97,7 @@ public class XSDWriter
         {
             buf.append(" maxOccurs=\"1\" type=\"xs:integer\"/>\n");
         }
-        else if (type instanceof Str)
+        else if (type instanceof Str || type instanceof DataType)
         {
             buf.append(" maxOccurs=\"1\" type=\"xs:string\"/>\n");
         }

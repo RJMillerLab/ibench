@@ -577,6 +577,8 @@ public class iBench {
 		
 		numOfSourceRelations = source.sizeOfRelationArray();
 		
+		
+		
 		for (int relIndex = 0; relIndex < numOfSourceRelations; relIndex++) {
 			numOfSourceAttributes = numOfSourceAttributes + source.getRelationArray(relIndex).sizeOfAttrArray();
 		}
