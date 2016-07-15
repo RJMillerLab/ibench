@@ -211,7 +211,7 @@ public class Configuration {
 		DataType data;
 		
 		List<DataType> types = new ArrayList<>();
-		float[] percentages = new float[DataTypeHandler.getInst().getNumDTs()];
+		double[] percentages = new double[DataTypeHandler.getInst().getNumDTs()];
 		Map<String, DataType> typesMap = new HashMap<>();
 		
 		for (int i = 0; i < DataTypeHandler.getInst().getNumDTs(); i++) {
