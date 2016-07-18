@@ -86,4 +86,11 @@ public class StringPrinter extends VisitorImpl
         buf.append("ANY");
         return null;
     }
+    
+    public Object visit(DataType o, Object[] args)
+    {
+        StringBuffer buf = (StringBuffer) args[0];
+        buf.append("DataType ");
+        return null;
+    }
 }

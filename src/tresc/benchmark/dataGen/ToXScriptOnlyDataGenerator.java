@@ -30,7 +30,6 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	public String f (String s) {
 		return s;//return "h"+Integer.toString(s.hashCode());
 	}
-	
 
 	static Logger log = Logger.getLogger(ToXScriptOnlyDataGenerator.class);
 
@@ -39,7 +38,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	List<StringBuffer> toxLists;
 	List<StringBuffer> toxTypes;
 	DirectedGraph<String> dependencies;
-	IdMap<String> toxListPos; 
+	IdMap<String> toxListPos;
 	StringBuffer documentBuffer;
 	StringBuffer templateBuffer;
 	String documentName;
@@ -74,8 +73,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		templateBuffer = new StringBuffer();
 		coveredAtomicElements = new ArrayList<SMarkElement>();
 		documentName = config.getSourceDocumentName();
-		dependencies = new DirectedGraph<String> (false);
-		toxListPos = new IdMap<String> ();
+		dependencies = new DirectedGraph<String>(false);
+		toxListPos = new IdMap<String>();
 	}
 
 	@Override
@@ -89,16 +88,17 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		String schemaName = schema.getLabel();
 		
+		
 		generateToxTypes();
 
 		generateDocumentOpening(documentName, schemaName, documentBuffer);
 		for (int i = 0; i < schema.size(); i++) {
 			SMarkElement rootSetElt = (SMarkElement) schema.getSubElement(i);
 
-			generateListIterationConstruct(rootSetElt.getLabel(),
-					documentBuffer);
-
-			generateToxList(rootSetElt, repElemCount);
+			generateListIterationConstruct(rootSetElt.getLabel(), documentBuffer);
+			
+			//repElemCount for Source data, targetTableNumRows for Target data
+			generateToxList(rootSetElt, schemaName.equalsIgnoreCase("source") ? repElemCount : targetTableNumRows, schemaName);
 		}
 
 		generateDocumentClosing(schemaName, documentBuffer);
@@ -117,7 +117,10 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		generateTemplateClosing(templateBuffer);
 
-		if (log.isDebugEnabled()) {log.debug(templateBuffer);};
+		if (log.isDebugEnabled()) {
+			log.debug(templateBuffer);
+		}
+		;
 
 		BufferedWriter bufWriter =
 				new BufferedWriter(new FileWriter(new File(
@@ -129,11 +132,13 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	private void outputToxLists(StringBuffer templateBuffer2) throws Exception {
 		List<String> topoSort = dependencies.topologicalSort();
-		
-		if (log.isDebugEnabled()) {log.debug("sorted as " + topoSort.toString() 
-				+ "\n\n base on\n" + dependencies.toString());};
-		
-		for(int i = 0; i < topoSort.size(); i++) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("sorted as " + topoSort.toString() + "\n\n base on\n" + dependencies.toString());
+		}
+		;
+
+		for (int i = 0; i < topoSort.size(); i++) {
 			int pos = toxListPos.getId(topoSort.get(i));
 			templateBuffer.append(toxLists.get(pos));
 		}
@@ -156,7 +161,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		Type type = schemaElement.getType();
 		
 		if (type instanceof Set) {
-			generateComplexElementOpening(label, buf, repElemCount);
+			//repElemCount for Source data, targetTableNumRows for Target data
+			generateComplexElementOpening(label, buf, label.equalsIgnoreCase("source") ? repElemCount : targetTableNumRows);
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
 						(SMarkElement) schemaElement.getSubElement(i), buf, i);
@@ -173,7 +179,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 				// we need to sample from the list that is being generated now)
 				if ((srcConstraint == null) || referencesSameSet(srcConstraint)) {
 					Atomic atomicType = (Atomic) type;
-					generateAtomicElementConstruct(label, buf, atomicType);
+					generateAtomicElementConstruct(label, buf, atomicType, index);
 					coveredAtomicElements.add(schemaElement);
 				}
 				else {
@@ -207,26 +213,26 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	private SMarkElement[][] findConstraint(SMarkElement schemaElement) {
 		for (SMarkElement[][] constraint : constraints) {
 			for (int i = 0; i < constraint.length; i++) {
-				if (log.isDebugEnabled()) {log.debug(constraint[i][0]);};
-				if (constraint[i][0].toString()
-						.equals(schemaElement.toString()))
+				if (log.isDebugEnabled()) {
+					log.debug(constraint[i][0]);
+				}
+				;
+				if (constraint[i][0].toString().equals(schemaElement.toString()))
 					return constraint;
 			}
 		}
 		return null;
 	}
 
-	private void generateToxList(SMarkElement schemaElement, int eltCount)
-			throws Exception {
+	private void generateToxList(SMarkElement schemaElement, int eltCount, String schemaName) throws Exception {
 		StringBuffer listBuf = new StringBuffer();
 
 		String label = schemaElement.getLabel();
 		String listName = label + LIST_NAME_SUFFIX;
-		
-		
-		
+		// Type type = schemaElement.getType();
+
 		if (!hasSelfFK(schemaElement)) {
-			String unique = generateUnique(schemaElement);
+			String unique = generateUnique(schemaElement, schemaName);
 			generateListOpening(label, listBuf, eltCount, unique, "");
 
 			for (int i = 0; i < schemaElement.size(); i++)
@@ -234,7 +240,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 						(SMarkElement) schemaElement.getSubElement(i), listBuf, i);
 
 			generateListClosing(listBuf);
-			
+
 			// add to list of tox list and create node in dependency graph
 			memToxList(listBuf, listName);
 		}
@@ -265,7 +271,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String keyListName = keyLabel + LIST_NAME_SUFFIX;
 		AttrDefType[] keyAttrs = scen.getDoc().getKeyAttrs(label, true);
 		String[] keyAttrNames = new String[keyAttrs.length];
-		
+
 		// generate list for the key attribute values
 		generateListOpening(keyLabel, listBuf, eltCount, 
 				getUniqueCode(keyLabel, keyAttrs[0].getName()), "");
@@ -275,14 +281,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		for(int i = 0; i < keyAttrs.length; i++) {
 			keyAttrNames[i] = keyAttrs[i].getName();
 			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
-					scen.getDocFac().getDT(keyAttrs[i].getDataType()));
+					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);
 		}
-		
+
 		generateListClosing(listBuf);
 		memToxList(listBuf, keyListName);
-		
+
 		listBuf = new StringBuffer();
-		
+
 		// generate the list with the elements
 		ForeignKeyType fk = scen.getDoc().getFKs(label, label, true)[0];
 		AttrDefType[] fkAttrs = scen.getDoc().getAttrs(label, 
@@ -292,26 +298,29 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String keyListPath = keyLabel + LIST_NAME_SUFFIX + "/" + keyLabel;
 		
 		int index = 0;
+		
 		// loop through attributes and 
 		for(AttrDefType a: attrs) {
 			Atomic dt = scen.getDocFac().getDT(a.getDataType());
+
 			// is a key attr
 			int pos = CollectionUtils.searchPos(keyAttrs, a);
 			int fkPos = CollectionUtils.searchPos(fkAttrs, a);
-			index++; // to save the last position
+			//index++; // to save the last position
 			if (pos != -1) {
 				String expr = a.getName();
-				generateAtomicFromSamplePathConstruct(a.getName(), listBuf, dt, keyListPath, expr);
+				generateAtomicFromSamplePathConstruct(a.getName(), listBuf, dt, keyListPath, expr, index);
 			}
 			// is FK
 			else if (fkPos != -1) {
 				String expr = keyAttrs[fkPos].getName();
-				generateAtomicFromPathConstruct(a.getName(), listBuf, dt, keyListPath, expr);	
+				generateAtomicFromPathConstruct(a.getName(), listBuf, dt, keyListPath, expr, index);	
 			} 
 			// normal attr
 			else {
-				generateAtomicElementConstruct(a.getName(), listBuf, dt);
+				generateAtomicElementConstruct(a.getName(), listBuf, dt, index);
 			}
+			index++;
 		}
 		generateListClosing(listBuf);
 		memToxList(listBuf, labelListName);
@@ -319,22 +328,23 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	// generate primary key constraints
-	private String generateUnique(SMarkElement schemaElement) throws Exception {
-		RelationType rel = scen.getDoc().getRelForName(
-				schemaElement.getLabel().toLowerCase(), false);
+	private String generateUnique(SMarkElement schemaElement, String schemaName) throws Exception {
+		boolean isTarget = schemaName.equalsIgnoreCase("Source") ? false : true;
+		
+		RelationType rel = scen.getDoc().getRelForName(schemaElement.getLabel().toLowerCase(), isTarget);
 
 		if (!rel.isSetPrimaryKey())
 			return "";
 
 		AttrListType key = rel.getPrimaryKey();
 
-//		if (key.getAttrArray().length == 1) {
-			return getUniqueCode(rel.getName(), key.getAttrArray(0));
-//		}
+		// if (key.getAttrArray().length == 1) {
+		return getUniqueCode(rel.getName(), key.getAttrArray(0));
+		// }
 
-		//TODO how to do multiple attr keys in toxgene?
+		// TODO how to do multiple attr keys in toxgene?
 
-//		return "unique";
+		// return "unique";
 	}
 
 	private String getUniqueCode(String rel, String keyAttr) {
@@ -367,28 +377,29 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateAtomicElementConstruct(String eltName,
-			StringBuffer buf, Atomic atomicType) {
-	
-		String typeString =
-				(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+			StringBuffer buf, Atomic atomicType, int index) {
+		
+		String typeString;
+		if (atomicType == Atomic.INTEGER) {
+			typeString = "bench_int";
+		} else {
+			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+		}
+		
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
-				+ "\"/>\n");
+				+ "\"/>\n"); 
 	}
 	
 	private void generateAtomicFromPathConstruct (String eltName,
-			StringBuffer buf, Atomic atomicType, String path, String expr) {
-		//Defines the type by element
+			StringBuffer buf, Atomic atomicType, String path, String expr, int index) {
+		//Defines the type by element	
 		String typeString = null;
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_email"; //string
-		} else {
-			typeString = "bench_email";
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
 		}
 		
-		//String typeString =
-		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\">\n");
 		buf.append("\t<simpleType>\n" + 
@@ -401,20 +412,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 	
 	private void generateAtomicFromSamplePathConstruct (String eltName,
-			StringBuffer buf, Atomic atomicType, String path, String expr) {
-		
+			StringBuffer buf, Atomic atomicType, String path, String expr, int index) {
 		
 		String typeString = null;
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_email"; //bench_string
-		} else {
-			typeString = "bench_email";
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
 		}
-		
-		//String typeString =
-		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\">\n");
@@ -511,7 +516,10 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String thisList = getParentList(constraint[0][0]);
 		String otherList = getParentList(parent);
 		dependencies.addNodesAndEdge(otherList, thisList);
-		if (log.isDebugEnabled()) {log.debug("added dependency from <" + thisList + "> to <" + otherList + ">");};
+		if (log.isDebugEnabled()) {
+			log.debug("added dependency from <" + thisList + "> to <" + otherList + ">");
+		}
+		;
 	}
 
 	private void generateToxSampleOpening(SMarkElement schemaElement,
@@ -527,13 +535,13 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		buf.append("]\">\n");
 	}
 
-	private String getParentList (Element schemaElement) {
+	private String getParentList(Element schemaElement) {
 		Element parent = schemaElement;
-		while(parent.getParent().getParent() != null)
+		while (parent.getParent().getParent() != null)
 			parent = parent.getParent();
 		return parent.getLabel() + LIST_NAME_SUFFIX;
 	}
-	
+
 	private String getSamplePath(Element schemaElement) {
 		Element parent = schemaElement.getParent();
 		if (parent == null)

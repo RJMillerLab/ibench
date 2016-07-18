@@ -251,6 +251,7 @@ public class TrampModelFactory {
 			a.setDataType(dTypes[i]);
 		}
 
+		log.debug(Arrays.toString(dTypes));
 		addSTRelation(hook, name, attrs, dTypes, source);
 
 		if (source && conf.getOutputOption(OutputOption.Data)
@@ -306,23 +307,28 @@ public class TrampModelFactory {
 		doc.getRelPos().put("");
 	}
 	
-	/*public RelationType addRelation(String hook, String name, String[] attrs,
-			boolean source) {
-		String[] dTypes = new String[attrs.length];
-		Arrays.fill(dTypes, "TEXT");
-		return addRelation(hook, name, attrs, dTypes, source);
-		
-	}*/
 	public RelationType addRelation(String hook, String name, String[] attrs,
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
+		String[] dTypesNames = new String[attrs.length];
 		Arrays.fill(dTypes, null);
-
-		for (int i = 0; i < dTypes.length; i++) 
-		{
+		
+		Atomic data;
+		
+		for (int k = 0; k < dTypes.length; k++) {
 			Random randGen = new Random();
-			dTypes[i] = DataTypeHandler.getInst().getRandomDT(randGen);
+			data = DataTypeHandler.getInst().getRandomDT(randGen);
+			if (!(data instanceof DataType)) {
+				dTypes[k] = "TEXT";
+				dTypesNames[k] = "text";
+			}
+			else {
+				dTypesNames[k] = ((DataType)data).getName().toLowerCase(); // fill with email, phoneNumber, names, etc
+				dTypes[k] = DataTypeHandler.getInst().getDbType(dTypesNames[k]); // fill with DB types, text, int, etc
+			}
+
 		}
+		DataTypeHandler.getInst().setTypesNamesOrder(dTypesNames);
 		return addRelation(hook, name, attrs, dTypes, source);
 		
 	}
@@ -389,7 +395,11 @@ public class TrampModelFactory {
 		if (string.equals("INT8"))
 			return Atomic.INTEGER;
 		//access the map
+
 		log.error("USED DEFAULT FOR: " + string);
+
+		log.error("SHOULD HAVE NEVER COME HERE");
+
 		return Atomic.STRING;
 	}
 	

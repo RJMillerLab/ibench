@@ -5,7 +5,7 @@ SchemaPathPrefix=out0
 InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 0
+Scenarios.COPY = 1
 Scenarios.HORIZPARTITION = 0
 Scenarios.SURROGATEKEY = 0
 Scenarios.MERGING = 0
@@ -17,7 +17,7 @@ Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
 Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 1
+Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
 Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
@@ -38,18 +38,18 @@ LoadScenarios.0.Name = simpleTest
 LoadScenarios.0.Inst = 10
 
 DataType.NumDataType = 1
-DataType.0.Name = Email
+DataType.0.Name = email
 DataType.0.ClassPath = toxgene.util.cdata.xmark.email
-DataType.0.Percentage = 0.20
+DataType.0.Percentage = 60.0
 DataType.0.DBType = TEXT
 
-# DataType.1.Name = Age
+# DataType.1.Name = age
 # DataType.1.ClassPath = toxgene.util.cdata.xmark.age
-# DataType.1.Percentage = 0.20
+# DataType.1.Percentage = 20.0
 # DataType.1.DBType = INT8
 
 
-ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 1
 ConfigOptions.JoinSize = 2
@@ -66,6 +66,9 @@ MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
+TargetTableNumRows = 100
+ExchangeTargetData = false
+
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false

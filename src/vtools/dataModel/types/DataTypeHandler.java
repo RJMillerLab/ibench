@@ -17,8 +17,11 @@ public class DataTypeHandler {
 	
 	private List<DataType> types;
 	private Map<String,DataType> nameToDTMap;
-	private float[] percentages;
+	private double[] percentages;
 	private int numDTs;
+	private double[] probabilities;
+	private String[] typesNamesOrder;
+	
 	
 	static Logger log = Logger.getLogger(DataTypeHandler.class);
 	
@@ -32,18 +35,36 @@ public class DataTypeHandler {
 		
 	}
 	
-	public String getRandomDT (Random randGen) {
+			
+
+	public void setProbabilities() {
+		log.debug(percentages[0]);
+		probabilities = new double[numDTs];
+		probabilities[0] = (percentages[0]/100.0);
+		for (int k = 1; k < numDTs; k++) {
+			probabilities[k] = probabilities[k-1] + (percentages[k]/100.0);
+		}
+	}
+	
+	public Atomic getRandomDT (Random randGen) {
+		setProbabilities();
 		float r = randGen.nextFloat();
 		
-		for(int i = 0; i < getNumDTs(); i++) {
-			if (r < getPercentages()[i])
-				return getTypes().get(i).getName();
-			
+		for(int i = 0; i < probabilities.length; i++) {
+			if (r < probabilities[i])
+				return getTypes().get(i);
+
 		}
-		return "TEXT";
+		return Atomic.STRING;
 	}
 	
 
+	public String getDbType(String dataType) {
+		DataType data = 
+				this.nameToDTMap.get(dataType);
+		return data.getDbType();
+	}
+	
 	public List<DataType> getTypes() {
 		return types;
 	}
@@ -60,11 +81,11 @@ public class DataTypeHandler {
 		this.nameToDTMap = nameToDTMap;
 	}
 
-	public float[] getPercentages() {
+	public double[] getPercentages() {
 		return percentages;
 	}
 
-	public void setPercentages(float[] percentages) {
+	public void setPercentages(double[] percentages) {
 		this.percentages = percentages;
 	}
 
@@ -74,6 +95,14 @@ public class DataTypeHandler {
 
 	public void setNumDTs(int numDTs) {
 		this.numDTs = numDTs;
+	}
+
+	public String[] getTypesNamesOrder() {
+		return typesNamesOrder;
+	}
+
+	public void setTypesNamesOrder(String[] typesNamesOrder) {
+		this.typesNamesOrder = typesNamesOrder;
 	}
 	
 	
