@@ -478,7 +478,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String[] benchStringTypes = {
 				"gibberish", "text", "xmrk_text", "email", "fname", 
 				"lname", "city", "country", "province", "domain", "word",
-				"multiword"
+				"multiword", "phonenumber"
 				};
 		
 		for (int i = 0; i < benchStringTypes.length; i++) {
