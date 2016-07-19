@@ -475,16 +475,27 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateBenchStringType(StringBuffer buf) {
-		String[] benchStringTypes = {
-				"gibberish", "text", "xmrk_text", "email", "fname", 
-				"lname", "city", "country", "province", "domain", "word",
-				"multiword", "phonenumber"
-				};
 		
-		for (int i = 0; i < benchStringTypes.length; i++) {
-			buf.append("<simpleType name=\"bench_" + benchStringTypes[i] + "\">\n");
+		int size = DataTypeHandler.getInst().getTypes().size();
+		
+		String typeName;
+		boolean hasTextType = false;
+		
+		for (int i = 0; i < size; i++) {
+			typeName = DataTypeHandler.getInst().getTypes().get(i).getName();
+			hasTextType = (typeName.equals("text")) ? true : false;
+			buf.append("<simpleType name=\"bench_" + typeName + "\">\n");
 			buf.append("<restriction base=\"string\">\n");
-			buf.append("<tox-string type=\"" + benchStringTypes[i] + "\" maxLength=\"" + maxStringLength
+			buf.append("<tox-string type=\"" + typeName + "\" maxLength=\"" + maxStringLength
+					+ "\"/>\n");
+			buf.append("</restriction>\n");
+			buf.append("</simpleType>\n");
+		}
+		// default type
+		if (!hasTextType) {
+			buf.append("<simpleType name=\"bench_text\">\n");
+			buf.append("<restriction base=\"string\">\n");
+			buf.append("<tox-string type=\"text\" maxLength=\"" + maxStringLength
 					+ "\"/>\n");
 			buf.append("</restriction>\n");
 			buf.append("</simpleType>\n");
