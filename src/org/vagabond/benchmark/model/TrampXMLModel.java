@@ -42,7 +42,7 @@ public class TrampXMLModel extends MapScenarioHolder {
 	
 	public TrampXMLModel (MappingScenarioDocument doc) throws Exception {
 		TrampModelFactory fac;
-		
+
 		this.doc = doc;
 		initIndex();
 		fillIndex();
