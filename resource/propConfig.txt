@@ -32,10 +32,10 @@ Scenarios.VERTPARTITIONISAAUTHORITY = 0
 #ConfigOptions.TargetInclusionDependencyFKPerc = 100
 
 
-LoadScenarios.NumScenarios = 1
-LoadScenarios.0.File =  exampleScenarios/fh.xml
-LoadScenarios.0.Name = simpleTest
-LoadScenarios.0.Inst = 10
+#LoadScenarios.NumScenarios = 1
+#LoadScenarios.0.File =  exampleScenarios/fh.xml
+#LoadScenarios.0.Name = simpleTest
+#LoadScenarios.0.Inst = 10
 
 DataType.NumDataType = 1
 DataType.0.Name = email
@@ -66,8 +66,8 @@ MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
-TargetTableNumRows = 100
-ExchangeTargetData = false
+TargetTableNumRows = 50
+ExchangeTargetData = true
 
 
 # Optional activation/deactivation of output options

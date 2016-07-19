@@ -33,6 +33,7 @@ public class Configuration {
 	private long _seed;
 	private Random randomGenerator;
 
+
 	private int[][] _configurations;
 	private boolean[] _outputOpts;
 	private int[] _groundTruthValues;
@@ -76,6 +77,9 @@ public class Configuration {
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
 
+	int targetTableNumRows;
+	boolean exchangeTargetData;
+	
 	int namingPolicy;
 
 	List<File> loadScenarios;
@@ -235,6 +239,9 @@ public class Configuration {
 			randomGenerator = new Random();
 		else
 			randomGenerator.setSeed(_seed);
+		
+		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
+		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
 
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);
@@ -642,6 +649,15 @@ public class Configuration {
 	public void setDataGen(DataGenType dataGen) {
 		this.dataGen = dataGen;
 	}
+	
+	public int getTargetNumRows() {
+		return targetTableNumRows;
+	}
+
+	public boolean getExchangeTargetData() {
+		return exchangeTargetData;
+	}
+
 
 	public MappingLanguageType getMapType() {
 		return mapType;
