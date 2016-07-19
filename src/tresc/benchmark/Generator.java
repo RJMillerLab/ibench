@@ -222,6 +222,16 @@ public class Generator {
 		dataGenerator.setScenario(scenario);
 		dataGenerator.generateData();
 	}
+	
+	public void generateTargetData(MappingScenario scenario) throws Exception {
+		// new method not sure if anything works at all
+		dataGenerator.setSchema(scenario.getTarget());          
+		// to be tested \/
+		dataGenerator.setConstraints(scenario.getTgtConstraints());
+		dataGenerator.setScenario(scenario);
+		dataGenerator.generateData();
+	}
+
 
 	public DataGenerator getDataGenerator() {
 		return dataGenerator;

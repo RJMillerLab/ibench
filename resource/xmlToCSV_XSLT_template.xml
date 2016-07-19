@@ -5,7 +5,7 @@
 
 	<!-- create one row for each tuple like element -->
 	<xsl:template match="/">
-		<xsl:for-each select="Source/$RELNAME$">
+		<xsl:for-each select="$SCHEMA$/$RELNAME$">
 			<xsl:number value="position()" />
 			<xsl:text>|</xsl:text>
 			<xsl:for-each select="./*">

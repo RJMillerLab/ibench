@@ -73,7 +73,7 @@ public class TrampCSVGen extends ToXDataGenerator {
 		for (int i = 0; i < schema.size(); i++) {
 			SMarkElement rootSetElt = (SMarkElement) schema.getSubElement(i);
 			String relName = rootSetElt.getLabel();
-			String xsltScript = templateXSLT.replace("$RELNAME$", relName);
+			String xsltScript = templateXSLT.replace("$RELNAME$", relName).replace("$SCHEMA$", schema.getLabel());
 			outFile = new File(outputPath, relName + ".csv");
 			if (log.isDebugEnabled()) {log.debug("use XSLT script:\n" + xsltScript);};
 			
