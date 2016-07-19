@@ -28,7 +28,7 @@ import vtools.dataModel.types.DataTypeHandler;
 public class Configuration {
 	private int[] _repetitions;
 	private int[] _numExplsForType;
-
+	
 	// private long[] _seeds;
 	private long _seed;
 	private Random randomGenerator;
@@ -76,16 +76,13 @@ public class Configuration {
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
 
-	int targetTableNumRows;
-	boolean exchangeTargetData;
-
 	int namingPolicy;
 
 	List<File> loadScenarios;
 	private List<String> loadScenarioNames;
 	private int numLoadScenarios = 0;
 	private int[] numLoadScenarioInsts;
-
+	
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 	
@@ -145,21 +142,21 @@ public class Configuration {
 			_outputOpts[o.ordinal()] = b;
 		}
 		prop.resetPrefix();
-
+		
 		prop.setPrefix("GroundTruthValues");
 		for (DESErrorType v : Constants.DESErrorType.values()) {
 			int b = prop.getInt(v.toString(), _groundTruthValues[v.ordinal()]);
 			_groundTruthValues[v.ordinal()] = b;
 		}
 		prop.resetPrefix();
-
+		
 		prop.setPrefix("GroundTruthDev");
 		for (DESErrorType v : Constants.DESErrorType.values()) {
 			int b = prop.getInt(v.toString(), _groundTruthDev[v.ordinal()]);
 			_groundTruthDev[v.ordinal()] = b;
 		}
 		prop.resetPrefix();
-
+		
 		// read switches for omitting parts of the Tramp XML document
 		prop.setPrefix("TrampXMLOutput");
 		for (TrampXMLOutputSwitch s : Constants.TrampXMLOutputSwitch.values()) {
@@ -176,7 +173,7 @@ public class Configuration {
 			_numExplsForType[e.ordinal()] = val;
 		}
 		prop.resetPrefix();
-
+		
 		// database connection options
 		prop.setPrefix("DB");
 		for (DBOption o : Constants.DBOption.values()) {
@@ -184,14 +181,14 @@ public class Configuration {
 			_dbOptions[o.ordinal()] = val;
 		}
 		prop.resetPrefix();
-
+		
 		// explgen options like percentage of errors to add
-
+		
 		// options for loading existing scenarios as new primitives
 		prop.setPrefix("LoadScenarios");
 		setNumLoadScenarios(prop.getInt("NumScenarios", 0));
 		numLoadScenarioInsts = new int[numLoadScenarios];
-
+		
 		for (int i = 0; i < getNumLoadScenarios(); i++) {
 			String fileName = prop.getProperty(i + ".File", "");
 			String name = prop.getProperty(i + ".Name", "");
@@ -211,7 +208,7 @@ public class Configuration {
 		DataType data;
 		
 		List<DataType> types = new ArrayList<>();
-		double[] percentages = new double[DataTypeHandler.getInst().getNumDTs()];
+		float[] percentages = new float[DataTypeHandler.getInst().getNumDTs()];
 		Map<String, DataType> typesMap = new HashMap<>();
 		
 		for (int i = 0; i < DataTypeHandler.getInst().getNumDTs(); i++) {
@@ -224,7 +221,6 @@ public class Configuration {
 			percentages[i] = data.getPercentage();
 			typesMap.put(data.getName(), data);
 			
-			//DataTypeHandler.getInst().getNameToDTMap().put(data.getDbType(), data);
 			types.add(data);
 			
 		}
@@ -243,8 +239,7 @@ public class Configuration {
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);
 		maxNumValue = prop.getInt("MaxNumValue", 100);
-		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
-		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
+
 		// data generator and type of mapping language
 		dataGen =
 				(DataGenType) prop.getEnumProperty("DataGenerator",
@@ -284,7 +279,7 @@ public class Configuration {
 		// INSTANCE_FILE SOURCE_DOC_NAME MAPPING_FILE_NAME
 
 		StringTokenizer st = new StringTokenizer(configLine, " \t");
-
+		
 		// read the number of repetitions for each scenario
 		for (int i = 0; i < Constants.ScenarioName.values().length; i++) {
 			ScenarioName scen = Constants.ScenarioName.values()[i]; 
@@ -294,7 +289,7 @@ public class Configuration {
 			if (numScen != 0)
 				fileNameSuffix += Constants.nameForScenarios.get(scen);
 		}
-
+		
 		// read the parameters
 		for(int i = 0; i < Constants.ParameterName.values().length; i++) {
 			int val= Integer.valueOf(st.nextToken());
@@ -308,7 +303,7 @@ public class Configuration {
 			_configurations[i][1] = val;
 			fileNameSuffix += "_" + val;
 		}
-
+		
 		// generate the output file names
 		genFileNames(fileNameSuffix);
 
@@ -360,7 +355,7 @@ public class Configuration {
 				new boolean[Constants.TrampXMLOutputSwitch.values().length];
 		_numExplsForType = new int[Constants.DESErrorType.values().length];
 		_dbOptions = new String[Constants.DBOption.values().length];
-
+		
 		randomGenerator = new Random();
 		initOptionsDefaults();
 	}
@@ -480,11 +475,11 @@ public class Configuration {
 	public int getScenarioRepetitions(int scenario) {
 		return _repetitions[scenario];
 	}
-
+	
 	public void setScenarioRepetitions(ScenarioName n, int value) {
 		setScenarioRepetitions(n.ordinal(), value);
 	}
-
+	
 	public void setScenarioRepetitions(int scenario, int value) {
 		_repetitions[scenario] = value;
 	}
@@ -492,11 +487,11 @@ public class Configuration {
 	public boolean getOutputOption(OutputOption o) {
 		return _outputOpts[o.ordinal()];
 	}
-
+	
 	public int getGroundTruthValues(DESErrorType v) {
 		return _groundTruthValues[v.ordinal()];
 	}
-
+	
 	public int getGroundTruthDev(DESErrorType v) {
 		return _groundTruthDev[v.ordinal()];
 	}
@@ -504,7 +499,7 @@ public class Configuration {
 	public boolean getTrampXMLOutputOption (TrampXMLOutputSwitch s) {
 		return _trampXMLoutputOpts[s.ordinal()];
 	}
-
+	
 	/*
 	 * public long getScenarioSeeds(int scenario) { return _seeds[scenario]; }
 	 */
@@ -516,7 +511,7 @@ public class Configuration {
 	public Random getRandomGenerator() {
 		return randomGenerator;
 	}
-
+	
 	public void resetRandomGenerator() {
 		randomGenerator = new Random(_seed);
 	}
@@ -555,14 +550,6 @@ public class Configuration {
 
 	public int getMaxNumValue() {
 		return maxNumValue;
-	}
-
-	public int getTargetNumRows() {
-		return targetTableNumRows;
-	}
-
-	public boolean getExchangeTargetData() {
-		return exchangeTargetData;
 	}
 
 	public void setSchemaPathPrefix(String __schemaPathPrefix) {
@@ -614,25 +601,25 @@ public class Configuration {
 		result.append("_seed: <" + _seed + ">\n");
 		result.append("mapType: <" + mapType + ">\n");
 		result.append("dataGen: <" + dataGen + ">\n");
-
+		
 		result.append("\n\n---- OUTPUT OPTIONS ----\n");
 		for (OutputOption p : Constants.OutputOption.values()) {
 			boolean val = _outputOpts[p.ordinal()];
 			result.append(p.toString() + ": <" + val + ">\n");
 		}
-
+		
 		result.append("\n\n---- GROUND TRUTH VALUES ----\n");
 		for (DESErrorType v : Constants.DESErrorType.values()) {
 			int val = _groundTruthValues[v.ordinal()];
 			result.append(v.toString() + ": <" + val + ">\n");
 		}
-
+		
 		result.append("\n\n---- TRAMP XML OUTPUT OPTIONS ----\n");
 		for (TrampXMLOutputSwitch p : Constants.TrampXMLOutputSwitch.values()) {
 			boolean val = _trampXMLoutputOpts[p.ordinal()];
 			result.append(p.toString() + ": <" + val + ">\n");
 		}
-
+		
 		return result.toString();
 	}
 
@@ -643,8 +630,8 @@ public class Configuration {
 	public static String getInstancePathPrefix() {
 		return instancePathPrefix;
 	}
-
-	public static String getAbsoluteInstancePath() {
+	
+	public static String getAbsoluteInstancePath () {
 		return new File(instancePathPrefix).getAbsolutePath();
 	}
 
@@ -663,12 +650,12 @@ public class Configuration {
 	public void setMapType(MappingLanguageType mapType) {
 		this.mapType = mapType;
 	}
-
-	public String getDBOption(DBOption o) {
+	
+	public String getDBOption (DBOption o) {
 		return _dbOptions[o.ordinal()];
 	}
-
-	public int getReuseThreshold() {
+	
+	public int getReuseThreshold () {
 		int totalNumScen = getTotalNumScen();
 		int thresh =  (int) Math.floor(totalNumScen * 0.01 * 
 				_configurations[Constants.ParameterName.
@@ -690,7 +677,7 @@ public class Configuration {
 		 */
 		for(ParameterName p: Constants.ParameterName.values())
 			checkParameterRange(p, 0, 1.0);
-
+		
 		/* check specific parameter derivations */
 		checkParameterRange(ParameterName.PrimaryKeySize, 0, 0.5);
 		checkParameterRange(ParameterName.JoinSize, 1, 0.5);
@@ -720,23 +707,24 @@ public class Configuration {
 		// add deviation of NumOfSubElements
 		minNumElem += getDeviation(ParameterName.NumOfSubElements);
 		setParam(ParameterName.NumOfSubElements, minNumElem);
-
+		
+		
 	}
 
 	private void checkParameterRange(ParameterName p, int min, int max) {//TODO log warnings?
 		int pValue = _configurations[p.ordinal()][0];
 		int pDev = _configurations[p.ordinal()][1];
-
+		
 		if (pValue < min)
 			pValue = min;
 		if (pValue > max)
 			pValue = max;
-
+		
 		if (pValue - pDev < min)
 			pDev = (pValue - min);
 		if (pValue + pDev < max)
 			pDev = (max - pValue);
-
+		
 		_configurations[p.ordinal()][0] = pValue;
 		_configurations[p.ordinal()][1] = pDev;
 	}
@@ -748,7 +736,7 @@ public class Configuration {
 	private void checkParameterRange(ParameterName p, int min, double dev) {
 		int pValue = _configurations[p.ordinal()][0];
 		int pDev = _configurations[p.ordinal()][1];
-
+		
 		if (pValue < min)
 			pValue = min;
 		if (pDev > pValue * dev)
@@ -758,11 +746,11 @@ public class Configuration {
 		_configurations[p.ordinal()][0] = pValue;
 		_configurations[p.ordinal()][1] = pDev;
 	}
-
+	
 	public int paramMin(ParameterName p) {
 		return _configurations[p.ordinal()][0] - _configurations[p.ordinal()][1]; 
 	}
-
+	
 	public int paramMax(ParameterName p) {
 		return _configurations[p.ordinal()][0] + _configurations[p.ordinal()][1]; 
 	}

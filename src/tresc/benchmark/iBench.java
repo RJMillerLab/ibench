@@ -537,10 +537,8 @@ public class iBench {
 //		}
 		
 		
-		if (_configuration.getOutputOption(OutputOption.Data)){
+		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(_scenario);
-			Modules.scenarioGenerator.generateTargetData(_scenario);
-		}
 		if (_configuration.getOutputOption(OutputOption.ErrorsAndExplanations))
 			Modules.explGen.genearteExpls(_scenario, _configuration);
 		
@@ -578,6 +576,8 @@ public class iBench {
 		SchemaType target = txModel.getSchema(false);
 		
 		numOfSourceRelations = source.sizeOfRelationArray();
+		
+		
 		
 		for (int relIndex = 0; relIndex < numOfSourceRelations; relIndex++) {
 			numOfSourceAttributes = numOfSourceAttributes + source.getRelationArray(relIndex).sizeOfAttrArray();

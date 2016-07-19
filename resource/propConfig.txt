@@ -38,18 +38,18 @@ LoadScenarios.0.Name = simpleTest
 LoadScenarios.0.Inst = 10
 
 DataType.NumDataType = 1
-DataType.0.Name = Email
+DataType.0.Name = email
 DataType.0.ClassPath = toxgene.util.cdata.xmark.email
-DataType.0.Percentage = 20.0
+DataType.0.Percentage = 60.0
 DataType.0.DBType = TEXT
 
-# DataType.1.Name = Age
+# DataType.1.Name = age
 # DataType.1.ClassPath = toxgene.util.cdata.xmark.age
 # DataType.1.Percentage = 20.0
 # DataType.1.DBType = INT8
 
 
-ConfigOptions.NumOfSubElements = 10
+ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1
 ConfigOptions.NumOfAttributesToDelete = 1
 ConfigOptions.JoinSize = 2
@@ -66,7 +66,7 @@ MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
-TargetTableNumRows = 250
+TargetTableNumRows = 100
 ExchangeTargetData = false
 
 

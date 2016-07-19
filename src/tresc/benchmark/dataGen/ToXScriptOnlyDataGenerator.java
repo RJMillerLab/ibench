@@ -298,6 +298,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String keyListPath = keyLabel + LIST_NAME_SUFFIX + "/" + keyLabel;
 		
 		int index = 0;
+		
 		// loop through attributes and 
 		for(AttrDefType a: attrs) {
 			Atomic dt = scen.getDocFac().getDT(a.getDataType());
@@ -305,20 +306,21 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			// is a key attr
 			int pos = CollectionUtils.searchPos(keyAttrs, a);
 			int fkPos = CollectionUtils.searchPos(fkAttrs, a);
-			index++; // to save the last position
+			//index++; // to save the last position
 			if (pos != -1) {
 				String expr = a.getName();
-				generateAtomicFromSamplePathConstruct(a.getName(), listBuf, dt, keyListPath, expr);
+				generateAtomicFromSamplePathConstruct(a.getName(), listBuf, dt, keyListPath, expr, index);
 			}
 			// is FK
 			else if (fkPos != -1) {
 				String expr = keyAttrs[fkPos].getName();
-				generateAtomicFromPathConstruct(a.getName(), listBuf, dt, keyListPath, expr);	
+				generateAtomicFromPathConstruct(a.getName(), listBuf, dt, keyListPath, expr, index);	
 			} 
 			// normal attr
 			else {
 				generateAtomicElementConstruct(a.getName(), listBuf, dt, index);
 			}
+			index++;
 		}
 		generateListClosing(listBuf);
 		memToxList(listBuf, labelListName);
@@ -377,39 +379,27 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	private void generateAtomicElementConstruct(String eltName,
 			StringBuffer buf, Atomic atomicType, int index) {
 		
-		
-		String typeName = DataTypeHandler.getInst().getTypes().get(index).getName();
-		
-		//test
-		String typeString = null;
+		String typeString;
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
-		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_" + typeName.toLowerCase(); // string
 		} else {
-			typeString = "bench_" + typeName.toLowerCase();
+			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
 		}
-				
-		//String typeString =
-		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
+		
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
-				+ "\"/>\n");
+				+ "\"/>\n"); 
 	}
 	
 	private void generateAtomicFromPathConstruct (String eltName,
-			StringBuffer buf, Atomic atomicType, String path, String expr) {
-		//Defines the type by element
+			StringBuffer buf, Atomic atomicType, String path, String expr, int index) {
+		//Defines the type by element	
 		String typeString = null;
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_email"; //string
-		} else {
-			typeString = "bench_email";
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
 		}
 		
-		//String typeString =
-		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\">\n");
 		buf.append("\t<simpleType>\n" + 
@@ -422,20 +412,14 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 	
 	private void generateAtomicFromSamplePathConstruct (String eltName,
-			StringBuffer buf, Atomic atomicType, String path, String expr) {
-		
+			StringBuffer buf, Atomic atomicType, String path, String expr, int index) {
 		
 		String typeString = null;
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-			typeString = "bench_email"; //bench_string
-		} else {
-			typeString = "bench_email";
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
 		}
-		
-		//String typeString =
-		//		(atomicType == Atomic.STRING) ? "bench_string" : "bench_int";
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
 				+ "\">\n");
@@ -494,7 +478,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		String[] benchStringTypes = {
 				"gibberish", "text", "xmrk_text", "email", "fname", 
 				"lname", "city", "country", "province", "domain", "word",
-				"multiword"
+				"multiword", "phonenumber"
 				};
 		
 		for (int i = 0; i < benchStringTypes.length; i++) {

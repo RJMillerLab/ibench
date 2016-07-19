@@ -19,10 +19,6 @@ public abstract class DataGenerator
 	int maxStringLength;
 	// max for numeric values
 	int maxNumValue;
-	// number of rows for the target data
-	int targetTableNumRows;
-	// boolean for exchanging data or not
-	boolean exchangeTargetData;
 	
 	public DataGenerator(Configuration config)
 	{
@@ -35,8 +31,6 @@ public abstract class DataGenerator
 		repElemCount = config.getRepElemCount();
 		maxStringLength = config.getMaxStringLength();
 		maxNumValue = config.getMaxNumValue();
-		targetTableNumRows = config.getTargetNumRows();
-		exchangeTargetData = config.getExchangeTargetData();
 	}
 
 	public DataGenerator(Schema __schema, Configuration config)

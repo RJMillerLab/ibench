@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author lord_pretzel
  *
@@ -18,6 +20,10 @@ public class DataTypeHandler {
 	private double[] percentages;
 	private int numDTs;
 	private double[] probabilities;
+	private String[] typesNamesOrder;
+	
+	
+	static Logger log = Logger.getLogger(DataTypeHandler.class);
 	
 	private static DataTypeHandler inst = new DataTypeHandler();
 	
@@ -29,7 +35,10 @@ public class DataTypeHandler {
 		
 	}
 	
+			
+
 	public void setProbabilities() {
+		log.debug(percentages[0]);
 		probabilities = new double[numDTs];
 		probabilities[0] = (percentages[0]/100.0);
 		for (int k = 1; k < numDTs; k++) {
@@ -40,13 +49,22 @@ public class DataTypeHandler {
 	public Atomic getRandomDT (Random randGen) {
 		setProbabilities();
 		float r = randGen.nextFloat();
+		
 		for(int i = 0; i < probabilities.length; i++) {
 			if (r < probabilities[i])
 				return getTypes().get(i);
+
 		}
 		return Atomic.STRING;
 	}
+	
 
+	public String getDbType(String dataType) {
+		DataType data = 
+				this.nameToDTMap.get(dataType);
+		return data.getDbType();
+	}
+	
 	public List<DataType> getTypes() {
 		return types;
 	}
@@ -77,6 +95,14 @@ public class DataTypeHandler {
 
 	public void setNumDTs(int numDTs) {
 		this.numDTs = numDTs;
+	}
+
+	public String[] getTypesNamesOrder() {
+		return typesNamesOrder;
+	}
+
+	public void setTypesNamesOrder(String[] typesNamesOrder) {
+		this.typesNamesOrder = typesNamesOrder;
 	}
 	
 	

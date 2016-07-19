@@ -299,24 +299,6 @@ public class MappingScenario
     	return srcConstraints;
     }
     
-    //new
-    public Vector<SMarkElement[][]> getTgtConstraints()
-    {
-    	Vector<SMarkElement[][]> tgtConstraints=new Vector<SMarkElement[][]>();
-    	for(int i=0;i<_target.getConstrSize();i++)
-    	{
-    		Rule thisConstraint=_target.getConstraint(i);
-    		if(thisConstraint instanceof ForeignKey)
-    		{
-    			//maybe this is the problem?? \/
-    			SMarkElement[][] thisElementArray=rule2ElementArray(thisConstraint);
-    			tgtConstraints.add(thisElementArray);
-    		}
-    	}
-    	return tgtConstraints;
-    }
-
-    
     private SMarkElement[][] rule2ElementArray(Rule constraint)
     {
  	
