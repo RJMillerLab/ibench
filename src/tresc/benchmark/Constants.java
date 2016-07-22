@@ -205,7 +205,8 @@ public class Constants
     	TrampXML,
     	ErrorsAndExplanations,
     	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
-    	Clio
+    	Clio,
+    	EnableTargetData
     }
     
     public static final Map<OutputOption, Boolean> defaultOutputOptionValues
@@ -220,6 +221,7 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
     	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
     	defaultOutputOptionValues.put(OutputOption.Clio, Boolean.FALSE);
+    	defaultOutputOptionValues.put(OutputOption.EnableTargetData, Boolean.FALSE);
     }
     
   

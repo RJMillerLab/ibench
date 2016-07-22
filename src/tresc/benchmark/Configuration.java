@@ -77,8 +77,12 @@ public class Configuration {
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
 
+	@Option(name = "-targetTableNumRows", usage = "number of rows for the target table")
 	int targetTableNumRows;
+	@Option(name = "-exchangeTargetData", usage = "enable target schema data exchangeing")
 	boolean exchangeTargetData;
+	@Option(name = "-enableTargetData", usage = "enable target schema data generation")
+	boolean enableTargetData;
 	
 	int namingPolicy;
 
@@ -242,6 +246,7 @@ public class Configuration {
 		
 		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
 		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
+		exchangeTargetData = prop.getBool("EnableTargetData", false);
 
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);

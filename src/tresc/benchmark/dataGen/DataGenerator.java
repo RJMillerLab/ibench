@@ -37,6 +37,7 @@ public abstract class DataGenerator
 		maxNumValue = config.getMaxNumValue();
 		targetTableNumRows = config.getTargetNumRows();
 		exchangeTargetData = config.getExchangeTargetData();
+		
 	}
 
 	public DataGenerator(Schema __schema, Configuration config)

@@ -539,7 +539,7 @@ public class iBench {
 		
 		if (_configuration.getOutputOption(OutputOption.Data))
 			Modules.scenarioGenerator.generateSourceData(_scenario);
-		if (_configuration.getOutputOption(OutputOption.Data))
+		if (_configuration.getOutputOption(OutputOption.EnableTargetData))
 			Modules.scenarioGenerator.generateTargetData(_scenario);
 
 		
