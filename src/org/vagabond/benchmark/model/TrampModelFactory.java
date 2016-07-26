@@ -262,7 +262,8 @@ public class TrampModelFactory {
 			p.addSourceRel(rel);
 		else
 			p.addTargetRel(rel);
-		
+		//TODO register datatyeps
+//		DataTypeHandler.getInst().setTypesNamesOrder(name, dTypesNames);
 		return rel;
 	}
 	
@@ -293,6 +294,8 @@ public class TrampModelFactory {
 				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
 			addDataElement(newR.getName());
 		
+		//TODO also register
+//		DataTypeHandler.getInst().setTypesNamesOrder(name, dTypesNames);
 		if (source)
 			p.addSourceRel(r);
 		else
@@ -328,7 +331,7 @@ public class TrampModelFactory {
 			}
 
 		}
-		DataTypeHandler.getInst().setTypesNamesOrder(dTypesNames);
+		DataTypeHandler.getInst().setTypesNamesOrder(name, dTypesNames);
 		return addRelation(hook, name, attrs, dTypes, source);
 		
 	}

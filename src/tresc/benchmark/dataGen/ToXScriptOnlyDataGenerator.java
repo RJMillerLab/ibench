@@ -21,6 +21,7 @@ import tresc.benchmark.Configuration;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
+import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Type;
@@ -156,7 +157,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void
-			visitSchemaElement(SMarkElement schemaElement, StringBuffer buf, int index) {
+			visitSchemaElement(SMarkElement schemaElement, String parentName, StringBuffer buf, int index) {
 		String label = schemaElement.getLabel();
 		Type type = schemaElement.getType();
 		
@@ -165,7 +166,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			generateComplexElementOpening(label, buf, label.equalsIgnoreCase("source") ? repElemCount : targetTableNumRows);
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
-						(SMarkElement) schemaElement.getSubElement(i), buf, i);
+						(SMarkElement) schemaElement.getSubElement(i), label, buf, i);
 			generateComplexElementClosing(buf);
 		}
 
@@ -179,7 +180,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 				// we need to sample from the list that is being generated now)
 				if ((srcConstraint == null) || referencesSameSet(srcConstraint)) {
 					Atomic atomicType = (Atomic) type;
-					generateAtomicElementConstruct(label, buf, atomicType, index);
+					generateAtomicElementConstruct(label, parentName, buf, atomicType, index);
 					coveredAtomicElements.add(schemaElement);
 				}
 				else {
@@ -237,7 +238,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
-						(SMarkElement) schemaElement.getSubElement(i), listBuf, i);
+						(SMarkElement) schemaElement.getSubElement(i), label, listBuf, i);
 
 			generateListClosing(listBuf);
 
@@ -280,8 +281,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		
 		for(int i = 0; i < keyAttrs.length; i++) {
 			keyAttrNames[i] = keyAttrs[i].getName();
-			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
-					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);
+			generateAtomicElementConstruct(keyAttrNames[i], null, listBuf, 
+					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);//TODO check
 		}
 
 		generateListClosing(listBuf);
@@ -318,7 +319,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			} 
 			// normal attr
 			else {
-				generateAtomicElementConstruct(a.getName(), listBuf, dt, index);
+				generateAtomicElementConstruct(a.getName(), null, listBuf, dt, index);//TODO check
 			}
 			index++;
 		}
@@ -376,15 +377,23 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		buf.append("</element>\n");
 	}
 
-	private void generateAtomicElementConstruct(String eltName,
+	private void generateAtomicElementConstruct(String eltName, String parentName,
 			StringBuffer buf, Atomic atomicType, int index) {
 		
-		String typeString;
+		String typeString = null;
+		log.error(parentName + "." + eltName);
+		log.error(index);
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else {
-			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+//		} else if (atomicType == Atomic.STRING)
+//		{
+//			typeString = "bench_string";
+//		}
+//		else if (atomicType instanceof DataType){
+			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(parentName)[index];
 		}
+		log.error(typeString);
 		
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
 				+ "\"/>\n"); 
@@ -397,7 +406,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(eltName)[index];
 		}
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
@@ -418,7 +427,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(eltName)[index];
 		}
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString

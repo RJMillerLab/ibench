@@ -25,4 +25,6 @@ public abstract class Atomic extends Type implements Visitable, Cloneable
     {
         return StringPrinter.StringPrinter;
     }
+    
+    
 }

@@ -30,4 +30,8 @@ public class Int extends Atomic implements Visitable, Cloneable
         return StringPrinter.StringPrinter;
     }
 
+    public String toString () {
+    	return "Atomic.INT";
+    }
+    
 }

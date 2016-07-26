@@ -3,6 +3,8 @@
  */
 package vtools.dataModel.types;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -15,15 +17,15 @@ import org.apache.log4j.Logger;
  */
 public class DataTypeHandler {
 	
+	static Logger log = Logger.getLogger(DataTypeHandler.class);
+	
 	private List<DataType> types;
 	private Map<String,DataType> nameToDTMap;
 	private double[] percentages;
 	private int numDTs;
 	private double[] probabilities;
-	private String[] typesNamesOrder;
-	
-	
-	static Logger log = Logger.getLogger(DataTypeHandler.class);
+//	private String[] typesNamesOrder;
+	private Map<String, String[]> typesNamesNewOrder;
 	
 	private static DataTypeHandler inst = new DataTypeHandler();
 	
@@ -32,7 +34,7 @@ public class DataTypeHandler {
 	}
 	
 	private DataTypeHandler () {
-		
+		typesNamesNewOrder = new HashMap<String,String[]>();
 	}
 	
 			
@@ -97,14 +99,21 @@ public class DataTypeHandler {
 		this.numDTs = numDTs;
 	}
 
-	public String[] getTypesNamesOrder() {
-		return typesNamesOrder;
-	}
+//	public String[] getTypesNamesOrder() {
+//		return typesNamesOrder;
+//	}
 
-	public void setTypesNamesOrder(String[] typesNamesOrder) {
-		this.typesNamesOrder = typesNamesOrder;
+//	public void setTypesNamesOrder(String[] typesNamesOrder) {
+//		this.typesNamesOrder = typesNamesOrder;
+//	}
+//	
+	public String[] getTypesNamesOrder (String tableName) {
+		return typesNamesNewOrder.get(tableName);
 	}
 	
-	
+	public void setTypesNamesOrder (String tableName, String[] order) {
+		typesNamesNewOrder.put(tableName, order);
+		log.error(tableName + ":" + Arrays.toString(order));
+	}
 	
 }

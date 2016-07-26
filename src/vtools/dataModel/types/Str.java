@@ -31,4 +31,8 @@ public class Str extends Atomic implements Visitable, Cloneable
         return StringPrinter.StringPrinter;
     }
 
+    public String toString () {
+    	return "Atomic.STRING";
+    }
+    
 }
