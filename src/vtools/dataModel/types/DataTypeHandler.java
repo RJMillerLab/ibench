@@ -99,6 +99,10 @@ public class DataTypeHandler {
 		this.numDTs = numDTs;
 	}
 
+	public List<CustomDistributionDataType> getAllCustomTypes () {
+		return null; //TODO 
+	}
+	
 //	public String[] getTypesNamesOrder() {
 //		return typesNamesOrder;
 //	}

@@ -12,6 +12,7 @@ import org.kohsuke.args4j.Option;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.util.PropertyWrapper;
 
+import toxgene.util.cdata.xmark.CSVHandler;
 import tresc.benchmark.Constants.DBOption;
 import tresc.benchmark.Constants.DESErrorType;
 import tresc.benchmark.Constants.DataGenType;
@@ -212,6 +213,11 @@ public class Configuration {
 		}
 		prop.resetPrefix();
 		
+		// setup data type information
+		List<DataType> types = new ArrayList<>();
+		double[] percentages = new double[DataTypeHandler.getInst().getNumDTs()];
+		Map<String, DataType> typesMap = new HashMap<>();
+
 		// Read user's input csv file
 		prop.setPrefix("CSVDataType");
 		List<File> files = new ArrayList<File>();
@@ -231,9 +237,6 @@ public class Configuration {
 		DataTypeHandler.getInst().setNumDTs(prop.getInt("NumDataType"));
 		DataType data;
 		
-		List<DataType> types = new ArrayList<>();
-		double[] percentages = new double[DataTypeHandler.getInst().getNumDTs()];
-		Map<String, DataType> typesMap = new HashMap<>();
 		
 		for (int i = 0; i < DataTypeHandler.getInst().getNumDTs(); i++) {
 			data = new DataType();

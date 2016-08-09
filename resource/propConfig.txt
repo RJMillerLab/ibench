@@ -50,6 +50,10 @@ DataType.0.DBType = TEXT
 
 CSVDataType.NumFiles = 1
 CSVDataType.0.File = zip_code_states.csv
+CSVDataType.0.AttrName = state
+CSVDataType.0.Percentage = 60.0
+CSVDataType.0.DBType = TEXT
+
 
 ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1

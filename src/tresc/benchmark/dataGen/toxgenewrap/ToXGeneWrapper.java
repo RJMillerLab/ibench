@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -17,6 +18,8 @@ import toxgene.interfaces.ToXgeneDocumentCollection;
 import toxgene.interfaces.ToXgeneReporter;
 import toxgene.interfaces.ToXgeneSession;
 import toxgene.util.ToXgeneReporterImpl;
+import vtools.dataModel.types.CustomDistributionDataType;
+import vtools.dataModel.types.DataTypeHandler;
 
 public class ToXGeneWrapper {
 
@@ -44,6 +47,12 @@ public class ToXGeneWrapper {
 
 	public void generate(String template, String outputPath) throws Exception {
 		generate (new File(template), outputPath);
+	}
+	
+	public void registerDT(CustomDistributionDataType dt) {
+		//TODO register with toxgene engine
+		//TODO call createDT of CSVHandler
+		//TODO register DT with engine
 	}
 	
 	public String generate(File template, String outputPath) throws Exception {
@@ -74,7 +83,12 @@ public class ToXGeneWrapper {
 			session.pomBufferSize = 80000 * 1024;
 			/* Initialize the engine */
 			tgEngine.startSession(session);
-
+			//TODO register new CSVDataTypes
+			List<CustomDistributionDataType> customDTs = DataTypeHandler.getInst().getAllCustomTypes();
+			for(CustomDistributionDataType dt: customDTs) {
+				registerDT(dt);
+			}
+			
 			/*
 			 * The progress() method sends a progress report message to the
 			 * message handler.
