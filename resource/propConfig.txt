@@ -43,11 +43,13 @@ DataType.0.ClassPath = toxgene.util.cdata.xmark.email
 DataType.0.Percentage = 60.0
 DataType.0.DBType = TEXT
 
-# DataType.1.Name = age
-# DataType.1.ClassPath = toxgene.util.cdata.xmark.age
-# DataType.1.Percentage = 20.0
-# DataType.1.DBType = INT8
+#DataType.1.Name = age
+#DataType.1.ClassPath = toxgene.util.cdata.xmark.age
+#DataType.1.Percentage = 20.0
+#DataType.1.DBType = INT8
 
+CSVDataType.NumFiles = 1
+CSVDataType.0.File = zip_code_states.csv
 
 ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1

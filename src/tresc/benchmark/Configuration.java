@@ -91,6 +91,8 @@ public class Configuration {
 	private int numLoadScenarios = 0;
 	private int[] numLoadScenarioInsts;
 	
+	private int numCSVTypesFiles = 0;
+
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 	
@@ -208,6 +210,20 @@ public class Configuration {
 			loadScenarios.add(scenFile);
 			loadScenarioNames.add(name);
 		}
+		prop.resetPrefix();
+		
+		// Read user's input csv file
+		prop.setPrefix("CSVDataType");
+		List<File> files = new ArrayList<File>();
+		setNumCSVTypesFiles(prop.getInt("NumFiles", 0));
+		for (int i = 0; i < getNumCSVTypesFiles(); i++) {
+			String fileName = prop.getProperty(i + ".File", "");
+			File csvFile = new File(fileName);
+			if (!csvFile.exists())
+				throw new Exception("csv file <" + csvFile + "> from <" + fileName + "> does not exist");
+			files.add(csvFile);
+		}
+		CSVHandler.getInst().setCSVFiles(files);
 		prop.resetPrefix();
 		
 		// Reading user's data type and distribution
@@ -804,5 +820,11 @@ public class Configuration {
 		return numLoadScenarioInsts;
 	}
 
+	private void setNumCSVTypesFiles(int numTypes) {
+		this.numCSVTypesFiles = numTypes;
+	}
 
+	private int getNumCSVTypesFiles() {
+		return numCSVTypesFiles;
+	}
 }
