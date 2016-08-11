@@ -484,12 +484,16 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void generateBenchStringType(StringBuffer buf) {
-		String[] benchStringTypes = {
-				"gibberish", "text", "xmrk_text", "email", "fname", 
-				"lname", "city", "country", "province", "domain", "word",
-				"multiword", "phonenumber"
-				};
+//		String[] benchStringTypes = {
+//				"gibberish", "text", "xmrk_text", "email", "fname", 
+//				"lname", "city", "country", "province", "domain", "word",
+//				"multiword", "phonenumber"
+//				};
 		
+		String[] benchStringTypes = new String[DataTypeHandler.getInst().getTypes().size()];
+		for (int k = 0; k < benchStringTypes.length; k++) {
+			benchStringTypes[k] = DataTypeHandler.getInst().getTypes().get(k).getName();
+		}
 		for (int i = 0; i < benchStringTypes.length; i++) {
 			buf.append("<simpleType name=\"bench_" + benchStringTypes[i] + "\">\n");
 			buf.append("<restriction base=\"string\">\n");
