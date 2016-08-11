@@ -49,11 +49,18 @@ DataType.0.DBType = TEXT
 #DataType.1.DBType = INT8
 
 CSVDataType.NumFiles = 1
-CSVDataType.0.File = zip_code_states.csv
+CSVDataType.0.File = zip_codes_states.csv
+
+CSVDataType.NumDataType = 2
+CSVDataType.0.File = zip_codes_states.csv
 CSVDataType.0.AttrName = state
-CSVDataType.0.Percentage = 60.0
+CSVDataType.0.Percentage = 20.0
 CSVDataType.0.DBType = TEXT
 
+CSVDataType.1.File = zip_codes_states.csv
+CSVDataType.1.AttrName = latitude
+CSVDataType.1.Percentage = 20.0
+CSVDataType.1.DBType = TEXT
 
 ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1

@@ -3,6 +3,7 @@
  */
 package vtools.dataModel.types;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -99,8 +100,14 @@ public class DataTypeHandler {
 		this.numDTs = numDTs;
 	}
 
-	public List<CustomDistributionDataType> getAllCustomTypes () {
-		return null; //TODO 
+	public List<CustomDataType> getAllCustomTypes () {
+		List<CustomDataType> list = new ArrayList<CustomDataType>();
+		for (DataType dt : types) {
+			if (dt instanceof CustomDataType) {
+				list.add((CustomDataType)dt);
+			}
+		}
+		return list;
 	}
 	
 //	public String[] getTypesNamesOrder() {

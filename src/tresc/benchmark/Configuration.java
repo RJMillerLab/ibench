@@ -1,6 +1,7 @@
 package tresc.benchmark;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
+import vtools.dataModel.types.CustomDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 
@@ -214,42 +216,57 @@ public class Configuration {
 		prop.resetPrefix();
 		
 		// setup data type information
-		List<DataType> types = new ArrayList<>();
-		double[] percentages = new double[DataTypeHandler.getInst().getNumDTs()];
-		Map<String, DataType> typesMap = new HashMap<>();
-
-		// Read user's input csv file
+		prop.setPrefix("DataType");
+		int numDT = prop.getInt("NumDataType");
+		prop.resetPrefix();
 		prop.setPrefix("CSVDataType");
+		int csvNumDT = prop.getInt("NumDataType");
+		
+		List<DataType> types = new ArrayList<>();
+		DataTypeHandler.getInst().setNumDTs(numDT + csvNumDT);
+		double[] percentages = new double[numDT + csvNumDT];
+		Map<String, DataType> typesMap = new HashMap<>();
+				
+		// Read user's input csv file
 		List<File> files = new ArrayList<File>();
 		setNumCSVTypesFiles(prop.getInt("NumFiles", 0));
 		for (int i = 0; i < getNumCSVTypesFiles(); i++) {
 			String fileName = prop.getProperty(i + ".File", "");
 			File csvFile = new File(fileName);
-			if (!csvFile.exists())
+			if (csvFile.exists() == false)
 				throw new Exception("csv file <" + csvFile + "> from <" + fileName + "> does not exist");
 			files.add(csvFile);
 		}
 		CSVHandler.getInst().setCSVFiles(files);
+		
+		CustomDataType customData;
+		for (int i = 0; i < csvNumDT; i++) {
+			customData = new CustomDataType();
+			customData.setName(prop.getProperty(i + ".AttrName")); 
+			customData.setClassPath(prop.getProperty(i + ".File"));
+			customData.setPercentage(prop.getFloat(i + ".Percentage"));
+			customData.setDbType(prop.getProperty(i + ".DBType"));
+			
+			percentages[i] = customData.getPercentage();
+			typesMap.put(customData.getName(), customData);
+			types.add(customData);	
+		}
 		prop.resetPrefix();
 		
-		// Reading user's data type and distribution
+		// Reading existing data types and distribution
 		prop.setPrefix("DataType");
-		DataTypeHandler.getInst().setNumDTs(prop.getInt("NumDataType"));
 		DataType data;
-		
-		
-		for (int i = 0; i < DataTypeHandler.getInst().getNumDTs(); i++) {
+				
+		for (int i = 0; i < numDT; i++) {
 			data = new DataType();
 			data.setName(prop.getProperty(i + ".Name")); 
 			data.setClassPath(prop.getProperty(i + ".ClassPath"));
 			data.setPercentage(prop.getFloat(i + ".Percentage"));
 			data.setDbType(prop.getProperty(i + ".DBType"));
 			
-			percentages[i] = data.getPercentage();
-			typesMap.put(data.getName(), data);
-			
-			types.add(data);
-			
+			percentages[csvNumDT + i] = data.getPercentage();
+			typesMap.put(data.getName(), data);	
+			types.add(data);	
 		}
 		DataTypeHandler.getInst().setNameToDTMap(typesMap);
 		DataTypeHandler.getInst().setTypes(types);

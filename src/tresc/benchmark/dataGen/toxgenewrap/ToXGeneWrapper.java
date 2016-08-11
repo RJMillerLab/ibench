@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -18,7 +19,9 @@ import toxgene.interfaces.ToXgeneDocumentCollection;
 import toxgene.interfaces.ToXgeneReporter;
 import toxgene.interfaces.ToXgeneSession;
 import toxgene.util.ToXgeneReporterImpl;
-import vtools.dataModel.types.CustomDistributionDataType;
+import toxgene.util.cdata.xmark.CSVDataType;
+import toxgene.util.cdata.xmark.CSVHandler;
+import vtools.dataModel.types.CustomDataType;
 import vtools.dataModel.types.DataTypeHandler;
 
 public class ToXGeneWrapper {
@@ -49,10 +52,10 @@ public class ToXGeneWrapper {
 		generate (new File(template), outputPath);
 	}
 	
-	public void registerDT(CustomDistributionDataType dt) {
-		//TODO register with toxgene engine
-		//TODO call createDT of CSVHandler
-		//TODO register DT with engine
+	public void registerDT(CustomDataType dt) throws IOException {
+		// register with toxgene engine
+		CSVDataType cdt = CSVHandler.getInst().createDT(new File(dt.getClassPath()), dt.getName());
+		tgEngine.registerCDataGenerator(cdt.getAttributeName(), cdt);
 	}
 	
 	public String generate(File template, String outputPath) throws Exception {
@@ -83,9 +86,10 @@ public class ToXGeneWrapper {
 			session.pomBufferSize = 80000 * 1024;
 			/* Initialize the engine */
 			tgEngine.startSession(session);
-			//TODO register new CSVDataTypes
-			List<CustomDistributionDataType> customDTs = DataTypeHandler.getInst().getAllCustomTypes();
-			for(CustomDistributionDataType dt: customDTs) {
+			
+			// register new CSVDataTypes
+			List<CustomDataType> customDTs = DataTypeHandler.getInst().getAllCustomTypes();
+			for(CustomDataType dt: customDTs) {
 				registerDT(dt);
 			}
 			
