@@ -25,5 +25,6 @@
    <dependency org="com.googlecode.jarjar" name="jarjar" rev="1.3"/> 
    <dependency org="mysql" name="mysql-connector-java" rev="6.0.5"/>
    <dependency org="args4j" name="args4j-site" rev="2.0.16" />
+   <dependency org="microsoft" name="sqljdbc" rev="1.2"/>
  </dependencies>
 </ivy-module>
