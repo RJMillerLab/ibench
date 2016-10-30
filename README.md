@@ -12,14 +12,22 @@ iBench is written in Java. To build the system you need [ant](http://ant.apache.
 ant
 ```
 
-in the main directory. This will build a jar file and create a build folder. The `mac` subfolder contains a script for running iBench on Mac OS or Linux. The `windows` subfolder contains a batch script for windows users.
+in the main directory. This will build a jar file and create a `build` folder. This folder contains two "fat" jar files `iBench.jar` and `confFileGenerator.jar`. `iBench.jar` is the actual iBench system while `confFileGenerator.jar` is a batch tool for creating configuration files for iBench from a template. Furthermore, this folder contains scripts for running iBench on Mac OS or Linux as well as windows.
 
 ### Getting Started ###
 
-The input to iBench is a configuration file (a text file with key value pairs, i.e., a Java Properties file) that determines the structure and characteristics of the scenario to be created. Some of the parameters control the structure of the generated schemas, mappings, and metadata, some parameters determine which mapping primitives the integration scenario should be composed of, and finally there are parameters that control what metadata is outputted and in which format.
+The input to iBench is a configuration file (a text file with key value pairs, i.e., a Java Properties file) that determines the structure and characteristics of the scenario to be created. Some of the parameters control the structure of the generated schemas, mappings, and metadata, some parameters determine which mapping primitives the integration scenario should be composed of, and finally there are parameters that control what metadata is producted and in which format.
 
 * The tech report mentioned below explains the available primitives and parameters
 * The [Wiki - Configuration File](https://bitbucket.org/ibencher/ibench/wiki/ConfigurationFile) also has a page describing the configuration file format and parameters 
+
+#### Usage Example
+
+
+```sh
+cd build
+./iBench.sh -c 
+```
 
 ### Example Configuration Files and UDPs ###
 
