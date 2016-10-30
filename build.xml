@@ -1,18 +1,15 @@
-<project name="iBench" default="Deploy" basedir=".">
+<project 
+	name="iBench" 
+	default="Deploy" 
+	basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant"
+	>
 	<description>
-
+iBench is a flexible metadata generator.
 	</description>
 
-	<!-- Internal Taskdefs -->
-
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-		<classpath>
-			<pathelement location="${basedir}/lib/ant-contrib.jar"/>
-		</classpath>
-	</taskdef>
 
 	<!-- Properties -->
-
 	<property name="binarydir" location="${basedir}/bin" />
 	<property name="builddir" location="${basedir}/build" />
 	<property name="buildresdir" location="${basedir}/buildResources" />
@@ -26,48 +23,90 @@
   	<property name="binwindir" location="${builddir}/win"/>
 	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
 	
+	<!-- Ivy -->
+    <property name="ivy.install.version" value="2.4.0" />
+    <condition property="ivy.home" value="${env.IVY_HOME}">
+      <isset property="env.IVY_HOME" />
+    </condition>
+    <property name="ivy.jar.dir" value="${librarydir}" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+		
 	<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />
   	<property name="mainClass" value="tresc.benchmark.iBench" />
   	<property name="expMainClass" value="tresc.benchmark.iBenchDriver" />
 
-	<!-- ClassPath Setup -->
 
-	<path id="libraries">
-		<fileset dir="${librarydir}"/>
-	</path>
-
-	<pathconvert property="jarClasspath" pathsep="    ">
-		<path>
-			<fileset dir="${librarydir}">
-				<exclude name="ant*.jar" />
-			</fileset>
-		</path>
-		<mapper>
-			<chainedmapper>
-				<flattenmapper/>
-				<globmapper from="*.jar" to="lib/*.jar" casesensitive="no"/>
-			</chainedmapper>
-		</mapper>
-	</pathconvert>
 
 	<property name="fullJarClasspath" value="${jarClasspath}   resource/    lib/" />
 
 	<!-- targets -->
+	<!-- Ivy -->
+    <target name="download-ivy" unless="offline">
 
-	<target name="Compile" depends="Clean">
-		<javac srcdir="${sourcedir}" destdir="${binarydir}" 
-			classpathref="libraries" debug="on" includeantruntime="false">
-			<compilerarg value="-Xlint:unchecked" />
-		</javac>
+        <mkdir dir="${ivy.jar.dir}"/>
+        <!-- download Ivy from web site so that it can be used even without any special installation -->
+        <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" 
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+
+    <target name="init-ivy" depends="download-ivy">
+      <!-- try to load ivy here from ivy home, in case the user has not already dropped
+              it into ant's lib dir (note that the latter copy will always take precedence).
+              We will not fail as long as local lib dir exists (it may be empty) and
+              ivy is in at least one of ant's lib dir or the local lib dir. -->
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+	
+	<target name="download-dependencies" depends="init-ivy">
+		 <ivy:resolve />
+		 <ivy:retrieve sync="false" type="jar" pattern="${librarydir}/[artifact].[ext]" />
 	</target>
-
-	<target name="Clean">
+	
+	<!-- Internal Taskdefs -->
+	<target name="setup-additional-anttasks" depends="download-dependencies">
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="${librarydir}/ant-contrib.jar"/>
+			</classpath>
+		</taskdef>
+	</target>
+	
+	<target name="Clean" depends="download-dependencies">
 		<delete includeemptydirs="true">
 			<fileset dir="${binarydir}" includes="**/*"/>
 		</delete>
 		<mkdir dir="${binarydir}" />
 		<mkdir dir="${builddir}" />
+		<!-- ClassPath Setup -->
+		<path id="libraries">
+			<fileset dir="${librarydir}"/>
+		</path>
+
+		<pathconvert property="jarClasspath" pathsep="    ">
+			<path>
+				<fileset dir="${librarydir}">
+					<exclude name="ant*.jar" />
+				</fileset>
+			</path>
+			<mapper>
+				<chainedmapper>
+					<flattenmapper/>
+					<globmapper from="*.jar" to="lib/*.jar" casesensitive="no"/>
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
 		<echo message="${jarClasspath}"/>
+	</target>
+	
+	<target name="Compile" depends="Clean">
+		<javac srcdir="${sourcedir}" destdir="${binarydir}" 
+			classpathref="libraries" debug="on" includeantruntime="false">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
 	</target>
 
 	<target name="Deploy" depends="Jar">
@@ -111,34 +150,37 @@
 	</target>
 
 	<target name="Jar" depends="Compile">
+		 <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
+		        classpath="${librarydir}/jarjar.jar"/>
 		<mkdir dir="${builddir}"/>
     	<mkdir dir="${binmacdir}"/>
 		<mkdir dir="${binwindir}"/>
-		<jar destfile="${binmacdir}/iBench.jar" basedir="${binarydir}">
+		<jarjar destfile="${binmacdir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${mainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
-		</jar>
+		</jarjar>
 		<copy todir="${builddir}" file="${binmacdir}/iBench.jar" />
-		<jar destfile="${binwindir}/iBench.jar" basedir="${binarydir}">
+		<jarjar destfile="${binwindir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${mainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
       		</manifest>
-		</jar>
+		</jarjar>
     	<echo message="${jarClasspath}" />
-		<jar destfile="${builddir}/iBench.jar" basedir="${binarydir}">
+		<jarjar destfile="${builddir}/iBench.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${expMainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
-		</jar>
+		</jarjar>
 	</target>
 
+	
 	<target name="GenerateJavaDoc">
 		<javadoc access="private" 
 			author="true" 
