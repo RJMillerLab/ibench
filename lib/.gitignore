@@ -1,0 +1,16 @@
+activation.jar
+ant.jar
+commons-primitives.jar
+geronimo-jms_1.1_spec.jar
+hamcrest-core.jar
+ivy.jar
+jarjar.jar
+javaee-api.jar
+junit.jar
+mail.jar
+mysql-connector-java.jar
+postgresql.jar
+stax-api.jar
+xml-apis.jar
+xml-resolver.jar
+xmlbeans.jar
