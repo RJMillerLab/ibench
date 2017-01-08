@@ -37,7 +37,7 @@ public class DB
             switch (dbms)
             {
             case DB.SQL_SERVER:
-                DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
+//                DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
                 dbString = "jdbc:microsoft:sqlserver://" + host + ":" + port + ";DatabaseName=" + dbName;
                 break;
             case DB.MYSQL:

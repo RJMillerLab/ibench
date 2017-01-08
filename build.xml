@@ -163,7 +163,6 @@ iBench is a flexible metadata generator.
 			</manifest>
 			<zipfileset src="${librarydir}/log4j.jar"/>
 			<zipfileset src="${librarydir}/args4j.jar"/>
-		  	<zipfileset src="${librarydir}/commons-primitives.jar"/>
 			<zipfileset src="${librarydir}/junit.jar"/>
 			<zipfileset src="${librarydir}/toxgene.jar"/>
 			<zipfileset src="${librarydir}/trampexgen.jar"/>
@@ -181,7 +180,6 @@ iBench is a flexible metadata generator.
 			</manifest>
 			<zipfileset src="${librarydir}/log4j.jar"/>
 			<zipfileset src="${librarydir}/args4j.jar"/>
-		  	<zipfileset src="${librarydir}/commons-primitives.jar"/>
 			<zipfileset src="${librarydir}/junit.jar"/>
 			<zipfileset src="${librarydir}/toxgene.jar"/>
 			<zipfileset src="${librarydir}/trampexgen.jar"/>
