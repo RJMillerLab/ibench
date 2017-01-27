@@ -1,4 +1,4 @@
-                                 Apache License
+ Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
@@ -186,7 +186,27 @@
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright {yyyy} {name of copyright owner}
+   Copyright 2016 Big Data Curation Lab, University of Toronto,
+   			 	  	  	   				 Patricia Arocena,
+										 Boris Glavic,
+										 Renee J. Miller
+
+   This software also contains code derived from STBenchmark as described in
+   with the permission of the authors:
+
+   Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+
+   This code was originally described in:
+
+   STBenchmark: Towards a Benchmark for Mapping Systems
+   Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+   PVLDB: Proceedings of the VLDB Endowment archive
+   2008, vol. 1, no. 1, pp. 230-244
+
+   The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+   Denilson Barbosa. The iBench distribution contains this jar file with the
+   permission of the author of ToxGene
+   (http://www.cs.toronto.edu/tox/toxgene/index.html)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
