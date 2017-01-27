@@ -1,4 +1,4 @@
-<img src="https://github.com/IITDBGroup/gprom/docs/images/ibenchlogo.png" alt="GProM Logo" style="width: 100px;"/>
+<img src="https://github.com/RJMillerLab/ibench/blob/master/docs/images/ibenchlogo.png" alt="GProM Logo" width="200"/>
 
 # iBench #
 
