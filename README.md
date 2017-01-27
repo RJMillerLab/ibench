@@ -1,4 +1,4 @@
-![Logo](http://www.cs.iit.edu/%7edbgroup/images/ibenchlogo.png)
+![Logo](<img src="https://github.com/IITDBGroup/gprom/docs/images/ibenchlogo.png" alt="GProM Logo" style="width: 100px;"/>)
 
 # iBench #
 
