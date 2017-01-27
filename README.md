@@ -1,3 +1,5 @@
+![Logo](http://www.cs.iit.edu/%7edbgroup/images/ibenchlogo.png)
+
 # iBench #
 
 iBench is a metadata generator for creating arbitrarily large and complex mappings, schemas and schema constraints. iBench can be used with a data generator to efficiently generate realistic data integration scenarios with varying degrees of size and complexity. iBench can be used to create benchmarks for different integration tasks including (virtual) data integration, data exchange, schema evolution, mapping operators like composition and inversion, and schema matching.
