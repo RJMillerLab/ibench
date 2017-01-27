@@ -26,16 +26,16 @@ The input to iBench is a configuration file (a text file with key value pairs, i
 
 ```sh
 cd build
-./iBench.sh -c 
+./iBench.sh -c CONFIG_FILE
 ```
 
 ### Example Configuration Files and UDPs ###
 
-We maintain a [public repository](https://bitbucket.org/ibencher/ibenchconfigurationsandscenarios) with example configuration files and integration scenarios (which can be used as UDPs). Additions to this repository from the community are highly encouraged.
+We maintain a [public repository](https://github.com/RJMillerLab/ibenchScenarioCollection) with example configuration files and integration scenarios (which can be used as UDPs). Additions to this repository from the community are highly encouraged.
 
 ### Wiki ###
 
-More detailed explanations of the configuration file format and how to use user-defined primitives (UDPs) will be added to the [Wiki](https://bitbucket.org/ibencher/ibench/wiki/Home) in the future.
+More detailed explanations of the configuration file format and how to use user-defined primitives (UDPs) will be added to the [Wiki](https://github.com/RJMillerLab/ibench/wiki) in the future.
 
 ### Publications ###
 
@@ -45,4 +45,5 @@ More detailed explanations of the configuration file format and how to use user-
 ### Contact ###
 
 * Patricia Arocena - Lead Data Architect at the University of Toronto Database Group
+* Boris Glavic - Professor at the Illinois Institute of Technology DBGroup
 * Renée J. Miller - Professor at the University of Toronto Database Group
