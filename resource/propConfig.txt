@@ -42,6 +42,7 @@ DataType.0.Name = email
 DataType.0.ClassPath = toxgene.util.cdata.xmark.email
 DataType.0.Percentage = 60.0
 DataType.0.DBType = TEXT
+# DataType.0.Parameters = Default = [0,MAX], 3: [1,3], 4: [5,6]
 
 # DataType.1.Name = age
 # DataType.1.ClassPath = toxgene.util.cdata.xmark.age
