@@ -108,6 +108,9 @@ public class Configuration {
 	@Option(name = "-maxNumericValue", usage = "maximal numeric value used")
 	int maxNumValue;
 
+	@Option(name = "-logconfig", usage = "path to log4j configuration file to use")
+	File logConfig = null;
+	
 	int namingPolicy;
 
 	List<File> loadScenarios;

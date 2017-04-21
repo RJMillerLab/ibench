@@ -39,6 +39,8 @@ package tresc.benchmark;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -195,7 +197,7 @@ public class iBench {
 	}
 
 	public static void main(String[] args) throws Exception {
-		PropertyConfigurator.configure("resource/log4jproperties.txt");
+		defaultLogConfig();
 
 		iBench benchmark = new iBench();
 		//MN added lines to make connection with random config file generator - 21 April 2014
@@ -207,9 +209,35 @@ public class iBench {
 		//_configuration.configurationFile = configFileName;
 		//MN end of adding some lines - 21 April 2014
 		benchmark.parseArgs(args);
+		benchmark.reconfigLog();
 		benchmark.run(args);
 	}
 
+	/**
+	 *  read log4j properties from user defined location or default location
+	 * @throws FileNotFoundException 
+	 */
+	public void reconfigLog() throws FileNotFoundException {
+		File location = _configuration.getLogConfig();
+		// user provided log location?
+		if (location != null) {
+			if (!location.exists())
+			{
+				System.err.printf("User provided log location does not exist: %s", location);
+				System.exit(1);
+			}
+			PropertyConfigurator.configure(new FileInputStream(location));
+		}
+		else {
+			defaultLogConfig();
+		}
+			
+	}
+	
+	public void defaultLogConfig() {
+		PropertyConfigurator.configure("resource/log4jproperties.txt");
+	}
+	
 	//MN prints results as mapjob, xsml and xsd files
 	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
 //	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
