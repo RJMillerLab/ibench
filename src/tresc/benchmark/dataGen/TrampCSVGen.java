@@ -119,6 +119,7 @@ public class TrampCSVGen extends ToXDataGenerator {
 	}
 
 	private void transform(String script, File instFile, File outFile) {
+		// ensure that Saxon is used
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		try {
 			Transformer transformer =

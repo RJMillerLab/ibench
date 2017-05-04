@@ -43,7 +43,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Level;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.OptionHandlerRegistry;
+import org.kohsuke.args4j.spi.OptionHandler;
 import org.vagabond.util.CollectionUtils;
 import org.vagabond.util.PropertyWrapper;
 
@@ -111,6 +114,9 @@ public class Configuration {
 	@Option(name = "-logconfig", usage = "path to log4j configuration file to use")
 	File logConfig = null;
 	
+	@Option(name = "-loglevel", usage ="set a global log level if no log4j configuration file is specificed")
+	Level loglevel = null;
+	
 	int namingPolicy;
 
 	List<File> loadScenarios;
@@ -121,6 +127,11 @@ public class Configuration {
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 
+	// register option handler for log level 
+	static {
+		OptionHandlerRegistry.getRegistry().registerHandler(Level.class, Log4jLevelOptionHandler.class);
+	}
+	
 	public Configuration() {
 		initArrays();
 		setDefaultConfiguration();
@@ -790,6 +801,14 @@ public class Configuration {
 
 	public int[] getNumLoadScenarioInsts() {
 		return numLoadScenarioInsts;
+	}
+
+	public File getLogConfig() {
+		return logConfig;
+	}
+
+	public void setLogConfig(File logConfig) {
+		this.logConfig = logConfig;
 	}
 
 }
