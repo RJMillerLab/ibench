@@ -14,3 +14,9 @@ stax-api.jar
 xml-apis.jar
 xml-resolver.jar
 xmlbeans.jar
+ant-contrib.jar
+args4j.jar
+javacc.jar
+log4j.jar
+saxon.jar
+xercesImpl.jar
