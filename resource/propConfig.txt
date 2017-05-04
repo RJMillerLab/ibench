@@ -31,36 +31,10 @@ Scenarios.VERTPARTITIONISAAUTHORITY = 0
 #ConfigOptions.TargetInclusionDependencyPerc = 0
 #ConfigOptions.TargetInclusionDependencyFKPerc = 100
 
-
-#LoadScenarios.NumScenarios = 1
-#LoadScenarios.0.File =  exampleScenarios/fh.xml
-#LoadScenarios.0.Name = simpleTest
-#LoadScenarios.0.Inst = 10
-
-DataType.NumDataType = 1
-DataType.0.Name = email
-DataType.0.ClassPath = toxgene.util.cdata.xmark.email
-DataType.0.Percentage = 60.0
-DataType.0.DBType = TEXT
-
-#DataType.1.Name = age
-#DataType.1.ClassPath = toxgene.util.cdata.xmark.age
-#DataType.1.Percentage = 20.0
-#DataType.1.DBType = INT8
-
-CSVDataType.NumFiles = 1
-CSVDataType.0.File = zip_codes_states.csv
-
-CSVDataType.NumDataType = 2
-CSVDataType.0.File = zip_codes_states.csv
-CSVDataType.0.AttrName = state
-CSVDataType.0.Percentage = 20.0
-CSVDataType.0.DBType = TEXT
-
-CSVDataType.1.File = zip_codes_states.csv
-CSVDataType.1.AttrName = latitude
-CSVDataType.1.Percentage = 20.0
-CSVDataType.1.DBType = TEXT
+# LoadScenarios.NumScenarios = 0
+# LoadScenarios.0.File =  exampleScenarios/fh.xml
+# LoadScenarios.0.Name = simpleTest
+# LoadScenarios.0.Inst = 10
 
 ConfigOptions.NumOfSubElements = 5
 ConfigOptions.NumOfNewAttributes = 1
@@ -72,6 +46,7 @@ ConfigOptions.NumOfJoinAttributes = 2
 ConfigOptions.JoinKind = 0 
 # Star is 0 , chain is 1
 
+
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 2
 RepElementCount = 100
@@ -79,9 +54,6 @@ MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
-TargetTableNumRows = 50
-ExchangeTargetData = true
-
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false

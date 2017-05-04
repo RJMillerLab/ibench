@@ -1,30 +1,67 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.xmlbeans.XmlOptions;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.OptionHandlerRegistry;
 import org.vagabond.benchmark.model.TrampXMLModel;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
-
-import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SchemaType;
 
-import tresc.benchmark.configGen.ConfigGenerator;
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.OutputOption;
-import tresc.benchmark.schemaGen.SourceInclusionDependencyGenerator;
-import tresc.benchmark.schemaGen.TargetInclusionDependencyGenerator;
 import vtools.dataModel.expression.Expression;
 import vtools.dataModel.expression.HTMLPresenter;
 import vtools.dataModel.expression.SPJQuery;
@@ -45,8 +82,15 @@ import vtools.xml.XSMLWriter;
 // PRG ADD Instance Variables and Public Methods to hold/get Metadata Stats - 15 MAR 2015
 
 public class iBench {
-	static Logger log = Logger.getLogger(iBench.class);
+	/**
+	 * 
+	 */
+	public static final String LOG4JPROPERIES_DEFAULT_LOCATION = "resource/log4jproperties.txt";
 
+	static Logger log = Logger.getLogger(iBench.class);
+	static Logger progressAndResultLog = Logger.getLogger("iBenchProgressAndResult");
+	
+	
 	private static Configuration _configuration;
 	// PRG ADD Instance Variable to hold the schema mapping currently being generated
 	private MappingScenario _scenario;
@@ -114,7 +158,7 @@ public class iBench {
 			if (log.isDebugEnabled()) {log.debug("Please specify command line arguments");};
 			parser.printUsage(System.err);
 			System.exit(1);
-		}
+		}		
 		
 		if (log.isDebugEnabled()) {log.debug("Command line args are: <" + LoggerUtil.arrayToString(args) + ">");};
 		try {
@@ -124,6 +168,12 @@ public class iBench {
 			LoggerUtil.logException(e, log);
 			parser.printUsage(System.err);
 			throw e;
+		}
+		
+		if (_configuration.isShowHelp())
+		{
+			parser.printUsage(System.err);
+			System.exit(0);
 		}
 	}
 
@@ -158,9 +208,8 @@ public class iBench {
 	}
 
 	public static void main(String[] args) throws Exception {
-		PropertyConfigurator.configure("resource/log4jproperties.txt");
-
 		iBench benchmark = new iBench();
+		benchmark.defaultLogConfig();
 		//MN added lines to make connection with random config file generator - 21 April 2014
 		//MN the following lines should be enabled - 26 April 2014
 		//ConfigGenerator cg = new ConfigGenerator();
@@ -170,9 +219,81 @@ public class iBench {
 		//_configuration.configurationFile = configFileName;
 		//MN end of adding some lines - 21 April 2014
 		benchmark.parseArgs(args);
+		benchmark.reconfigLog();
 		benchmark.run(args);
 	}
 
+	/**
+	 *  read log4j properties from user defined location or default location
+	 * @throws FileNotFoundException 
+	 */
+	public void reconfigLog() throws FileNotFoundException {
+		File location = _configuration.getLogConfig();
+		Level llevel = _configuration.loglevel;
+		Logger.getRootLogger().removeAllAppenders();
+		progressAndResultLog.setAdditivity(false);
+		
+		// user provided log location?
+		if (location != null) {
+			if (!location.exists())
+			{
+				System.err.printf("User provided log location does not exist: %s", location);
+				System.exit(1);
+			}
+			PropertyConfigurator.configure(new FileInputStream(location));
+			log.info("user has provided log level location: " +  location);
+		}
+		// user has given a global log level
+		else if (llevel != null) {
+			ConsoleAppender c = new ConsoleAppender();
+			c.setLayout(new PatternLayout("%-4r [%t] %-5p %l - %m%n"));
+			c.setThreshold(llevel);
+			c.activateOptions();
+			Logger.getRootLogger().addAppender(c);			
+		
+			log.info("user set log level to " + llevel.toString());
+		}
+		// do we have a log file at the default location
+		else if (new File(LOG4JPROPERIES_DEFAULT_LOCATION).exists())
+		{
+			defaultLogPropertyFileConfig();
+			log.info("use default log properties location " + LOG4JPROPERIES_DEFAULT_LOCATION);
+		}
+		// just set everything to error log level
+		else {
+			defaultLogConfig();
+		}
+		
+		outputLog(llevel == null ? Level.INFO : llevel);	
+	}
+	
+	public void outputLog(Level l) {
+		if (!progressAndResultLog.getAllAppenders().hasMoreElements()) {
+			progressAndResultLog.removeAllAppenders();
+			ConsoleAppender console = new ConsoleAppender(); 
+			String PATTERN = "%m%n";
+			console.setLayout(new PatternLayout(PATTERN)); 
+			console.setThreshold(l);
+			console.activateOptions();
+			progressAndResultLog.addAppender(console);
+		}
+	}
+	
+	public void defaultLogConfig() {
+		// standard appender is console
+		ConsoleAppender console = new ConsoleAppender(); 
+		String PATTERN = "%d [%p] %l %m%n";
+		console.setLayout(new PatternLayout(PATTERN)); 
+		console.setThreshold(Level.ERROR);
+		console.activateOptions();
+		Logger.getRootLogger().addAppender(console);
+	}
+	
+	public void defaultLogPropertyFileConfig() {
+		PropertyConfigurator.configure(LOG4JPROPERIES_DEFAULT_LOCATION);
+		log.debug("reading from default log configuration file");
+	}
+	
 	//MN prints results as mapjob, xsml and xsd files
 	//MN it also injects random source and target regular inclusion dependencies into mappings - 14 April 2014
 //	private void printResultsMapjobAndXSMLAndXSD(MappingScenario scenario, String S, String T,
@@ -325,7 +446,7 @@ public class iBench {
 								schemDir, mapjob + ".xsml")));
 				bufWriterXSML.write(bufXSML.toString());
 				bufWriterXSML.close();
-				System.out.print(".xsml file done!\n");
+				progressAndResultLog.info(".xsml file done!\n");
 			}
 			catch (Exception e) {
 				LoggerUtil.logException(e, log);
@@ -352,14 +473,14 @@ public class iBench {
 								schemDir, S)));
 				bufWriterXSD.write(bufSourceXSD.toString());
 				bufWriterXSD.close();
-				System.out.print("source .xsd file done!\n");
+				progressAndResultLog.info("source .xsd file done!");
 
 				bufWriterXSD =
 						new BufferedWriter(new FileWriter(new File(
 								schemDir, T.substring(0, T.length()-7) + "Trg.xsd")));
 				bufWriterXSD.write(bufTargetXSD.toString());
 				bufWriterXSD.close();
-				System.out.print("target .xsd file done!\n");
+				progressAndResultLog.info("target .xsd file done!\n");
 			}
 			catch (Exception e) {
 				LoggerUtil.logException(e, log);
@@ -547,7 +668,7 @@ public class iBench {
 			Modules.explGen.genearteExpls(_scenario, _configuration);
 		
 		// PRG ADD Benchmarking elapsed mapping generation time - 25 FEB 2015
-		System.out.println("\niBench - Mapping Generation Time: " + _elapsedTime + " seconds");
+		progressAndResultLog.info("\niBench - Mapping Generation Time: " + _elapsedTime + " seconds");
 		
 		// PRG ADD Computing Metadata Stats - 25 FEB 2015
 		computeMetadataStats();
@@ -597,16 +718,16 @@ public class iBench {
 		
 		double elapsedTime = 1. * (System.currentTimeMillis() - startTime) / 1000;
 		
-		System.out.println("\niBench - Stats Computation Time: " + elapsedTime + " seconds");
+		progressAndResultLog.info("\niBench - Stats Computation Time: " + elapsedTime + " seconds");
 		
-		System.out.println("\nSource Schema Stats: " + numOfSourceRelations + "(relations) " + numOfSourceAttributes + "(attributes)");
+		progressAndResultLog.info("\nSource Schema Stats: " + numOfSourceRelations + " (relations) " + numOfSourceAttributes + " (attributes)");
 		
-		System.out.println("\nTarget Schema Stats: " + numOfTargetRelations + "(relations) " + numOfTargetAttributes + "(attributes)");
+		progressAndResultLog.info("\nTarget Schema Stats: " + numOfTargetRelations + " (relations) " + numOfTargetAttributes + " (attributes)");
 		
-		System.out.println("\nTotal Schema Stats: " + (numOfSourceRelations+numOfTargetRelations) + "(relations) " 
-		                    + (numOfSourceAttributes+numOfTargetAttributes) + "(attributes)");
+		progressAndResultLog.info("\nTotal Schema Stats: " + (numOfSourceRelations+numOfTargetRelations) + " (relations) " 
+		                    + (numOfSourceAttributes+numOfTargetAttributes) + " (attributes)");
 		
-		System.out.println("\nTotal Mappings Stats: " + numOfTotalMappings + "(mappings)"); 		
+		progressAndResultLog.info("\nTotal Mappings Stats: " + numOfTotalMappings + " (mappings)"); 		
 		
 	}
 }
