@@ -88,7 +88,7 @@ public class ToXGeneWrapper {
 		
 		try {
 			tgEngine = new Engine();
-			tgEngine.setUseJarLoading(true);
+			tgEngine.setUseJarLoading(false);
 //			tgEngine.setJarPath(toxGenePath);
 //			boolean verbose = true; /*
 //									 * useful for debugging templates

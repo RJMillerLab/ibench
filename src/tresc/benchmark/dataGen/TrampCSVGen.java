@@ -41,6 +41,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import javax.xml.transform.Transformer;
@@ -57,8 +59,9 @@ import vtools.dataModel.schema.Schema;
 
 public class TrampCSVGen extends ToXDataGenerator {
 
-	private static final String XML_TO_CSV_XSLT_TEMPLATE_XML =
-			"resource/xmlToCSV_XSLT_template.xml";
+	private static final String XML_TO_CSV_XSLT_TEMPLATE_XML = "xmlToCSV_XSLT_template.xml"; 
+	private static final String XML_TO_CSV_XSLT_TEMPLATE_XML_PATH =
+			"resource/" + XML_TO_CSV_XSLT_TEMPLATE_XML;
 
 	Logger log = Logger.getLogger(TrampCSVGen.class);
 
@@ -84,9 +87,15 @@ public class TrampCSVGen extends ToXDataGenerator {
 
 	private void readTemplate() throws IOException {
 		StringBuffer result = new StringBuffer();
-		BufferedReader in =
-				new BufferedReader(new FileReader(XML_TO_CSV_XSLT_TEMPLATE_XML));
-
+		BufferedReader in;
+		
+		if (new File(XML_TO_CSV_XSLT_TEMPLATE_XML_PATH).exists()) {
+			in = new BufferedReader(new FileReader(XML_TO_CSV_XSLT_TEMPLATE_XML_PATH));
+		}
+		else {
+			InputStream rIn = this.getClass().getResourceAsStream(XML_TO_CSV_XSLT_TEMPLATE_XML);
+			in = new BufferedReader(new InputStreamReader(rIn));
+		}
 		while (in.ready()) {
 			result.append(in.readLine() + "\n");
 		}

@@ -22,6 +22,7 @@ iBench is a flexible metadata generator.
    	<property name="binmacdir" location="${builddir}/mac" />
   	<property name="binwindir" location="${builddir}/win"/>
 	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
+	<property name="xsltTemplate" location="${resourcedir}/xmlToCSV_XSLT_template.xml" />
 	
 	<!-- Ivy -->
     <property name="ivy.install.version" value="2.1.0" />
@@ -37,7 +38,7 @@ iBench is a flexible metadata generator.
 
 
 
-	<property name="fullJarClasspath" value="${jarClasspath}   resource/    lib/" />
+	<property name="fullJarClasspath" value="${jarClasspath}   resource/" />
 
 	<!-- targets -->
 	<!-- Ivy -->
@@ -76,10 +77,10 @@ iBench is a flexible metadata generator.
 	</target>
 	
 	<target name="Clean" depends="setup-additional-anttasks">
+		<mkdir dir="${binarydir}" />
 		<delete includeemptydirs="true">
 			<fileset dir="${binarydir}" includes="**/*"/>
 		</delete>
-		<mkdir dir="${binarydir}" />
 		<mkdir dir="${builddir}" />
 		<!-- ClassPath Setup -->
 		<path id="libraries">
@@ -116,23 +117,9 @@ iBench is a flexible metadata generator.
 		<copy todir="${builddir}" file="${buildresdir}/iBench.bat" /> 
 		<copy todir="${builddir}" file="${buildresdir}/configGen.bat" />
 		<copy todir="${builddir}" file="${buildresdir}/configGen.sh" />
-	<!--	<var name="deployto" value="${binmacdir}" />
-    	<antcall target="DeployOne" />
-    	<copy todir="${binmacdir}" file="${buildresdir}/iBench.sh" />
-    	
-		<var name="deployto" value="${binwindir}" />
-		<antcall target="DeployOne" />
-    	<copy todir="${binwindir}" file="${buildresdir}/iBench.bat" /> -->
 	</target>
 
 	<target name="DeployOne">
-		<!--		<mkdir dir="${deployto}/lib"/>
-		<copy todir="${deployto}/lib">
-			<fileset dir="${librarydir}">
-				<exclude name=".svn"/>
-			</fileset>
-		</copy>
-		<copy tofile="${deployto}/toxgene.jar" file="${librarydir}/toxgene.jar" /> -->
 		<mkdir dir="${deployto}/exampleScenarios" />
 		<copy todir="${deployto}/exampleScenarios">
 			<fileset dir="${examplescendir}">
@@ -163,16 +150,19 @@ iBench is a flexible metadata generator.
 			</manifest>
 			<zipfileset src="${librarydir}/log4j.jar"/>
 			<zipfileset src="${librarydir}/args4j.jar"/>
+			<zipfileset src="${librarydir}/commons-primitives.jar"/>
 			<zipfileset src="${librarydir}/junit.jar"/>
+			<zipfileset src="${librarydir}/saxon.jar"/>
 			<zipfileset src="${librarydir}/toxgene.jar"/>
 			<zipfileset src="${librarydir}/trampexgen.jar"/>
 			<zipfileset src="${librarydir}/xercesImpl.jar"/>
 			<zipfileset src="${librarydir}/xml-apis.jar"/>
 			<zipfileset src="${librarydir}/xml-resolver.jar"/>
 			<zipfileset src="${librarydir}/xmlbeans.jar"/>
+			<file file="${xsltTemplate}"/>
 		</jarjar>
-    	<echo message="${jarClasspath}" />
-		<jarjar destfile="${builddir}/confFileGenerator.jar" basedir="${binarydir}">
+	<!--	<echo message="${jarClasspath}" /> -->
+	<!--	<jarjar destfile="${builddir}/confFileGenerator.jar" basedir="${binarydir}">
 			<manifest>
 				<attribute name="Main-Class" value="${expMainClass}" />
 				<attribute name="Created-By" value="University of Toronto" />
@@ -180,6 +170,7 @@ iBench is a flexible metadata generator.
 			</manifest>
 			<zipfileset src="${librarydir}/log4j.jar"/>
 			<zipfileset src="${librarydir}/args4j.jar"/>
+			<zipfileset src="${librarydir}/commons-primitives.jar"/>
 			<zipfileset src="${librarydir}/junit.jar"/>
 			<zipfileset src="${librarydir}/toxgene.jar"/>
 			<zipfileset src="${librarydir}/trampexgen.jar"/>
@@ -187,7 +178,7 @@ iBench is a flexible metadata generator.
 			<zipfileset src="${librarydir}/xml-apis.jar"/>
 			<zipfileset src="${librarydir}/xml-resolver.jar"/>
 			<zipfileset src="${librarydir}/xmlbeans.jar"/>
-		</jarjar>
+		</jarjar> -->
 	</target>
 
 	

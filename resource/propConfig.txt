@@ -57,7 +57,7 @@ MappingLanguage = SOtgds
 
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
-OutputOption.Data = false
+OutputOption.Data = true
 OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true

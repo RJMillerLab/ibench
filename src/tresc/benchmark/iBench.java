@@ -158,7 +158,7 @@ public class iBench {
 			if (log.isDebugEnabled()) {log.debug("Please specify command line arguments");};
 			parser.printUsage(System.err);
 			System.exit(1);
-		}
+		}		
 		
 		if (log.isDebugEnabled()) {log.debug("Command line args are: <" + LoggerUtil.arrayToString(args) + ">");};
 		try {
@@ -168,6 +168,12 @@ public class iBench {
 			LoggerUtil.logException(e, log);
 			parser.printUsage(System.err);
 			throw e;
+		}
+		
+		if (_configuration.isShowHelp())
+		{
+			parser.printUsage(System.err);
+			System.exit(0);
 		}
 	}
 
