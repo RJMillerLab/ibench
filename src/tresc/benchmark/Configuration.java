@@ -333,7 +333,7 @@ public class Configuration {
 		
 		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
 		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
-		exchangeTargetData = prop.getBool("EnableTargetData", false);
+		enableTargetData = prop.getBool("EnableTargetData", false);
 
 		repElemCountValue = prop.getInt("RepElementCount", 1);
 		maxStringLength = prop.getInt("MaxStringLength", 10);
@@ -912,6 +912,14 @@ public class Configuration {
 
 	public void setShowHelp(boolean showHelp) {
 		this.showHelp = showHelp;
+	}
+
+	public boolean isEnableTargetData() {
+		return enableTargetData;
+	}
+
+	public void setEnableTargetData(boolean enableTargetData) {
+		this.enableTargetData = enableTargetData;
 	}
 
 }

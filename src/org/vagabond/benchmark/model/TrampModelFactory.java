@@ -299,15 +299,21 @@ public class TrampModelFactory {
 			p.addSourceRel(rel);
 		else
 			p.addTargetRel(rel);
-		//TODO register datatyeps
-//		DataTypeHandler.getInst().setTypesNamesOrder(name, dTypesNames);
+		
+		// determine data types
+		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, name))
+		{
+			String[] dTypesNames = new String[dTypes.length];
+			getDTNames(dTypes, dTypesNames);
+			DataTypeHandler.getInst().setTypesNamesOrder(source, name, dTypesNames);
+		}
 		return rel;
 	}
 	
 	public void addRelation(String hook, RelationType r, boolean source) {
 		String[] attr = new String[r.sizeOfAttrArray()];
 		String[] dTypes = new String[r.sizeOfAttrArray()];
-		
+
 		for(int i = 0; i < attr.length; i++) {
 			AttrDefType a = r.getAttrArray(i);
 			attr[i] = a.getName();
@@ -331,8 +337,20 @@ public class TrampModelFactory {
 				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
 			addDataElement(newR.getName());
 		
-		//TODO also register
-//		DataTypeHandler.getInst().setTypesNamesOrder(name, dTypesNames);
+		// also register data types (or generate them if the relation we are copying has not been registered yet)
+		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, r.getName())) {
+			String[] dTypesNames;
+			if (DataTypeHandler.getInst().hasTypesNamesOrder(!source, r.getName())) {
+				String[] origNames = DataTypeHandler.getInst().getTypesNamesOrder(!source, r.getName());
+				dTypesNames = Arrays.copyOf(origNames, origNames.length);
+			}
+			else {
+				dTypesNames = new String[dTypes.length];
+				getDTNames(dTypes, dTypesNames);
+			}
+			DataTypeHandler.getInst().setTypesNamesOrder(source, r.getName(), dTypes);
+		}
+		
 		if (source)
 			p.addSourceRel(r);
 		else
@@ -352,7 +370,15 @@ public class TrampModelFactory {
 		String[] dTypes = new String[attrs.length];
 		String[] dTypesNames = new String[attrs.length];
 		Arrays.fill(dTypes, null);
+
+		// determine data types
+		getDTNames(dTypes, dTypesNames);	
 		
+		DataTypeHandler.getInst().setTypesNamesOrder(source, name, dTypesNames);
+		return addRelation(hook, name, attrs, dTypes, source);
+	}
+
+	private void getDTNames (String[] dTypes, String[] dTypesNames) {
 		Atomic data;
 		
 		for (int k = 0; k < dTypes.length; k++) {
@@ -366,13 +392,9 @@ public class TrampModelFactory {
 				dTypesNames[k] = ((DataType)data).getName().toLowerCase(); // fill with email, phoneNumber, names, etc
 				dTypes[k] = DataTypeHandler.getInst().getDbType(dTypesNames[k]); // fill with DB types, text, int, etc
 			}
-
 		}
-		DataTypeHandler.getInst().setTypesNamesOrder(name, dTypesNames);
-		return addRelation(hook, name, attrs, dTypes, source);
-		
 	}
-
+	
 	@SuppressWarnings("incomplete-switch")
 	private void addDataElement(String name) {
 		if (!doc.getScenario().isSetData())

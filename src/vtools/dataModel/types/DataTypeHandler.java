@@ -112,13 +112,23 @@ public class DataTypeHandler {
 		return list;
 	}
 	
-	public String[] getTypesNamesOrder (String tableName) {
-		return typesNamesNewOrder.get(tableName);
+	public boolean hasTypesNamesOrder (boolean source, String tableName) {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+		return typesNamesNewOrder.containsKey(fullName);
 	}
 	
-	public void setTypesNamesOrder (String tableName, String[] order) {
-		typesNamesNewOrder.put(tableName, order);
-		log.info(tableName + ":" + Arrays.toString(order));
+	public String[] getTypesNamesOrder (boolean source, String tableName) {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+		return typesNamesNewOrder.get(fullName);
+	}
+	
+	public void setTypesNamesOrder (boolean source, String tableName, String[] order) {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+		typesNamesNewOrder.put(fullName, order);
+		log.info(fullName + ":" + Arrays.toString(order));
 	}
 	
 }

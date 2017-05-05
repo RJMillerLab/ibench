@@ -66,9 +66,13 @@ MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = SOtgds
 
+TargetTableNumRows = 50
+
+
 # Optional activation/deactivation of output options
 OutputOption.HTMLSchemas = false
 OutputOption.Data = true
+OutputOption.EnableTargetData = true
 OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
 OutputOption.TrampXML = true

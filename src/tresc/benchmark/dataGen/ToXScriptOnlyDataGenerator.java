@@ -419,7 +419,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		
 		String typeString = null;
 		log.debug(parentName + "." + eltName);
-		log.debug(index);
+		log.debug(index + " of type " + atomicType);
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else {
@@ -428,7 +428,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 //			typeString = "bench_string";
 //		}
 //		else if (atomicType instanceof DataType){
-			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(parentName)[index];
+			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(this.isSource(), parentName)[index];
 		}
 		log.debug(typeString);
 		
@@ -443,7 +443,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(eltName)[index];
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(this.isSource(), eltName)[index];
 		}
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
@@ -464,7 +464,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(eltName)[index];
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(this.isSource(), eltName)[index];
 		}
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
