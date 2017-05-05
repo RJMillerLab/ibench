@@ -418,8 +418,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			StringBuffer buf, Atomic atomicType, int index) {
 		
 		String typeString = null;
-		log.error(parentName + "." + eltName);
-		log.error(index);
+		log.debug(parentName + "." + eltName);
+		log.debug(index);
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else {
@@ -430,7 +430,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 //		else if (atomicType instanceof DataType){
 			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(parentName)[index];
 		}
-		log.error(typeString);
+		log.debug(typeString);
 		
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
 				+ "\"/>\n"); 

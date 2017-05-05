@@ -118,7 +118,7 @@ public class DataTypeHandler {
 	
 	public void setTypesNamesOrder (String tableName, String[] order) {
 		typesNamesNewOrder.put(tableName, order);
-		log.error(tableName + ":" + Arrays.toString(order));
+		log.info(tableName + ":" + Arrays.toString(order));
 	}
 	
 }
