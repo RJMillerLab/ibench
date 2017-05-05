@@ -93,7 +93,7 @@ public class TrampCSVGen extends ToXDataGenerator {
 			in = new BufferedReader(new FileReader(XML_TO_CSV_XSLT_TEMPLATE_XML_PATH));
 		}
 		else {
-			InputStream rIn = this.getClass().getResourceAsStream(XML_TO_CSV_XSLT_TEMPLATE_XML);
+			InputStream rIn = ClassLoader.getSystemResourceAsStream(XML_TO_CSV_XSLT_TEMPLATE_XML);
 			in = new BufferedReader(new InputStreamReader(rIn));
 		}
 		while (in.ready()) {

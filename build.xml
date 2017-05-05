@@ -17,6 +17,7 @@ iBench is a flexible metadata generator.
 	<property name="librarydir" location="${basedir}/lib" />
 	<property name="resourcedir" location="${basedir}/resource" />
 	<property name="examplescendir" location="${basedir}/exampleScenarios" />
+	<property name="exampleconfdir" location="${basedir}/exampleConfigurations" />
 <!--	<property name="exampledatadir" location="${basedir}/exampleData" /> -->
 	<property name="sourcedir" location="${basedir}/src" />
    	<property name="binmacdir" location="${builddir}/mac" />
@@ -126,14 +127,20 @@ iBench is a flexible metadata generator.
 				<exclude name=".svn"/>
 			</fileset>
 		</copy> 
+		<mkdir dir="${deployto}/exampleConfigurations" />
+		<copy todir="${deployto}/exampleConfigurations">
+			<fileset dir="${examplescendir}">
+				<exclude name=".svn"/>
+			</fileset>
+		</copy> 
 		<mkdir dir="${deployto}/resource"/>
-		<copy todir="${deployto}/resource">
+		<!-- <copy todir="${deployto}/resource">
 			<fileset dir="${resourcedir}">
 				<exclude name=".svn"/>
 				<exclude name="test/**"/>
 				<exclude name="log4jproperties.txt"/>
 			</fileset>
-		</copy>
+		</copy> -->
 		<copy todir="${deployto}/resource" 
 			file="${buildresdir}/log4jproperties.txt"/>
 	</target>

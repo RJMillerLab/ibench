@@ -1,8 +1,8 @@
 # Configuration File for iBench
 
 # Output Path Prefixes
-SchemaPathPrefix=gen
-InstancePathPrefix=gen
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
 
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 1
@@ -46,17 +46,6 @@ ConfigOptions.NumOfJoinAttributes = 2
 ConfigOptions.JoinKind = 0 
 # Star is 0 , chain is 1
 
-DataType.NumDataType = 2
-
-DataType.0.Name = email
-DataType.0.ClassPath = toxgene.util.cdata.xmark.email
-DataType.0.Percentage = 20.0
-DataType.0.DBType = TEXT
-
-DataType.1.Name = gpa
-DataType.1.ClassPath = toxgene.util.cdata.xmark.gpa
-DataType.1.Percentage = 60.0
-DataType.1.DBType = TEXT
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 2

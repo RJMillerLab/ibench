@@ -45,7 +45,7 @@ import tresc.benchmark.test.trampxml.AllTrampXMLTests;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	TestToxGene.class,
+	tresc.benchmark.test.toxgene.TestToxGene.class,
 	AllTrampXMLTests.class
 })
 public class AllTests {
