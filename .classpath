@@ -6,7 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
-	<classpathentry kind="lib" path="lib/ant-contrib.jar"/>
 	<classpathentry kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/args4j.jar"/>
 	<classpathentry kind="lib" path="lib/commons-primitives.jar"/>
@@ -14,7 +13,6 @@
 	<classpathentry kind="lib" path="lib/hamcrest-core.jar"/>
 	<classpathentry kind="lib" path="lib/ivy.jar"/>
 	<classpathentry kind="lib" path="lib/jarjar.jar"/>
-	<classpathentry kind="lib" path="lib/javacc.jar"/>
 	<classpathentry kind="lib" path="lib/javaee-api.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
@@ -23,12 +21,12 @@
 	<classpathentry kind="lib" path="lib/postgresql.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/stax-api.jar"/>
-	<classpathentry kind="lib" path="lib/toxgene.jar"/>
-	<classpathentry kind="lib" path="lib/trampexgen.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/toxgene.jar" sourcepath="/ToxGene"/>
+	<classpathentry kind="lib" path="lib/trampexgen.jar" sourcepath="/TrampExGen"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/xml-resolver.jar"/>
 	<classpathentry kind="lib" path="lib/xmlbeans.jar"/>
 	<classpathentry kind="lib" path="lib/saxon.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

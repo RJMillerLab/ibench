@@ -46,6 +46,17 @@ ConfigOptions.NumOfJoinAttributes = 2
 ConfigOptions.JoinKind = 0 
 # Star is 0 , chain is 1
 
+#DataType.NumDataType = 1
+
+DataType.0.Name = email
+DataType.0.ClassPath = toxgene.util.cdata.xmark.email
+DataType.0.Percentage = 60.0
+DataType.0.DBType = TEXT
+
+#DataType.1.Name = age
+#DataType.1.ClassPath = toxgene.util.cdata.xmark.age
+#DataType.1.Percentage = 20.0
+#DataType.1.DBType = INT8
 
 # Random number generator and max values, DataGenerator and MappingLang
 RandomSeed = 2

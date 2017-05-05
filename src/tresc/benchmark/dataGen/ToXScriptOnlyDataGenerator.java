@@ -520,18 +520,19 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	}
 
-	private void generateBenchStringType(StringBuffer buf) {
-//		String[] benchStringTypes = {
-//				"gibberish", "text", "xmrk_text", "email", "fname", 
-//				"lname", "city", "country", "province", "domain", "word",
-//				"multiword", "phonenumber"
-//				};
-		
-		String[] benchStringTypes = new String[DataTypeHandler.getInst().getTypes().size()];
-		for (int k = 0; k < benchStringTypes.length; k++) {
-			benchStringTypes[k] = DataTypeHandler.getInst().getTypes().get(k).getName();
+	private void generateBenchStringType(StringBuffer buf) {	
+		String[] benchStringTypes = new String[DataTypeHandler.getInst().getTypes().size() + 1];
+		benchStringTypes[0] = "bench_text";
+		for (int k = 1; k < benchStringTypes.length; k++) {
+			benchStringTypes[k] = DataTypeHandler.getInst().getTypes().get(k - 1).getName();
 		}
-		for (int i = 0; i < benchStringTypes.length; i++) {
+		buf.append("<simpleType name=\"bench_text\">\n");
+		buf.append("<restriction base=\"string\">\n");
+		buf.append("<tox-string type=\"multiword\" maxLength=\"" + maxStringLength
+				+ "\"/>\n");
+		buf.append("</restriction>\n");
+		buf.append("</simpleType>\n");
+		for (int i = 1; i < benchStringTypes.length; i++) {
 			buf.append("<simpleType name=\"bench_" + benchStringTypes[i] + "\">\n");
 			buf.append("<restriction base=\"string\">\n");
 			buf.append("<tox-string type=\"" + benchStringTypes[i] + "\" maxLength=\"" + maxStringLength
@@ -539,7 +540,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			buf.append("</restriction>\n");
 			buf.append("</simpleType>\n");
 		}
-
+		
 	}
 		
 	private void generateToxSampleConstruct(SMarkElement[][] constraint,

@@ -41,11 +41,14 @@ public class DataTypeHandler {
 			
 
 	public void setProbabilities() {
-		log.debug(percentages[0]);
+		if (percentages.length > 0)
+			log.debug(percentages[0]);
 		probabilities = new double[numDTs];
-		probabilities[0] = (percentages[0]/100.0);
-		for (int k = 1; k < numDTs; k++) {
-			probabilities[k] = probabilities[k-1] + (percentages[k]/100.0);
+		if (probabilities.length > 0) {
+			probabilities[0] = (percentages[0]/100.0);
+			for (int k = 1; k < numDTs; k++) {
+				probabilities[k] = probabilities[k-1] + (percentages[k]/100.0);
+			}
 		}
 	}
 	
@@ -56,7 +59,6 @@ public class DataTypeHandler {
 		for(int i = 0; i < probabilities.length; i++) {
 			if (r < probabilities[i])
 				return getTypes().get(i);
-
 		}
 		return Atomic.STRING;
 	}
@@ -110,14 +112,6 @@ public class DataTypeHandler {
 		return list;
 	}
 	
-//	public String[] getTypesNamesOrder() {
-//		return typesNamesOrder;
-//	}
-
-//	public void setTypesNamesOrder(String[] typesNamesOrder) {
-//		this.typesNamesOrder = typesNamesOrder;
-//	}
-//	
 	public String[] getTypesNamesOrder (String tableName) {
 		return typesNamesNewOrder.get(tableName);
 	}

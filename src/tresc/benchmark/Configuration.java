@@ -268,10 +268,10 @@ public class Configuration {
 		
 		// setup data type information
 		prop.setPrefix("DataType");
-		int numDT = prop.getInt("NumDataType");
+		int numDT = prop.getInt("NumDataType", 0);
 		prop.resetPrefix();
 		prop.setPrefix("CSVDataType");
-		int csvNumDT = prop.getInt("NumDataType");
+		int csvNumDT = prop.getInt("NumDataType", 0);
 		
 		List<DataType> types = new ArrayList<>();
 		DataTypeHandler.getInst().setNumDTs(numDT + csvNumDT);
