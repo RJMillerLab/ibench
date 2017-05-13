@@ -1,11 +1,50 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.dataGen.toxgenewrap;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -17,6 +56,10 @@ import toxgene.interfaces.ToXgeneDocumentCollection;
 import toxgene.interfaces.ToXgeneReporter;
 import toxgene.interfaces.ToXgeneSession;
 import toxgene.util.ToXgeneReporterImpl;
+import toxgene.util.cdata.xmark.CSVDataType;
+import toxgene.util.cdata.xmark.CSVHandler;
+import vtools.dataModel.types.CustomDataType;
+import vtools.dataModel.types.DataTypeHandler;
 
 public class ToXGeneWrapper {
 
@@ -46,12 +89,18 @@ public class ToXGeneWrapper {
 		generate (new File(template), outputPath);
 	}
 	
+	public void registerDT(CustomDataType dt) throws IOException {
+		// register with toxgene engine
+		CSVDataType cdt = CSVHandler.getInst().createDT(new File(dt.getClassPath()), dt.getName());
+		tgEngine.registerCDataGenerator(cdt.getAttributeName(), cdt);
+	}
+	
 	public String generate(File template, String outputPath) throws Exception {
 		String name = null;
 		
 		try {
 			tgEngine = new Engine();
-			tgEngine.setUseJarLoading(true);
+			tgEngine.setUseJarLoading(false);
 //			tgEngine.setJarPath(toxGenePath);
 //			boolean verbose = true; /*
 //									 * useful for debugging templates
@@ -74,7 +123,13 @@ public class ToXGeneWrapper {
 			session.pomBufferSize = 80000 * 1024;
 			/* Initialize the engine */
 			tgEngine.startSession(session);
-
+			
+			// register new CSVDataTypes
+			List<CustomDataType> customDTs = DataTypeHandler.getInst().getAllCustomTypes();
+			for(CustomDataType dt: customDTs) {
+				registerDT(dt);
+			}
+			
 			/*
 			 * The progress() method sends a progress report message to the
 			 * message handler.

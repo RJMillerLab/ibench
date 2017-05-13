@@ -83,4 +83,8 @@ public class DataType extends Atomic implements Visitable, Cloneable {
 	public void setDbType(String dbType) {
 		this.dbType = dbType;
 	}
+	
+	public String toString () {
+    	return "DataType: <" + name + "," + classPath + "," + percentage + "," + dbType + ">";
+    }
 }

@@ -3,6 +3,9 @@
  */
 package vtools.dataModel.types;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -15,15 +18,15 @@ import org.apache.log4j.Logger;
  */
 public class DataTypeHandler {
 	
+	static Logger log = Logger.getLogger(DataTypeHandler.class);
+	
 	private List<DataType> types;
 	private Map<String,DataType> nameToDTMap;
 	private double[] percentages;
 	private int numDTs;
 	private double[] probabilities;
-	private String[] typesNamesOrder;
-	
-	
-	static Logger log = Logger.getLogger(DataTypeHandler.class);
+//	private String[] typesNamesOrder;
+	private Map<String, String[]> typesNamesNewOrder;
 	
 	private static DataTypeHandler inst = new DataTypeHandler();
 	
@@ -32,17 +35,20 @@ public class DataTypeHandler {
 	}
 	
 	private DataTypeHandler () {
-		
+		typesNamesNewOrder = new HashMap<String,String[]>();
 	}
 	
 			
 
 	public void setProbabilities() {
-		log.debug(percentages[0]);
+		if (percentages.length > 0)
+			log.debug(percentages[0]);
 		probabilities = new double[numDTs];
-		probabilities[0] = (percentages[0]/100.0);
-		for (int k = 1; k < numDTs; k++) {
-			probabilities[k] = probabilities[k-1] + (percentages[k]/100.0);
+		if (probabilities.length > 0) {
+			probabilities[0] = (percentages[0]/100.0);
+			for (int k = 1; k < numDTs; k++) {
+				probabilities[k] = probabilities[k-1] + (percentages[k]/100.0);
+			}
 		}
 	}
 	
@@ -53,7 +59,6 @@ public class DataTypeHandler {
 		for(int i = 0; i < probabilities.length; i++) {
 			if (r < probabilities[i])
 				return getTypes().get(i);
-
 		}
 		return Atomic.STRING;
 	}
@@ -97,14 +102,33 @@ public class DataTypeHandler {
 		this.numDTs = numDTs;
 	}
 
-	public String[] getTypesNamesOrder() {
-		return typesNamesOrder;
-	}
-
-	public void setTypesNamesOrder(String[] typesNamesOrder) {
-		this.typesNamesOrder = typesNamesOrder;
+	public List<CustomDataType> getAllCustomTypes () {
+		List<CustomDataType> list = new ArrayList<CustomDataType>();
+		for (DataType dt : types) {
+			if (dt instanceof CustomDataType) {
+				list.add((CustomDataType)dt);
+			}
+		}
+		return list;
 	}
 	
+	public boolean hasTypesNamesOrder (boolean source, String tableName) {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+		return typesNamesNewOrder.containsKey(fullName);
+	}
 	
+	public String[] getTypesNamesOrder (boolean source, String tableName) {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+		return typesNamesNewOrder.get(fullName);
+	}
+	
+	public void setTypesNamesOrder (boolean source, String tableName, String[] order) {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+		typesNamesNewOrder.put(fullName, order);
+		log.info(fullName + ":" + Arrays.toString(order));
+	}
 	
 }

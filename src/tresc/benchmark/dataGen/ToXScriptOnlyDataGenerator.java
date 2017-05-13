@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.dataGen;
 
 import java.io.BufferedWriter;
@@ -21,6 +58,7 @@ import tresc.benchmark.Configuration;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
+import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 import vtools.dataModel.types.Set;
 import vtools.dataModel.types.Type;
@@ -156,7 +194,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	}
 
 	private void
-			visitSchemaElement(SMarkElement schemaElement, StringBuffer buf, int index) {
+			visitSchemaElement(SMarkElement schemaElement, String parentName, StringBuffer buf, int index) {
 		String label = schemaElement.getLabel();
 		Type type = schemaElement.getType();
 		
@@ -165,7 +203,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			generateComplexElementOpening(label, buf, label.equalsIgnoreCase("source") ? repElemCount : targetTableNumRows);
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
-						(SMarkElement) schemaElement.getSubElement(i), buf, i);
+						(SMarkElement) schemaElement.getSubElement(i), label, buf, i);
 			generateComplexElementClosing(buf);
 		}
 
@@ -179,7 +217,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 				// we need to sample from the list that is being generated now)
 				if ((srcConstraint == null) || referencesSameSet(srcConstraint)) {
 					Atomic atomicType = (Atomic) type;
-					generateAtomicElementConstruct(label, buf, atomicType, index);
+					generateAtomicElementConstruct(label, parentName, buf, atomicType, index);
 					coveredAtomicElements.add(schemaElement);
 				}
 				else {
@@ -237,7 +275,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 			for (int i = 0; i < schemaElement.size(); i++)
 				visitSchemaElement(
-						(SMarkElement) schemaElement.getSubElement(i), listBuf, i);
+						(SMarkElement) schemaElement.getSubElement(i), label, listBuf, i);
 
 			generateListClosing(listBuf);
 
@@ -280,8 +318,8 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		
 		for(int i = 0; i < keyAttrs.length; i++) {
 			keyAttrNames[i] = keyAttrs[i].getName();
-			generateAtomicElementConstruct(keyAttrNames[i], listBuf, 
-					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);
+			generateAtomicElementConstruct(keyAttrNames[i], null, listBuf, 
+					scen.getDocFac().getDT(keyAttrs[i].getDataType()), i);//TODO check
 		}
 
 		generateListClosing(listBuf);
@@ -318,7 +356,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 			} 
 			// normal attr
 			else {
-				generateAtomicElementConstruct(a.getName(), listBuf, dt, index);
+				generateAtomicElementConstruct(a.getName(), null, listBuf, dt, index);//TODO check
 			}
 			index++;
 		}
@@ -376,15 +414,23 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		buf.append("</element>\n");
 	}
 
-	private void generateAtomicElementConstruct(String eltName,
+	private void generateAtomicElementConstruct(String eltName, String parentName,
 			StringBuffer buf, Atomic atomicType, int index) {
 		
-		String typeString;
+		String typeString = null;
+		log.debug(parentName + "." + eltName);
+		log.debug(index + " of type " + atomicType);
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else {
-			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+//		} else if (atomicType == Atomic.STRING)
+//		{
+//			typeString = "bench_string";
+//		}
+//		else if (atomicType instanceof DataType){
+			typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(this.isSource(), parentName)[index];
 		}
+		log.debug(typeString);
 		
 		buf.append("<element name=\"" + f(eltName) + "\" type=\"" + typeString
 				+ "\"/>\n"); 
@@ -397,7 +443,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(this.isSource(), eltName)[index];
 		}
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
@@ -418,7 +464,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 		if (atomicType == Atomic.INTEGER) {
 			typeString = "bench_int";
 		} else if (atomicType == Atomic.STRING) {
-				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder()[index];
+				typeString = "bench_" + DataTypeHandler.getInst().getTypesNamesOrder(this.isSource(), eltName)[index];
 		}
 		
 		buf.append("<element name=\"" + eltName + "\" type=\"" + typeString
@@ -474,33 +520,27 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	}
 
-	private void generateBenchStringType(StringBuffer buf) {
-		
-		int size = DataTypeHandler.getInst().getTypes().size();
-		
-		String typeName;
-		boolean hasTextType = false;
-		
-		for (int i = 0; i < size; i++) {
-			typeName = DataTypeHandler.getInst().getTypes().get(i).getName();
-			hasTextType = (typeName.equals("text")) ? true : false;
-			buf.append("<simpleType name=\"bench_" + typeName + "\">\n");
+	private void generateBenchStringType(StringBuffer buf) {	
+		String[] benchStringTypes = new String[DataTypeHandler.getInst().getTypes().size() + 1];
+		benchStringTypes[0] = "bench_text";
+		for (int k = 1; k < benchStringTypes.length; k++) {
+			benchStringTypes[k] = DataTypeHandler.getInst().getTypes().get(k - 1).getName();
+		}
+		buf.append("<simpleType name=\"bench_text\">\n");
+		buf.append("<restriction base=\"string\">\n");
+		buf.append("<tox-string type=\"multiword\" maxLength=\"" + maxStringLength
+				+ "\"/>\n");
+		buf.append("</restriction>\n");
+		buf.append("</simpleType>\n");
+		for (int i = 1; i < benchStringTypes.length; i++) {
+			buf.append("<simpleType name=\"bench_" + benchStringTypes[i] + "\">\n");
 			buf.append("<restriction base=\"string\">\n");
-			buf.append("<tox-string type=\"" + typeName + "\" maxLength=\"" + maxStringLength
+			buf.append("<tox-string type=\"" + benchStringTypes[i] + "\" maxLength=\"" + maxStringLength
 					+ "\"/>\n");
 			buf.append("</restriction>\n");
 			buf.append("</simpleType>\n");
 		}
-		// default type
-		if (!hasTextType) {
-			buf.append("<simpleType name=\"bench_text\">\n");
-			buf.append("<restriction base=\"string\">\n");
-			buf.append("<tox-string type=\"text\" maxLength=\"" + maxStringLength
-					+ "\"/>\n");
-			buf.append("</restriction>\n");
-			buf.append("</simpleType>\n");
-		}
-
+		
 	}
 		
 	private void generateToxSampleConstruct(SMarkElement[][] constraint,

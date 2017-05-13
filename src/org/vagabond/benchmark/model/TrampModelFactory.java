@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.vagabond.benchmark.model;
 
 import java.util.ArrayList;
@@ -263,13 +300,20 @@ public class TrampModelFactory {
 		else
 			p.addTargetRel(rel);
 		
+		// determine data types
+		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, name))
+		{
+			String[] dTypesNames = new String[dTypes.length];
+			getDTNames(dTypes, dTypesNames);
+			DataTypeHandler.getInst().setTypesNamesOrder(source, name, dTypesNames);
+		}
 		return rel;
 	}
 	
 	public void addRelation(String hook, RelationType r, boolean source) {
 		String[] attr = new String[r.sizeOfAttrArray()];
 		String[] dTypes = new String[r.sizeOfAttrArray()];
-		
+
 		for(int i = 0; i < attr.length; i++) {
 			AttrDefType a = r.getAttrArray(i);
 			attr[i] = a.getName();
@@ -293,6 +337,20 @@ public class TrampModelFactory {
 				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
 			addDataElement(newR.getName());
 		
+		// also register data types (or generate them if the relation we are copying has not been registered yet)
+		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, r.getName())) {
+			String[] dTypesNames;
+			if (DataTypeHandler.getInst().hasTypesNamesOrder(!source, r.getName())) {
+				String[] origNames = DataTypeHandler.getInst().getTypesNamesOrder(!source, r.getName());
+				dTypesNames = Arrays.copyOf(origNames, origNames.length);
+			}
+			else {
+				dTypesNames = new String[dTypes.length];
+				getDTNames(dTypes, dTypesNames);
+			}
+			DataTypeHandler.getInst().setTypesNamesOrder(source, r.getName(), dTypes);
+		}
+		
 		if (source)
 			p.addSourceRel(r);
 		else
@@ -312,7 +370,15 @@ public class TrampModelFactory {
 		String[] dTypes = new String[attrs.length];
 		String[] dTypesNames = new String[attrs.length];
 		Arrays.fill(dTypes, null);
+
+		// determine data types
+		getDTNames(dTypes, dTypesNames);	
 		
+		DataTypeHandler.getInst().setTypesNamesOrder(source, name, dTypesNames);
+		return addRelation(hook, name, attrs, dTypes, source);
+	}
+
+	private void getDTNames (String[] dTypes, String[] dTypesNames) {
 		Atomic data;
 		
 		for (int k = 0; k < dTypes.length; k++) {
@@ -326,13 +392,9 @@ public class TrampModelFactory {
 				dTypesNames[k] = ((DataType)data).getName().toLowerCase(); // fill with email, phoneNumber, names, etc
 				dTypes[k] = DataTypeHandler.getInst().getDbType(dTypesNames[k]); // fill with DB types, text, int, etc
 			}
-
 		}
-		DataTypeHandler.getInst().setTypesNamesOrder(dTypesNames);
-		return addRelation(hook, name, attrs, dTypes, source);
-		
 	}
-
+	
 	@SuppressWarnings("incomplete-switch")
 	private void addDataElement(String name) {
 		if (!doc.getScenario().isSetData())

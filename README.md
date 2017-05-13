@@ -1,3 +1,5 @@
+<img src="https://github.com/RJMillerLab/ibench/blob/master/docs/images/ibenchlogo.png" alt="GProM Logo" width="200"/>
+
 # iBench #
 
 iBench is a metadata generator for creating arbitrarily large and complex mappings, schemas and schema constraints. iBench can be used with a data generator to efficiently generate realistic data integration scenarios with varying degrees of size and complexity. iBench can be used to create benchmarks for different integration tasks including (virtual) data integration, data exchange, schema evolution, mapping operators like composition and inversion, and schema matching.
@@ -12,22 +14,30 @@ iBench is written in Java. To build the system you need [ant](http://ant.apache.
 ant
 ```
 
-in the main directory. This will build a jar file and create a build folder. The `mac` subfolder contains a script for running iBench on Mac OS or Linux. The `windows` subfolder contains a batch script for windows users.
+in the main directory. This will build a jar file and create a `build` folder. This folder contains two "fat" jar files `iBench.jar` and `confFileGenerator.jar`. `iBench.jar` is the actual iBench system while `confFileGenerator.jar` is a batch tool for creating configuration files for iBench from a template. Furthermore, this folder contains scripts for running iBench on Mac OS or Linux as well as windows.
 
 ### Getting Started ###
 
-The input to iBench is a configuration file (a text file with key value pairs, i.e., a Java Properties file) that determines the structure and characteristics of the scenario to be created. Some of the parameters control the structure of the generated schemas, mappings, and metadata, some parameters determine which mapping primitives the integration scenario should be composed of, and finally there are parameters that control what metadata is outputted and in which format.
+The input to iBench is a configuration file (a text file with key value pairs, i.e., a Java Properties file) that determines the structure and characteristics of the scenario to be created. Some of the parameters control the structure of the generated schemas, mappings, and metadata, some parameters determine which mapping primitives the integration scenario should be composed of, and finally there are parameters that control what metadata is producted and in which format.
 
 * The tech report mentioned below explains the available primitives and parameters
-* The [Wiki - Configuration File](https://bitbucket.org/ibencher/ibench/wiki/ConfigurationFile) also has a page describing the configuration file format and parameters 
+* The [Wiki - Configuration File](https://github.com/RJMillerLab/ibench/wiki/ConfigurationFile) also has a page describing the configuration file format and parameters 
+
+#### Usage Example
+
+
+```sh
+cd build
+./iBench.sh -c CONFIG_FILE
+```
 
 ### Example Configuration Files and UDPs ###
 
-We maintain a [public repository](https://bitbucket.org/ibencher/ibenchconfigurationsandscenarios) with example configuration files and integration scenarios (which can be used as UDPs). Additions to this repository from the community are highly encouraged.
+We maintain a [public repository](https://github.com/RJMillerLab/ibenchScenarioCollection) with example configuration files and integration scenarios (which can be used as UDPs). Additions to this repository from the community are highly encouraged.
 
 ### Wiki ###
 
-More detailed explanations of the configuration file format and how to use user-defined primitives (UDPs) will be added to the [Wiki](https://bitbucket.org/ibencher/ibench/wiki/Home) in the future.
+More detailed explanations of the configuration file format and how to use user-defined primitives (UDPs) will be added to the [Wiki](https://github.com/RJMillerLab/ibench/wiki) in the future.
 
 ### Publications ###
 
@@ -37,4 +47,5 @@ More detailed explanations of the configuration file format and how to use user-
 ### Contact ###
 
 * Patricia Arocena - Lead Data Architect at the University of Toronto Database Group
+* Boris Glavic - Professor at the Illinois Institute of Technology DBGroup
 * Renée J. Miller - Professor at the University of Toronto Database Group

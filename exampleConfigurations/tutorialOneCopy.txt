@@ -1,0 +1,71 @@
+# Configuration File for iBench
+
+# Output Path Prefixes
+SchemaPathPrefix=out0
+InstancePathPrefix=out0
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 1
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 0
+Scenarios.MERGING = 0
+Scenarios.FUSION = 0
+Scenarios.SELFJOINS = 0
+Scenarios.VERTPARTITION = 0
+Scenarios.ADDATTRIBUTE = 0
+Scenarios.DELATTRIBUTE = 0
+Scenarios.ADDDELATTRIBUTE = 0
+Scenarios.VERTPARTITIONISA = 0
+Scenarios.VERTPARTITIONHASA = 0
+Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.MERGEADD = 0
+Scenarios.VERTPARTITIONISAAUTHORITY = 0
+
+
+#ConfigOptions.ReuseSourcePerc = 0
+#ConfigOptions.ReuseTargetPerc = 0
+#ConfigOptions.NoReuseScenPerc = 100
+
+#ConfigOptions.SourceInclusionDependencyPerc = 0
+#ConfigOptions.SourceInclusionDependencyFKPerc = 100
+#ConfigOptions.TargetInclusionDependencyPerc = 0
+#ConfigOptions.TargetInclusionDependencyFKPerc = 100
+
+# LoadScenarios.NumScenarios = 0
+# LoadScenarios.0.File =  exampleScenarios/fh.xml
+# LoadScenarios.0.Name = simpleTest
+# LoadScenarios.0.Inst = 10
+
+ConfigOptions.NumOfSubElements = 5
+ConfigOptions.NumOfNewAttributes = 1
+ConfigOptions.NumOfAttributesToDelete = 1
+ConfigOptions.JoinSize = 2
+ConfigOptions.NumOfParamsInFunctions = 1
+ConfigOptions.PrimaryKeySize = 1
+ConfigOptions.NumOfJoinAttributes = 2
+ConfigOptions.JoinKind = 0 
+# Star is 0 , chain is 1
+
+
+# Random number generator and max values, DataGenerator and MappingLang
+RandomSeed = 2
+RepElementCount = 100
+MaxStringLength = 100
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+MappingLanguage = SOtgds
+
+# Optional activation/deactivation of output options
+OutputOption.HTMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = true
+OutputOption.HTMLMapping = false
+OutputOption.TrampXML = true
+OutputOption.Clio = true
+
+# Optional activation/deactivation of output parts of the Tramp XML document
+TrampXMLOutput.Correspondences = true
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = false

@@ -1,0 +1,1 @@
+java -Xmx4096m -classpath . -jar confFileGenerator.jar
