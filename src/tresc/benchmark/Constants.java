@@ -98,7 +98,7 @@ public class Constants
 			= new HashMap<ParameterName, Integer> ();
     
     static {
-    	defaultParameterValues.put(ParameterName.NumOfSubElements, 3);
+    	defaultParameterValues.put(ParameterName.NumOfSubElements, 5);
     	defaultParameterValues.put(ParameterName.NestingDepth, 1);
     	defaultParameterValues.put(ParameterName.JoinSize, 2);
     	defaultParameterValues.put(ParameterName.JoinKind, 0);
@@ -110,11 +110,11 @@ public class Constants
     	defaultParameterValues.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceSkolemPerc, 0);
-    	defaultParameterValues.put(ParameterName.SourceFDPerc, 40);
+    	defaultParameterValues.put(ParameterName.SourceFDPerc, 0);
     	defaultParameterValues.put(ParameterName.PrimaryKeyFDs, 1);
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
-    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 2);
+    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 1);
     	
     	defaultParameterValues.put(ParameterName.SourceInclusionDependencyPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceInclusionDependencyFKPerc, 0);

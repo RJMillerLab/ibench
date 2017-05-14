@@ -1,13 +1,13 @@
 ################################################################################
 #						   IBENCH CONFIGURATION FILE						   #
 ################################################################################
-# This is a Java properties file, i.e., options are represented as key value
-# pairs separated by "=". Comments start with a "hash" character (like this
-# line).
+# This is a Java properties file, i.e., options are represented as key-value
+# pairs separated by "=". Comment lines start with a "hash" character (like
+# this line).
 ################################################################################
 
 ################################################################################
-# Output Path Prefixes
+# Output path prefixes and file names
 ################################################################################
 
 # relative path for storing metadata related files
@@ -15,6 +15,13 @@ SchemaPathPrefix=templateOut
 
 # relative path for storing data files
 InstancePathPrefix=templateOut			
+
+# Source and target schema xml file name
+# SourceSchema = sourceSchema.xml
+# TargetSchema = targetSchema.xml
+
+# Name for source instance XML file
+# SourceInstance=sourceInst.xml
 
 ################################################################################
 # Number of instances for each primitive type. A primitive is a mapping template
@@ -37,7 +44,7 @@ Scenarios.MERGING = 0
 # Inverse of horizontal partitioning, i.e., a union of multiple source fragments
 Scenarios.FUSION = 0
 
-# Copy a source relation that has a foreign key to itself (e.g., employee with )
+# Copy a source relation that has a foreign key to itself (e.g., employee with a foreign key mapping each employee to their manager)
 Scenarios.SELFJOINS = 0
 
 # Vertically partition a source relation
@@ -65,7 +72,7 @@ Scenarios.VERTPARTITIONNTOM = 0
 Scenarios.MERGEADD = 0
 
 # Vertically partitions a source relation that corresponds to several independent star-shaped relationships
-Scenarios.VERTPARTITIONISAAUTHORITY = 0	
+Scenarios.VERTPARTITIONISAAUTHORITY = 0
 
 ################################################################################
 # ConfigOptions, configuration options that control the metadata and data
@@ -112,7 +119,7 @@ ConfigOptions.JoinKind = 0
 #ConfigOptions.NoReuseScenPerc = 100					
 
 ########################################
-#
+# 
 
 # Determines how parameters of skolem functions are chosen: 
 #ConfigOptions.SkolemKind = 1						
@@ -170,27 +177,50 @@ ConfigOptions.JoinKind = 0
 # User defined primitives (UDP) specification. 
 ################################################################################
 
+# The number of user defined primitives to be loaded
 #LoadScenarios.NumScenarios = 1
 
+########################################
+# For each user defined primitive, three parameters prefixed with LoadScenarios.i for the ith UDP
+# starting from 0. See exampleScenarios/fh.xml for an example of a UDP
+
+########################################
+# the TrampXML format file storing the schema, correspondences, and mappings defining the UDP
 #LoadScenarios.0.File =  exampleScenarios/fh.xml
+# A user-defined name for the UDP
 #LoadScenarios.0.Name = simpleTest
+# how many instances should be created
 #LoadScenarios.0.Inst = 10
 
 ################################################################################
 # User defined data types, i.e., value generator
-# Upfront the user needs to specify the number of such data types
+#
+# The user needs to specify the number of such data types.
 # For each data type specify its name (any name would do), the fully classified
-# class implementing the value generator (a subclass of ToxGene's ), and the
-# chance of the value generator being picked for any given attribute in the
+# class implementing the value generator (a subclass of ToxGene's ToXgeneCdataGenerator), 
+# and the chance of the value generator being picked for any given attribute in the
 # generated source schema
 ################################################################################
 
+# number of user-defined datatypes to be used
 #DataType.NumDataType = 1
 
+########################################
+# For each user defined data type (UDT), four parameters need to be provided. 
+# A user-defined ToXgeneCdataGenerator needs to implement interface ToXgeneCdataGenerator and
+# has to have a constructor without parameters.
+
+########################################
+# name for the datatype, choosen by user
 #DataType.0.Name = email
+# class implementing a value generator for this datatype
 #DataType.0.ClassPath = toxgene.util.cdata.xmark.email
+# the percentage of attributes that should use this DT (this is interpreted as a probability)
 #DataType.0.Percentage = 60.0
+# when loading generated data into a database, use this SQL datatype for the column of this UDT
 #DataType.0.DBType = TEXT
+# if the datatype implementation is provided as a separate jar file, the path to this jar file
+#DataType.0.JarFile = exampleDataTypes/mydt.jar
 
 #DataType.1.Name = age
 #DataType.1.ClassPath = toxgene.util.cdata.xmark.age
@@ -199,21 +229,38 @@ ConfigOptions.JoinKind = 0
 
 ################################################################################
 # CSV Data Types
+#
+# iBench also supports UDTs which are based on data given a CSV file. The
+# user specifies a list of CSV files. The values in each column of a file
+# in this list can be turned in to UDT. iBench reads the bag of values from 
+# the column and interprets it as a probability distribution. 
+#
+# For instance, if the values in a column are ( 0, 1, 1, 2, 2 ) then values
+# for the corresponding data type are chosen as follows:
+# 		0 => with probability 0.2
+# 		1 => with probability 0.4
+# 		2 => with probability 0.4
+#  
 ################################################################################
 
-CSVDataType.NumFiles = 1
-CSVDataType.0.File = zip_codes_states.csv
+# number of CSV files to load
+# CSVDataType.NumFiles = 1
 
-CSVDataType.NumDataType = 2
-CSVDataType.0.File = zip_codes_states.csv
-CSVDataType.0.AttrName = state
-CSVDataType.0.Percentage = 20.0
-CSVDataType.0.DBType = TEXT
+# the path to the ith CSV file
+# CSVDataType.0.File = zip_codes_states.csv
 
-CSVDataType.1.File = zip_codes_states.csv
-CSVDataType.1.AttrName = latitude
-CSVDataType.1.Percentage = 20.0
-CSVDataType.1.DBType = TEXT
+# number of datatypes to define based on the CSV files
+# CSVDataType.NumDataType = 2
+
+########################################
+# CSV file this UDT is coming from
+# CSVDataType.0.File = zip_codes_states.csv
+# Name of the attribute from which the values are read 
+# CSVDataType.0.AttrName = state
+# the percentage of attributes that should use this DT (this is interpreted as a probability)
+# CSVDataType.0.Percentage = 20.0
+# when loading generated data into a database, use this SQL datatype for the column of this UDT
+# CSVDataType.0.DBType = TEXT
 
 
 ################################################################################
@@ -221,7 +268,7 @@ CSVDataType.1.DBType = TEXT
 # Random number generator and max values, DataGenerator and MappingLang
 ################################################################################
 
-# Seed for the random number generator, use for repeatability
+# Seed for the random number generator, used for repeatability
 RandomSeed = 2
 
 # Number of tuples per relation, if data is generated

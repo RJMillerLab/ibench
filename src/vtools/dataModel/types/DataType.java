@@ -1,14 +1,17 @@
 package vtools.dataModel.types;
 
+import java.io.File;
+
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 
 public class DataType extends Atomic implements Visitable, Cloneable {
 	
-	private String name;
-	private String classPath;
-	private float percentage;
-	private String dbType;
+	protected String name;
+	protected String classPath;
+	protected float percentage;
+	protected String dbType;
+	protected String jarPath;
 
 	public DataType(String name, String classPath, float percentage, String dbType) {
 		this.name = name;
@@ -87,4 +90,12 @@ public class DataType extends Atomic implements Visitable, Cloneable {
 	public String toString () {
     	return "DataType: <" + name + "," + classPath + "," + percentage + "," + dbType + ">";
     }
+
+	public String getJarPath() {
+		return jarPath;
+	}
+
+	public void setJarPath(String jarPath) {
+		this.jarPath = jarPath;
+	}
 }

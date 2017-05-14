@@ -314,7 +314,7 @@ public class Configuration {
 			data.setClassPath(prop.getProperty(i + ".ClassPath"));
 			data.setPercentage(prop.getFloat(i + ".Percentage"));
 			data.setDbType(prop.getProperty(i + ".DBType"));
-			
+			data.setJarPath(prop.getProperty(i + ".JarPath"));
 			percentages[csvNumDT + i] = data.getPercentage();
 			typesMap.put(data.getName(), data);	
 			types.add(data);	
