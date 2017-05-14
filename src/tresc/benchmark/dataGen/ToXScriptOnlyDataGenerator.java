@@ -100,7 +100,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	protected void initFromConfig() {
 		super.initFromConfig();
 		documentName = config.getSourceDocumentName();
-		outputPath = Configuration.getInstancePathPrefix();
+		outputPath = config.getInstancePathPrefix();
 		template = config.getSourceInstanceFile();
 	}
 
@@ -162,7 +162,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		BufferedWriter bufWriter =
 				new BufferedWriter(new FileWriter(new File(
-						Configuration.getInstancePathPrefix(),
+						config.getInstancePathPrefix(),
 						config.getSourceInstanceFile())));
 		bufWriter.write(templateBuffer.toString());
 		bufWriter.close();

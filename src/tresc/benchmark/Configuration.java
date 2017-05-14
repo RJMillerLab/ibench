@@ -105,9 +105,9 @@ public class Configuration {
 	String schemaFile;
 
 	@Option(name = "-schemaPrefix", usage = "schema path prefix")
-	static String schemaPathPrefix = "./out";
+	String schemaPathPrefix = "./out";
 	@Option(name = "-instancePrefix", usage = "instance path prefix")
-	static String instancePathPrefix = "./out";
+	String instancePathPrefix = "./out";
 
 	@Option(name = "-p", usage = "Read configuration from this property file")
 	String propertyFileName = null;
@@ -726,11 +726,11 @@ public class Configuration {
 		return schemaPathPrefix;
 	}
 
-	public static String getInstancePathPrefix() {
+	public String getInstancePathPrefix() {
 		return instancePathPrefix;
 	}
 	
-	public static String getAbsoluteInstancePath () {
+	public String getAbsoluteInstancePath () {
 		return new File(instancePathPrefix).getAbsolutePath();
 	}
 

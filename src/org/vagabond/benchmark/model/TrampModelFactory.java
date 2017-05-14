@@ -395,7 +395,6 @@ public class TrampModelFactory {
 		}
 	}
 	
-	@SuppressWarnings("incomplete-switch")
 	private void addDataElement(String name) {
 		if (!doc.getScenario().isSetData())
 			doc.getScenario().addNewData();
@@ -407,10 +406,12 @@ public class TrampModelFactory {
 			inst.setFileName(name + ".csv");
 			inst.setColumnDelim("|");
 			inst.setName(name);
-			inst.setPath(Configuration.getAbsoluteInstancePath());
+			inst.setPath(conf.getAbsoluteInstancePath());
 			break;
 		case TrampXMLInline:
 			// TODO
+			break;
+		default:
 			break;
 		}
 	}
