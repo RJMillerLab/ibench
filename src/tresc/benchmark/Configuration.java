@@ -40,6 +40,7 @@ package tresc.benchmark;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.OptionHandlerRegistry;
 import org.kohsuke.args4j.spi.OptionHandler;
@@ -68,6 +70,9 @@ import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 
 public class Configuration {
+	
+	static Logger log = Logger.getLogger(Configuration.class);
+	
 	private int[] _repetitions;
 	private int[] _numExplsForType;
 	
@@ -319,10 +324,13 @@ public class Configuration {
 			typesMap.put(data.getName(), data);	
 			types.add(data);	
 		}
+		log.debug("percentages: " + Arrays.toString(percentages));
+		
 		DataTypeHandler.getInst().setNameToDTMap(typesMap);
 		DataTypeHandler.getInst().setTypes(types);
 		DataTypeHandler.getInst().setPercentages(percentages);
 		prop.resetPrefix();
+		log.debug("Custom DataTypes:\n\n" + DataTypeHandler.getInst().toString());
 		
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);

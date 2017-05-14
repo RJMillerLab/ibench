@@ -140,5 +140,21 @@ public class DataTypeHandler {
 		typesNamesNewOrder.put(fullName, order);
 		log.info(fullName + ":" + Arrays.toString(order));
 	}
+
+	public String toString() {
+		StringBuilder st = new StringBuilder();
+		
+		st.append("num DTs: " + numDTs + "\n\n");
+		
+		for(int i = 0; i < numDTs; i++) {
+			DataType dt = types.get(i);
+			String name = dt.getName() == null ? "" : dt.getName();
+			
+			st.append("\tDataType <" + name + "> with " + percentages[i] + " probability:\n" + dt.toString() +"\n\n");
+		}
+		
+		
+		return st.toString();
+	}
 	
 }

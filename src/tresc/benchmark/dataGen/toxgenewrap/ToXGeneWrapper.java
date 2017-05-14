@@ -89,12 +89,12 @@ public class ToXGeneWrapper {
 		System.setProperty("ToXgene_home", toxGenePath);
 	}
 
-	public void generate(String template, String outputPath) throws Exception {
-		generate (new File(template), outputPath);
+	public void generate(String template, String outputPath, long seed) throws Exception {
+		generate (new File(template), outputPath, seed);
 	}
 	
 	
-	public void registerDT(DataType dt) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public void registerDT(DataType dt, long seed) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		// register with toxgene engine
 		if (dt instanceof CustomDataType) {
 			CSVDataType cdt = CSVHandler.getInst().createDT(new File(dt.getClassPath()), dt.getName());
@@ -117,12 +117,14 @@ public class ToXGeneWrapper {
 			}
 			
 			gen = (ToXgeneCdataGenerator) dtClass.newInstance();
+			int toxSeed = (int) seed % (Integer.MAX_VALUE - 1);
+			gen.setRandomSeed(toxSeed);
 			
 			tgEngine.registerCDataGenerator(dt.getName(), gen);
 		}
 	}
 	
-	public String generate(File template, String outputPath) throws Exception {
+	public String generate(File template, String outputPath, long seed) throws Exception {
 		String name = null;
 		
 		try {
@@ -154,13 +156,13 @@ public class ToXGeneWrapper {
 			// register new CSVDataTypes
 			List<CustomDataType> csvDTs = DataTypeHandler.getInst().getAllCustomTypes();
 			for(CustomDataType dt: csvDTs) {
-				registerDT(dt);
+				registerDT(dt, seed);
 			}
 			
 			// also register standard UDTs
 			List<DataType> udts = DataTypeHandler.getInst().getAllNonCSVDTs();
 			for(DataType dt: udts) {
-				registerDT(dt);
+				registerDT(dt, seed);
 			}
 			
 			/*

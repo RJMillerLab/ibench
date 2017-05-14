@@ -88,7 +88,14 @@ public class DataType extends Atomic implements Visitable, Cloneable {
 	}
 	
 	public String toString () {
-    	return "DataType: <" + name + "," + classPath + "," + percentage + "," + dbType + ">";
+		String nameS, classPathS, dbTypeS, jarPathS;
+		
+		nameS = name == null ? "null" : name;
+		classPathS = classPath == null ? "null" : classPath;
+		dbTypeS = dbType == null ? "null" : dbType;
+		jarPathS = jarPath == null ? "null" : jarPath;
+		
+    	return "DataType: <" + name + "," + classPath + "," + percentage + "," + dbType + "," + jarPath + ">";
     }
 
 	public String getJarPath() {

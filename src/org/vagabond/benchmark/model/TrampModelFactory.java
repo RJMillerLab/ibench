@@ -389,7 +389,8 @@ public class TrampModelFactory {
 				dTypesNames[k] = "text";
 			}
 			else {
-				dTypesNames[k] = ((DataType)data).getName().toLowerCase(); // fill with email, phoneNumber, names, etc
+				log.debug("choose DT: " + data.toString());
+				dTypesNames[k] = ((DataType)data).getName(); // fill with email, phoneNumber, names, etc
 				dTypes[k] = DataTypeHandler.getInst().getDbType(dTypesNames[k]); // fill with DB types, text, int, etc
 			}
 		}
