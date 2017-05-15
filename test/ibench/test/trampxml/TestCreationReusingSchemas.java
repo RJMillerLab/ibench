@@ -35,7 +35,7 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test.trampxml;
+package ibench.test.trampxml;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,42 +51,57 @@ import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
+import tresc.benchmark.Constants.MappingLanguageType;
+import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.Constants.ScenarioName;
 
-
-public class TestCreatingPartOfTheModelWithSO extends AbstractAllScenarioTester {
-
-	static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
-
+public class TestCreationReusingSchemas extends AbstractAllScenarioTester {
+	
+	static Logger log = Logger.getLogger(TestCreationReusingSchemas.class);
+	
 	@Before
 	public void setUpConf () throws Exception {
-		PropertyWrapper prop = new PropertyWrapper("testresource/partconf.txt");
+		PropertyWrapper prop = new PropertyWrapper("testresource/reuseconf.txt");
 		conf = new Configuration();
 		conf.readFromProperties(prop);
 		conf.setInstancePathPrefix(OUT_DIR);
 		conf.setSchemaPathPrefix(OUT_DIR);
+		conf.setMapType(MappingLanguageType.FOtgds);
 	}
 	
 	@Override
 	public void testSingleBasicScenario (ScenarioName n) throws Exception {
 		log.info(n);
-		conf.setScenarioRepetitions(n, 1);
+		conf.setScenarioRepetitions(n, 2); // 2 so we can reuse
+		// reuse source
+		setReuse(100,0,conf);
+		conf.resetRandomGenerator();
 		b.runConfig(conf);
-		testLoad(n, false, false);
-		conf.setScenarioRepetitions(n, 0);
+		testLoad(n, "source");
+		// reuse target
+		setReuse(0,100,conf);
+		conf.resetRandomGenerator();
+		b.runConfig(conf);
+		testLoad(n, "target");
+		if (!n.equals(ScenarioName.COPY))
+			conf.setScenarioRepetitions(n, 0);
 	}
 
+	private void setReuse(int src, int target, Configuration conf) {
+		conf.setParam(ParameterName.ReuseSourcePerc, src);
+		conf.setParam(ParameterName.ReuseTargetPerc, target);
+	}
 	
 	
-	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
+	private void testLoad(ScenarioName n, String reuse) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
 			if (log.isDebugEnabled()) {log.debug(doc.getScenario().toString());};
 		}
 		catch (Exception e) {
-			log.error(n + "\n\n" + loadToString());
+			log.error(n + " " + reuse + "\n\n" + loadToString());
 			LoggerUtil.logException(e, log);
-			throw e;	
+			throw new Exception (n + " " + reuse, e);	
 		}
 	}
 	
@@ -102,5 +117,6 @@ public class TestCreatingPartOfTheModelWithSO extends AbstractAllScenarioTester 
 		
 		return result.toString();
 	}
+
 	
 }

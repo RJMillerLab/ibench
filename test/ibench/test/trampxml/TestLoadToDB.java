@@ -35,7 +35,7 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test.trampxml;
+package ibench.test.trampxml;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,9 +56,10 @@ import org.vagabond.util.PropertyWrapper;
 import tresc.benchmark.Configuration;
 import tresc.benchmark.Constants.ScenarioName;
 
-public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
+public class TestLoadToDB extends AbstractAllScenarioTester {
 
-	static Logger log = Logger.getLogger(TestLoadingCreatedModel.class);
+	static Logger log = Logger.getLogger(TestLoadToDB.class);
+	
 	
 	@Before
 	public void setUpConf () throws Exception {
@@ -68,36 +69,27 @@ public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
 		conf.setInstancePathPrefix(OUT_DIR);
 		conf.setSchemaPathPrefix(OUT_DIR);
 	}
-	
-	
+
 	@Override
-	public void testSingleBasicScenario (ScenarioName n) throws Exception {
+	public void testSingleBasicScenario(ScenarioName n) throws Exception {
 		log.info(n);
 		conf.setScenarioRepetitions(n, 1);
 		conf.resetRandomGenerator();
 		b.runConfig(conf);
-		testLoad(n, false, false);
+		testLoad(n, true, false);
 		conf.setScenarioRepetitions(n, 0);
 	}
 
-	
-	
 	private void testLoad(ScenarioName n, boolean toDB, boolean withData) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-			if (log.isDebugEnabled()) {log.debug(doc.getScenario().toString());};
-			if (toDB) {
-				Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-				if (withData)
-					DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
-				else
-					DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-				dbCon.close();
-			}
+			Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
+			DatabaseScenarioLoader.getInstance().loadScenarioNoData(dbCon, doc);
+			dbCon.close();
 		}
 		catch (Exception e) {
 			log.error(n + "\n\n" + loadToString());
-			LoggerUtil.logException(e, log, n.toString());
+			LoggerUtil.logException(e, log);
 			throw e;	
 		}
 	}
@@ -114,6 +106,5 @@ public class TestLoadingCreatedModel extends AbstractAllScenarioTester {
 		
 		return result.toString();
 	}
-
-
+	
 }

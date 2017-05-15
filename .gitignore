@@ -2,3 +2,4 @@ bin/*
 testout/*
 build/*
 /bin
+exampleData/testDT.jar

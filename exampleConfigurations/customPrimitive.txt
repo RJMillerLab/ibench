@@ -1,32 +1,33 @@
 ################################################################################
 # iBench configuration file
 #
-# Example with user defined data types (UDTs), create 1 copy primitives and use
-# 4 user defined data types for its 30 attributes
+# Example with user defined primitive (UDPs), create 3 copy primitives and
+# 3 instances of a flight-hotel scenario UDP (exampleScenarios/fh.xml)
 #
 ################################################################################
 
 # Output Path Prefixes
-SchemaPathPrefix=jarLoadDT
-InstancePathPrefix=jarLoadDT
+SchemaPathPrefix=udpExample
+InstancePathPrefix=udpExample
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 1
+Scenarios.COPY = 3
 
 ################################################################################
-# UDTs
-#
-# 100 percent of attributes use a dummy DT loaded from a jarfile
-#
+# User defined primitives (UDP) specification. 
 ################################################################################
 
-DataType.NumDataType = 1
-DataType.0.Name = myTestDummy
-DataType.0.ClassPath = ibench.test_udts.TestDT
-DataType.0.Percentage = 100.0
-DataType.0.DBType = TEXT
-DataType.0.JarPath = ./exampleData/testDT.jar
+# The number of user defined primitives to be loaded
+LoadScenarios.NumScenarios = 1
 
+########################################
+# create UDP for exampleScenarios/fh.xml
+# TrampXML file specifying the schema elements, correspondences, and mappings
+LoadScenarios.0.File =  exampleScenarios/fh.xml
+# name for the primitive
+LoadScenarios.0.Name = FlightHotel
+# how many instances should be created
+LoadScenarios.0.Inst = 3
 
 ################################################################################
 # Additional configuration

@@ -35,17 +35,15 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test;
+package ibench.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import tresc.benchmark.test.toxgene.TestToxGene;
-import tresc.benchmark.test.trampxml.AllTrampXMLTests;
+import ibench.test.trampxml.AllTrampXMLTests;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	tresc.benchmark.test.toxgene.TestToxGene.class,
 	AllTrampXMLTests.class
 })
 public class AllTests {

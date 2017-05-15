@@ -35,7 +35,7 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test.toxgene;
+package ibench.test.toxgene;
 
 /*
  * Sample.java implements a sample front-end to the ToxGene engine

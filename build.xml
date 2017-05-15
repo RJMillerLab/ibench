@@ -11,6 +11,7 @@ iBench is a flexible metadata generator.
 
 	<!-- Properties -->
 	<property name="binarydir" location="${basedir}/bin" />
+	<property name="testbindir" location="${basedir}/testbin" />
 	<property name="builddir" location="${basedir}/build" />
 	<property name="buildresdir" location="${basedir}/buildResources" />
 	<property name="docdir" location="${basedir}/doc" />
@@ -21,7 +22,8 @@ iBench is a flexible metadata generator.
 	<property name="exampledatadir" location="${basedir}/exampleData" />
 <!--	<property name="exampledatadir" location="${basedir}/exampleData" /> -->
 	<property name="sourcedir" location="${basedir}/src" />
-   	<property name="binmacdir" location="${builddir}/mac" />
+	<property name="testdtsrcdir" location="${basedir}/srcDTexam" />
+	<property name="binmacdir" location="${builddir}/mac" />
   	<property name="binwindir" location="${builddir}/win"/>
 	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
 	<property name="xsltTemplate" location="${resourcedir}/xmlToCSV_XSLT_template.xml" />
@@ -83,6 +85,10 @@ iBench is a flexible metadata generator.
 		<delete includeemptydirs="true">
 			<fileset dir="${binarydir}" includes="**/*"/>
 		</delete>
+		<mkdir dir="${testbindir}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${testbindir}" includes="**/*"/>
+		</delete>
 		<mkdir dir="${builddir}" />
 		<!-- ClassPath Setup -->
 		<path id="libraries">
@@ -112,6 +118,20 @@ iBench is a flexible metadata generator.
 		</javac>
 	</target>
 
+	<target name="CreateDTTestJar" depends="Clean">
+		<javac srcdir="${testdtsrcdir}" destdir="${testbindir}" 
+			classpathref="libraries" debug="on" includeantruntime="false">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+		<jar destfile="${exampledatadir}/testDT.jar" basedir="${testbindir}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Created-By" value="University of Toronto" />
+			</manifest>
+			<fileset dir="${testbindir}"/>
+		</jar>
+	</target>
+	
 	<target name="Deploy" depends="Jar">
 		<var name="deployto" value="${builddir}" />
 		<antcall target="DeployOne" />

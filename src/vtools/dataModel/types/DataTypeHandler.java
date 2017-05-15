@@ -150,7 +150,7 @@ public class DataTypeHandler {
 			DataType dt = types.get(i);
 			String name = dt.getName() == null ? "" : dt.getName();
 			
-			st.append("\tDataType <" + name + "> with " + percentages[i] + " probability:\n" + dt.toString() +"\n\n");
+			st.append("\tDataType <" + name + "> with " + percentages[i] + " probability:\n\t\t" + dt.toString() +"\n\n");
 		}
 		
 		

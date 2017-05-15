@@ -35,47 +35,29 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test.trampxml;
+package ibench.test.primitiveOut;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import java.io.File;
 
-import tresc.benchmark.Constants.ScenarioName;
+import org.apache.log4j.Logger;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	TestCreatingPartOfTheModelWithSO.class,
-	TestCreatingPartOfTheModelWithSOWithSourceSkolems.class,
+import tresc.benchmark.Constants.MappingLanguageType;
+
+public class TestSONoDataNoTransformations extends AbstractCheckExpectedOutputTester {
+
+	static Logger log = Logger.getLogger(TestSONoDataNoTransformations.class);
 	
-	TestLoadingCreatedModel.class,
-	TestLoadToDB.class,
-	TestLoadToDBWithData.class,
-	
-	TestCreationReusingSchemas.class,
-	TestLoadingToDBWithDataReusingSchema.class,
-	
-	TestFormerCrashConfigurations.class
-})
-public class AllTrampXMLTests {
+	@Override
+	public void setPaths() {
+		expectedPath = new File("testresource/expected/SONoDataNoTransformation");
+		confName = "primConf.txt";
+	}
 
-	public static ScenarioName[] workingScen = new ScenarioName[] {
-			ScenarioName.ADDATTRIBUTE,
-			ScenarioName.ADDDELATTRIBUTE,
-			ScenarioName.COPY,
-			ScenarioName.DELATTRIBUTE,
-			ScenarioName.FUSION,
-			ScenarioName.HORIZPARTITION,
-			ScenarioName.MERGEADD,
-			ScenarioName.MERGING,
-			ScenarioName.SELFJOINS,
-			ScenarioName.SURROGATEKEY,
-			ScenarioName.VALUEGEN,
-			ScenarioName.VALUEMANAGEMENT,
-			ScenarioName.VERTPARTITION,
-			ScenarioName.VERTPARTITIONHASA,
-			ScenarioName.VERTPARTITIONISA,
-			ScenarioName.VERTPARTITIONNTOM
-	};
+	@Override
+	public void adaptConfiguration() {
+		conf.setMapType(MappingLanguageType.SOtgds);
+	}
+
+	
 	
 }
-

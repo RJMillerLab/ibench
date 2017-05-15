@@ -35,7 +35,7 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test.trampxml;
+package ibench.test.trampxml;
 
 import java.io.BufferedReader;
 import java.io.File;

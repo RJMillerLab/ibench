@@ -385,8 +385,9 @@ public class TrampModelFactory {
 			Random randGen = new Random();
 			data = DataTypeHandler.getInst().getRandomDT(randGen);
 			if (!(data instanceof DataType)) {
+				log.debug("choose DT: bench_TEXT (multiword)");
 				dTypes[k] = "TEXT";
-				dTypesNames[k] = "text";
+				dTypesNames[k] = "TEXT";
 			}
 			else {
 				log.debug("choose DT: " + data.toString());

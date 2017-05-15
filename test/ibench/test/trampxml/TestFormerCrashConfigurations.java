@@ -35,89 +35,91 @@
  * limitations under the License.
  *
  */
-package tresc.benchmark.test.trampxml;
+package ibench.test.trampxml;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
 
 import org.apache.log4j.Logger;
-import org.junit.Before;
+import org.apache.log4j.PropertyConfigurator;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.mapping.model.ModelLoader;
-import org.vagabond.mapping.scenarioToDB.DatabaseScenarioLoader;
-import org.vagabond.util.ConnectionManager;
 import org.vagabond.util.LoggerUtil;
 import org.vagabond.util.PropertyWrapper;
 
 import tresc.benchmark.Configuration;
-import tresc.benchmark.Constants.ParameterName;
-import tresc.benchmark.Constants.ScenarioName;
+import tresc.benchmark.iBench;
 
-public class TestLoadToDBWithData extends AbstractAllScenarioTester {
+public class TestFormerCrashConfigurations {
 
-	static Logger log = Logger.getLogger(TestLoadToDBWithData.class);
+	static Logger log = Logger.getLogger(TestCreationReusingSchemas.class);
+	
+	private iBench b = new iBench();
+	private Configuration conf;
+	private static final String OUT_DIR = "./testout";
 
 	
-	@Before
-	public void setUpConf () throws Exception {
-		PropertyWrapper prop = new PropertyWrapper("testresource/defconf.txt");
+	@BeforeClass
+	public static void setUp () {
+		PropertyConfigurator.configure("testresource/log4jproperties.txt");
+		File outDir = new File(OUT_DIR);
+		if (!outDir.exists())
+			outDir.mkdir();
+	}
+	
+	@AfterClass
+	public static void tearDown () {
+		File outDir = new File(OUT_DIR);
+//		if (outDir.exists()) {
+//			for(File child: outDir.listFiles()) {
+//				child.delete();
+//			}
+//			outDir.delete();
+//		}
+	}
+	
+	public void setUpConf (String fileName) throws Exception {
+		PropertyWrapper prop = new PropertyWrapper("testresource/" + fileName);
 		conf = new Configuration();
 		conf.readFromProperties(prop);
 		conf.setInstancePathPrefix(OUT_DIR);
 		conf.setSchemaPathPrefix(OUT_DIR);
 	}
-
+	
 	@Test
-	public void testLoadAllBasicScenariosWithData () throws Exception {
-		for(ScenarioName n: scens)
-			conf.setScenarioRepetitions(n, 1);
-		b.runConfig(conf);
-		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-		log.info(doc.getScenario().toString());
-		Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-		dbCon.close();
-	}
-
-	@Test
-	public void testToxtSizeProblem () throws Exception {
-		conf.setParam(ParameterName.NumOfSubElements, 127);
-		conf.setScenarioRepetitions(ScenarioName.COPY, 1);
-		conf.resetRandomGenerator();
-		b.runConfig(conf);
-		MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-		log.info(doc.getScenario().toString());
-		Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-		DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-		dbCon.close();
+	public void testReuseCrash () throws Exception {
+		testOne("reuseCrashConf.txt");
 	}
 	
-	@Override
-	public void testSingleBasicScenario(ScenarioName n)
-			throws Exception {
-		log.info(n);
-		conf.setScenarioRepetitions(n, 1);
-		conf.resetRandomGenerator();
-		b.runConfig(conf);
-		testLoad(n);
-		conf.setScenarioRepetitions(n, 0);
+	@Test
+	public void testMergeChainCrash () throws Exception {
+		testOne("mergeChainJoinConf.txt");
 	}
-
-
-	private void testLoad(ScenarioName n) throws Exception {
+	
+	@Test
+	public void testRandomSkolemCrash() throws Exception {
+		testOne("randomSkolemCrash0.txt");
+	}
+	
+	private void testOne (String fileName) throws Exception {
+		setUpConf(fileName);
+		b.runConfig(conf);
+		testLoad(fileName);
+	}
+	
+	private void testLoad(String name) throws Exception {
 		try {
 			MapScenarioHolder doc = ModelLoader.getInstance().load(new File(OUT_DIR,"test.xml"));
-			Connection dbCon = ConnectionManager.getInstance().getConnection(doc);
-			DatabaseScenarioLoader.getInstance().loadScenario(dbCon, doc);
-			dbCon.close();			
+			if (log.isDebugEnabled()) {log.debug(doc.getScenario().toString());};
 		}
 		catch (Exception e) {
-			log.error(n + "\n\n" + loadToString());
+			log.error(name + "\n\n" + loadToString());
 			LoggerUtil.logException(e, log);
 			throw e;	
 		}
@@ -136,5 +138,4 @@ public class TestLoadToDBWithData extends AbstractAllScenarioTester {
 		return result.toString();
 	}
 
-	
 }
