@@ -59,7 +59,7 @@ OutputOption.Clio = false
 ################################################################################
 
 TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = true
+TrampXMLOutput.Transformations = false
 TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
 TrampXMLOutput.FDs = false	  			
