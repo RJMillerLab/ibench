@@ -280,10 +280,13 @@ MaxStringLength = 100
 # Maximum numerical value created by the data generator
 MaxNumValue = 1000
 
-# Type of data generator (current TrampCSV)
+# Type of data generator (currently only TrampCSV supported)
 DataGenerator = TrampCSV
 
-# Mapping language used (currently FO tgds or SO tgds)
+# Type of query generator to use (Postgres, Perm)
+QueryGenerator = Perm
+
+# Mapping language used (currently FO tgds or SO tgds are supported)
 # MappingLanguage = FOtgds
 
 # Number of independent tuples (not created by data exchange) generated for each target relation

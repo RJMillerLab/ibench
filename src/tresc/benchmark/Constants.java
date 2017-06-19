@@ -327,6 +327,11 @@ public class Constants
     	SOtgds
     }
     
+    public enum QueryTranslatorType {
+    	Postgres,
+    	Perm
+    }
+    
     public enum DESErrorType {
     	SuperfluousMapping,
     	SourceCopyError,

@@ -62,9 +62,12 @@ import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.ParameterName;
+import tresc.benchmark.Constants.QueryTranslatorType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
+import tresc.benchmark.queryGen.QueryTranslationHandler;
+import tresc.benchmark.queryGen.QueryTranslator;
 import vtools.dataModel.types.CustomDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
@@ -150,7 +153,9 @@ public class Configuration {
 
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
-
+	QueryTranslatorType queryGen = QueryTranslatorType.Perm;
+	
+	
 	// register option handler for log level 
 	static {
 		OptionHandlerRegistry.getRegistry().registerHandler(Level.class, Log4jLevelOptionHandler.class);
@@ -354,6 +359,10 @@ public class Configuration {
 		mapType =
 				(MappingLanguageType) prop.getEnumProperty("MappingLanguage",
 						MappingLanguageType.class, mapType);
+		queryGen = (QueryTranslatorType) prop.getEnumProperty("QueryGenerator", 
+				QueryTranslatorType.class, queryGen);
+		QueryTranslationHandler.getInst().setT(queryGen);
+		
 		// read optional parameters
 		genFileNames(fileNameSuffix);
 
@@ -708,6 +717,7 @@ public class Configuration {
 		result.append("_seed: <" + _seed + ">\n");
 		result.append("mapType: <" + mapType + ">\n");
 		result.append("dataGen: <" + dataGen + ">\n");
+		result.append("queryGen: <" + queryGen + ">\n");
 		
 		result.append("\n\n---- OUTPUT OPTIONS ----\n");
 		for (OutputOption p : Constants.OutputOption.values()) {

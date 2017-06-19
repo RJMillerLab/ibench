@@ -40,6 +40,7 @@ package vtools.dataModel.expression;
 
 import org.vagabond.benchmark.model.IdGen;
 
+import tresc.benchmark.queryGen.QueryTranslationHandler;
 import vtools.visitor.Visitable;
 import vtools.visitor.Visitor;
 
@@ -84,6 +85,18 @@ public abstract class Query extends Expression implements Visitable, Cloneable, 
     public String toTrampString() throws Exception {
     	return toTrampString(new IdGen());
     }
+    
+    public String toTrampString(IdGen idGen) throws Exception {
+    	return QueryTranslationHandler.getInst().getT().queryToSQLCode(this, idGen);
+    }
+    
+    public String toTrampStringOneMap(String mapping) throws Exception {
+		String result = toTrampString();
+		for(int i = 0; i < getNumberOfLeafs(); i++) {
+			result = result.replace("${" + i + "}", mapping);
+		}
+		return result;
+	}
     
     public void storeCode(String code) {
     	this.code = code;
