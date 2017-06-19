@@ -153,7 +153,7 @@ public class Configuration {
 
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
-	QueryTranslatorType queryGen = QueryTranslatorType.Perm;
+	QueryTranslatorType queryGen = QueryTranslatorType.Postgres;
 	
 	
 	// register option handler for log level 

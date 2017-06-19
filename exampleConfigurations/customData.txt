@@ -58,6 +58,7 @@ RepElementCount = 100
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
+QueryGenerator = Postgres
 MappingLanguage = FOtgds
 ExchangeTargetData = false
 

@@ -28,6 +28,7 @@ RandomSeed = 2
 # create 10 rows of data
 RepElementCount = 10
 DataGenerator = TrampCSV
+QueryGenerator = Postgres
 MappingLanguage = SOtgds
 
 ################################################################################

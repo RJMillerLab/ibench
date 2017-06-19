@@ -284,7 +284,7 @@ MaxNumValue = 1000
 DataGenerator = TrampCSV
 
 # Type of query generator to use (Postgres, Perm)
-QueryGenerator = Perm
+QueryGenerator = Postgres
 
 # Mapping language used (currently FO tgds or SO tgds are supported)
 # MappingLanguage = FOtgds
