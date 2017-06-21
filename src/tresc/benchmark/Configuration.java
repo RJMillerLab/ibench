@@ -345,7 +345,7 @@ public class Configuration {
 			randomGenerator.setSeed(_seed);
 		
 		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
-		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
+		exchangeTargetData = prop.getBool("ExchangeTargetData", true);
 		enableTargetData = prop.getBool("EnableTargetData", false);
 
 		repElemCountValue = prop.getInt("RepElementCount", 1);
@@ -718,7 +718,7 @@ public class Configuration {
 		result.append("mapType: <" + mapType + ">\n");
 		result.append("dataGen: <" + dataGen + ">\n");
 		result.append("queryGen: <" + queryGen + ">\n");
-		
+		result.append("exchangeTargetData: <" + exchangeTargetData + ">\n");
 		result.append("\n\n---- OUTPUT OPTIONS ----\n");
 		for (OutputOption p : Constants.OutputOption.values()) {
 			boolean val = _outputOpts[p.ordinal()];

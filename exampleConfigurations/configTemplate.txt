@@ -307,7 +307,7 @@ OutputOption.HTMLSchemas = false
 OutputOption.Data = true
 
 # Generate target data that is independent of the source data
-# EnableTargetData = false
+OutputOption.EnableTargetData = false
 
 # Generate XMLSchema schemas for the source and target schemas
 OutputOption.XMLSchemas = true
