@@ -135,12 +135,17 @@ iBench is a flexible metadata generator.
 	<target name="Deploy" depends="Jar">
 		<var name="deployto" value="${builddir}" />
 		<antcall target="DeployOne" />
-		<copy todir="${builddir}" file="${buildresdir}/iBench.sh" />
-		<chmod file="${builddir}/iBench.sh" perm="ug+rx"/>
-		<copy todir="${builddir}" file="${buildresdir}/iBench.bat" /> 
-		<copy todir="${builddir}" file="${buildresdir}/configGen.bat" />
-		<copy todir="${builddir}" file="${buildresdir}/configGen.sh" />
-		<chmod file="${builddir}/configGen.sh" perm="ug+rx"/>
+		<copy todir="${builddir}">
+			<fileset dir="${buildresdir}">
+				<include name="*.sh"/>
+				<include name="*.bat"/>
+			</fileset>
+			</copy>
+		<chmod file="${builddir}/iBench.sh" perm="ug+rx">
+			<fileset dir="${builddir}">
+    			<include name="*.sh"/>
+			</fileset>
+		</chmod>
 	</target>
 
 	<target name="DeployOne">

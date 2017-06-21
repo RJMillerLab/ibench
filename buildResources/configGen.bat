@@ -1,1 +1,1 @@
-java -Xmx4096m -classpath . -jar confFileGenerator.jar
+java -Xmx4096m -classpath .:iBench.jar tresc.benchmark.iBenchDriver
