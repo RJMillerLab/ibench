@@ -16,6 +16,8 @@ ConfigOptions.NumOfAttributesToDelete = 3
 ConfigOptionsDeviation.NumOfNewAttributes = 1
 ConfigOptionsDeviation.NumOfAttributesToDelete = 1
 
+ConfigOptions.SourceInclusionDependencyPerc = 10
+
 DataType.NumDataType = 1
 DataType.0.Name = myEmail
 DataType.0.ClassPath = toxgene.util.cdata.xmark.Emails
