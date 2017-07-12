@@ -1,103 +1,64 @@
-# Configuration File for STBenchmark
+################################################################################
+# iBench configuration file
+#
+# Example with user defined data types (UDTs), create 1 copy primitives and use
+# 4 user defined data types for its 30 attributes
+#
+################################################################################
 
 # Output Path Prefixes
-SchemaPathPrefix=outest
-InstancePathPrefix=outest
+SchemaPathPrefix=jarLoadDT
+InstancePathPrefix=jarLoadDT
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 2
-Scenarios.HORIZPARTITION = 0
-Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
-Scenarios.FUSION = 0
-Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 0
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 0
-Scenarios.VERTPARTITIONISAAUTHORITY = 0
+Scenarios.COPY = 1
 
-# These should always be zero
-Scenarios.FLATTENING = 0
-Scenarios.GLAV = 0
-Scenarios.NESTING = 0
-Scenarios.VALUEGEN = 0
-Scenarios.VALUEMANAGEMENT = 0
+################################################################################
+# UDTs
+#
+# 100 percent of attributes use a dummy DT loaded from a jarfile
+#
+################################################################################
 
-# Parameters that define the shape of the schema and basic scenarios
-ConfigOptions.NumOfSubElements = 5
-ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumOfAttributesToDelete = 1
-ConfigOptions.JoinSize = 1
-ConfigOptions.NumOfParamsInFunctions = 1
-ConfigOptions.PrimaryKeySize = 1
-ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 0 
-# Star is 0 , chain is 1
-ConfigOptions.SkolemKind = 1
-ConfigOptions.SourceSkolemPerc = 0
-ConfigOptions.SourceFDPerc = 0
-ConfigOptions.NestingDepth = 0
-ConfigOptions.ReuseSourcePerc = 25
-ConfigOptions.ReuseTargetPerc = 50
-ConfigOptions.NoReuseScenPerc = 50
-ConfigOptions.SourceInclusionDependencyPerc = 0
-ConfigOptions.SourceInclusionDependencyFKPerc = 0
-ConfigOptions.TargetInclusionDependencyPerc = 0
-ConfigOptions.TargetInclusionDependencyFKPerc = 0
-# exists is 1 and not exists is 0
-ConfigOptions.SourceCircularInclusionDependency = 0
-ConfigOptions.SourceCircularFK = 0
-ConfigOptions.TargetCircularInclusionDependency = 0
-ConfigOptions.TargetCircularFK = 0
+DataType.NumDataType = 1
+DataType.0.Name = myTestDummy
+DataType.0.ClassPath = ibench.test_udts.TestDT
+DataType.0.Percentage = 100.0
+DataType.0.DBType = TEXT
+DataType.0.JarPath = ./exampleData/testDT.jar
 
-# Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 2
-ConfigOptionsDeviation.NumOfNewAttributes = 0
-ConfigOptionsDeviation.NumOfAttributesToDelete = 0
-ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 0
-ConfigOptionsDeviation.PrimaryKeySize = 0
-ConfigOptionsDeviation.NumOfJoinAttributes = 0
-ConfigOptionsDeviation.JoinKind = 0
-ConfigOptionsDeviation.SkolemKind = 0
-ConfigOptionsDeviation.ReuseSourcePerc = 0
-ConfigOptionsDeviation.ReuseTargetPerc = 0
-ConfigOptionsDeviation.NoReuseScenPerc = 0
-ConfigOptionsDeviation.SourceInclusionDependencyPerc = 0
-ConfigOptionsDeviation.SourceInclusionDependencyFKPerc = 0
-ConfigOptionsDeviation.TargetInclusionDependencyPerc = 0
-ConfigOptionsDeviation.TargetInclusionDependencyFKPerc = 0
-ConfigOptionsDeviation.SourceCircularInclusionDependency = 0
-ConfigOptionsDeviation.SourceCircularFK = 0
-ConfigOptionsDeviation.TargetCircularInclusionDependency = 0
-ConfigOptionsDeviation.TargetCircularFK = 0
-ConfigOptionsDeviation.SourceSkolemPerc = 0
-ConfigOptionsDeviation.SourceFDPerc = 0
 
-# Random number generator and max values, DataGenerator and MappingLang
+################################################################################
+# Additional configuration
+
+ConfigOptions.NumOfSubElements = 3
+
 RandomSeed = 2
-RepElementCount = 100
+RepElementCount = 10
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
-MappingLanguage = SOtgds
+MappingLanguage = FOtgds
+ExchangeTargetData = false
 
+################################################################################
 # Optional activation/deactivation of output options
+# create only TrampXML metadata file and data
+################################################################################ 
+
 OutputOption.HTMLSchemas = false
 OutputOption.Data = true
-OutputOption.XMLSchemas = false
+OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
-OutputOption.TrampXML = true
-OutputOption.ErrorsAndExplanations = false
+OutputOption.TrampXML = true			
+OutputOption.Clio = false				
 
-# Optional activation/deactivation of output parts of the Tramp XML document
+################################################################################
+# Optional activation/deactivation of parts of the generated Tramp XML document
+################################################################################
+
 TrampXMLOutput.Correspondences = true
 TrampXMLOutput.Transformations = true
 TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
-TrampXMLOutput.FDs = true
+TrampXMLOutput.FDs = false	  			

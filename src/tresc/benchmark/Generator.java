@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark;
 
 import java.io.IOException;
@@ -194,6 +231,7 @@ public class Generator {
 			}
 		}
 		
+		
 		//MN generates Random Source Inclusion Dependencies
 		SourceInclusionDependencyGenerator srcIDGen = new SourceInclusionDependencyGenerator();
 		srcIDGen.generateScenario(scenario, configuration);
@@ -205,6 +243,9 @@ public class Generator {
 		trgIDGen.generateScenario(scenario, configuration);
 		//MN to inject random target inclusion dependencies into mappings - 14 April 2014
 		randomTargetInclusionDependencies = trgIDGen.getRandomTargetIDs();
+
+		// create FKs
+		scenario.getDocFac().copyFKsToRealDoc();
 		
 		// create FDs?
 		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))
@@ -221,11 +262,25 @@ public class Generator {
 	}
 
 	public void generateSourceData(MappingScenario scenario) throws Exception {
+		log.info("generate source data");
 		dataGenerator.setSchema(scenario.getSource());
+		dataGenerator.setSource(true);
 		dataGenerator.setConstraints(scenario.getSrcConstraints());
 		dataGenerator.setScenario(scenario);
 		dataGenerator.generateData();
 	}
+	
+	public void generateTargetData(MappingScenario scenario) throws Exception {
+		log.info("generate target data");
+		// new method not sure if anything works at all
+		dataGenerator.setSource(false);
+		dataGenerator.setSchema(scenario.getTarget());          
+		// to be tested \/
+		dataGenerator.setConstraints(scenario.getTgtConstraints());
+		dataGenerator.setScenario(scenario);
+		dataGenerator.generateData();
+	}
+
 
 	public DataGenerator getDataGenerator() {
 		return dataGenerator;

@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.configGen;
 
 import java.io.BufferedWriter;
@@ -21,9 +58,9 @@ import tresc.benchmark.configGen.Constants.TrampXMLOutputSwitch;
 
 // MN there are no parameters with respect to .mapjob, .xsml and.xsd files - 21 April 2014
 // PRG FIX Removed generation of random seed config line in method generateRandomsAndMappingLang() - Sep 12, 2012
-// The random seed is what forces StBenchmark to generate the same schema schema mappings (minus variations in 
+// The random seed is what forces iBench to generate the same schema schema mappings (minus variations in 
 // the name of elements in the source/target schemas) during any iteration of a given configuration. We now can
-// generate random config files without imposing any particular seed. StBench 2.0 supplies a random seem on demand.
+// generate random config files without imposing any particular seed. iBench supplies a random seem on demand.
 
 // PRG ADDED + 1 to ensure that max repetition value is also taken into consideration in the random draw - Sep 22, 2012
 
@@ -90,7 +127,7 @@ public class ConfigGenerator {
 
 		configWriter.write("\n# These should always be zero\n");
 		
-		// certain scenarios cannot be run in STBenchmark 2.0 so ensure that they are disabled
+		// certain scenarios cannot be run in iBench so ensure that they are disabled
 		//MN How do we disable these two scenarios i.e., fusion and self joins? - 21 April 2014
 		for (DisabledScenarios name : Constants.DisabledScenarios.values())
 			configWriter.write("Scenarios." + name + " = " + 0 + "\n");

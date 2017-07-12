@@ -1,1 +1,0 @@
-java -Xmx2048m -jar stbenchmark.jar

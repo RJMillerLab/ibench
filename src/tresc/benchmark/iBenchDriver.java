@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark;
 
 import java.io.File;
@@ -19,7 +56,7 @@ import org.kohsuke.args4j.CmdLineParser;
 
 import org.vagabond.util.LoggerUtil;
 
-import tresc.benchmark.STBenchmark;
+import tresc.benchmark.iBench;
 import tresc.benchmark.iBenchOptions;
 
 
@@ -90,10 +127,10 @@ public class iBenchDriver
 			if (log.isDebugEnabled()) {log.debug("RUN ITERATION " + j);};
 			
 			
-			STBenchmark benchmark = runiBench(0, configPath);
+			iBench benchmark = runiBench(0, configPath);
 			
 			// get the names / paths of the files it created
-			String schemaFile = STBenchmark.getConfiguration().getSchemaFile();
+			String schemaFile = iBench.getConfiguration().getSchemaFile();
 			
 			// rename the schema xml file to include a counter so that each run of the scenario is different
 			// note: 0 is the config index, "j" is the run/iteration index
@@ -127,7 +164,7 @@ public class iBenchDriver
 		         avgNumTotalMapps + ", " + avgElapsedTime + "\n");	
 	}
 	
-	private static void printIterationStats(int iteration, STBenchmark bench) {
+	private static void printIterationStats(int iteration, iBench bench) {
 		
 		int numSourceRels = bench.getNumOfSourceRelations();
 		int numSourceAttrs = bench.getNumOfSourceAttributes();
@@ -160,9 +197,9 @@ public class iBenchDriver
 				
 	}
 	
-	private static STBenchmark runiBench(int configIndex, String configPath) throws CmdLineException, Exception {
+	private static iBench runiBench(int configIndex, String configPath) throws CmdLineException, Exception {
 		
-		STBenchmark benchmark = new STBenchmark();
+		iBench benchmark = new iBench();
 		
 		// PRG FIXED to segregate generation of schema mapping files per configIndex - Sep 10, 2012
 		// String[] params = new String[] {"-p", configPath, "-schemaPrefix", path, "-instancePrefix", path};
@@ -227,7 +264,7 @@ public class iBenchDriver
 		infoFilter.setAcceptOnMatch(true);
 		resultAppender.addFilter(infoFilter);
 		log.addAppender(resultAppender);
-		Logger.getLogger(STBenchmark.class).addAppender(resultAppender);
+		Logger.getLogger(iBench.class).addAppender(resultAppender);
 		
 	}
 

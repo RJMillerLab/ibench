@@ -1,2 +1,5 @@
 #!/bin/bash
-java -Xmx4096m -classpath .:~/iBench/codebase/build/lib/ -jar iBench.jar $*
+pushd $(dirname "${0}") > /dev/null
+DIR=$(pwd -L)
+java -Xmx4096m -classpath . -jar iBench.jar $*
+popd > /dev/null

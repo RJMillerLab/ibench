@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark;
 
 import java.util.HashMap;
@@ -61,7 +98,7 @@ public class Constants
 			= new HashMap<ParameterName, Integer> ();
     
     static {
-    	defaultParameterValues.put(ParameterName.NumOfSubElements, 3);
+    	defaultParameterValues.put(ParameterName.NumOfSubElements, 5);
     	defaultParameterValues.put(ParameterName.NestingDepth, 1);
     	defaultParameterValues.put(ParameterName.JoinSize, 2);
     	defaultParameterValues.put(ParameterName.JoinKind, 0);
@@ -73,11 +110,11 @@ public class Constants
     	defaultParameterValues.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceSkolemPerc, 0);
-    	defaultParameterValues.put(ParameterName.SourceFDPerc, 40);
+    	defaultParameterValues.put(ParameterName.SourceFDPerc, 0);
     	defaultParameterValues.put(ParameterName.PrimaryKeyFDs, 1);
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
-    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 2);
+    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 1);
     	
     	defaultParameterValues.put(ParameterName.SourceInclusionDependencyPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
@@ -205,7 +242,8 @@ public class Constants
     	TrampXML,
     	ErrorsAndExplanations,
     	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
-    	Clio
+    	Clio,
+    	EnableTargetData
     }
     
     public static final Map<OutputOption, Boolean> defaultOutputOptionValues
@@ -220,6 +258,7 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
     	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
     	defaultOutputOptionValues.put(OutputOption.Clio, Boolean.FALSE);
+    	defaultOutputOptionValues.put(OutputOption.EnableTargetData, Boolean.FALSE);
     }
     
   
@@ -288,6 +327,11 @@ public class Constants
     	SOtgds
     }
     
+    public enum QueryTranslatorType {
+    	Postgres,
+    	Perm
+    }
+    
     public enum DESErrorType {
     	SuperfluousMapping,
     	SourceCopyError,
@@ -327,4 +371,7 @@ public class Constants
     	dbOptionDefaults.put(DBOption.User, "postgres");
     	dbOptionDefaults.put(DBOption.Port, "5432");
     }
+    
+    
+    
 }

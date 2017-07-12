@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package vtools.xml;
 
 //MN This class prints the output of iBench as XSML file - 3 April 2014
@@ -14,12 +51,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlString;
 import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.ForeignKeyType;
+import org.vagabond.xmlmodel.FunctionType;
+import org.vagabond.xmlmodel.MapExprType;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelAtomType;
+import org.vagabond.xmlmodel.RelationType;
+import org.vagabond.xmlmodel.SKFunction;
 
 import smark.support.MappingScenario;
 import vtools.dataModel.schema.Element;
@@ -62,53 +109,55 @@ public class XSMLWriter {
 
 	};
 
-	
-	//MN prints the schemas (source and target)
-	public void print (StringBuffer buf, String name){
+	public void printAll (StringBuffer buf, MappingScenario scenario, String name,
+			ArrayList<String> randomSourceInclusionDependencies, 
+			ArrayList<String> randomTargetInclusionDependencies) throws Exception {
 		buf.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
 		buf.append("<xsml:schemaMapping xmlns:xsml=\"http://com.ibm.clio.model/xsml/2.0\">\n");
 		
+		//////print schemas
+		print(buf, name);
+		/////print correspondences
+		print(buf, name, scenario);
+		////print logical mappings (for first experiment)
+		print(buf, scenario, name, randomSourceInclusionDependencies, randomTargetInclusionDependencies);
+
+		buf.append("</xsml:schemaMapping>");
+	}
+	
+	
+	//MN prints the schemas (source and target)
+	public void print (StringBuffer buf, String name){
 		buf.append("  <schemas>\n");
-		
 		buf.append("    <source name=\"" + name + "_Src0\"" + " rootName=\"" + name + "_Src\"" + " schemaLocation=\"" + name + "_Src.xsd\"" + "/>\n");
-		
 		buf.append("    <target name=\"" + name + "_Trg0\"" + " rootName=\"" + name + "_Trg\"" + " schemaLocation=\"" + name + "_Trg.xsd\"" + "/>\n");
-		
 		buf.append("  </schemas>\n");
 	}
 	
-	//MN prints the correspondences (from source to target)
+	/**
+	 * Print correspondences as "componentMappings"
+	 * @param buf
+	 * @param name
+	 * @param scenario
+	 * @throws Exception
+	 */
 	public void print (StringBuffer buf, String name, MappingScenario scenario) throws Exception{
+		if (!scenario.getDoc().getDocument().getMappingScenario()
+				.isSetCorrespondences())
+			return;
+		if (scenario.getDoc().getDocument().getMappingScenario()
+				.getCorrespondences().sizeOfCorrespondenceArray() == 0)
+			return;
 		buf.append("  <componentMappings>\n");
-		
-//		String sScenario = scenario.getDoc().getDocument().toString();
-//		int corrsIndexBegin = sScenario.indexOf("<Correspondences");
-//		int corrsIndexEnd = sScenario.indexOf("</Correspondences");
-//		String correspondences = sScenario.substring(corrsIndexBegin+28, corrsIndexEnd-3);
+
 		if (scenario.getDoc().getDocument().getMappingScenario().isSetCorrespondences())
 		{
 			for(CorrespondenceType c: scenario.getDoc().getDocument().
 					getMappingScenario().getCorrespondences().
 					getCorrespondenceArray())
 			{
-	//		while (!correspondences.equals("")){
-	//			String nameCorr = correspondences.split("=")[1].split(">")[0];
-				//MN removing the name of correspondences - 6 August 2014
 				buf.append("    <valueMapping>\n");
-				
-	//			int corrIndexEnd = correspondences.indexOf("</Correspondence>");
-	
-	//			String correspondence = correspondences.substring(0, corrIndexEnd+17);
-	//			String fromRel = ((correspondence.split("="))[2].split(">"))[0];
-	//			String fromRelAttr = (((correspondence.split("="))[2].split("<Attr>"))[1].split("</Attr>"))[0];
-	//			String toRel = ((correspondence.split("="))[3].split(">"))[0];
-	//			String toRelAttr = (((correspondence.split("="))[3].split("<Attr>"))[1].split("</Attr>"))[0];
-	//TODO works only for one attribute correspondences?			
-	//			fromRel = fromRel.substring(1, fromRel.length()-1);
-				//fromRelAttr = fromRelAttr.substring(0, fromRelAttr.length()-1);
-	//			toRel = toRel.substring(1, toRel.length()-1);
-				//toRelAttr = toRelAttr.substring(0, toRelAttr.length()-1);
-		
+			
 				String fromRel = c.getFrom().getTableref();
 				String toRel = c.getTo().getTableref();
 				String fromRelAttr = c.getFrom().getAttrArray(0);
@@ -116,25 +165,16 @@ public class XSMLWriter {
 				
 				buf.append("      <source value=\"" + "$" + name + "_Src0" + "/" + fromRel + "/" + fromRelAttr + "\"/>\n");
 				buf.append("      <target value=\"" + "$" + name + "_Trg0" + "/" + toRel   + "/" + toRelAttr   + "\"/>\n");
-				
-	//			if(correspondences.length()>corrIndexEnd+17)
-	//			    correspondences = correspondences.substring(corrIndexEnd+18);
-	//			else
-	//				break;
-				
+							
 				buf.append("    </valueMapping>\n");
 			}
 		}
-//		buf.append("    </valueMapping>\n");
 		buf.append("  </componentMappings>\n");
-		//just for testing only correspondences
-		////buf.append("</xsml:schemaMapping>");
-	
 	}
 	
 	//MN checks to see whether both from and to relations of the source FK exist in the mapping
 	//MN modified - 1 June 2014
-	public boolean existsSourceFKFromTo (String mapping, ForeignKeyType sourceFK){
+	private boolean existsSourceFKFromTo (String mapping, ForeignKeyType sourceFK){
 		String fromRelFK = sourceFK.getFrom().getTableref().toString();
 		String toRelFK = sourceFK.getTo().getTableref().toString();
 		
@@ -178,7 +218,7 @@ public class XSMLWriter {
 	
 	//MN checks to see whether both from and to relations of the target FK are in the mapping
 	//MN modified - 1 June 2014
-	public boolean existsTargetFKFromTo(String mapping, ForeignKeyType targetFK){
+	private boolean existsTargetFKFromTo(String mapping, ForeignKeyType targetFK){
 		String fromRelFK = targetFK.getFrom().getTableref().toString();
 		String toRelFK = targetFK.getTo().getTableref().toString();
 				
@@ -224,7 +264,17 @@ public class XSMLWriter {
 	//MN prints the logical mappings (from source to target)
 	//MN modifying the method to support injection of random source and target inclusion dependencies into mappings - 14 April 2014
 	public void print (StringBuffer buf, MappingScenario scenario, String name,
-			ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies){
+			ArrayList<String> randomSourceInclusionDependencies, ArrayList<String> randomTargetInclusionDependencies) throws Exception {
+		if (scenario.getDoc().getDocument().getMappingScenario().getMappings().sizeOfMappingArray() == 0)
+			return;
+		
+		
+		printLogicalMappings(buf, scenario, name);
+		if (1 + 1 >= 2)
+			return;
+		// ********************************************************************************
+		// Here be dragons
+		//TODO logical mappings section required?
 		buf.append("  <logicalMappings>\n");
 		
 		String sScenario = scenario.getDoc().getDocument().toString();
@@ -527,10 +577,276 @@ public class XSMLWriter {
 			    break;}
 		}
 		buf.append("  </logicalMappings>\n");
-		buf.append("</xsml:schemaMapping>");
-		//System.out.print(buf.toString());
+	}
+
+
+	private void printLogicalMappings(StringBuffer buf,
+			MappingScenario scenario, String name) throws Exception {
+		buf.append("  <logicalMappings>\n");
+		
+		for(MappingType m: scenario.getDoc().getDocument().getMappingScenario().getMappings().getMappingArray()) {
+			MapExprType source = m.getForeach();
+			MapExprType target = m.getExists();
+			
+			buf.append("    <logicalMapping "+ "name=\"" + m.getId() + "\">\n");
+			
+			// deal with LHS
+			buf.append("      <source>\n");
+			for(RelAtomType a: source.getAtomArray())
+				printAtom(buf, a, true, name);
+			printPredicates(scenario, buf, source, true);
+			buf.append("      </source>\n");
+			
+			// deal wiht RHS
+			buf.append("      <target>\n");
+			for(RelAtomType a: target.getAtomArray())
+				printAtom(buf, a, false, name);
+			printPredicates(scenario, buf, target, false);
+			buf.append("      </target>\n");
+
+			// deal with exchanged variables
+			printExchangedVarsMapping(scenario, buf, source, target);
+			buf.append("      </logicalMapping>\n");
+		}
+		
+		buf.append("  </logicalMappings>\n");
 	}
 	
+	/**
+	 * 
+	 * @param buf
+	 * @param source
+	 * @param source
+	 * @throws Exception 
+	 */
+	private void printPredicates(MappingScenario s, StringBuffer buf, MapExprType conj, boolean source) throws Exception {
+		String relPrefix = source ? "sm" : "tm";
+		Map<String,List<String>> argToAttr;
+		List<String> comparisons = new LinkedList<String> ();
+		
+		argToAttr = createVarToRelAttrMap(s,conj, source);
+		
+		// create comparison expressions
+		for(String v: argToAttr.keySet()) {
+			List<String> args = argToAttr.get(v);
+			
+			// add pairwise comparisons 0 = 1, 1 = 2, ...
+			for (int i = 0; i < args.size() - 1; i++) {
+				String lAttr, rAttr;
+				lAttr = "$" + relPrefix + args.get(i);
+				rAttr = "$" + relPrefix + args.get(i + 1);
+				comparisons.add(lAttr + " = " + rAttr);
+			}
+		}
+		
+		if (comparisons.size() == 0)
+			return;
+		
+		// output expressions
+		buf.append("      <predicate>");
+		
+		appendListSepByAnd(buf, comparisons);
+		
+		buf.append("</predicate>\n");
+	}
+
+
+	private void appendListSepByAnd(StringBuffer buf, List<String> stringList) {
+		for(int i = 0; i < stringList.size(); i++) {
+			buf.append(stringList.get(i));
+			if (i != stringList.size() - 1)
+				buf.append(" AND ");
+		}
+	}
+	
+	private Map<String,List<String>> createVarToRelAttrMap (MappingScenario s, MapExprType conj, boolean source) throws Exception {
+		HashMap<String, List<String>> varToAttr = new HashMap<String, List<String>>();
+		
+		for(RelAtomType r: conj.getAtomArray()) {
+			String relName = r.getTableref();
+			RelationType rel = s.getDoc().getRelForName(relName, !source);
+			XmlObject[] args = s.getDoc().getAtomArguments(r);
+			for(int i = 0; i < args.length; i++) {
+				XmlObject x = args[i];
+				String attr = relName + "/" + rel.getAttrArray(i).getName();
+				String key = null;
+				
+				if (x instanceof SKFunction) {
+					SKFunction f = (SKFunction) x;
+					key = skFunctionToString(f);
+				}
+				else if (x instanceof XmlString) {
+					key = ((XmlString) x).getStringValue();
+				}
+				else
+					throw new Exception("only support skolem functions and variables for now\n" + r.toString());
+				addOrAppendMap(varToAttr,key,attr);
+//				if (x instanceof FunctionType)//TODO not used in iBench right now
+//					return functionToString ((FunctionType) arg);
+			}
+		}
+		
+		return varToAttr;
+	}
+	
+	private String atomArgToString (XmlObject arg) throws Exception {
+		if (arg instanceof SKFunction)
+			return skFunctionToString ((SKFunction) arg);
+		if (arg instanceof XmlString)
+			return ((XmlString) arg).getStringValue(); 
+		if (arg instanceof FunctionType)
+			return functionToString ((FunctionType) arg);
+		
+		throw new Exception ("unexpected object type: " + arg.getClass());
+	}
+
+	private String functionToString(FunctionType f) throws Exception {
+		StringBuilder b = new StringBuilder();
+		int numElements = f.sizeOfConstantArray() + f.sizeOfFunctionArray() + 
+				f.sizeOfSKFunctionArray() + f.sizeOfVarArray();
+
+		b.append(f.getFname());
+		XmlCursor c = f.newCursor();
+		argsToString(c, b, numElements);
+		
+		return b.toString();
+	}
+
+	private void argsToString(XmlCursor c, StringBuilder b, int numElements)
+			throws Exception {
+		b.append("(");
+
+		c.toChild(0);
+		for(int i = 0; i < numElements; i++) {
+			XmlObject o = (XmlObject) c.getObject();
+			b.append(atomArgToString(o) + ", ");
+			c.toNextSibling();
+		}
+		
+		b.delete(b.length() - 2, b.length());
+		b.append(")");
+	}
+
+	private String skFunctionToString (SKFunction f) throws Exception {
+		StringBuilder b = new StringBuilder();
+		int numElements = f.sizeOfFunctionArray() + 
+				f.sizeOfSKFunctionArray() + f.sizeOfVarArray();
+
+		b.append(f.getSkname());
+		XmlCursor c = f.newCursor();
+		argsToString(c, b, numElements);
+		
+		return b.toString();
+	}
+
+	
+	
+	/**
+	 * Given a Map: String -> List<String> append a new element to the end of the list for parameter key.
+	 * 
+	 * @param m the map
+	 * @param key the key for fetching the list
+	 * @param newElem the new element to append to the end
+	 */
+	private void addOrAppendMap(Map<String,List<String>> m, String key, String newElem) {
+		List<String> values;
+		if (m.containsKey(key)) {
+			values = m.get(key);
+			values.add(newElem);
+		}
+		else {
+			values = new ArrayList<String> ();
+			values.add(newElem);
+			m.put(key, values);
+		}
+	}
+
+
+	/**
+	 * Print <mapping> element in XSML file that equates source and targets attributes based on exchanged variables.
+	 * For instance, if R(A,B), S(C,D), T(E,F) and R(x,y), S(y,z) -> T(x,z) then we would equate R.A = T.E AND S.D = T.F
+	 * @param buf
+	 * @param source
+	 * @param target
+	 * @throws Exception 
+	 */
+	private void printExchangedVarsMapping(MappingScenario s, StringBuffer buf,
+			MapExprType source, MapExprType target) throws Exception {
+		Map<String,List<String>> sMap;
+		List<String> comparisons = new ArrayList<String> ();
+		
+		sMap = createVarToRelAttrMap(s, source, true);
+		
+		for(RelAtomType r: target.getAtomArray()) {
+			String relName = r.getTableref();
+			RelationType rel = s.getDoc().getRelForName(relName, true);
+			XmlObject[] args = s.getDoc().getAtomArguments(r);
+			for(int i = 0; i < args.length; i++) {
+				String targetAttr = relName + "/" + rel.getAttrArray(i).getName();
+				XmlObject x = args[i];
+				
+				// equate target attribute with skolem function, e.g., T(f(a,b), ...)
+				if (x instanceof SKFunction) {
+					SKFunction f = (SKFunction) x;
+					String fName = f.getSkname();
+					XmlObject[] skArgs = s.getDoc().getSKArguments(f);
+					String fCall;
+					StringBuilder skA = new StringBuilder();
+					
+					for(int j = 0; j < skArgs.length; j++) {
+						XmlObject skArg = skArgs[j];
+						if (skArg instanceof XmlString) {
+							String v = ((XmlString) skArg).getStringValue();
+							String sA = sMap.get(v).get(0);//TODO should always possible
+							skA.append("$sm" + sA);
+							if (j != skArgs.length - 1)
+								skA.append(", ");
+						}
+						else
+							throw new Exception("SK arguments should only be vars for now: " + x.toString());
+					}
+					
+					fCall = fName + "(" + skA + ")";
+					comparisons.add(fCall + " = " + "$tm" + targetAttr);
+				}
+				// equate target attribute with source attribute
+				if (x instanceof XmlString) {
+					String v = ((XmlString) x).getStringValue();
+					if (sMap.containsKey(v)) {
+						List<String> sourceAttrs = sMap.get(v);
+						String firstSourceAttr = sourceAttrs.get(0);
+						comparisons.add("$sm" + firstSourceAttr + " = " + "$tm" + targetAttr);
+					}
+				}
+			}
+		}
+		if (comparisons.size() == 0)
+			return;
+		
+		// output expressions
+		buf.append("      <mapping>");
+		appendListSepByAnd(buf, comparisons);		
+		buf.append("</mapping>\n");
+	}
+
+
+	/**
+	 * 
+	 * @param buf
+	 * @param a
+	 * @param source
+	 * @param schemaName
+	 */
+	private void printAtom(StringBuffer buf, RelAtomType a, boolean source, String schemaName) {
+		String relName = a.getTableref();
+		String schemaPostfix = source ? "_Src0" : "_Trg0";
+		String relPrefix = source ? "sm" : "tm";
+		buf.append("        <entity " 
+				+ "value=\"$" + schemaName + schemaPostfix + "/" +  relName + "\" " 
+				+ "name=\"" + relPrefix + relName + "\"/>\n");
+	}
+
+
 	//MN prints random source regular inclusion dependencies - 14 April 2014
 	private void printSourceRegularInclusionDependencies(StringBuffer buf, boolean[] sourceFromIDs, boolean[] sourceToIDs, ArrayList<String> sourceIDs,
 			boolean and){

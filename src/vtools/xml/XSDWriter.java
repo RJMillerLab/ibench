@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package vtools.xml;
 
 import java.util.ArrayList;
@@ -8,6 +45,7 @@ import org.vagabond.xmlmodel.RelationType;
 import smark.support.MappingScenario;
 import vtools.dataModel.schema.Element;
 import vtools.dataModel.schema.Schema;
+import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.Int;
 import vtools.dataModel.types.Rcd;
 import vtools.dataModel.types.Set;
@@ -96,7 +134,7 @@ public class XSDWriter
         {
             buf.append(" maxOccurs=\"1\" type=\"xs:integer\"/>\n");
         }
-        else if (type instanceof Str)
+        else if (type instanceof Str || type instanceof DataType)
         {
             buf.append(" maxOccurs=\"1\" type=\"xs:string\"/>\n");
         }
@@ -247,7 +285,8 @@ public class XSDWriter
         // schemas should be of type record
         buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         buf.append("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n");
-        Rcd rcd = (Rcd)scenario.getSource().getType();      
+        Rcd rcd = (Rcd)scenario.getSource().getType();
+        //        buf.append("<xs:element name=\"Source\">\n");
         buf.append("<xs:element name=\"" + name + "\">\n");
         print(buf, rcd, 1);
         //MN ADD two methods to print source primary and foreign keys in XSD file - 3 April 2014
@@ -262,7 +301,8 @@ public class XSDWriter
         // schemas should be of type record
         buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         buf.append("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n");
-        Rcd rcd = (Rcd)mapping.getTarget().getType();      
+        Rcd rcd = (Rcd)mapping.getTarget().getType();
+//        buf.append("<xs:element name=\"Target\">\n");
         buf.append("<xs:element name=\"" + name + "\">\n");
         print(buf, rcd, 1);
         //MN ADD two methods to print target primary and foreign keys in XSD file - 3 April 2014

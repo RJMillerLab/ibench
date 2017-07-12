@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
@@ -14,6 +51,7 @@ import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -186,9 +224,9 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
         //MN END
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
-		String joinAtt1 = randomAttrName(0, 0);
+		String joinAtt1 = randomAttrName(0, 0) + "0";
 		String joinAtt1Ref = joinAtt1 + "Ref";
-        String joinAtt2 = randomAttrName(1, 0);
+        String joinAtt2 = randomAttrName(1, 0) + "1";
         String joinAtt2Ref = joinAtt2 + "Ref";
 		
         for (int i = 0; i < numOfTgtTables; i++)
@@ -498,17 +536,15 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
+		Query q;
 		SPJQuery genQuery = genQuery(new SPJQuery());
 		
 		for(int i = 0; i <= numOfTgtTables; i++) {
 			String creates = m.getTargetRels().get(i).getName();
 			q = (SPJQuery) genQuery.getSelect().getTerm(i);
-			//MN BEGIN 16 August 2014
-			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
-			//MN changed the line above to the following line - 16 August 2014
-//			fac.addTransformation(" ", m.getMapIds(), creates);
-			//MN END
+			q.storeCode(q.toTrampString(m.getMapIds()));
+			q = addQueryOrUnion(creates, q);
+			fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 		}
 	}
 	
@@ -519,10 +555,14 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 	
 		String joinAtt1;
 		String joinAtt2;
+		String joinAtt1Ref;
+		String joinAtt2Ref;
 		
 		joinAtt1 = m.getAttrId(0, m.getNumRelAttr(0, false) - 1, false);
         joinAtt2 = m.getAttrId(1, m.getNumRelAttr(1, false) - 1, false);
-
+        joinAtt1Ref = m.getAttrId(2, 0, false);
+        joinAtt2Ref = m.getAttrId(2, 1, false);
+        
 		// gen query
 		for(int i = 0; i < numOfTgtTables; i++) 
 		{
@@ -595,29 +635,39 @@ public class VPNtoMScenarioGenerator extends AbstractScenarioGenerator {
 				stSK.addArg(att);
 			}
 
+//			if(i == 0)
+//			{
+//				seli.add(joinAtt1 + i, stSK); //TODO ok to disambiguate here?
+//				sel2.add(joinAtt1 + i, stSK);
+//			}
+//			else
+//			{
+//				seli.add(joinAtt2 + i, stSK);
+//				sel2.add(joinAtt2 + i, stSK);
+//			}
 			if(i == 0)
 			{
-				seli.add(joinAtt1, stSK);
-				sel2.add(joinAtt1, stSK);
+				seli.add(joinAtt1, stSK); //TODO ok to disambiguate here?
+				sel2.add(joinAtt1Ref, stSK);
 			}
 			else
 			{
 				seli.add(joinAtt2, stSK);
-				sel2.add(joinAtt2, stSK);
+				sel2.add(joinAtt2Ref, stSK);
 			}
 		}
         
         // add the partial queries to the parent query
         // to form the whole transformation
-        SelectClauseList pselect = pquery.getSelect();
+//        SelectClauseList pselect = pquery.getSelect();
         SelectClauseList gselect = generatedQuery.getSelect();
         for (int i = 0; i < numOfTgtTables+1; i++)
         {
             String tblTrgName = m.getRelName(i, false);
-            pselect.add(tblTrgName, queries[i]);
+//            pselect.add(tblTrgName, queries[i]);
             gselect.add(tblTrgName, queries[i]);
         }
-        pquery.setSelect(pselect);
+//        pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
 		return generatedQuery;
 	} 
