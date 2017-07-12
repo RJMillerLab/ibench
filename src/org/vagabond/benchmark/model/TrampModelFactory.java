@@ -291,9 +291,8 @@ public class TrampModelFactory {
 		log.debug(Arrays.toString(dTypes));
 		addSTRelation(hook, name, attrs, dTypes, source);
 
-		if (source && conf.getOutputOption(OutputOption.Data)
-				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
-			addDataElement(name);
+		// create data element
+		addDataElementIfNeeded(source, name);
 
 		if (source)
 			p.addSourceRel(rel);
@@ -333,9 +332,7 @@ public class TrampModelFactory {
 			addiBenchKey(r.getName(), r.getPrimaryKey().getAttrArray(), source);
 		
 		// create data element
-		if (source && conf.getOutputOption(OutputOption.Data)
-				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
-			addDataElement(newR.getName());
+		addDataElementIfNeeded(source, newR.getName());
 		
 		// also register data types (or generate them if the relation we are copying has not been registered yet)
 		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, r.getName())) {
@@ -385,21 +382,41 @@ public class TrampModelFactory {
 			Random randGen = new Random();
 			data = DataTypeHandler.getInst().getRandomDT(randGen);
 			if (!(data instanceof DataType)) {
+				log.debug("choose DT: bench_TEXT (multiword)");
 				dTypes[k] = "TEXT";
-				dTypesNames[k] = "text";
+				dTypesNames[k] = "TEXT";
 			}
 			else {
-				dTypesNames[k] = ((DataType)data).getName().toLowerCase(); // fill with email, phoneNumber, names, etc
+				log.debug("choose DT: " + data.toString());
+				dTypesNames[k] = ((DataType)data).getName(); // fill with email, phoneNumber, names, etc
 				dTypes[k] = DataTypeHandler.getInst().getDbType(dTypesNames[k]); // fill with DB types, text, int, etc
 			}
 		}
 	}
 	
-	@SuppressWarnings("incomplete-switch")
-	private void addDataElement(String name) {
+	private void addDataElementIfNeeded (boolean source, String tableName) {
+		boolean dataActive = conf.getOutputOption(OutputOption.Data);
+		boolean trampXMLdata = conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data);
+		boolean targetDataActive = conf.getOutputOption(OutputOption.EnableTargetData);
+		
+		if (source && dataActive && trampXMLdata)
+			addDataElement(source, tableName);
+		if (! source && dataActive && targetDataActive)
+			addDataElement(source, tableName);
+	}
+	
+	private void addDataElement(boolean source, String name) {
 		if (!doc.getScenario().isSetData())
 			doc.getScenario().addNewData();
 
+		// mark target data for exchange if asked for
+		if (conf.getExchangeTargetData() && !doc.getScenario().getData().isSetExchangeData())
+			doc.getScenario().getData().addNewExchangeData();
+		
+		// mark target data loading if we create a data element for a target relation
+		if (!source && !doc.getScenario().getData().isSetLoadTargetData())
+			doc.getScenario().getData().addNewLoadTargetData();
+		
 		switch (conf.getDataGen()) {
 		case TrampCSV:
 			RelInstanceFileType inst =
@@ -407,10 +424,14 @@ public class TrampModelFactory {
 			inst.setFileName(name + ".csv");
 			inst.setColumnDelim("|");
 			inst.setName(name);
-			inst.setPath(Configuration.getAbsoluteInstancePath());
+			inst.setPath(conf.getAbsoluteInstancePath());
+			if (!source)
+				inst.addNewTargetRelation();
 			break;
 		case TrampXMLInline:
 			// TODO
+			break;
+		default:
 			break;
 		}
 	}

@@ -1,2 +1,7 @@
 #!/bin/bash
-java -Xmx4096m -classpath . -jar confFileGenerator.jar $*
+pushd $(dirname "${0}") > /dev/null
+DIR=$(pwd -L)
+java -Xmx2048m -classpath .:iBench.jar tresc.benchmark.iBenchDriver $*
+popd > /dev/null
+
+

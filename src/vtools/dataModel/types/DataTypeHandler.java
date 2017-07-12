@@ -112,6 +112,16 @@ public class DataTypeHandler {
 		return list;
 	}
 	
+	public List<DataType> getAllNonCSVDTs () {
+		List<DataType> result = new ArrayList<DataType> ();
+		for (DataType dt : types) {
+			if (! (dt instanceof CustomDataType)) {
+				result.add(dt);
+			}
+		}
+		return result;
+	}
+	
 	public boolean hasTypesNamesOrder (boolean source, String tableName) {
 		String schema = source ? "Source." : "Target.";
 		String fullName = schema + tableName;
@@ -129,6 +139,22 @@ public class DataTypeHandler {
 		String fullName = schema + tableName;
 		typesNamesNewOrder.put(fullName, order);
 		log.info(fullName + ":" + Arrays.toString(order));
+	}
+
+	public String toString() {
+		StringBuilder st = new StringBuilder();
+		
+		st.append("num DTs: " + numDTs + "\n\n");
+		
+		for(int i = 0; i < numDTs; i++) {
+			DataType dt = types.get(i);
+			String name = dt.getName() == null ? "" : dt.getName();
+			
+			st.append("\tDataType <" + name + "> with " + percentages[i] + " probability:\n\t\t" + dt.toString() +"\n\n");
+		}
+		
+		
+		return st.toString();
 	}
 	
 }

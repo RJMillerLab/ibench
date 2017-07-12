@@ -100,7 +100,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 	protected void initFromConfig() {
 		super.initFromConfig();
 		documentName = config.getSourceDocumentName();
-		outputPath = Configuration.getInstancePathPrefix();
+		outputPath = config.getInstancePathPrefix();
 		template = config.getSourceInstanceFile();
 	}
 
@@ -162,7 +162,7 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 		BufferedWriter bufWriter =
 				new BufferedWriter(new FileWriter(new File(
-						Configuration.getInstancePathPrefix(),
+						config.getInstancePathPrefix(),
 						config.getSourceInstanceFile())));
 		bufWriter.write(templateBuffer.toString());
 		bufWriter.close();
@@ -522,11 +522,11 @@ public class ToXScriptOnlyDataGenerator extends DataGenerator {
 
 	private void generateBenchStringType(StringBuffer buf) {	
 		String[] benchStringTypes = new String[DataTypeHandler.getInst().getTypes().size() + 1];
-		benchStringTypes[0] = "bench_text";
+		benchStringTypes[0] = "bench_TEXT";
 		for (int k = 1; k < benchStringTypes.length; k++) {
 			benchStringTypes[k] = DataTypeHandler.getInst().getTypes().get(k - 1).getName();
 		}
-		buf.append("<simpleType name=\"bench_text\">\n");
+		buf.append("<simpleType name=\"bench_TEXT\">\n");
 		buf.append("<restriction base=\"string\">\n");
 		buf.append("<tox-string type=\"multiword\" maxLength=\"" + maxStringLength
 				+ "\"/>\n");

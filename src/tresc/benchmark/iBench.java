@@ -384,10 +384,10 @@ public class iBench {
 	private void printResults(MappingScenario scenario, String S, String T,
 			String M, String S1) throws Exception {
 		if (log.isDebugEnabled()) {log.debug("Printing results !");};
-		File instDir = new File (Configuration.instancePathPrefix);
+		File instDir = new File (_configuration.instancePathPrefix);
 		if (!instDir.exists())
 			instDir.mkdirs();
-		File schemDir = new File(Configuration.schemaPathPrefix);
+		File schemDir = new File(_configuration.schemaPathPrefix);
 		if (!schemDir.exists())
 			schemDir.mkdirs();
 		
@@ -552,7 +552,7 @@ public class iBench {
 			// vtools.dataModel.schema.HTMLPresenter.HTMLPresenter.printInHtmlFile(buf,
 			// "web/" + S + ".html");
 			vtools.dataModel.schema.HTMLPresenter.HTMLPresenter
-					.printInHtmlFile(buf, Configuration.schemaPathPrefix, S
+					.printInHtmlFile(buf, _configuration.schemaPathPrefix, S
 							+ ".html");
 
 			// print the trg schema in an HTML file
@@ -565,7 +565,7 @@ public class iBench {
 			// vtools.dataModel.schema.HTMLPresenter.HTMLPresenter.printInHtmlFile(buf,
 			// "web/" + T + ".html");
 			vtools.dataModel.schema.HTMLPresenter.HTMLPresenter
-					.printInHtmlFile(buf, Configuration.schemaPathPrefix, T
+					.printInHtmlFile(buf, _configuration.schemaPathPrefix, T
 							+ ".html");
 		}
 
@@ -587,7 +587,7 @@ public class iBench {
 			}
 
 			HTMLPresenter.HTMLPresenter.printInHtmlFile(buf,
-					Configuration.schemaPathPrefix, M + ".html");
+					_configuration.schemaPathPrefix, M + ".html");
 		}
 	}
 

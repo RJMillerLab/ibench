@@ -1,0 +1,60 @@
+################################################################################
+#
+# Configuration File for iBench
+#
+# Basic configuration that creates a single copy scenario and generates some 
+# independent target data
+#
+################################################################################
+
+########################################
+# Output Path Prefixes
+SchemaPathPrefix=tutorialTargetData
+InstancePathPrefix=tutorialTargetData
+
+########################################
+# Number of Instances for each Basic Scenario Type
+# Create one copy scenario
+Scenarios.COPY = 1
+
+################################################################################
+# Additional configuration
+
+# relations have 5 attributes each
+ConfigOptions.NumOfSubElements = 5
+
+# Random number generator and max values, DataGenerator and MappingLang
+RandomSeed = 2
+
+# create 10 rows of data
+RepElementCount = 10
+DataGenerator = TrampCSV
+QueryGenerator = Postgres
+MappingLanguage = SOtgds
+
+########################################
+# Number of independent tuples (not created by data exchange) generated for each target relation
+TargetTableNumRows = 10
+
+# Generate target data as source data exchanged by the generated mappings
+# ExchangeTargetData = true
+
+################################################################################
+# Optional activation/deactivation of output options
+# create only TrampXML metadata file and data
+################################################################################ 
+
+OutputOption.Data = true
+OutputOption.XMLSchemas = true
+OutputOption.TrampXML = true			
+
+########################################
+# Generate target data that is independent of the source data
+OutputOption.EnableTargetData = true
+
+
+################################################################################
+# Optional activation/deactivation of parts of the generated Tramp XML document
+################################################################################
+
+TrampXMLOutput.ConnectionInfo = false

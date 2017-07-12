@@ -43,6 +43,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
@@ -52,6 +54,7 @@ import org.vagabond.util.LoggerUtil;
 
 import toxgene.core.Engine;
 import toxgene.core.ToXgeneErrorException;
+import toxgene.interfaces.ToXgeneCdataGenerator;
 import toxgene.interfaces.ToXgeneDocumentCollection;
 import toxgene.interfaces.ToXgeneReporter;
 import toxgene.interfaces.ToXgeneSession;
@@ -59,6 +62,7 @@ import toxgene.util.ToXgeneReporterImpl;
 import toxgene.util.cdata.xmark.CSVDataType;
 import toxgene.util.cdata.xmark.CSVHandler;
 import vtools.dataModel.types.CustomDataType;
+import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 
 public class ToXGeneWrapper {
@@ -85,17 +89,42 @@ public class ToXGeneWrapper {
 		System.setProperty("ToXgene_home", toxGenePath);
 	}
 
-	public void generate(String template, String outputPath) throws Exception {
-		generate (new File(template), outputPath);
+	public void generate(String template, String outputPath, long seed) throws Exception {
+		generate (new File(template), outputPath, seed);
 	}
 	
-	public void registerDT(CustomDataType dt) throws IOException {
+	
+	public void registerDT(DataType dt, long seed) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		// register with toxgene engine
-		CSVDataType cdt = CSVHandler.getInst().createDT(new File(dt.getClassPath()), dt.getName());
-		tgEngine.registerCDataGenerator(cdt.getAttributeName(), cdt);
+		if (dt instanceof CustomDataType) {
+			CSVDataType cdt = CSVHandler.getInst().createDT(new File(dt.getClassPath()), dt.getName());
+			tgEngine.registerCDataGenerator(cdt.getAttributeName(), cdt);	
+		}
+		else {
+			String jarFile = dt.getJarPath();
+			String className = dt.getClassPath();
+			Class<?> dtClass = null;
+			ToXgeneCdataGenerator gen = null;
+			
+			// have to load from Jar file?
+			if (jarFile != null) {
+				URL jarURL = new File(jarFile).toURI().toURL();
+				URLClassLoader loader = new URLClassLoader (new URL[] {jarURL}, this.getClass().getClassLoader());
+				dtClass = Class.forName (className, true, loader);
+			}
+			else {
+				dtClass = Class.forName(className);
+			}
+			
+			gen = (ToXgeneCdataGenerator) dtClass.newInstance();
+			int toxSeed = (int) seed % (Integer.MAX_VALUE - 1);
+			gen.setRandomSeed(toxSeed);
+			
+			tgEngine.registerCDataGenerator(dt.getName(), gen);
+		}
 	}
 	
-	public String generate(File template, String outputPath) throws Exception {
+	public String generate(File template, String outputPath, long seed) throws Exception {
 		String name = null;
 		
 		try {
@@ -125,9 +154,15 @@ public class ToXGeneWrapper {
 			tgEngine.startSession(session);
 			
 			// register new CSVDataTypes
-			List<CustomDataType> customDTs = DataTypeHandler.getInst().getAllCustomTypes();
-			for(CustomDataType dt: customDTs) {
-				registerDT(dt);
+			List<CustomDataType> csvDTs = DataTypeHandler.getInst().getAllCustomTypes();
+			for(CustomDataType dt: csvDTs) {
+				registerDT(dt, seed);
+			}
+			
+			// also register standard UDTs
+			List<DataType> udts = DataTypeHandler.getInst().getAllNonCSVDTs();
+			for(DataType dt: udts) {
+				registerDT(dt, seed);
 			}
 			
 			/*

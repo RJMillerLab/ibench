@@ -11,6 +11,7 @@ iBench is a flexible metadata generator.
 
 	<!-- Properties -->
 	<property name="binarydir" location="${basedir}/bin" />
+	<property name="testbindir" location="${basedir}/testbin" />
 	<property name="builddir" location="${basedir}/build" />
 	<property name="buildresdir" location="${basedir}/buildResources" />
 	<property name="docdir" location="${basedir}/doc" />
@@ -18,9 +19,11 @@ iBench is a flexible metadata generator.
 	<property name="resourcedir" location="${basedir}/resource" />
 	<property name="examplescendir" location="${basedir}/exampleScenarios" />
 	<property name="exampleconfdir" location="${basedir}/exampleConfigurations" />
+	<property name="exampledatadir" location="${basedir}/exampleData" />
 <!--	<property name="exampledatadir" location="${basedir}/exampleData" /> -->
 	<property name="sourcedir" location="${basedir}/src" />
-   	<property name="binmacdir" location="${builddir}/mac" />
+	<property name="testdtsrcdir" location="${basedir}/srcDTexam" />
+	<property name="binmacdir" location="${builddir}/mac" />
   	<property name="binwindir" location="${builddir}/win"/>
 	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
 	<property name="xsltTemplate" location="${resourcedir}/xmlToCSV_XSLT_template.xml" />
@@ -82,6 +85,10 @@ iBench is a flexible metadata generator.
 		<delete includeemptydirs="true">
 			<fileset dir="${binarydir}" includes="**/*"/>
 		</delete>
+		<mkdir dir="${testbindir}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${testbindir}" includes="**/*"/>
+		</delete>
 		<mkdir dir="${builddir}" />
 		<!-- ClassPath Setup -->
 		<path id="libraries">
@@ -111,13 +118,34 @@ iBench is a flexible metadata generator.
 		</javac>
 	</target>
 
+	<target name="CreateDTTestJar" depends="Clean">
+		<javac srcdir="${testdtsrcdir}" destdir="${testbindir}" 
+			classpathref="libraries" debug="on" includeantruntime="false">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+		<jar destfile="${exampledatadir}/testDT.jar" basedir="${testbindir}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Created-By" value="University of Toronto" />
+			</manifest>
+			<fileset dir="${testbindir}"/>
+		</jar>
+	</target>
+	
 	<target name="Deploy" depends="Jar">
 		<var name="deployto" value="${builddir}" />
 		<antcall target="DeployOne" />
-		<copy todir="${builddir}" file="${buildresdir}/iBench.sh" />
-		<copy todir="${builddir}" file="${buildresdir}/iBench.bat" /> 
-		<copy todir="${builddir}" file="${buildresdir}/configGen.bat" />
-		<copy todir="${builddir}" file="${buildresdir}/configGen.sh" />
+		<copy todir="${builddir}">
+			<fileset dir="${buildresdir}">
+				<include name="*.sh"/>
+				<include name="*.bat"/>
+			</fileset>
+			</copy>
+		<chmod file="${builddir}/iBench.sh" perm="ug+rx">
+			<fileset dir="${builddir}">
+    			<include name="*.sh"/>
+			</fileset>
+		</chmod>
 	</target>
 
 	<target name="DeployOne">
@@ -129,18 +157,17 @@ iBench is a flexible metadata generator.
 		</copy> 
 		<mkdir dir="${deployto}/exampleConfigurations" />
 		<copy todir="${deployto}/exampleConfigurations">
-			<fileset dir="${examplescendir}">
+			<fileset dir="${exampleconfdir}">
+				<exclude name=".svn"/>
+			</fileset>
+		</copy> 
+		<mkdir dir="${deployto}/exampleData" />
+		<copy todir="${deployto}/exampleData">
+			<fileset dir="${exampledatadir}">
 				<exclude name=".svn"/>
 			</fileset>
 		</copy> 
 		<mkdir dir="${deployto}/resource"/>
-		<!-- <copy todir="${deployto}/resource">
-			<fileset dir="${resourcedir}">
-				<exclude name=".svn"/>
-				<exclude name="test/**"/>
-				<exclude name="log4jproperties.txt"/>
-			</fileset>
-		</copy> -->
 		<copy todir="${deployto}/resource" 
 			file="${buildresdir}/log4jproperties.txt"/>
 	</target>
@@ -168,24 +195,6 @@ iBench is a flexible metadata generator.
 			<zipfileset src="${librarydir}/xmlbeans.jar"/>
 			<file file="${xsltTemplate}"/>
 		</jarjar>
-	<!--	<echo message="${jarClasspath}" /> -->
-	<!--	<jarjar destfile="${builddir}/confFileGenerator.jar" basedir="${binarydir}">
-			<manifest>
-				<attribute name="Main-Class" value="${expMainClass}" />
-				<attribute name="Created-By" value="University of Toronto" />
-				<attribute name="Class-Path" value="${fullJarClasspath}" />
-			</manifest>
-			<zipfileset src="${librarydir}/log4j.jar"/>
-			<zipfileset src="${librarydir}/args4j.jar"/>
-			<zipfileset src="${librarydir}/commons-primitives.jar"/>
-			<zipfileset src="${librarydir}/junit.jar"/>
-			<zipfileset src="${librarydir}/toxgene.jar"/>
-			<zipfileset src="${librarydir}/trampexgen.jar"/>
-			<zipfileset src="${librarydir}/xercesImpl.jar"/>
-			<zipfileset src="${librarydir}/xml-apis.jar"/>
-			<zipfileset src="${librarydir}/xml-resolver.jar"/>
-			<zipfileset src="${librarydir}/xmlbeans.jar"/>
-		</jarjar> -->
 	</target>
 
 	

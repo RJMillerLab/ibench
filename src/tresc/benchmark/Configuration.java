@@ -40,6 +40,7 @@ package tresc.benchmark;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.OptionHandlerRegistry;
 import org.kohsuke.args4j.spi.OptionHandler;
@@ -60,14 +62,20 @@ import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.MappingLanguageType;
 import tresc.benchmark.Constants.OutputOption;
 import tresc.benchmark.Constants.ParameterName;
+import tresc.benchmark.Constants.QueryTranslatorType;
 import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
+import tresc.benchmark.queryGen.QueryTranslationHandler;
+import tresc.benchmark.queryGen.QueryTranslator;
 import vtools.dataModel.types.CustomDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 
 public class Configuration {
+	
+	static Logger log = Logger.getLogger(Configuration.class);
+	
 	private int[] _repetitions;
 	private int[] _numExplsForType;
 	
@@ -105,9 +113,9 @@ public class Configuration {
 	String schemaFile;
 
 	@Option(name = "-schemaPrefix", usage = "schema path prefix")
-	static String schemaPathPrefix = "./out";
+	String schemaPathPrefix = "./out";
 	@Option(name = "-instancePrefix", usage = "instance path prefix")
-	static String instancePathPrefix = "./out";
+	String instancePathPrefix = "./out";
 
 	@Option(name = "-p", usage = "Read configuration from this property file")
 	String propertyFileName = null;
@@ -145,7 +153,9 @@ public class Configuration {
 
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
-
+	QueryTranslatorType queryGen = QueryTranslatorType.Postgres;
+	
+	
 	// register option handler for log level 
 	static {
 		OptionHandlerRegistry.getRegistry().registerHandler(Level.class, Log4jLevelOptionHandler.class);
@@ -314,15 +324,18 @@ public class Configuration {
 			data.setClassPath(prop.getProperty(i + ".ClassPath"));
 			data.setPercentage(prop.getFloat(i + ".Percentage"));
 			data.setDbType(prop.getProperty(i + ".DBType"));
-			
+			data.setJarPath(prop.getProperty(i + ".JarPath"));
 			percentages[csvNumDT + i] = data.getPercentage();
 			typesMap.put(data.getName(), data);	
 			types.add(data);	
 		}
+		log.debug("percentages: " + Arrays.toString(percentages));
+		
 		DataTypeHandler.getInst().setNameToDTMap(typesMap);
 		DataTypeHandler.getInst().setTypes(types);
 		DataTypeHandler.getInst().setPercentages(percentages);
 		prop.resetPrefix();
+		log.debug("Custom DataTypes:\n\n" + DataTypeHandler.getInst().toString());
 		
 		// read remaining and optional parameters
 		_seed = prop.getLong("RandomSeed", 0L);
@@ -332,7 +345,7 @@ public class Configuration {
 			randomGenerator.setSeed(_seed);
 		
 		targetTableNumRows = prop.getInt("TargetTableNumRows", 1);
-		exchangeTargetData = prop.getBool("ExchangeTargetData", false);
+		exchangeTargetData = prop.getBool("ExchangeTargetData", true);
 		enableTargetData = prop.getBool("EnableTargetData", false);
 
 		repElemCountValue = prop.getInt("RepElementCount", 1);
@@ -346,6 +359,10 @@ public class Configuration {
 		mapType =
 				(MappingLanguageType) prop.getEnumProperty("MappingLanguage",
 						MappingLanguageType.class, mapType);
+		queryGen = (QueryTranslatorType) prop.getEnumProperty("QueryGenerator", 
+				QueryTranslatorType.class, queryGen);
+		QueryTranslationHandler.getInst().setT(queryGen);
+		
 		// read optional parameters
 		genFileNames(fileNameSuffix);
 
@@ -700,7 +717,8 @@ public class Configuration {
 		result.append("_seed: <" + _seed + ">\n");
 		result.append("mapType: <" + mapType + ">\n");
 		result.append("dataGen: <" + dataGen + ">\n");
-		
+		result.append("queryGen: <" + queryGen + ">\n");
+		result.append("exchangeTargetData: <" + exchangeTargetData + ">\n");
 		result.append("\n\n---- OUTPUT OPTIONS ----\n");
 		for (OutputOption p : Constants.OutputOption.values()) {
 			boolean val = _outputOpts[p.ordinal()];
@@ -726,11 +744,11 @@ public class Configuration {
 		return schemaPathPrefix;
 	}
 
-	public static String getInstancePathPrefix() {
+	public String getInstancePathPrefix() {
 		return instancePathPrefix;
 	}
 	
-	public static String getAbsoluteInstancePath () {
+	public String getAbsoluteInstancePath () {
 		return new File(instancePathPrefix).getAbsolutePath();
 	}
 
