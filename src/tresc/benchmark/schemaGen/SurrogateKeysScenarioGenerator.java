@@ -1,9 +1,50 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
+import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 
 import tresc.benchmark.Constants.ScenarioName;
@@ -11,6 +52,7 @@ import tresc.benchmark.Constants.SkolemKind;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
@@ -24,6 +66,12 @@ import vtools.dataModel.expression.Variable;
 
 // BORIS TO DO - Revise method genQueries() as it might be out of sync now - Sep 17, 2012
 
+// MN IMPLEMENTED chooseSourceRels and chooseTargetRels - 5 May 2014
+// MN ENHANCED genTargetRels to pass types of attributes of target relation as argument to addRelation - 5 May 2014
+// MN uniform (ToDo) - 6 May 2014
+// MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 13 May 2014
+
+
 public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 {
 
@@ -33,6 +81,10 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	// private SkolemKind sk = SkolemKind.ALL;
 	private SkolemKind sk;
 	private int keySize;
+	
+	//MN - added attribute to check whether we are reusing a target relation - 13 May 2014
+	private boolean targetReuse;
+	//MN
     
     public SurrogateKeysScenarioGenerator()
     {
@@ -64,12 +116,20 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		// PRG ENFORCE MANDATORY KEY - Sep 17, 2012
 		keySize = (keySize > 0) ? keySize : 1;
 		
+		//MN - 13 May 2014
+		targetReuse = false;
+		//MN
+		
 	}
 
 	@Override
 	protected void genSourceRels() throws Exception {
 		String relName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
+		
+		//MN - considered an array to store types of attributes of source relation - 13 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
+		//MN
 		
 		//for(int i =0; i < numOfSrcTblAttr; i++) {
 		//	attrs[i] = randomAttrName(0, i);
@@ -86,39 +146,155 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 					
 			String attrName = randomAttrName(0, i);		
 			
-			if (keyCount < keySize)						
-				attrName = keys[keyCount];					
+			if (keyCount < keySize){						
+				attrName = keys[keyCount];
+			}
 					
 			keyCount++;		
 			
 			attrs[i] = attrName;
+			//MN BEGIN - 13 May 2014
+			if(targetReuse)
+				attrsType [i] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+			//MN END
 					
 		}		
 		
-		fac.addRelation(getRelHook(0), relName, attrs, true);
+		//MN BEGIN - 13 May 2014
+		if(!targetReuse)
+			fac.addRelation(getRelHook(0), relName, attrs, true);
+		else
+			fac.addRelation(getRelHook(0), relName, attrs, attrsType, true);
+		//MN END
+		
 		// PRG FIX BUG - The generated key may have more than 1 element as indicated by keySize - Sep 17, 2012
 		//fac.addPrimaryKey(relName, 0, true);
 		fac.addPrimaryKey(relName, keys, true);
+		
+		//MN - 13 May 2014
+		targetReuse = false;
+		//MN
 	}
 
+	// override to adapt the local fields
+	//MN Question: Do we want to preserve the value of keySize? - 5 May 2014
+	//MN Question: what about source reusability of other primitives? - 5 May 2014
+	/**
+	 * Also set the number of source attributes
+	 */
+	@Override
+	protected boolean chooseSourceRels() throws Exception {
+		RelationType rel;
+		
+		//MN there is no constraint - 5 May 2014
+		rel = getRandomRel(true, 1);
+		
+		if (rel == null)
+			return false;
+		
+		// set number of src tbl attributes
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		
+		if (keySize > 0 && !rel.isSetPrimaryKey()) {
+			//MN keys should be the first elements of the relation - 5 May 2014
+			if(keySize <= rel.sizeOfAttrArray()){
+				fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);}
+			else{
+				keySize = 1;
+				fac.addPrimaryKey(rel.getName(), 
+						CollectionUtils.createSequence(0, keySize), true);
+			}
+				
+		}
+		else if (rel.isSetPrimaryKey()){
+			//MN we need to check that if primary key is in the right position - 5 May 2014
+			int[] pkPos = model.getPKPos(rel.getName(), true);
+			boolean ok = true;
+			for(int i=0; i<pkPos.length; i++)
+				if(pkPos[i] != i)
+					ok = false;
+			if(!ok)
+				return false;
+			keySize = rel.getPrimaryKey().sizeOfAttrArray();
+		}
+		
+		//the relation should be added to "m" - 5 May 2014
+		m.addSourceRel(rel);
+		return true;
+	}
+	
+	//MN Question: what about keySize? - 5 May 2014
 	@Override
 	protected void genTargetRels() {
 		String tRelName = randomRelName(0);
 		int numTargetEl = numOfSrcTblAttr + 2;
 		String[] attrs = new String[numTargetEl];
+		//MN BEGIN - considered an array to store types of attributes of target relation - 5 May 2014
+		List<String> attrsType = new ArrayList<String> ();
+		//MN END
 		
-		for(int i = 0; i < numOfSrcTblAttr; i++)
+		for(int i = 0; i < numOfSrcTblAttr; i++){
 			attrs[i] = m.getAttrId(0, i, true);
+			//MN BEGIN - 5 May 2014
+			attrsType.add(m.getSourceRels().get(0).getAttrArray(i).getDataType());
+			//MN END
+		}
 		// PRG NOTE - We're explicitly creating two new target attributes for which we need to generate appropriate Skolems 
 		attrs[numOfSrcTblAttr] = randomAttrName(0, numOfSrcTblAttr) + "IDindep";
+		//MN BEGIN - 5 May 2014
+		attrsType.add("TEXT");
+		//MN END
+		
 		attrs[numOfSrcTblAttr + 1] = randomAttrName(0, numOfSrcTblAttr + 1) + "IDOnFirst";
+		//MN BEGIN - 5 May 2014
+		attrsType.add("TEXT");
+		//MN END
 		
 		// PRG NOTE - The original StBench does not generate a target key at all for SURROGATE KEY Scenarios.
 		// In lieu of this, we do likewise (that is, no target key is being generated so far) - Sep 17, 2012
 		
-		fac.addRelation(getRelHook(0), tRelName, attrs, false);
+		//MN  - 5 May 2014
+		fac.addRelation(getRelHook(0), tRelName, attrs, attrsType.toArray(new String[] {}), false);
 	}
 	
+	
+	// override to adapt the local fields
+	//MN added support for target reusability - 5 May 2014
+	//MN Question: Do we want to preserve the value of keySize? we set keySize to "1" - 5 May 2014
+	//MN 
+	/**
+	 * Also set the number of source attributes
+	 */
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+			RelationType rel;
+			
+			//MN minRequiredNumOfAttrs =  2 for skolems + keySize in source - 5 May 2014
+			//MN Question: Is that ok to not to consider keySize? - 5 May 2014
+			rel = getRandomRel(false, 2 + 1);
+			
+			if (rel == null)
+				return false;
+			
+			// set number of src tbl attributes
+			//MN 2 skolems in target relation - 5 May 2014
+			numOfSrcTblAttr = rel.sizeOfAttrArray() - 2;
+			
+			//MN set keySize for genSourceRels - 5 May 2014
+			//MN the reason for setting value of keySize to 1 is increase in reusability - 13 May 2014
+			keySize = 1;
+			
+			//the relation should be added to "m" - 5 May 2014
+			m.addTargetRel(rel);
+			
+			//MN - 13 May 2014
+			targetReuse = true;
+			//MN 
+			
+			return true;
+	}
+		
 	@Override
 	protected void genMappings() throws Exception {
 		MappingType m1 = fac.addMapping(m.getCorrs());
@@ -255,11 +431,13 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 	
 	@Override
 	protected void genTransformations() throws Exception {
-		SPJQuery q;
+		Query q;
 		String creates = m.getRelName(0, false);
 		
 		q = genQueries();
-		fac.addTransformation(q.toTrampString(m.getMapIds()), m.getMapIds(), creates);
+		q.storeCode(q.toTrampString(m.getMapIds()));
+		q = addQueryOrUnion(creates, q);
+		fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
 	}
 	
 	private SPJQuery genQueries() throws Exception {
@@ -338,9 +516,9 @@ public class SurrogateKeysScenarioGenerator extends AbstractScenarioGenerator
 		
 		// add the subquery to the final transformation query
 		query.setSelect(select);
-		SelectClauseList pselect = pquery.getSelect();
-		pselect.add(targetName, query);
-		pquery.setSelect(pselect);
+//		SelectClauseList pselect = pquery.getSelect();
+//		pselect.add(targetName, query);
+//		pquery.setSelect(pselect);
 		
 		return query;
 	}

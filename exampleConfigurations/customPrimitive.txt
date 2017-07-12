@@ -1,0 +1,66 @@
+################################################################################
+# iBench configuration file
+#
+# Example with user defined primitive (UDPs), create 3 copy primitives and
+# 3 instances of a flight-hotel scenario UDP (exampleScenarios/fh.xml)
+#
+################################################################################
+
+# Output Path Prefixes
+SchemaPathPrefix=udpExample
+InstancePathPrefix=udpExample
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 3
+
+################################################################################
+# User defined primitives (UDP) specification. 
+################################################################################
+
+# The number of user defined primitives to be loaded
+LoadScenarios.NumScenarios = 1
+
+########################################
+# create UDP for exampleScenarios/fh.xml
+# TrampXML file specifying the schema elements, correspondences, and mappings
+LoadScenarios.0.File =  exampleScenarios/fh.xml
+# name for the primitive
+LoadScenarios.0.Name = FlightHotel
+# how many instances should be created
+LoadScenarios.0.Inst = 3
+
+################################################################################
+# Additional configuration
+
+ConfigOptions.NumOfSubElements = 3
+
+RandomSeed = 2
+RepElementCount = 10
+MaxStringLength = 100
+MaxNumValue = 1000
+DataGenerator = TrampCSV
+QueryGenerator = Postgres
+MappingLanguage = FOtgds
+ExchangeTargetData = false
+
+################################################################################
+# Optional activation/deactivation of output options
+# create only TrampXML metadata file and data
+################################################################################ 
+
+OutputOption.HTMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = true
+OutputOption.HTMLMapping = false
+OutputOption.TrampXML = true			
+OutputOption.Clio = false				
+
+################################################################################
+# Optional activation/deactivation of parts of the generated Tramp XML document
+################################################################################
+
+TrampXMLOutput.Correspondences = true
+TrampXMLOutput.Transformations = false
+TrampXMLOutput.Data = true
+TrampXMLOutput.ConnectionInfo = false
+TrampXMLOutput.FDs = false	  			

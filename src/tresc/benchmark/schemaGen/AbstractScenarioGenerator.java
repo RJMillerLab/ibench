@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.schemaGen;
 
 import java.util.ArrayList;
@@ -33,6 +70,7 @@ import vtools.dataModel.schema.Schema;
 
 // PRG RESTORED Reading Deviation Parameter (numOfElementsDeviation) from config file - August 28, 2012
 // PRG MOVED method getRandomSourceVars(int numArgsForSkolem, MappingType m1) to tresc.benchmark.utils.Utils.java to facilitate code reuse - Sep 21, 2012
+// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
 
 public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	
@@ -78,6 +116,10 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 	protected int srcFDPerc;
 	protected int primaryKeySize;
 	protected int primaryKeySizeDeviation;
+	
+	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+	protected int VPAuthorityComplexity;
+	protected int VPAuthorityComplexityDeviation;
 	
 	protected MappingLanguageType mapLang;
 	protected int curRep;
@@ -161,11 +203,14 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED CORRS: \n" + m.getCorrs().toString());};
 		}
 		genMappings();
+		//MN we don't need transformations for the purpose of evaluating mapmerge - 16 August 2014
+		//MN commented them - 16 August 2014
 		if (log.isDebugEnabled()) {log.debug("\n\nGENERATED MAPS: \n" + m.getMaps().toString());};
 		if (configuration.getTrampXMLOutputOption(TrampXMLOutputSwitch.Transformations)) {
 			genTransformations();
 			if (log.isDebugEnabled()) {log.debug("\n\nGENERATED TRANS: \n" + m.getTrans().toString());};
 		}
+		
 		scenario.get_basicScens().put(getScenType() + "_" + curRep, m);
 		//if (log.isDebugEnabled()) {log.debug("Repetition <" + curRep +"> is " + m.toString());};
 	}
@@ -184,8 +229,15 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		}
 		// roll dice to determine whether source or target are reused
 		else {
-			boolean reuseSrc = _generator.nextInt(100) <= srcReusePerc;
-			boolean reuseTrg = _generator.nextInt(100) <= trgReusePerc;
+			//MN I've modified the code for the case whether source reusability is zero
+			//MN or target reusability is zero - 2 May 2014
+			boolean reuseSrc = false;
+			boolean reuseTrg = false;
+			
+			if(srcReusePerc>0 )
+				reuseSrc = _generator.nextInt(100) <= srcReusePerc;
+			if(trgReusePerc>0)
+				reuseTrg = _generator.nextInt(100) <= trgReusePerc;
 			
 			// check whether at least one target or source relation exists when reusing
 			if (reuseSrc && model.getSchema(true).sizeOfRelationArray() == 0)
@@ -363,7 +415,12 @@ public abstract class AbstractScenarioGenerator implements ScenarioGenerator {
 		primaryKeySize = configuration.getParam(Constants.ParameterName.PrimaryKeySize);
 		primaryKeySizeDeviation = configuration.getDeviation(Constants.ParameterName.PrimaryKeySize);
         
-		
+		// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+		VPAuthorityComplexity = configuration.getParam(Constants.ParameterName.VPAuthorityComplexity);
+		VPAuthorityComplexityDeviation = configuration.getDeviation(Constants.ParameterName.VPAuthorityComplexity);
+		// PRG END ADD - 24 FEB 2015
+				
+				
         mapLang = configuration.getMapType();
 
 		source = scen.getSource();

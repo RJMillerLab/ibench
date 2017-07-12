@@ -1,4 +1,4 @@
-# Configuration File for STBenchmark
+# Configuration File for iBench
 
 # Output Path Prefixes
 SchemaPathPrefix=out
@@ -17,12 +17,6 @@ Scenarios.ADDATTRIBUTE = 0
 Scenarios.DELATTRIBUTE = 0
 Scenarios.ADDDELATTRIBUTE = 0
 Scenarios.VERTPARTITIONISA = 0
-
-# These should always be zero
-Scenarios.FLATTENING = 0
-Scenarios.GLAV = 0
-Scenarios.NESTING = 0
-Scenarios.VALUEGEN = 0
 
 # Parameters that define the shape of the schema and basic scenarios
 ConfigOptions.NumOfSubElements = 4

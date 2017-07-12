@@ -1,5 +1,7 @@
 # Set root logger level to DEBUG and its only appender to A1.
-log4j.rootLogger=DEBUG, A1
+#log4j.rootLogger=DEBUG, A1
+log4j.rootLogger=INFO, logFileAppender
+log4j.tresc.benchmark=INFO, resultAppender
 
 # A1 is set to be a ConsoleAppender.
 log4j.appender.A1=org.apache.log4j.ConsoleAppender
@@ -7,3 +9,19 @@ log4j.appender.A1=org.apache.log4j.ConsoleAppender
 # A1 uses PatternLayout.
 log4j.appender.A1.layout=org.apache.log4j.PatternLayout
 log4j.appender.A1.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n
+
+################################
+# logFileAppender is set to be a FileAppender for the full log
+log4j.appender.logFileAppender=org.apache.log4j.FileAppender
+
+# logFileAppender uses PatternLayout.
+log4j.appender.logFileAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.logFileAppender.layout.ConversionPattern=[%t] %-5p %c %x - %m%n
+
+################################
+# resultAppender is set to be a FileAppender for the experimental results
+log4j.appender.resultAppender=org.apache.log4j.FileAppender
+
+# resultAppender uses PatternLayout.
+log4j.appender.resultAppender.layout=org.apache.log4j.PatternLayout
+log4j.appender.resultAppender.layout.ConversionPattern=[%t] %-5p %c %x - %m%n

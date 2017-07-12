@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:ExplanationAndErrors xmlns:this="org/vagabond/xmlmodel/explanderror"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Explanations>
+<!-- A(auth,5610,name)
+A(auth,7579,name)
+A(auth,460,name) -->
+		<Explanation type="SourceCopy">
+			<Explains>
+				<Relation>auth</Relation>
+				<TupleID>5610</TupleID>
+				<Attribute>name</Attribute>
+			</Explains>
+			<Coverage>
+			</Coverage>
+			<SourceInstSE>
+				<AttrMarker>
+					<Relation>author</Relation>
+					<TupleID>5610</TupleID>
+					<Attribute>name</Attribute>
+				</AttrMarker>
+			</SourceInstSE>
+		</Explanation>
+		<Explanation type="SourceCopy">
+			<Explains>
+				<Relation>auth</Relation>
+				<TupleID>7579</TupleID>
+				<Attribute>name</Attribute>
+			</Explains>
+			<Coverage>
+			</Coverage>
+			<SourceInstSE>
+				<AttrMarker>
+					<Relation>author</Relation>
+					<TupleID>7579</TupleID>
+					<Attribute>name</Attribute>
+				</AttrMarker>
+			</SourceInstSE>
+		</Explanation>
+				<Explanation type="SourceCopy">
+			<Explains>
+				<Relation>auth</Relation>
+				<TupleID>460</TupleID>
+				<Attribute>name</Attribute>
+			</Explains>
+			<Coverage>
+			</Coverage>
+			<SourceInstSE>
+				<AttrMarker>
+					<Relation>author</Relation>
+					<TupleID>460</TupleID>
+					<Attribute>name</Attribute>
+				</AttrMarker>
+			</SourceInstSE>
+		</Explanation>
+	</Explanations>
+</this:ExplanationAndErrors>

@@ -1,0 +1,83 @@
+# Configuration File for iBench
+
+# Output Path Prefixes
+SchemaPathPrefix=exampleScenarios
+InstancePathPrefix=exampleData
+
+# Number of Instances for each Basic Scenario Type
+Scenarios.COPY = 17
+Scenarios.HORIZPARTITION = 0
+Scenarios.SURROGATEKEY = 0
+Scenarios.MERGING = 0
+Scenarios.FUSION = 0
+Scenarios.SELFJOINS = 0
+Scenarios.VERTPARTITION = 17
+Scenarios.ADDATTRIBUTE = 0
+Scenarios.DELATTRIBUTE = 0
+Scenarios.ADDDELATTRIBUTE = 0
+Scenarios.VERTPARTITIONISA = 0
+Scenarios.VERTPARTITIONHASA = 0
+Scenarios.VERTPARTITIONNTOM = 0
+Scenarios.MERGEADD = 0
+
+# Parameters that define the shape of the schema and basic scenarios
+ConfigOptions.NumOfSubElements = 5
+ConfigOptions.NumOfNewAttributes = 0
+ConfigOptions.NumofAttributestoDelete = 0
+ConfigOptions.JoinSize = 2
+ConfigOptions.NumOfParamsInFunctions = 2
+ConfigOptions.PrimaryKeySize = 1
+ConfigOptions.NumOfJoinAttributes = 1
+ConfigOptions.JoinKind = 0
+# Star is 0 , chain is 1
+ConfigOptions.SkolemKind = 1
+ConfigOptions.SourceSkolemPerc = 0
+ConfigOptions.SourceFDPerc = 0
+ConfigOptions.NestingDepth = 0
+ConfigOptions.ReuseSourcePerc = 100
+ConfigOptions.ReuseTargetPerc = 0
+ConfigOptions.NoReuseScenPerc = 0
+
+# Deviations for each of the parameters
+ConfigOptionsDeviation.NumOfSubElements = 0
+ConfigOptionsDeviation.NumOfNewAttributes = 0
+ConfigOptionsDeviation.NumofAttributestoDelete = 0
+ConfigOptionsDeviation.JoinSize = 0
+ConfigOptionsDeviation.NumOfParamsInFunctions = 0
+ConfigOptionsDeviation.PrimaryKeySize = 0
+ConfigOptionsDeviation.NumOfJoinAttributes = 0
+ConfigOptionsDeviation.JoinKind = 0
+ConfigOptionsDeviation.SkolemKind = 0
+ConfigOptionsDeviation.SourceSkolemPerc = 0
+ConfigOptionsDeviation.SourceFDPerc = 0
+
+# Random number generator and max values, DataGenerator and MappingLang
+RandomSeed = 123456
+RepElementCount = 1000
+MaxStringLength = 10
+MaxNumValue = 10
+DataGenerator = TrampCSV
+MappingLanguage = FOtgds
+
+# Optional overwriting file names
+# FileNames.SourceSchema = 
+# FileNames.TargetSchema = 
+# FileNames.SourceInstance = 
+# FileNames.SourceDocumentName =
+FileNames.Schemas = PerformanceTest_Reuse.xml
+
+# Optional activation/deactivation of output options
+OutputOption.HTMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = false
+OutputOption.HTMLMapping = false
+OutputOption.TrampXML = true
+OutputOption.ErrorsAndExplanations = false
+
+# Optional activation/deactivation of output parts of the Tramp XML document
+TrampXMLOutput.Correspondences = true
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
+TrampXMLOutput.ConnectionInfo = true
+TrampXMLOutput.FDs = false
+

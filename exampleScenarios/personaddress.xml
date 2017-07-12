@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+		<Relation name="person">
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>address</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>name</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="address">
+			<Attr><Name>zip</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>city</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>zip</Attr></PrimaryKey>
+		</Relation>
+		<ForeignKey id="person_add_fk">
+			<From tableref="person"><Attr>address</Attr></From>
+			<To tableref="address"><Attr>zip</Attr></To>
+		</ForeignKey>
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="livesAt">
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>city</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>zip</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>zip</Attr></PrimaryKey>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Correspondences>
+	<Correspondence id="c1">
+		<From tableref="person"><Attr>name</Attr></From>
+		<To tableref="livesAt"><Attr>name</Attr></To>
+	</Correspondence>
+	 <Correspondence id="c2">
+		<From tableref="address"><Attr>zip</Attr></From>
+		<To tableref="livesAt"><Attr>zip</Attr></To>
+	</Correspondence> 
+	 <Correspondence id="c3">
+		<From tableref="address"><Attr>city</Attr></From>
+		<To tableref="livesAt"><Attr>city</Attr></To>
+	</Correspondence> 
+</Correspondences>
+<Mappings>
+	<Mapping id="M1">
+		<Uses>
+			<Correspondence ref="c1" />
+			<Correspondence ref="c2" />
+			<Correspondence ref="c3" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="person"><Var>a</Var><Var>b</Var></Atom>
+			<Atom tableref="address"><Var>b</Var><Var>c</Var></Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="livesAt">
+				<Var>a</Var><Var>b</Var><Var>c</Var>
+			</Atom>
+		</Exists>
+	</Mapping>
+	<Mapping id="M2">
+		<Uses>
+			<Correspondence ref="c2" />
+			<Correspondence ref="c3" />
+		</Uses>
+		<Foreach>
+			<Atom tableref="address"><Var>a</Var><Var>b</Var></Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="livesAt">
+				<SKFunction skname="SK1"><Var>a</Var><Var>b</Var></SKFunction><Var>a</Var><Var>b</Var>
+			</Atom>
+		</Exists>
+	</Mapping>
+</Mappings>
+</this:MappingScenario>

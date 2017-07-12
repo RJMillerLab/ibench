@@ -1,9 +1,48 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.dataGen;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import javax.xml.transform.Transformer;
@@ -20,8 +59,9 @@ import vtools.dataModel.schema.Schema;
 
 public class TrampCSVGen extends ToXDataGenerator {
 
-	private static final String XML_TO_CSV_XSLT_TEMPLATE_XML =
-			"resource/xmlToCSV_XSLT_template.xml";
+	private static final String XML_TO_CSV_XSLT_TEMPLATE_XML = "xmlToCSV_XSLT_template.xml"; 
+	private static final String XML_TO_CSV_XSLT_TEMPLATE_XML_PATH =
+			"resource/" + XML_TO_CSV_XSLT_TEMPLATE_XML;
 
 	Logger log = Logger.getLogger(TrampCSVGen.class);
 
@@ -47,9 +87,15 @@ public class TrampCSVGen extends ToXDataGenerator {
 
 	private void readTemplate() throws IOException {
 		StringBuffer result = new StringBuffer();
-		BufferedReader in =
-				new BufferedReader(new FileReader(XML_TO_CSV_XSLT_TEMPLATE_XML));
-
+		BufferedReader in;
+		
+		if (new File(XML_TO_CSV_XSLT_TEMPLATE_XML_PATH).exists()) {
+			in = new BufferedReader(new FileReader(XML_TO_CSV_XSLT_TEMPLATE_XML_PATH));
+		}
+		else {
+			InputStream rIn = ClassLoader.getSystemResourceAsStream(XML_TO_CSV_XSLT_TEMPLATE_XML);
+			in = new BufferedReader(new InputStreamReader(rIn));
+		}
 		while (in.ready()) {
 			result.append(in.readLine() + "\n");
 		}
@@ -73,7 +119,7 @@ public class TrampCSVGen extends ToXDataGenerator {
 		for (int i = 0; i < schema.size(); i++) {
 			SMarkElement rootSetElt = (SMarkElement) schema.getSubElement(i);
 			String relName = rootSetElt.getLabel();
-			String xsltScript = templateXSLT.replace("$RELNAME$", relName);
+			String xsltScript = templateXSLT.replace("$RELNAME$", relName).replace("$SCHEMA$", schema.getLabel());
 			outFile = new File(outputPath, relName + ".csv");
 			if (log.isDebugEnabled()) {log.debug("use XSLT script:\n" + xsltScript);};
 			
@@ -82,6 +128,7 @@ public class TrampCSVGen extends ToXDataGenerator {
 	}
 
 	private void transform(String script, File instFile, File outFile) {
+		// ensure that Saxon is used
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		try {
 			Transformer transformer =

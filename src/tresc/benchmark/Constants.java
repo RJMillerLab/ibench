@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark;
 
 import java.util.HashMap;
@@ -18,6 +55,11 @@ import tresc.benchmark.dataGen.TrampCSVGen;
 import tresc.benchmark.dataGen.TrampXMLinlineGen;
 
 
+//MN added new sceanrio newVP - 23 June 2014
+//PRG RENAMED CLASS - Before was newVP, Now is VPIsAAuthorityScenarioGenerator - 16 Oct 2014
+//PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
+
 public class Constants
 {
     public enum ParameterName {
@@ -37,14 +79,26 @@ public class Constants
         SourceFDPerc,	// associate FDs with source
         PrimaryKeyFDs,
         SourceSkolemNumAttr,		// attributes and use them in mappings
-        PrimaryKeySize
+        PrimaryKeySize,
+        //mehrnaz: I've added six parameters in order to implement random inclusion dependency generation
+        SourceInclusionDependencyPerc,
+        SourceInclusionDependencyFKPerc,
+        TargetInclusionDependencyPerc,
+        TargetInclusionDependencyFKPerc,
+        SourceCircularInclusionDependency,
+        SourceCircularFK,
+        TargetCircularInclusionDependency,
+        TargetCircularFK,
+        // PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+        VPAuthorityComplexity
+        
     };
 
     public static final Map<ParameterName, Integer> defaultParameterValues
 			= new HashMap<ParameterName, Integer> ();
     
     static {
-    	defaultParameterValues.put(ParameterName.NumOfSubElements, 3);
+    	defaultParameterValues.put(ParameterName.NumOfSubElements, 5);
     	defaultParameterValues.put(ParameterName.NestingDepth, 1);
     	defaultParameterValues.put(ParameterName.JoinSize, 2);
     	defaultParameterValues.put(ParameterName.JoinKind, 0);
@@ -56,11 +110,25 @@ public class Constants
     	defaultParameterValues.put(ParameterName.ReuseSourcePerc, 0);
     	defaultParameterValues.put(ParameterName.ReuseTargetPerc, 0);
     	defaultParameterValues.put(ParameterName.SourceSkolemPerc, 0);
-    	defaultParameterValues.put(ParameterName.SourceFDPerc, 40);
+    	defaultParameterValues.put(ParameterName.SourceFDPerc, 0);
     	defaultParameterValues.put(ParameterName.PrimaryKeyFDs, 1);
     	defaultParameterValues.put(ParameterName.SourceSkolemNumAttr, 0);
     	defaultParameterValues.put(ParameterName.NoReuseScenPerc, 100);
-    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 2);
+    	defaultParameterValues.put(ParameterName.PrimaryKeySize, 1);
+    	
+    	defaultParameterValues.put(ParameterName.SourceInclusionDependencyPerc, 0);
+    	defaultParameterValues.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
+    	defaultParameterValues.put(ParameterName.TargetInclusionDependencyPerc, 0);
+    	defaultParameterValues.put(ParameterName.TargetInclusionDependencyFKPerc, 0);
+    	
+    	defaultParameterValues.put(ParameterName.SourceCircularInclusionDependency, 1);
+    	defaultParameterValues.put(ParameterName.SourceCircularFK, 1);
+    	defaultParameterValues.put(ParameterName.TargetCircularInclusionDependency, 1);
+    	defaultParameterValues.put(ParameterName.TargetCircularFK, 1);
+    	
+    	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+    	defaultParameterValues.put(ParameterName.VPAuthorityComplexity, 2);
+    	
     }
     
     public static final Map<ParameterName, Integer> defaultParameterDeviation
@@ -84,6 +152,19 @@ public class Constants
     	defaultParameterDeviation.put(ParameterName.NoReuseScenPerc, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeySize, 0);
     	defaultParameterDeviation.put(ParameterName.PrimaryKeyFDs, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.SourceInclusionDependencyPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceInclusionDependencyFKPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetInclusionDependencyPerc, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetInclusionDependencyFKPerc, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.SourceCircularInclusionDependency, 0);
+    	defaultParameterDeviation.put(ParameterName.SourceCircularFK, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetCircularInclusionDependency, 0);
+    	defaultParameterDeviation.put(ParameterName.TargetCircularFK, 0);
+    	
+    	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
+    	defaultParameterDeviation.put(ParameterName.VPAuthorityComplexity, 0);
     }
     
     public enum JoinKind {
@@ -119,7 +200,10 @@ public class Constants
         VERTPARTITIONISA,
         VERTPARTITIONHASA,
         VERTPARTITIONNTOM,
-        MERGEADD
+        MERGEADD,
+        //MN added new scenario - 23 June 2014, 30 June 2014
+        VERTPARTITIONISAAUTHORITY,
+        LOADEXISTING
     };
     
     public static final Map<ScenarioName,String> nameForScenarios 
@@ -145,6 +229,9 @@ public class Constants
     	nameForScenarios.put(ScenarioName.DELATTRIBUTE, "_DL");
     	nameForScenarios.put(ScenarioName.ADDDELATTRIBUTE, "_ADL");
     	nameForScenarios.put(ScenarioName.MERGEADD, "_MA");
+    	//MN added new scenario - 23 June 2014, 30 June 2014
+    	nameForScenarios.put(ScenarioName.VERTPARTITIONISAAUTHORITY, "_VA");
+    	nameForScenarios.put(ScenarioName.LOADEXISTING, "_LE");
     }
     
     public enum OutputOption {
@@ -153,7 +240,10 @@ public class Constants
     	XMLSchemas,
     	HTMLMapping,
     	TrampXML,
-    	ErrorsAndExplanations
+    	ErrorsAndExplanations,
+    	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
+    	Clio,
+    	EnableTargetData
     }
     
     public static final Map<OutputOption, Boolean> defaultOutputOptionValues
@@ -166,6 +256,9 @@ public class Constants
     	defaultOutputOptionValues.put(OutputOption.Data, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.TrampXML, Boolean.TRUE);
     	defaultOutputOptionValues.put(OutputOption.ErrorsAndExplanations, Boolean.FALSE);
+    	//PRG ADD Parameter to control the output of Clio/MapMerge files - 24 FEB 2015
+    	defaultOutputOptionValues.put(OutputOption.Clio, Boolean.FALSE);
+    	defaultOutputOptionValues.put(OutputOption.EnableTargetData, Boolean.FALSE);
     }
     
   
@@ -234,6 +327,11 @@ public class Constants
     	SOtgds
     }
     
+    public enum QueryTranslatorType {
+    	Postgres,
+    	Perm
+    }
+    
     public enum DESErrorType {
     	SuperfluousMapping,
     	SourceCopyError,
@@ -273,4 +371,7 @@ public class Constants
     	dbOptionDefaults.put(DBOption.User, "postgres");
     	dbOptionDefaults.put(DBOption.Port, "5432");
     }
+    
+    
+    
 }

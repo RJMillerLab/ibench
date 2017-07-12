@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+<!--  ****************** Publication type tables ************************** -->	
+		<Relation name="author">
+			<Attr><Name>author_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>first_name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>last_name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>affiliation</Name><DataType>TEXT</DataType></Attr>			
+			<PrimaryKey><Attr>author_id</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="dates">
+			<Attr><Name>date_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>			
+			<PrimaryKey><Attr>date_id</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="classification">
+			<Attr><Name>class_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>			
+			<PrimaryKey><Attr>class_id</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="journal">
+			<Attr><Name>jname</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>publisher</Name><DataType>TEXT</DataType></Attr>			
+			<PrimaryKey><Attr>jname</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="issue">
+			<Attr><Name>issue_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>journal</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>INT</DataType></Attr>			
+			<PrimaryKey><Attr>issue_id</Attr></PrimaryKey>
+		</Relation>
+		
+		<Relation name="publication">
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>author_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>date_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>INT</DataType></Attr>
+			<Attr><Name>class_id</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>issue_id</Name><DataType>TEXT</DataType></Attr>			
+			<PrimaryKey><Attr>title</Attr><Attr>author_id</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="notes">
+			<Attr><Name>pub_title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pub_author</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>notetext</Name><DataType>INT</DataType></Attr>			
+			<PrimaryKey><Attr>pub_title</Attr><Attr>pub_author</Attr><Attr>notetext</Attr></PrimaryKey>
+		</Relation>		
+		
+<!--  ****************** Foreign Keys ************************** -->	
+		<ForeignKey id="note_fk">
+			<From tableref="notes"><Attr>pub_title</Attr><Attr>pub_author</Attr></From>
+			<To tableref="publication"><Attr>title</Attr><Attr>author_id</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="issue_fk">
+			<From tableref="issue"><Attr>journal</Attr></From>
+			<To tableref="journal"><Attr>jname</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="pub_fk1">
+			<From tableref="publication"><Attr>author_id</Attr></From>
+			<To tableref="author"><Attr>author_id</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="pub_fk2">
+			<From tableref="publication"><Attr>date_id</Attr></From>
+			<To tableref="dates"><Attr>date_id</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="pub_fk3">
+			<From tableref="publication"><Attr>class_id</Attr></From>
+			<To tableref="classification"><Attr>class_id</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="pub_fk4">
+			<From tableref="publication"><Attr>issue_id</Attr></From>
+			<To tableref="issue"><Attr>issue_id</Attr></To>
+		</ForeignKey>
+
+
+
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="Dummy">
+			<Attr><Name>test</Name><DataType>TEXT</DataType></Attr>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Mappings>
+</Mappings>
+<ConnectionInfo>
+	<Host>localhost</Host>
+	<DB>amalgam</DB>
+	<User>lordpretzel</User>
+	<Password/>
+	<Port>5432</Port>
+</ConnectionInfo>
+</this:MappingScenario>

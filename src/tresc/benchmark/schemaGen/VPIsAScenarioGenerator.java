@@ -1,5 +1,46 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package tresc.benchmark.schemaGen;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.vagabond.util.CollectionUtils;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.RelationType;
 
@@ -7,18 +48,32 @@ import tresc.benchmark.Constants.ScenarioName;
 import tresc.benchmark.utils.Utils;
 import vtools.dataModel.expression.Path;
 import vtools.dataModel.expression.Projection;
+import vtools.dataModel.expression.Query;
 import vtools.dataModel.expression.SPJQuery;
 import vtools.dataModel.expression.SelectClauseList;
 import vtools.dataModel.expression.Variable;
 
+//MN I've applied some modifications to correct correspondences of this mapping primitive - 16 April 2014
 // very similar to merging scenario generator, with source and target schemas swapped
+
+//MN IMPLEMENTED source and target reusability (chooseSourceRels and chooseTargetRels) - 3 May 2014
+//MN ENHANCED genTargetRels to pass types of attributes of target relation as argument to addRelation - 8 May 2014
+//MN ENHANCED genSourceRels to pass types of attributes of source relation as argument to addRelation - 13 May 2014
+//MN FIXED the errors in foreign key generation - 24 June 2014
+
 public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 {
+	public static final int MAX_NUM_TRIES = 10;
+	
 	private int numOfSrcTblAttr;
 	private int numOfTgtTables;
 	private int attsPerTargetRel;
 	private int attrRemainder;
 	private int keySize;
+	
+	//MN - considered an attribute to check whether we are reusing a target relation - 13 May 2014
+	private boolean targetReuse;
+	//MN
 
     public VPIsAScenarioGenerator()
     {
@@ -30,6 +85,7 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
     	super.initPartialMapping();
     	
         numOfSrcTblAttr = Utils.getRandomNumberAroundSomething(_generator, numOfElements, numOfElementsDeviation);
+        //MN number of set elements refers to join size - 16 April 2014
         numOfTgtTables = Utils.getRandomNumberAroundSomething(_generator, numOfSetElements, numOfSetElementsDeviation);
         keySize = Utils.getRandomNumberAroundSomething(_generator, primaryKeySize, primaryKeySizeDeviation);
         
@@ -40,6 +96,10 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
     	
         attsPerTargetRel = (numOfSrcTblAttr-keySize) / numOfTgtTables;
         attrRemainder = (numOfSrcTblAttr-keySize) % numOfTgtTables; 
+        
+        //MN - 13 May 2014
+        targetReuse = false;
+        //MN
     }
 
     /*public void generateScenario(MappingScenario scenario, Configuration configuration)
@@ -269,13 +329,55 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         pquery.setSelect(pselect);
     }*/
 
-
+	//MN implemented chooseSourceRels method to support source reusability - 3 May 2014
+	@Override
+	protected boolean chooseSourceRels() throws Exception {
+		//MN I need to discuss it with Patricia - 3 May 2014
+		int minAttrs = keySize;
+		//MN - 13 May 2014
+		if(keySize<numOfTgtTables)
+			minAttrs = numOfTgtTables;
+		//MN
+		
+		RelationType rel;
+		
+		//MN get a random relation - 26 April 2014
+		rel = getRandomRel(true, minAttrs);
+		
+		if (rel == null) 
+			return false;
+		
+		numOfSrcTblAttr = rel.sizeOfAttrArray();
+		//MN reevaluate the following fields (tried to preserve initial value of numOfTgtTables not keySize) - 26 April 2014
+        attsPerTargetRel = (numOfSrcTblAttr-keySize) / numOfTgtTables;
+        attrRemainder = (numOfSrcTblAttr-keySize) % numOfTgtTables; 
+		
+		//MN I think key elements are first elements of the rel attrs (am I right?) - 26 April 2014
+		// create primary key if necessary
+		if (!rel.isSetPrimaryKey() && keySize > 0) {
+			fac.addPrimaryKey(rel.getName(), 
+					CollectionUtils.createSequence(0, keySize), true);
+		}
+		// adapt keySize - MN I believe keySize is not really important for VP (Am I right?) - 26 April 2014
+		else if (rel.isSetPrimaryKey()) {
+			keySize = rel.getPrimaryKey().sizeOfAttrArray(); 
+		}
+		
+		m.addSourceRel(rel);
+		
+		return true;
+	}
+	
 	@Override
 	protected void genSourceRels() throws Exception 
 	{
 		String sourceRelName = randomRelName(0);
 		String[] attrs = new String[numOfSrcTblAttr];
 		String hook = getRelHook(0);
+		
+		//MN - 13 May 2014
+		String[] attrsType = new String[numOfSrcTblAttr];
+		//MN
 		
 		// generate the appropriate number of keys
 		String[] keys = new String[keySize];
@@ -300,26 +402,204 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 		for (String a : attrs)
 			if (log.isDebugEnabled()) {log.debug("attr: " + a);};
 		
-		RelationType sRel = fac.addRelation(hook, sourceRelName, attrs, true);
+		//MN
+		//MN - 13 May 2014
+		if(targetReuse){
+				int count =0;
+				for(int i=0; i<keySize; i++)
+					attrsType[i] = m.getTargetRels().get(0).getAttrArray(i).getDataType();
+				count = keySize;
+				for(int i=0; i<numOfTgtTables; i++){
+					if(i != numOfTgtTables){
+						for(int j=keySize; j<attsPerTargetRel+keySize; j++){
+								attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+								count++;
+						}
+					}
+					else{
+						for(int j=keySize; j<attsPerTargetRel + attrRemainder + keySize; j++){
+							attrsType[count] = m.getTargetRels().get(i).getAttrArray(j).getDataType();
+							count++;
+					}
+					}
+				}
+		}
+		//MN
+		
+		
+		RelationType sRel = null;
+		
+		if(!targetReuse)
+			sRel = fac.addRelation(hook, sourceRelName, attrs, true);
+		else
+			sRel = fac.addRelation(hook, sourceRelName, attrs, attrsType, true);
+		
 		m.addSourceRel(sRel);
 		
 		fac.addPrimaryKey(sourceRelName, keys, true);
+		
+		//MN - 13 May 2014
+		targetReuse = false;
+		//MN
 	}
 
+	//MN implemented chooseTargetRels method to support target reusability - 3 May 2014
+	//MN assumptions - (1): attrRemainder =0 - 3 May 2014
+	@Override
+	protected boolean chooseTargetRels() throws Exception {
+		List<RelationType> rels = new ArrayList<RelationType> ();
+		int numTries = 0;
+		int created = 0;
+		boolean found = false;
+		RelationType rel;
+		//MN wanted to preserve the initial values of numOfTgtTables and attsPerTargetRel - 26 April 2014
+		String[][] attrs = new String[numOfTgtTables][];
+			
+		// first choose one that has attsPerTargetRel
+		while(created < numOfTgtTables) {
+			found = true;
+				
+			//MN check the following again (it is really tricky) - 26 April 2014
+			if(created == 0){
+				if(keySize < attsPerTargetRel)
+					rel = getRandomRel(false, attsPerTargetRel);
+				else
+					//MN we use minimum to increase reusability - 3 May 2014
+					rel = getRandomRel(false, keySize);
+			}
+			else{
+				rel = getRandomRel(false, attsPerTargetRel+keySize, attsPerTargetRel+keySize);
+					
+				if(rel != null){
+					for(int j=0; j<rels.size(); j++)
+						if(rels.get(j).getName().equals(rel.getName()))
+							found = false;
+				}else{
+					found = false;
+				}
+			}
+				
+			//MN VPISA cares about primary key - 26 April 2014
+			if(found && !rel.isSetPrimaryKey()) {
+				//MN set to false because this is target relation (Am I right?) - 3 May 2014
+				int [] primaryKeyPos = new int [keySize];
+				for(int i=0; i<keySize; i++)
+					primaryKeyPos[i] = i;
+				fac.addPrimaryKey(rel.getName(), primaryKeyPos, false);
+			}
+				
+			if(found && rel.isSetPrimaryKey()){
+				//MN keySize should be keySize and key attrs should be the first attrs- 3 May 2014
+				int[] pkPos = model.getPKPos(rel.getName(), false);
+					
+				if(pkPos[0] != 0)
+					found = false;
+			}
+				
+			// found a fitting relation
+			if (found) {
+				rels.add(rel);
+				m.addTargetRel(rel);
+
+				attrs[created] = new String[rel.sizeOfAttrArray()];
+				for(int i = 0; i < rel.sizeOfAttrArray(); i++)
+					attrs[created][i] = rel.getAttrArray(i).getName();
+					
+				//MN attsPerTargetRel should be set (check that) (it is really tricky) - 26 April 2014
+				if(created == 0){
+					keySize = model.getPKPos(rel.getName(), false).length; 
+					attsPerTargetRel = rel.getAttrArray().length- keySize;
+				}
+				
+				created++;
+				numTries = 0;
+			}
+			// not found, have exhausted number of tries? then create new one - path tested 1 May 2014
+			else {
+				numTries++;
+				if (numTries >= MAX_NUM_TRIES)
+				{
+					numTries = 0;
+					attrs[created] = new String[attsPerTargetRel+keySize];
+					for(int j = 0; j < attsPerTargetRel+keySize; j++)
+						attrs[created][j] = randomAttrName(created, j);
+						
+					// create the relation
+					String relName = randomRelName(created);
+					rels.add(fac.addRelation(getRelHook(created), relName, attrs[created], false));
+						
+					// primary key should be set and its size should be 1- 26 April 2014
+					int [] primaryKeyPos = new int [keySize];
+					for(int i=0; i<keySize; i++)
+						primaryKeyPos[i] = i;
+					fac.addPrimaryKey(relName, primaryKeyPos, false);
+						
+					//MN should I add it to TargetRel? - 26 April 2014
+					//m.addTargetRel(rels.get(rels.size()-1));
+						
+					created++;
+					numTries = 0;
+				}
+			}
+		}
+			
+		//MN set attrRemainder and numOfSrcTables - 26 April 2014
+		numOfSrcTblAttr= (numOfTgtTables * attsPerTargetRel) + keySize; 
+		//MN considering only this case - 26 April 2014
+		attrRemainder =0;
+			
+		//MN foreign key should be set - 26 April 2014
+		//MN should be fixed - 24 June 2014
+		addFKsNoReuse();
+		
+		//MN - 13 May 2014
+		targetReuse = true;
+		//MN
+		return true;
+	}
+	
+	//MN FIXED addFKs - 24 June 2014
+	private void addFKsNoReuse() 
+	{
+			for(int i = 1; i < numOfTgtTables; i++) 
+			{
+				// add a variable number of foreign keys per table (always the first keySize attributes)
+				//MN fixed the errors of incorrectly generating foreign key - 24 June 2014
+				//for (int j = 0; j < keySize; j++)
+					//addFK(i, j, 0, j, false);
+				String[] fAttr = new String[keySize];
+				for(int j=0; j<keySize; j++)
+					fAttr[j] = m.getTargetRels().get(i).getAttrArray(j).getName();
+				
+				String[] tAttr = new String[keySize];
+				for (int j=0; j<keySize; j++)
+					tAttr[j] = m.getTargetRels().get(0).getAttrArray(j).getName();
+				
+				addFK(i, fAttr, 0, tAttr, false);
+			}
+	}
+	
 	@Override
 	protected void genTargetRels() throws Exception 
 	{
 		String[] attrs;
+		String[] attrsType;
+		String[] attrsTypeKey;
 		String[] srcAttrs = m.getAttrIds(0, true);
 		
 		// create key names with JoinAttr/Ref tacked on
 		String[] keyAttNames = new String[keySize];
 		String[] keyAttNameRef = new String[keySize];
 		
+		attrsTypeKey = new String [keySize];
+		
 		for(int i = 0; i < keySize; i++)
 		{
 			keyAttNames[i] = srcAttrs[i] + "JoinAttr";
 			keyAttNameRef[i] = srcAttrs[i] + "Ref";
+			//MN BEGIN - 8 May 2014
+			attrsTypeKey[i] = m.getSourceRels().get(0).getAttrArray(i).getDataType();
+			//MN END
 		}
 		
         // the offset should be (current offset) + keySize
@@ -339,42 +619,80 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         	
         	int attrNum = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) : (attsPerTargetRel + attrRemainder + keySize);
         	attrs = new String[attrNum];
+        	//MN BEGIN
+        	attrsType = new String[attrNum];
+        	//MN END
         	
         	if (log.isDebugEnabled()) {log.debug("attrNum: " + attrNum);};
         	
         	int j = 0;
+        	//MN BEGIN
+        	int index = 0;
+        	//MN END
         	// if its the first relation then we add a join attribute, otherwise it is a foreign key so we use the ref attribute
             if (i==0)
-	            for (String key : keyAttNames)
-	            	attrs[j++] = key;
+	            for (String key : keyAttNames){
+	            	attrs[j] = key;
+	            	//MN BEGIN - 8 May 2014
+	            	attrsType[j++] = attrsTypeKey[index];
+	            	index++;
+	            	//MN END
+	            }
             else
-            	for (String key : keyAttNameRef)
-	            	attrs[j++] = key;
+            	for (String key : keyAttNameRef){
+	            	attrs[j] = key;
+	            	//MN BEGIN - 8 May 2014
+	            	attrsType[j++] = attrsTypeKey[index];
+	            	index++;
+	            	//MN END
+            	}
             
         	// create normal attributes for table (copy from source)
-            for (; j < attrNum; j++)
+            for (; j < attrNum; j++){
             	attrs[j] = srcAttrs[offset + j];
+            	//MN BEGIN
+            	attrsType[j] = m.getSourceRels().get(0).getAttrArray(j + offset).getDataType();
+            	//MN END
+            }
             
             for (String s : attrs)
         	   if (log.isDebugEnabled()) {log.debug("attr: " + s);};
             
-            fac.addRelation(hook, trgName, attrs, false);
+        	//MN BEGIN enhancement - 3 May 2014 and 8 May 2014
+            String[] attrsCopy = new String[attrs.length];
+            for(int h=0; h<attrs.length; h++)
+               	attrsCopy[h] = attrsType[h];
+            fac.addRelation(hook, trgName, attrs, attrsCopy, false);
+            //MN END
             
             if (i==0)
             	fac.addPrimaryKey(trgName, keyAttNames, false);
+            else
+            	addFKs(attrs, i);
         }
         
-        addFKs();
+        //addFKs();
 	}
 	
-	private void addFKs() 
+	//MN FIXED addFKs - 24 June 2014
+	private void addFKs(String attrs[], int relNum) 
 	{
-		for(int i = 1; i < numOfTgtTables; i++) 
-		{
+		//for(int i = 1; i < numOfTgtTables; i++) 
+		//{
 			// add a variable number of foreign keys per table (always the first keySize attributes)
-			for (int j = 0; j < keySize; j++)
-				addFK(i, j, 0, j, false);
-		}
+			//MN fixed the errors of incorrectly generating foreign key - 24 June 2014
+			//for (int j = 0; j < keySize; j++)
+				//addFK(i, j, 0, j, false);
+			String[] fAttr = new String[keySize];
+			for(int i=0; i<keySize; i++)
+				fAttr[i] = attrs[i];
+			
+			String[] tAttr = new String[keySize];
+			for (int i=0; i<keySize; i++)
+				tAttr [i] = m.getTargetRels().get(0).getAttrArray(i).getName();
+			
+			addFK(relNum, fAttr, 0, tAttr, false);
+		//}
 	}
 	
 	@Override
@@ -411,14 +729,20 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
 	@Override
 	protected void genTransformations() throws Exception 
 	{
-		SPJQuery q;
+		Query q;
 		SPJQuery genQuery = genQuery(new SPJQuery());
 		
 		for(int i = 0; i < numOfTgtTables; i++) {
 			String creates = m.getTargetRels().get(i).getName();
 			q = (SPJQuery) genQuery.getSelect().getTerm(i);
-			
-			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+			q.storeCode(q.toTrampString(m.getMapIds()));
+			q = addQueryOrUnion(creates, q);
+			fac.addTransformation(q.getStoredCode(), m.getMapIds(), creates);
+//			//MN BEGIN 16 August 2014
+//			fac.addTransformation(q.toTrampString(m.getMapIds()[0]), m.getMapIds(), creates);
+//			//MN changed the line above to the following line - 16 August 2014
+////			fac.addTransformation(" ", m.getMapIds(), creates);
+			//MN END
 		}
 	}
 	
@@ -456,30 +780,37 @@ public class VPIsAScenarioGenerator extends AbstractScenarioGenerator
         
         // add the partial queries to the parent query
         // to form the whole transformation
-        SelectClauseList pselect = pquery.getSelect();
+//        SelectClauseList pselect = pquery.getSelect();
         SelectClauseList gselect = generatedQuery.getSelect();
         for (int i = 0; i < numOfTgtTables; i++)
         {
             String tblTrgName = m.getRelName(i, false);
-            pselect.add(tblTrgName, queries[i]);
+//            pselect.add(tblTrgName, queries[i]);
             gselect.add(tblTrgName, queries[i]);
         }
-        pquery.setSelect(pselect);
+//        pquery.setSelect(pselect);
         generatedQuery.setSelect(gselect);
 		return generatedQuery;
 	}
 	
 	@Override
+	//MN I've applied some modifications to correct value correspondences in this mapping scenarios - 16 April 2014
 	protected void genCorrespondences() 
 	{
 		for (int i = 0; i < numOfTgtTables; i++)
         {
         	int offset = i * attsPerTargetRel;
-        	int numAtts = (i < numOfTgtTables - 1) ? attsPerTargetRel :
-    				attsPerTargetRel + attrRemainder;
+        	int numAtts = (i < numOfTgtTables - 1) ? (attsPerTargetRel + keySize) :
+    				(attsPerTargetRel + attrRemainder + keySize);
         	
+        	int keyIndex =0;
             for (int j = 0; j < numAtts; j++)
-            	addCorr(0, offset + j, i, j);         
+            	if((j>=keySize) || ((j<keySize) && (i==0))){
+            		addCorr(0, offset + j, i, j);}
+            	else{
+            		addCorr(0, 0 + keyIndex, i, j);
+            		keyIndex++;
+            	}
         }
 	}
 

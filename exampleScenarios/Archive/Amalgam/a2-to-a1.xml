@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  TAKEN FROM BOGDAN .map file: -->
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+
+
+				
+<!--  ****************** Publication type tables ************************** -->	
+		<Relation name="InProceedings">
+			<Attr><Name>inprocID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>bktitle</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>inprocID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="Article">
+			<Attr><Name>articleID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>journal</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>articleID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="TechReport">
+			<Attr><Name>techID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>inst</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>techID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="Book">
+			<Attr><Name>bookID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>publisher</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>bookID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="InCollection">
+			<Attr><Name>collID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>bktitle</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>collID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="Misc">
+			<Attr><Name>miscID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>howpub</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>confloc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>miscID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="Manual">
+			<Attr><Name>manID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>org</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>year</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>month</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pages</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>vol</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>loc</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>class</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>annote</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>manID</Attr></PrimaryKey>
+		</Relation>
+		
+<!--  ****************** Author table ************************** -->		
+		
+		<Relation name="Author">
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>
+		
+<!--  ****************** Relationship tables ************************** -->		
+		<Relation name="InprocPublished">
+			<Attr><Name>inprocID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>inprocID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="ArticlePublished">
+			<Attr><Name>articleID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>articleID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="TechPublished">
+			<Attr><Name>techID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>techID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="BookPublished">
+			<Attr><Name>bookID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>bookID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="InCollPublished">
+			<Attr><Name>collID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>collID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="MiscPublished">
+			<Attr><Name>miscID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>miscID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>		
+		<Relation name="ManualPublished">
+			<Attr><Name>manID</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>AuthID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>manID</Attr><Attr>AuthID</Attr></PrimaryKey>
+		</Relation>		
+
+<!--  ****************** Foreign Keys ************************** -->	
+		<ForeignKey id="inprocPub">
+			<From tableref="InprocPublished"><Attr>inprocID</Attr></From>
+			<To tableref="InProceedings"><Attr>inprocID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="inprocAuthor">
+			<From tableref="InprocPublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="articlePub">
+			<From tableref="ArticlePublished"><Attr>articleID</Attr></From>
+			<To tableref="Article"><Attr>articleID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="articleAuthor">
+			<From tableref="ArticlePublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="techPub">
+			<From tableref="TechPublished"><Attr>techID</Attr></From>
+			<To tableref="TechReport"><Attr>techID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="techAuthor">
+			<From tableref="TechPublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>
+
+		<ForeignKey id="bookPub">
+			<From tableref="BookPublished"><Attr>bookID</Attr></From>
+			<To tableref="Book"><Attr>bookID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="bookAuthor">
+			<From tableref="BookPublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>		
+		
+		<ForeignKey id="incollPub">
+			<From tableref="InCollPublished"><Attr>collID</Attr></From>
+			<To tableref="InCollection"><Attr>collID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="incollAuthor">
+			<From tableref="BookPublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>		
+				
+		<ForeignKey id="miscPub">
+			<From tableref="MiscPublished"><Attr>miscID</Attr></From>
+			<To tableref="Misc"><Attr>miscID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="miscAuthor">
+			<From tableref="MiscPublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>				
+
+		<ForeignKey id="manualPub">
+			<From tableref="ManualPublished"><Attr>manID</Attr></From>
+			<To tableref="Manual"><Attr>manID</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="manualAuthor">
+			<From tableref="ManualPublished"><Attr>AuthID</Attr></From>
+			<To tableref="Author"><Attr>AuthID</Attr></To>
+		</ForeignKey>					
+
+
+	</SourceSchema>
+	<TargetSchema>
+
+<!--  ****************** Publication type tables ************************** -->	
+		<Relation name="allBibs">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="citForm">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>form</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="authors">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>authNm</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>authNm</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="editors">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>edNm</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>edNm</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="titles">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>title</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+
+		<Relation name="schools">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>schoolNm</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="institutions">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>institNm</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="addresses">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>address</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="types">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>type</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="ISBN">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>isbnNum</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="notes">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>note</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>Note</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="volumes">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>volNum</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="numbers">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>num</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="months">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>mon</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="years">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>yr</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="pages">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pgRange</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="abstracts">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>txt</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="publisher">
+			<Attr><Name>pubNm</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pubID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>pubID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="citPublisher">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>pubID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>pubID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="journal">
+			<Attr><Name>jrnlNm</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>jrnlID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>jrnlID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="citJournal">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>jrnlID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>jrnlID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="series">
+			<Attr><Name>seriesNm</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>seriesID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>seriesID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="citSeries">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>seriesID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>seriesID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="booktitle">
+			<Attr><Name>bkTitleNm</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>bktitleID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>bktitleID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="citBkTitle">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>bktitleID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>bktitleID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="keyWord">
+			<Attr><Name>word</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>keyWdID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>keyWdID</Attr></PrimaryKey>
+		</Relation>
+
+		<Relation name="citKeyWord">
+			<Attr><Name>citKey</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>keyWdID</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>citKey</Attr><Attr>keyWdID</Attr></PrimaryKey>
+		</Relation>
+		
+		
+
+<!--  ****************** Foreign Keys ************************** -->	
+
+	<ForeignKey id="citFormToAllBib">
+			<From tableref="citForm"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="authorssToAllBib">
+			<From tableref="authors"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="editorsToAllBib">
+			<From tableref="editors"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	
+	<ForeignKey id="titlesToAllBib">
+			<From tableref="titles"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="schoolsToAllBib">
+			<From tableref="schools"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="institutionsToAllBib">
+			<From tableref="institutions"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="addressesToAllBib">
+			<From tableref="addresses"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="typesToAllBib">
+			<From tableref="types"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="ISBNToAllBib">
+			<From tableref="ISBN"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="notesToAllBib">
+			<From tableref="notes"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="volumesToAllBib">
+			<From tableref="volumes"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="numbersToAllBib">
+			<From tableref="numbers"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="monthsToAllBib">
+			<From tableref="months"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="yearsToAllBib">
+			<From tableref="years"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="pagesToAllBib">
+			<From tableref="pages"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="abstractsToAllBib">
+			<From tableref="abstracts"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	
+	<ForeignKey id="citPublisherToAllBib">
+			<From tableref="citPublisher"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	<ForeignKey id="citPublisherToPublisher">
+			<From tableref="citPublisher"><Attr>pubID</Attr></From>
+			<To tableref="publisher"><Attr>pubID</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="citJournalToAllBib">
+			<From tableref="citJournal"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	<ForeignKey id="citJournalToJournal">
+			<From tableref="citJournal"><Attr>jrnlID</Attr></From>
+			<To tableref="journal"><Attr>jrnlID</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="citSeriesToAllBib">
+			<From tableref="citSeries"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	<ForeignKey id="citSeriesToSeries">
+			<From tableref="citSeries"><Attr>seriesID</Attr></From>
+			<To tableref="series"><Attr>seriesID</Attr></To>
+	</ForeignKey>
+
+	<ForeignKey id="citBkTitleToAllBib">
+			<From tableref="citBkTitle"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	<ForeignKey id="citBkTitleToBooktitle">
+			<From tableref="citBkTitle"><Attr>bktitleID</Attr></From>
+			<To tableref="booktitle"><Attr>bktitleID</Attr></To>
+	</ForeignKey>	
+
+	<ForeignKey id="citKeyWordToAllBib">
+			<From tableref="citKeyWord"><Attr>citKey</Attr></From>
+			<To tableref="allBibs"><Attr>citKey</Attr></To>
+	</ForeignKey>
+	<ForeignKey id="citKeyWordToKeyWord">
+			<From tableref="citKeyWord"><Attr>keyWdID</Attr></From>
+			<To tableref="keyWord"><Attr>keyWdID</Attr></To>
+	</ForeignKey>	
+
+	</TargetSchema>
+</Schemas>
+
+<Correspondences/>
+
+<Mappings>
+<!-- DInProceedings(pid, title, pages, booktitle, url, cdrom, month, year) -> 
+	 InProceedings(inprocid, title, booktitle, year, month, pages, vol, num, loc, class, note, annote); -->
+
+	<Mapping id="M1">
+<Uses/>
+		<Foreach>
+			<Atom tableref="InProceedings">
+			  <Var>inprocID</Var>
+			  <Var>title</Var>
+			  <Var>bktitle</Var>
+			  <Var>year</Var>
+			  <Var>month</Var>
+			  <Var>pages</Var>
+			  <Var>vol</Var>
+			  <Var>num</Var>
+			  <Var>loc</Var>
+			  <Var>class</Var>
+			  <Var>note</Var>
+			  <Var>annote</Var>
+			</Atom>
+			<Atom tableref="InprocPublished">
+			  <Var>inprocId</Var>
+			  <Var>authId</Var>
+			</Atom>
+			<Atom tableref="Author">
+			  <Var>authId</Var>
+			  <Var>authName</Var>
+			</Atom>
+		</Foreach>
+		<Exists>
+			<Atom tableref="allBibs">
+				<!--  inprocid -->
+				<SKFunction skname="SK1">
+					<Var>inprocID</Var>
+				</SKFunction>
+			</Atom>
+		</Exists>
+	</Mapping>
+
+
+
+</Mappings>
+<ConnectionInfo>
+	<Host>localhost</Host>
+	<DB>amalgam</DB>
+	<User>lordpretzel</User>
+	<Password/>
+	<Port>5432</Port>
+</ConnectionInfo>
+</this:MappingScenario>

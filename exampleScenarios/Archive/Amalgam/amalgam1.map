@@ -1,0 +1,68 @@
+0    [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam1.xml'>
+549  [main] DEBUG org.vagabond.mapping.model.ModelLoader  - validate mapping scenario
+750  [main] DEBUG org.vagabond.commandline.loader.CommandLineLoader  - Command line args are: <'--validate-only','--output','map','-f','./resource/exampleScenarios/Amalgam/amalgam1.xml'>
+################# NAME OF MAPPING ##########################
+Name: 
+################# SOURCE AND TARGET SCHEMA #################
+Source:
+	InProceedings(inprocID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote);
+	Article(articleID, title, journal, year, month, pages, vol, num, loc, class, note, annote);
+	TechReport(techID, title, inst, year, month, pages, vol, num, loc, class, note, annote);
+	Book(bookID, title, publisher, year, month, pages, vol, num, loc, class, note, annote);
+	InCollection(collID, title, bktitle, year, month, pages, vol, num, loc, class, note, annote);
+	Misc(miscID, title, howpub, confloc, year, month, pages, vol, num, loc, class, note, annote);
+	Manual(manID, title, org, year, month, pages, vol, num, loc, class, note, annote);
+	Author(AuthID, name);
+	InprocPublished(inprocID, AuthID);
+	ArticlePublished(articleID, AuthID);
+	TechPublished(techID, AuthID);
+	BookPublished(bookID, AuthID);
+	InCollPublished(collID, AuthID);
+	MiscPublished(miscID, AuthID);
+	ManualPublished(manID, AuthID);
+Target:
+	Dummy(test);
+
+############### MAPPINGS ################################
+
+############### PK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# InProceedings(inprocID)
+# Article(articleID)
+# TechReport(techID)
+# Book(bookID)
+# InCollection(collID)
+# Misc(miscID)
+# Manual(manID)
+# Author(AuthID)
+# InprocPublished(inprocID, AuthID)
+# ArticlePublished(articleID, AuthID)
+# TechPublished(techID, AuthID)
+# BookPublished(bookID, AuthID)
+# InCollPublished(collID, AuthID)
+# MiscPublished(miscID, AuthID)
+# ManualPublished(manID, AuthID)
+
+## TARGET SCHEMA
+
+############### FK CONSTRAINTS ##########################
+
+## SOURCE SCHEMA
+# InprocPublished(inprocID) -> InProceedings(inprocID)
+# InprocPublished(AuthID) -> Author(AuthID)
+# ArticlePublished(articleID) -> Article(articleID)
+# ArticlePublished(AuthID) -> Author(AuthID)
+# TechPublished(techID) -> TechReport(techID)
+# TechPublished(AuthID) -> Author(AuthID)
+# BookPublished(bookID) -> Book(bookID)
+# BookPublished(AuthID) -> Author(AuthID)
+# InCollPublished(collID) -> InCollection(collID)
+# BookPublished(AuthID) -> Author(AuthID)
+# MiscPublished(miscID) -> Misc(miscID)
+# MiscPublished(AuthID) -> Author(AuthID)
+# ManualPublished(manID) -> Manual(manID)
+# ManualPublished(AuthID) -> Author(AuthID)
+
+## TARGET SCHEMA
+

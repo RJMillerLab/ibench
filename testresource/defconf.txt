@@ -1,4 +1,4 @@
-# Configuration File for STBenchmark
+# Configuration File for iBench
 
 # output path prefixes
 SchemaPathPrefix=testout

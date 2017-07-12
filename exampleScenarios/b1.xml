@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- GUS-BIOSQL REAL DATASET SCENARIO                                                      -->
+<!-- Mappings created by PRG according to material provided by Bodgan Alexe [SIGMOD 2011]  -->
+<!-- GUS Semantics: http://www.gusdb.org/SchemaBrowser                                     -->
+<!-- BIOSQL Semantics: http://www.biosql.org                                               --> 
+<Schemas>
+  <SourceSchema>
+
+    <Relation name="GUS_Gene" >
+      <Attr><Name>GENE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GENE_SYMBOL</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GENE_CATEGORY_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>REVIEW_STATUS_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>DESCRIPTION</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>REVIEWER_SUMMARY</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>SEQUENCE_ONTOLOGY_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>GENE_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_GeneSynonym" >
+      <Attr><Name>GENE_SYNONYM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GENE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>SYNONYM_NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>REVIEW_STATUS_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>IS_OBSOLETE</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>GENE_SYNONYM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_GORelationship" >
+      <Attr><Name>GO_RELATIONSHIP_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>PARENT_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>CHILD_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GO_RELATIONSHIP_TYPE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>GO_RELATIONSHIP_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_GOSynonym" >
+      <Attr><Name>GO_SYNONYM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>EXTERNAL_DATABASE_RELEASE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>SOURCE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GO_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>TEXT</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>GO_SYNONYM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_GOTerm" >
+      <Attr><Name>GO_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GO_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>EXTERNAL_DATABASE_RELEASE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>SOURCE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>DEFINITION</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>COMMENT_STRING</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>MINIMUM_LEVEL</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>MAXIMUM_LEVEL</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NUMBER_OF_LEVELS</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>ANCESTOR_GO_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>IS_OBSOLETE</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>GO_TERM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_Taxon" >
+      <Attr><Name>TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NCBI_TAX_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>PARENT_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>RANK</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GENETIC_CODE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>MITOCHONDRIAL_GENETIC_CODE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>TAXON_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="GUS_TaxonName" >
+      <Attr><Name>TAXON_NAME_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>UNIQUE_NAME_VARIANT</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME_CLASS</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>TAXON_NAME_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <ForeignKey>
+      <From tableref="GUS_GeneSynonym">
+        <Attr>GENE_ID</Attr>
+      </From>
+      <To tableref="GUS_Gene">
+        <Attr>GENE_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GORelationship">
+        <Attr>PARENT_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GORelationship">
+        <Attr>CHILD_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GOSynonym">
+        <Attr>GO_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_GOTerm">
+        <Attr>ANCESTOR_GO_TERM_ID</Attr>
+      </From>
+      <To tableref="GUS_GOTerm">
+        <Attr>GO_TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_Taxon">
+        <Attr>PARENT_ID</Attr>
+      </From>
+      <To tableref="GUS_Taxon">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_TaxonName">
+        <Attr>TAXON_ID</Attr>
+      </From>
+      <To tableref="GUS_Taxon">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+  </SourceSchema>
+  
+  <TargetSchema>
+    
+    <Relation name="biosql_BIOENTRY" >
+      <Attr><Name>BIOENTRY_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>BIODATABASE_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>ACCESSION</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>IDENTIFIER</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>DIVISION</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>DESCRIPTION</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>VERSION</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>BIOENTRY_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="biosql_TAXON" >
+      <Attr><Name>TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NCBI_TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>PARENT_TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NODE_RANK</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>GENETIC_CODE</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>MITO_GENETIC_CODE</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>LEFT_VALUE</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>RIGHT_VALUE</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>TAXON_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="biosql_TaxonName" >
+      <Attr><Name>TAXON_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME_CLASS</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>TAXON_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="biosql_TERM" >
+      <Attr><Name>TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>NAME</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>DEFINITION</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>IDENTIFIER</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>IS_OBSOLETE</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>ONTOLOGY_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>TERM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="biosql_TERM_SYNONYM" >
+      <Attr><Name>SYNONYM</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>SYNONYM</Attr>
+        <Attr>TERM_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <Relation name="biosql_TERM_RELATIONSHIP" >
+      <Attr><Name>TERM_RELATIONSHIP_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>SUBJECT_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>PREDICATE_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>OBJECT_TERM_ID</Name> <DataType>TEXT</DataType></Attr>
+      <Attr><Name>ONTOLOGY_ID</Name> <DataType>TEXT</DataType></Attr>
+      <PrimaryKey> 
+        <Attr>TERM_RELATIONSHIP_ID</Attr>
+      </PrimaryKey>
+    </Relation>
+
+    <ForeignKey>
+      <From tableref="biosql_BIOENTRY">
+        <Attr>TAXON_ID</Attr>
+      </From>
+      <To tableref="biosql_TAXON">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="GUS_TaxonName">
+        <Attr>TAXON_ID</Attr>
+      </From>
+      <To tableref="biosql_TAXON">
+        <Attr>TAXON_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_RELATIONSHIP">
+        <Attr>SUBJECT_TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_RELATIONSHIP">
+        <Attr>PREDICATE_TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_RELATIONSHIP">
+        <Attr>OBJECT_TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+    <ForeignKey>
+      <From tableref="biosql_TERM_SYNONYM">
+        <Attr>TERM_ID</Attr>
+      </From>
+      <To tableref="biosql_TERM">
+        <Attr>TERM_ID</Attr>
+      </To>
+    </ForeignKey>
+
+  </TargetSchema>
+  </Schemas>  
+
+<Correspondences/>
+
+  <Mappings>
+
+<!-- GUS_TaxonName(x0,x1,x2,x2,x4) & GUS_Taxon(x1,x6,x7,x8,x9,x10) 
+     -> biosql_TAXON_NAME(x1,x2,x4) & biosql_TAXON(x1,x6,x7,x8,x9,x10,x20,x21) 
+-->
+
+    <Mapping id="M1">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_TaxonName">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+        </Atom> 
+        <Atom tableref="GUS_Taxon">
+          <Var>x1</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TaxonName">
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x4</Var>
+        </Atom> 
+        <Atom tableref="biosql_TAXON">
+          <Var>x1</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+          <!-- SK1 represents LEFT_VALUE which depends on GUS_TAXON.TAXON_ID (key) -->
+          <SKFunction skname="SK1">
+            <Var>x1</Var>
+          </SKFunction>
+          <!-- SK2 represents RIGHT_VALUE which depends on GUS_TAXON.TAXON_ID (key) -->
+          <SKFunction skname="SK2">
+            <Var>x1</Var>
+           </SKFunction>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- GUS_Taxon(x0,x1,x2,x3,x4,x5) -> biosql_TAXON(x0,x1,x2,x3,x4,x5,x12,x13) -->
+
+   <Mapping id="M2">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_Taxon">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+          <Var>x5</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TAXON">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+          <Var>x5</Var>
+          <!-- SK1 represents LEFT_VALUE which depends on GUS_TAXON.TAXON_ID (key) -->
+          <SKFunction skname="SK1">
+            <Var>x0</Var>
+          </SKFunction>
+          <!-- SK2 represents RIGHT_VALUE which depends on GUS_TAXON.TAXON_ID (key) -->
+          <SKFunction skname="SK2">
+            <Var>x0</Var>
+           </SKFunction>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- GUS_Gene(x0,x1,x2,x3,x4,x5,x6,x7) 
+     -> biosql_BIOENTRY(x0,x9,x10,x1,x2,x7,x3,x5,x16) & biosql_TAXON(x10,x18,x19,x20,x21,x22,x23,x24) 
+-->
+
+   <Mapping id="M3">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_Gene">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+          <Var>x5</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_BIOENTRY">
+          <Var>x0</Var>
+          <!-- SK3 represents BIODATABASE_ID which depends on GUS_Gene.GENE_SYMBOL-->
+          <SKFunction skname="SK3">
+            <Var>x2</Var>
+          </SKFunction>
+          <!-- SK4 represents TAXON_ID which depends on GUS_Gene.GENE_ID, GENE_SYMBOL and GENE_CATEGORY-->
+          <SKFunction skname="SK4">
+            <Var>x0</Var>
+            <Var>x2</Var>
+            <Var>x3</Var>
+          </SKFunction>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x7</Var>
+          <Var>x3</Var>
+          <Var>x5</Var>
+          <!-- SK5 represents VERSION which depends on GUS_Gene.GENE_ID and REVIEW_STATUS_ID -->
+          <SKFunction skname="SK5">
+            <Var>x0</Var>
+            <Var>x4</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="biosql_TAXON">
+          <!-- SK4 represents TAXON_ID which depends on GUS_Gene.GENE_ID, GENE_SYMBOL and GENE_CATEGORY -->
+          <SKFunction skname="SK4">
+            <Var>x0</Var>
+            <Var>x2</Var>
+            <Var>x3</Var>
+          </SKFunction>
+          <!-- SK6 to SK12 represent NCBI_TAXON_ID to RIGHT VALUE, all depending on GUS_Gene.GENE_ID (key) --> 
+          <SKFunction skname="SK6">
+            <Var>x0</Var>
+          </SKFunction>
+          <SKFunction skname="SK7">
+            <Var>x0</Var>
+          </SKFunction>
+          <SKFunction skname="SK8">
+            <Var>x0</Var>
+          </SKFunction>
+          <SKFunction skname="SK9">
+            <Var>x0</Var>
+          </SKFunction>
+          <SKFunction skname="SK10">
+            <Var>x0</Var>
+          </SKFunction>
+          <SKFunction skname="SK11">
+            <Var>x0</Var>
+          </SKFunction>
+          <SKFunction skname="SK12">
+            <Var>x0</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+   </Mapping>
+
+<!-- GUS_GeneSynonym(x0,x1,x2,x3,x4) & GUS_Gene(x1,x2,x7,x8,x9,x10,x11,x12) 
+     -> biosql_TERM_SYNONYM(x0,x1) & biosql_TERM(x1,x2,x10,x18,x4,x20) 
+-->
+
+   <Mapping id="M4">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_GeneSynonym">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+        </Atom> 
+        <Atom tableref="GUS_Gene">
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x7</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+          <Var>x11</Var>
+          <Var>x12</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TERM_SYNONYM">
+          <Var>x0</Var>
+          <Var>x1</Var>
+        </Atom> 
+        <Atom tableref="biosql_TERM">
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x10</Var>
+          <!-- SK13 represents IDENTIFIER which depends on GUS_Gene.GENE_ID (key) -->
+          <SKFunction skname="SK13">
+            <Var>x1</Var>
+          </SKFunction>
+          <Var>x4</Var>
+          <!-- SK14 represents ONTOLOGY_ID which depends on GUS_Gene.SEQUENCE_ONTOLOGY_ID -->
+          <SKFunction skname="SK14">
+            <Var>x12</Var>
+          </SKFunction>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- GUS_GOTerm(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11) -> biosql_TERM(x0,x4,x5,x1,x11,x17) -->
+
+   <Mapping id="M5">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_GOTerm">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+          <Var>x5</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+          <Var>x11</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TERM">
+          <Var>x0</Var>
+          <Var>x4</Var>
+          <Var>x5</Var>
+          <Var>x1</Var>
+          <Var>x11</Var>
+          <!-- SK15 represents ONTOLOGY_ID which depends on GUS_GOTerm.GO_TERM_ID (key)-->
+          <SKFunction skname="SK15">
+            <Var>x0</Var>
+          </SKFunction>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+<!-- GUS_GOSynonym(x0,x1,x2,x3,x4) & GUS_GOTerm(x3,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16) 
+     -> biosql_TERM_SYNONYM(x0,x3) & biosql_TERM(x3,x9,x10,x6,x16,x24) 
+-->
+
+   <Mapping id="M6">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_GOSynonym">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+        </Atom> 
+        <Atom tableref="GUS_GOTerm">
+          <Var>x3</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+          <Var>x11</Var>
+          <Var>x12</Var>
+          <Var>x13</Var>
+          <Var>x14</Var>
+          <Var>x15</Var>
+          <Var>x16</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TERM_SYNONYM">
+          <Var>x0</Var>
+          <Var>x3</Var>
+        </Atom> 
+        <Atom tableref="biosql_TERM">
+          <Var>x3</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+          <Var>x6</Var>
+          <Var>x16</Var>
+          <!-- SK15 represents ONTOLOGY_ID which depends on GUS_GOTerm.GO_TERM_ID (key) -->
+          <SKFunction skname="SK15">
+             <Var>x3</Var>
+           </SKFunction>
+        </Atom> 
+      </Exists>
+   </Mapping>
+   
+<!-- GUS_GORelationship(x0,x4,x16,x3) 
+     & GUS_GOTerm(x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15) 
+     & GUS_GOTerm(x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27) 
+     -> biosql_TERM_RELATIONSHIP(x0,x4,x3,x16,x32) 
+     & biosql_TERM(x4,x8,x9,x5,x15,x38) & biosql_TERM(x16,x20,x21,x17,x27,x50) -->
+
+   <Mapping id="M7">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_GORelationship">
+          <Var>x0</Var>
+          <Var>x4</Var>
+          <Var>x16</Var>
+          <Var>x3</Var>
+        </Atom> 
+        <Atom tableref="GUS_GOTerm">
+          <Var>x4</Var>
+          <Var>x5</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x10</Var>
+          <Var>x11</Var>
+          <Var>x12</Var>
+          <Var>x13</Var>
+          <Var>x14</Var>
+          <Var>x15</Var>
+        </Atom> 
+        <Atom tableref="GUS_GOTerm">
+          <Var>x16</Var>
+          <Var>x17</Var>
+          <Var>x18</Var>
+          <Var>x19</Var>
+          <Var>x20</Var>
+          <Var>x21</Var>
+          <Var>x22</Var>
+          <Var>x23</Var>
+          <Var>x24</Var>
+          <Var>x25</Var>
+          <Var>x26</Var>
+          <Var>x27</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TERM_RELATIONSHIP">
+          <Var>x0</Var>
+          <Var>x4</Var>
+          <Var>x3</Var>
+          <Var>x16</Var>
+          <SKFunction skname="SK20">
+            <Var>x0</Var>
+          </SKFunction>
+        </Atom> 
+        <Atom tableref="biosql_TERM">
+          <Var>x4</Var>
+          <Var>x8</Var>
+          <Var>x9</Var>
+          <Var>x5</Var>
+          <Var>x15</Var>
+          <SKFunction skname="SK21">
+            <Var>x4</Var>
+          </SKFunction>
+        </Atom>
+        <Atom tableref="biosql_TERM">
+          <Var>x16</Var>
+          <Var>x20</Var>
+          <Var>x21</Var>
+          <Var>x17</Var>
+          <Var>x27</Var>
+          <SKFunction skname="SK22">
+            <Var>x16</Var>
+          </SKFunction>
+        </Atom>
+      </Exists>
+   </Mapping>
+ 
+<!-- GUS_Gene(x0,x1,x2,x3,x4,x5,x6,x7) -> biosql_TERM(x0,x1,x5,x11,x12,x13) -->
+
+   <Mapping id="M8">
+<Uses/>
+      <Foreach>
+        <Atom tableref="GUS_Gene">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x2</Var>
+          <Var>x3</Var>
+          <Var>x4</Var>
+          <Var>x5</Var>
+          <Var>x6</Var>
+          <Var>x7</Var>
+        </Atom> 
+      </Foreach>
+      <Exists>
+        <Atom tableref="biosql_TERM">
+          <Var>x0</Var>
+          <Var>x1</Var>
+          <Var>x5</Var>
+          <!-- SK13 represents IDENTIFIER which depends on GUS_Gene.GENE_ID (key) -->
+          <SKFunction skname="SK13">
+            <Var>x0</Var>
+          </SKFunction>
+          <!-- SK18 represents IS_OBSOLETE which depends on GENE_ID and REVIEW_STATUS_ID -->
+          <SKFunction skname="SK18">
+            <Var>x0</Var>
+            <Var>x4</Var>
+          </SKFunction>
+          <!-- SK14 represents ONTOLOGY_ID which depends on GUS_Gene.SEQUENCE_ONTOLOGY_ID -->
+          <SKFunction skname="SK14">
+            <Var>x7</Var>
+          </SKFunction>
+        </Atom> 
+      </Exists>
+   </Mapping>
+
+</Mappings>
+
+</this:MappingScenario>

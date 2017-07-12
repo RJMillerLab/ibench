@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<this:MappingScenario xmlns:this="org/vagabond/xmlmodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Schemas>
+	<SourceSchema>
+		<Relation name="person">
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>address</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>name</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="address">
+			<Attr><Name>occ</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>city</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>occ</Attr></PrimaryKey>
+		</Relation>
+		<Relation name="place">
+			<Attr><Name>occ</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>zip</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>occ</Attr></PrimaryKey>
+		</Relation>
+		<ForeignKey id="person_add_fk">
+			<From tableref="address"><Attr>occ</Attr></From>
+			<To tableref="person"><Attr>name</Attr></To>
+		</ForeignKey>
+		<ForeignKey id="person_place_fk">
+			<From tableref="place"><Attr>occ</Attr></From>
+			<To tableref="person"><Attr>name</Attr></To>
+		</ForeignKey>
+	</SourceSchema>
+	<TargetSchema>
+		<Relation name="livesAt">
+			<Attr><Name>name</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>city</Name><DataType>TEXT</DataType></Attr>
+			<Attr><Name>zip</Name><DataType>TEXT</DataType></Attr>
+			<PrimaryKey><Attr>name</Attr></PrimaryKey>
+		</Relation>
+	</TargetSchema>
+</Schemas>
+<Correspondences>
+	<Correspondence id="c1">
+		<From tableref="person"><Attr>name</Attr></From>
+		<To tableref="livesAt"><Attr>name</Attr></To>
+	</Correspondence>
+	 <Correspondence id="c2">
+		<From tableref="address"><Attr>city</Attr></From>
+		<To tableref="livesAt"><Attr>city</Attr></To>
+	</Correspondence> 
+	<!-- <Correspondence id="c3">
+		<From tableref="address"><Attr>city</Attr></From>
+		<To tableref="livesAt"><Attr>city</Attr></To>
+	</Correspondence> 
+	 <Correspondence id="c3">
+		<From tableref="place"><Attr>locn</Attr></From>
+		<To tableref="livesAt"><Attr>zip</Attr></To>
+	</Correspondence> -->
+	 <Correspondence id="c4">
+		<From tableref="place"><Attr>zip</Attr></From>
+		<To tableref="livesAt"><Attr>zip</Attr></To>
+	</Correspondence>
+</Correspondences>
+<Mappings/>
+</this:MappingScenario>

@@ -1,82 +1,64 @@
-# Configuration File for STBenchmark
+################################################################################
+# iBench configuration file
+#
+# Example with user defined data types (UDTs), create 1 copy primitives and use
+# 4 user defined data types for its 30 attributes
+#
+################################################################################
 
 # Output Path Prefixes
-SchemaPathPrefix=out0
-InstancePathPrefix=out0
+SchemaPathPrefix=jarLoadDT
+InstancePathPrefix=jarLoadDT
 
 # Number of Instances for each Basic Scenario Type
-Scenarios.COPY = 3
-Scenarios.HORIZPARTITION = 0
-Scenarios.SURROGATEKEY = 0
-Scenarios.MERGING = 0
-Scenarios.FUSION = 0
-Scenarios.SELFJOINS = 0
-Scenarios.VERTPARTITION = 0
-Scenarios.ADDATTRIBUTE = 0
-Scenarios.DELATTRIBUTE = 0
-Scenarios.ADDDELATTRIBUTE = 0
-Scenarios.VERTPARTITIONISA = 0
-Scenarios.VERTPARTITIONHASA = 0
-Scenarios.VERTPARTITIONNTOM = 0
-Scenarios.MERGEADD = 0
+Scenarios.COPY = 1
 
-# These should always be zero
-Scenarios.FLATTENING = 0
-Scenarios.GLAV = 0
-Scenarios.NESTING = 0
-Scenarios.VALUEGEN = 0
-Scenarios.VALUEMANAGEMENT = 0
+################################################################################
+# UDTs
+#
+# 100 percent of attributes use a dummy DT loaded from a jarfile
+#
+################################################################################
 
-# Parameters that define the shape of the schema and basic scenarios
+DataType.NumDataType = 1
+DataType.0.Name = myTestDummy
+DataType.0.ClassPath = ibench.test_udts.TestDT
+DataType.0.Percentage = 100.0
+DataType.0.DBType = TEXT
+DataType.0.JarPath = ./exampleData/testDT.jar
+
+
+################################################################################
+# Additional configuration
+
 ConfigOptions.NumOfSubElements = 3
-ConfigOptions.NumOfNewAttributes = 1
-ConfigOptions.NumofAttributestoDelete = 1
-ConfigOptions.JoinSize = 2
-ConfigOptions.NumOfParamsInFunctions = 1
-ConfigOptions.PrimaryKeySize = 1
-ConfigOptions.NumOfJoinAttributes = 1
-ConfigOptions.JoinKind = 0 
-# Star is 0 , chain is 1
-ConfigOptions.SkolemKind = 0
-ConfigOptions.SourceSkolemPerc = 0
-ConfigOptions.SourceFDPerc = 0
-ConfigOptions.NestingDepth = 0
-ParameterName.ReuseSourcePerc = 100
-ParameterName.NoReuseScenPerc = 50
 
-# Deviations for each of the parameters
-ConfigOptionsDeviation.NumOfSubElements = 0
-ConfigOptionsDeviation.NumOfNewAttributes = 0
-ConfigOptionsDeviation.NumofAttributestoDelete = 0
-ConfigOptionsDeviation.JoinSize = 0
-ConfigOptionsDeviation.NumOfParamsInFunctions = 0
-ConfigOptionsDeviation.PrimaryKeySize = 0
-ConfigOptionsDeviation.NumOfJoinAttributes = 0
-ConfigOptionsDeviation.JoinKind = 0
-ConfigOptionsDeviation.SkolemKind = 0
-ConfigOptionsDeviation.SourceSkolemPerc = 0
-ConfigOptionsDeviation.SourceFDPerc = 0
-
-# Random number generator and max values, DataGenerator and MappingLang
-RandomSeed = -1241084990
-RepElementCount = 5
-MaxStringLength = 5
+RandomSeed = 2
+RepElementCount = 10
+MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
-MappingLanguage = SOtgds
+MappingLanguage = FOtgds
+ExchangeTargetData = false
 
+################################################################################
 # Optional activation/deactivation of output options
+# create only TrampXML metadata file and data
+################################################################################ 
+
 OutputOption.HTMLSchemas = false
-OutputOption.Data = false
-OutputOption.XMLSchemas = false
+OutputOption.Data = true
+OutputOption.XMLSchemas = true
 OutputOption.HTMLMapping = false
-OutputOption.TrampXML = true
-OutputOption.ErrorsAndExplanations = false
+OutputOption.TrampXML = true			
+OutputOption.Clio = false				
 
-# Optional activation/deactivation of output parts of the Tramp XML document
+################################################################################
+# Optional activation/deactivation of parts of the generated Tramp XML document
+################################################################################
+
 TrampXMLOutput.Correspondences = true
-TrampXMLOutput.Transformations = false
-TrampXMLOutput.Data = false
+TrampXMLOutput.Transformations = true
+TrampXMLOutput.Data = true
 TrampXMLOutput.ConnectionInfo = false
-TrampXMLOutput.FDs = true
-
+TrampXMLOutput.FDs = false	  			

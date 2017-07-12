@@ -1,3 +1,40 @@
+/*
+ *
+ * Copyright 2016 Big Data Curation Lab, University of Toronto,
+ * 		   	  	  	   				 Patricia Arocena,
+ *   								 Boris Glavic,
+ *  								 Renee J. Miller
+ *
+ * This software also contains code derived from STBenchmark as described in
+ * with the permission of the authors:
+ *
+ * Bogdan Alexe, Wang-Chiew Tan, Yannis Velegrakis
+ *
+ * This code was originally described in:
+ *
+ * STBenchmark: Towards a Benchmark for Mapping Systems
+ * Alexe, Bogdan and Tan, Wang-Chiew and Velegrakis, Yannis
+ * PVLDB: Proceedings of the VLDB Endowment archive
+ * 2008, vol. 1, no. 1, pp. 230-244
+ *
+ * The copyright of the ToxGene (included as a jar file: toxgene.jar) belongs to
+ * Denilson Barbosa. The iBench distribution contains this jar file with the
+ * permission of the author of ToxGene
+ * (http://www.cs.toronto.edu/tox/toxgene/index.html)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.vagabond.benchmark.model;
 
 import java.util.ArrayList;
@@ -5,8 +42,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.vagabond.mapping.model.MapScenarioHolder;
 import org.vagabond.xmlmodel.AttrDefType;
 import org.vagabond.xmlmodel.AttrListType;
 import org.vagabond.xmlmodel.AttrRefType;
@@ -15,6 +54,8 @@ import org.vagabond.xmlmodel.CorrespondenceType;
 import org.vagabond.xmlmodel.FDType;
 import org.vagabond.xmlmodel.ForeignKeyType;
 import org.vagabond.xmlmodel.FunctionType;
+import org.vagabond.xmlmodel.IDType;
+import org.vagabond.xmlmodel.MappingScenarioDocument;
 import org.vagabond.xmlmodel.MappingType;
 import org.vagabond.xmlmodel.MappingType.Uses;
 import org.vagabond.xmlmodel.RelAtomType;
@@ -22,6 +63,7 @@ import org.vagabond.xmlmodel.RelInstanceFileType;
 import org.vagabond.xmlmodel.RelationType;
 import org.vagabond.xmlmodel.SKFunction;
 import org.vagabond.xmlmodel.SchemaType;
+import org.vagabond.xmlmodel.SchemasType;
 import org.vagabond.xmlmodel.TransformationType;
 import org.vagabond.xmlmodel.TransformationType.Implements;
 
@@ -39,6 +81,8 @@ import vtools.dataModel.expression.Projection;
 import vtools.dataModel.expression.Variable;
 import vtools.dataModel.schema.Schema;
 import vtools.dataModel.types.Atomic;
+import vtools.dataModel.types.DataType;
+import vtools.dataModel.types.DataTypeHandler;
 import vtools.dataModel.types.Set;
 
 /**
@@ -59,6 +103,7 @@ public class TrampModelFactory {
 	private MappingScenario stScen;
 	private Configuration conf;
 	private PartialMapping p;
+	private MappingScenarioDocument oDoc;
 
 	public enum FuncParamType {
 		Var,
@@ -68,9 +113,20 @@ public class TrampModelFactory {
 	public TrampModelFactory(MappingScenario stScen) {
 		this.setStScen(stScen);
 		this.doc = stScen.getDoc();
+		initODoc();
 		initIdGen();
 	}
 	
+	/**
+	 * 
+	 */
+	private void initODoc() {
+		oDoc = MappingScenarioDocument.Factory.newInstance();
+		SchemasType schemas = oDoc.addNewMappingScenario().addNewSchemas();
+		schemas.addNewSourceSchema();
+		schemas.addNewTargetSchema();
+	}
+
 	public TrampModelFactory(TrampXMLModel doc) {
 		this.doc = doc;
 		initIdGen();
@@ -107,6 +163,7 @@ public class TrampModelFactory {
 		idGen.createIdType("FK", "FK");
 		idGen.createIdType("SK", "SK");
 		idGen.createIdType("FD", "FD");
+		idGen.createIdType("ID", "ID");
 		idGen.createIdType("R", "");
 	}
 
@@ -136,6 +193,8 @@ public class TrampModelFactory {
 				doc.getDocument().getMappingScenario().getCorrespondences()
 						.addNewCorrespondence();
 		c.setId(idGen.createId("Corr"));
+		doc.indexCorr(c);
+		
 		c.addNewFrom();
 		c.getFrom().setTableref(fromRel);
 		for (String a : fromAttrs)
@@ -149,6 +208,13 @@ public class TrampModelFactory {
 		p.addCorr(c);
 		
 		return c;
+	}
+	
+	public CorrespondenceType addCorrespondence(CorrespondenceType c) {
+		CorrespondenceType newC = doc.getDocument().getMappingScenario().getCorrespondences().addNewCorrespondence();
+		newC.set(c);
+		p.addCorr(newC);
+		return newC;
 	}
 	
 	public void addPKFds () throws Exception {
@@ -175,11 +241,36 @@ public class TrampModelFactory {
 		return fd;
 	}
 	
+	public FDType addFD (FDType fd) {
+		FDType newFd = doc.getScenario().getSchemas().getSourceSchema().addNewFD();
+		newFd.set(fd);
+		return newFd;
+	}
+	
 	public FDType[] getRelFDs (String rel) {
 		FDType[] fd = doc.getScenario().getSchemas().getSourceSchema().getFDArray();
 		
 		return fd;
 	}
+	
+	public IDType addID (String fromRel, String[] fromAttrs, String toRel, String[] toAttrs, boolean source) {
+		SchemaType s = source ? doc.getScenario().getSchemas().getSourceSchema() : doc.getScenario().getSchemas().getTargetSchema();
+		IDType id = s.addNewID();
+		
+		id.setId(getNextId("ID"));
+		
+		AttrRefType from = id.addNewFrom();
+		from.setTableref(fromRel);
+		for(String a: fromAttrs)
+			from.addAttr(a);
+		AttrRefType to = id.addNewTo();
+		to.setTableref(toRel);
+		for(String a: toAttrs)
+			to.addAttr(a);
+		
+		return id;
+	}
+	
 
 	public RelationType addRelation(String hook, String name, String[] attrs,
 			String[] dTypes, boolean source) {
@@ -188,6 +279,8 @@ public class TrampModelFactory {
 						.getScenario().getSchemas().getTargetSchema();
 		RelationType rel = schema.addNewRelation();
 		rel.setName(name);
+		doc.indexRel(rel, source);
+		
 		addToIndex(rel, source);
 		for (int i = 0; i < attrs.length; i++) {
 			AttrDefType a = rel.addNewAttr();
@@ -195,24 +288,31 @@ public class TrampModelFactory {
 			a.setDataType(dTypes[i]);
 		}
 
+		log.debug(Arrays.toString(dTypes));
 		addSTRelation(hook, name, attrs, dTypes, source);
 
-		if (source && conf.getOutputOption(OutputOption.Data)
-				&& conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data))
-			addDataElement(name);
+		// create data element
+		addDataElementIfNeeded(source, name);
 
 		if (source)
 			p.addSourceRel(rel);
 		else
 			p.addTargetRel(rel);
 		
+		// determine data types
+		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, name))
+		{
+			String[] dTypesNames = new String[dTypes.length];
+			getDTNames(dTypes, dTypesNames);
+			DataTypeHandler.getInst().setTypesNamesOrder(source, name, dTypesNames);
+		}
 		return rel;
 	}
 	
 	public void addRelation(String hook, RelationType r, boolean source) {
 		String[] attr = new String[r.sizeOfAttrArray()];
 		String[] dTypes = new String[r.sizeOfAttrArray()];
-		
+
 		for(int i = 0; i < attr.length; i++) {
 			AttrDefType a = r.getAttrArray(i);
 			attr[i] = a.getName();
@@ -220,10 +320,33 @@ public class TrampModelFactory {
 		}
 		
 		SchemaType s = doc.getSchema(source);
-		s.addNewRelation();
-		s.setRelationArray(s.sizeOfRelationArray() - 1, r);
+		RelationType newR = s.addNewRelation();
+		newR.set(r);
+		
+		doc.indexRel(newR, source);
 		addSTRelation(hook, r.getName(), attr, dTypes, source);
 		addToIndex(r, source);
+		
+		// create PK for iBench
+		if (r.isSetPrimaryKey())
+			addiBenchKey(r.getName(), r.getPrimaryKey().getAttrArray(), source);
+		
+		// create data element
+		addDataElementIfNeeded(source, newR.getName());
+		
+		// also register data types (or generate them if the relation we are copying has not been registered yet)
+		if (!DataTypeHandler.getInst().hasTypesNamesOrder(source, r.getName())) {
+			String[] dTypesNames;
+			if (DataTypeHandler.getInst().hasTypesNamesOrder(!source, r.getName())) {
+				String[] origNames = DataTypeHandler.getInst().getTypesNamesOrder(!source, r.getName());
+				dTypesNames = Arrays.copyOf(origNames, origNames.length);
+			}
+			else {
+				dTypesNames = new String[dTypes.length];
+				getDTNames(dTypes, dTypesNames);
+			}
+			DataTypeHandler.getInst().setTypesNamesOrder(source, r.getName(), dTypes);
+		}
 		
 		if (source)
 			p.addSourceRel(r);
@@ -242,15 +365,58 @@ public class TrampModelFactory {
 	public RelationType addRelation(String hook, String name, String[] attrs,
 			boolean source) {
 		String[] dTypes = new String[attrs.length];
-		Arrays.fill(dTypes, "TEXT");
+		String[] dTypesNames = new String[attrs.length];
+		Arrays.fill(dTypes, null);
+
+		// determine data types
+		getDTNames(dTypes, dTypesNames);	
+		
+		DataTypeHandler.getInst().setTypesNamesOrder(source, name, dTypesNames);
 		return addRelation(hook, name, attrs, dTypes, source);
 	}
 
-	@SuppressWarnings("incomplete-switch")
-	private void addDataElement(String name) {
+	private void getDTNames (String[] dTypes, String[] dTypesNames) {
+		Atomic data;
+		
+		for (int k = 0; k < dTypes.length; k++) {
+			Random randGen = new Random();
+			data = DataTypeHandler.getInst().getRandomDT(randGen);
+			if (!(data instanceof DataType)) {
+				log.debug("choose DT: bench_TEXT (multiword)");
+				dTypes[k] = "TEXT";
+				dTypesNames[k] = "TEXT";
+			}
+			else {
+				log.debug("choose DT: " + data.toString());
+				dTypesNames[k] = ((DataType)data).getName(); // fill with email, phoneNumber, names, etc
+				dTypes[k] = DataTypeHandler.getInst().getDbType(dTypesNames[k]); // fill with DB types, text, int, etc
+			}
+		}
+	}
+	
+	private void addDataElementIfNeeded (boolean source, String tableName) {
+		boolean dataActive = conf.getOutputOption(OutputOption.Data);
+		boolean trampXMLdata = conf.getTrampXMLOutputOption(TrampXMLOutputSwitch.Data);
+		boolean targetDataActive = conf.getOutputOption(OutputOption.EnableTargetData);
+		
+		if (source && dataActive && trampXMLdata)
+			addDataElement(source, tableName);
+		if (! source && dataActive && targetDataActive)
+			addDataElement(source, tableName);
+	}
+	
+	private void addDataElement(boolean source, String name) {
 		if (!doc.getScenario().isSetData())
 			doc.getScenario().addNewData();
 
+		// mark target data for exchange if asked for
+		if (conf.getExchangeTargetData() && !doc.getScenario().getData().isSetExchangeData())
+			doc.getScenario().getData().addNewExchangeData();
+		
+		// mark target data loading if we create a data element for a target relation
+		if (!source && !doc.getScenario().getData().isSetLoadTargetData())
+			doc.getScenario().getData().addNewLoadTargetData();
+		
 		switch (conf.getDataGen()) {
 		case TrampCSV:
 			RelInstanceFileType inst =
@@ -258,10 +424,14 @@ public class TrampModelFactory {
 			inst.setFileName(name + ".csv");
 			inst.setColumnDelim("|");
 			inst.setName(name);
-			inst.setPath(Configuration.getAbsoluteInstancePath());
+			inst.setPath(conf.getAbsoluteInstancePath());
+			if (!source)
+				inst.addNewTargetRelation();
 			break;
 		case TrampXMLInline:
 			// TODO
+			break;
+		default:
 			break;
 		}
 	}
@@ -290,6 +460,15 @@ public class TrampModelFactory {
 			return "INT8";
 		if (dt == Atomic.STRING)
 			return "TEXT";
+		if (dt instanceof DataType)
+		{
+			DataType dataT = (DataType) dt;
+			String dbType = dataT.getDbType();
+			if (dbType != null)
+				return dbType;
+			return "TEXT";
+		}
+		
 		return null;
 	}
 	
@@ -298,7 +477,13 @@ public class TrampModelFactory {
 			return Atomic.STRING;
 		if (string.equals("INT8"))
 			return Atomic.INTEGER;
-		return null;
+		//access the map
+
+		log.error("USED DEFAULT FOR: " + string);
+
+		log.error("SHOULD HAVE NEVER COME HERE");
+
+		return Atomic.STRING;
 	}
 	
 	public Key addPrimaryKey(String relName, String[] attrs, boolean source)
@@ -309,13 +494,19 @@ public class TrampModelFactory {
 		for (String a : attrs)
 			k.addAttr(a);
 
+		Key key = addiBenchKey(relName, attrs, source);
+
+		return key;
+	}
+
+	private Key addiBenchKey(String relName, String[] attrs, boolean source) {
+		Schema s = source ? stScen.getSource() : stScen.getTarget();
 		Key key = new Key();
 		key.addLeftTerm(new Variable("X"), new Projection(Path.ROOT, relName));
 		key.setEqualElement(new Variable("X"));
 		s.addConstraint(key);
 		for (String a : attrs)
 			key.addKeyAttr(new Projection(new Variable("X"), a));
-
 		return key;
 	}
 	
@@ -350,8 +541,8 @@ public class TrampModelFactory {
 	public void addForeignKey (String fromRel, String[] fromA, String toRel, 
 			String[] toA, boolean source) {
 		Schema s = source ? stScen.getSource() : stScen.getTarget();
-		SchemaType st = source ? doc.getScenario().getSchemas().getSourceSchema() :
-			doc.getScenario().getSchemas().getTargetSchema();
+		SchemaType st = source ? oDoc.getMappingScenario().getSchemas().getSourceSchema() :
+			oDoc.getMappingScenario().getSchemas().getTargetSchema();
 		
 		ForeignKeyType fk = st.addNewForeignKey();
 		AttrRefType from = fk.addNewFrom();
@@ -368,8 +559,37 @@ public class TrampModelFactory {
 		stFK.addLeftTerm(fromVar, new Projection(Path.ROOT, fromRel));
 		Variable toVar = new Variable("K");
 		stFK.addRightTerm(toVar, new Projection(Path.ROOT, toRel));
-		stFK.addFKeyAttr(new Projection(toVar, toA[0]), 
-				new Projection(fromVar, fromA[0])); //TODO check whether supports more than one attr in FK
+		//MN BEGIN - 24 August 2014
+		for(int count=0; count<toA.length; count++)
+			stFK.addFKeyAttr(new Projection(toVar, toA[count]), 
+				new Projection(fromVar, fromA[count])); //TODO check whether supports more than one attr in FK
+		//MN END
+		s.addConstraint(stFK);
+	}
+	
+	public void addForeignKey (ForeignKeyType fks, boolean source) {
+		Schema s = source ? stScen.getSource() : stScen.getTarget();
+		SchemaType st = source ? doc.getScenario().getSchemas().getSourceSchema() :
+			doc.getScenario().getSchemas().getTargetSchema();
+		
+		ForeignKeyType fk = st.addNewForeignKey();
+		fk.set(fks);
+		String fromRel = fk.getFrom().getTableref();
+		String[] fromA = fk.getFrom().getAttrArray();
+			
+		String toRel = fk.getTo().getTableref();
+		String[] toA = fk.getTo().getAttrArray();
+		
+		ForeignKey stFK = new ForeignKey();
+		Variable fromVar = new Variable("F");
+		stFK.addLeftTerm(fromVar, new Projection(Path.ROOT, fromRel));
+		Variable toVar = new Variable("K");
+		stFK.addRightTerm(toVar, new Projection(Path.ROOT, toRel));
+		//MN BEGIN - 24 August 2014
+		for(int count=0; count<toA.length; count++)
+			stFK.addFKeyAttr(new Projection(toVar, toA[count]), 
+				new Projection(fromVar, fromA[count])); //TODO check whether supports more than one attr in FK
+		//MN END
 		s.addConstraint(stFK);
 	}
 
@@ -383,7 +603,7 @@ public class TrampModelFactory {
 		map = doc.getScenario().getMappings().addNewMapping();
 
 		map.setId(idGen.createId("Map"));
-		;
+		doc.indexMapping(map);
 		map.addNewExists();
 
 		if (cs != null && cs.length > 0) {
@@ -397,6 +617,14 @@ public class TrampModelFactory {
 		return map;
 	}
 
+	public MappingType addMapping (MappingType m) {
+		MappingType newM = doc.getScenario().getMappings().addNewMapping();
+		newM.set(m);
+		doc.indexMapping(newM);
+		p.addMapping(newM);
+		return newM;
+	}
+	
 	public void addForeachAtom(MappingType m, int rel, String[] vars) 
 			throws Exception {
 		addForeachAtom(m.getId(), p.getRelName(rel, true), vars);
@@ -597,5 +825,23 @@ public class TrampModelFactory {
 		}
 	}
 
-
+	public void copyFKsToRealDoc () {
+		SchemaType oSource, oTarget, source, target;
+		source = doc.getSchema(true);
+		oSource = oDoc.getMappingScenario().getSchemas().getSourceSchema();
+		target = doc.getSchema(false);
+		oTarget = oDoc.getMappingScenario().getSchemas().getTargetSchema();
+		
+		for(ForeignKeyType fk: oSource.getForeignKeyArray())
+		{
+			ForeignKeyType fkNew = source.addNewForeignKey();
+			fkNew.set(fk);
+		}
+		
+		for(ForeignKeyType fk: oTarget.getForeignKeyArray())
+		{
+			ForeignKeyType fkNew = target.addNewForeignKey();
+			fkNew.set(fk);
+		}
+	}
 }
