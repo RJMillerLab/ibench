@@ -21,14 +21,14 @@ ConfigOptions.SourceInclusionDependencyPerc = 10
 DataType.NumDataType = 1
 DataType.0.Name = myEmail
 DataType.0.ClassPath = toxgene.util.cdata.xmark.Emails
-DataType.0.Percentage = 50
+DataType.0.Percentage = 20
 DataType.0.DBType = TEXT
 
 CSVDataType.NumFiles = 1
 CSVDataType.NumDataType = 1
-CSVDataType.0.File = /home/ubuntu/new-ibench/ibench/cmd-experiments/data/values-100.csv
+CSVDataType.0.File = /home/ubuntu/new-ibench/ibench/cmd-experiments/data/values-50.csv
 CSVDataType.0.AttrName = T
-CSVDataType.0.Percentage = 50
+CSVDataType.0.Percentage = 80
 CSVDataType.0.DBType = TEXT
 
 ################################################################################
@@ -37,7 +37,7 @@ CSVDataType.0.DBType = TEXT
 ConfigOptions.NumOfSubElements = 5
 
 RandomSeed = 2
-RepElementCount = 100
+RepElementCount = 10
 MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
