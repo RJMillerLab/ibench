@@ -46,7 +46,10 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -61,9 +64,14 @@ import toxgene.interfaces.ToXgeneSession;
 import toxgene.util.ToXgeneReporterImpl;
 import toxgene.util.cdata.xmark.CSVDataType;
 import toxgene.util.cdata.xmark.CSVHandler;
-import vtools.dataModel.types.CustomDataType;
+import tresc.benchmark.data.ToXgeneTypes.DeviatedCSVDataType;
+import tresc.benchmark.data.ToXgeneTypes.GenericDeviatedDataType;
+import tresc.benchmark.data.ToXgeneTypes.UnionToxGeneType;
+import vtools.dataModel.types.CustomCSVDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
+import vtools.dataModel.types.DeviatedDataType;
+import vtools.dataModel.types.UnionDataType;
 
 public class ToXGeneWrapper {
 
@@ -89,22 +97,68 @@ public class ToXGeneWrapper {
 		System.setProperty("ToXgene_home", toxGenePath);
 	}
 
-	public void generate(String template, String outputPath, long seed) throws Exception {
-		generate (new File(template), outputPath, seed);
+	public void generate(Random r, String template, String outputPath, long seed) throws Exception {
+		generate (r, new File(template), outputPath, seed);
 	}
 	
 	
-	public void registerDT(DataType dt, long seed) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public void registerDT(Random r, DataType dt, long seed) throws Exception {
+		ToXgeneCdataGenerator gen = null;
+		
 		// register with toxgene engine
-		if (dt instanceof CustomDataType) {
-			CSVDataType cdt = CSVHandler.getInst().createDT(new File(dt.getClassPath()), dt.getName());
+		if (dt instanceof CustomCSVDataType) {
+			CSVDataType cdt = CSVHandler.getInst().createDT(new File(((CustomCSVDataType) dt).getCsvFile()), dt.getName());
 			tgEngine.registerCDataGenerator(cdt.getAttributeName(), cdt);	
+		}
+		else {
+			gen = instantiateDT(r, dt);
+			int toxSeed = (int) seed % (Integer.MAX_VALUE - 1);
+			gen.setRandomSeed(toxSeed);
+			
+			if (!tgEngine.registeredCdata.contains(dt.getName())) {
+				tgEngine.registerCDataGenerator(dt.getName(), gen);
+			}
+		}
+	}
+	
+	public ToXgeneCdataGenerator instantiateDT (Random r, DataType dt) throws Exception {
+		ToXgeneCdataGenerator gen = null;
+		
+		log.debug("instantiate type " + dt.toString());
+		
+		if (dt instanceof CustomCSVDataType) {
+			CSVDataType cdt = CSVHandler.getInst().createDT(new File(((CustomCSVDataType) dt).getCsvFile()), dt.getName());
+			return cdt;
+		}
+		else if (dt instanceof UnionDataType) { 
+			UnionDataType un = (UnionDataType) dt;
+			UnionToxGeneType tgen;
+			Set<DataType> dts = un.getDts();
+			List<ToXgeneCdataGenerator> gens = new ArrayList<ToXgeneCdataGenerator> ();
+			
+			for(DataType childDt: dts) {
+				gens.add(instantiateDT(r, childDt));
+			}
+			
+			tgen = new UnionToxGeneType(gens);
+			
+			gen = (ToXgeneCdataGenerator) tgen;
+		}
+		else if (dt instanceof DeviatedDataType) {
+			DeviatedDataType dd  = (DeviatedDataType) dt;
+			ToXgeneCdataGenerator child = instantiateDT(r, dd.getOriginal());
+			
+			if (child instanceof CSVDataType) {
+				gen = new DeviatedCSVDataType(r, (CSVDataType) child, dd.getDeviation());
+			}
+			else {
+				gen = new GenericDeviatedDataType(r, child, dd.getDeviation());
+			}
 		}
 		else {
 			String jarFile = dt.getJarPath();
 			String className = dt.getClassPath();
 			Class<?> dtClass = null;
-			ToXgeneCdataGenerator gen = null;
 			
 			// have to load from Jar file?
 			if (jarFile != null) {
@@ -115,16 +169,13 @@ public class ToXGeneWrapper {
 			else {
 				dtClass = Class.forName(className);
 			}
-			
 			gen = (ToXgeneCdataGenerator) dtClass.newInstance();
-			int toxSeed = (int) seed % (Integer.MAX_VALUE - 1);
-			gen.setRandomSeed(toxSeed);
-			
-			tgEngine.registerCDataGenerator(dt.getName(), gen);
 		}
+		
+		return gen;
 	}
 	
-	public String generate(File template, String outputPath, long seed) throws Exception {
+	public String generate(Random r, File template, String outputPath, long seed) throws Exception {
 		String name = null;
 		
 		try {
@@ -154,15 +205,15 @@ public class ToXGeneWrapper {
 			tgEngine.startSession(session);
 			
 			// register new CSVDataTypes
-			List<CustomDataType> csvDTs = DataTypeHandler.getInst().getAllCustomTypes();
-			for(CustomDataType dt: csvDTs) {
-				registerDT(dt, seed);
+			List<CustomCSVDataType> csvDTs = DataTypeHandler.getInst().getAllCustomTypes();
+			for(CustomCSVDataType dt: csvDTs) {
+				registerDT(r, dt, seed);
 			}
 			
 			// also register standard UDTs
 			List<DataType> udts = DataTypeHandler.getInst().getAllNonCSVDTs();
 			for(DataType dt: udts) {
-				registerDT(dt, seed);
+				registerDT(r, dt, seed);
 			}
 			
 			/*

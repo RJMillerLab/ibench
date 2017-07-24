@@ -68,7 +68,7 @@ import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
 import tresc.benchmark.queryGen.QueryTranslationHandler;
 import tresc.benchmark.queryGen.QueryTranslator;
-import vtools.dataModel.types.CustomDataType;
+import vtools.dataModel.types.CustomCSVDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 
@@ -300,11 +300,12 @@ public class Configuration {
 		}
 		CSVHandler.getInst().setCSVFiles(files);
 		
-		CustomDataType customData;
+		CustomCSVDataType customData;
 		for (int i = 0; i < csvNumDT; i++) {
-			customData = new CustomDataType();
-			customData.setName(prop.getProperty(i + ".AttrName")); 
-			customData.setClassPath(prop.getProperty(i + ".File"));
+			customData = new CustomCSVDataType();
+			customData.setAttrName(prop.getProperty(i + ".AttrName")); 		
+			customData.setCsvFile(prop.getProperty(i + ".File"));
+			customData.inferName();
 			customData.setPercentage(prop.getFloat(i + ".Percentage"));
 			customData.setDbType(prop.getProperty(i + ".DBType"));
 			

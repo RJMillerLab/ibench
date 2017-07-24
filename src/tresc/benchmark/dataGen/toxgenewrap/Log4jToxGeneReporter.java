@@ -57,6 +57,7 @@ public class Log4jToxGeneReporter implements ToXgeneReporter {
 	
 	public Log4jToxGeneReporter (Logger log) {
 		this.log = log;
+		warnings = new Vector<String>();
 	}
 	
 	
@@ -82,6 +83,7 @@ public class Log4jToxGeneReporter implements ToXgeneReporter {
 	@Override
 	public void warning(String arg0) {
 		log.warn(arg0);
+		warnings.add(arg0);
 	}
 
 	public int warnings(){

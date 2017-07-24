@@ -90,8 +90,10 @@ public class Constants
         TargetCircularInclusionDependency,
         TargetCircularFK,
         // PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
-        VPAuthorityComplexity
-        
+        VPAuthorityComplexity,
+        PropagateDTsToTarget,
+        PropagateDTsChanceOfDeviation,
+        PropagateDTsDegreeOfDeviation
     };
 
     public static final Map<ParameterName, Integer> defaultParameterValues
@@ -128,7 +130,9 @@ public class Constants
     	
     	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
     	defaultParameterValues.put(ParameterName.VPAuthorityComplexity, 2);
-    	
+    	defaultParameterValues.put(ParameterName.PropagateDTsToTarget, 0);
+    	defaultParameterValues.put(ParameterName.PropagateDTsChanceOfDeviation, 0);
+    	defaultParameterValues.put(ParameterName.PropagateDTsDegreeOfDeviation, 0);        
     }
     
     public static final Map<ParameterName, Integer> defaultParameterDeviation
@@ -165,6 +169,10 @@ public class Constants
     	
     	// PRG ADD Parameter to control the complexity of the VP Authority Scenario - 24 FEB 2015
     	defaultParameterDeviation.put(ParameterName.VPAuthorityComplexity, 0);
+    	defaultParameterDeviation.put(ParameterName.PropagateDTsToTarget, 0);
+    	
+    	defaultParameterDeviation.put(ParameterName.PropagateDTsChanceOfDeviation, 0);
+    	defaultParameterDeviation.put(ParameterName.PropagateDTsDegreeOfDeviation, 0);  
     }
     
     public enum JoinKind {
