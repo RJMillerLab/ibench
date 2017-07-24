@@ -144,8 +144,20 @@ ConfigOptions.JoinKind = 0
 #ConfigOptions.TargetCircularFK = 0				   	
 
 ########################################
-# Complity of VP authority primitives
-# VPAuthorityComplexity = 2
+# Complexity of VP authority primitives
+# ConfigOptions.VPAuthorityComplexity = 2
+
+########################################
+# Controls whether source data types are propagated to the target based on correspondences
+
+# activate 1 / deactivate 0
+# ConfigOptions.PropagateDTsToTarget = 0
+
+# chance (%) of a propagated DT to deviate from the source DT
+# ConfigOptions.PropagateDTsChanceOfDeviation = 0
+
+# how much a deviated datatype differs from the original one (max 100)
+# ConfigOptions.PropagateDTsDegreeOfDeviation = 10
 
 ########################################
 # Variance for each of the above parameters
@@ -172,7 +184,11 @@ ConfigOptions.JoinKind = 0
 #ConfigOptionsDeviation.SourceCircularFK = 0
 #ConfigOptionsDeviation.TargetCircularInclusionDependency = 0
 #ConfigOptionsDeviation.TargetCircularFK = 0
+#ConfigOptionsDeviation.PropagateDTsToTarget = 0
+#ConfigOptionsDeviation.PropagateDTsChanceOfDeviation = 0
 
+# how much a deviated datatype differs from the original one (max 100)
+# ConfigOptions.PropagateDTsDegreeOfDeviation = 10
 ################################################################################
 # User defined primitives (UDP) specification. 
 ################################################################################
@@ -212,9 +228,9 @@ ConfigOptions.JoinKind = 0
 
 ########################################
 # name for the datatype, choosen by user
-#DataType.0.Name = email
+#DataType.0.Name = myemail
 # class implementing a value generator for this datatype
-#DataType.0.ClassPath = toxgene.util.cdata.xmark.email
+#DataType.0.ClassPath = toxgene.util.cdata.xmark.Emails
 # the percentage of attributes that should use this DT (this is interpreted as a probability)
 #DataType.0.Percentage = 60.0
 # when loading generated data into a database, use this SQL datatype for the column of this UDT
@@ -222,8 +238,8 @@ ConfigOptions.JoinKind = 0
 # if the datatype implementation is provided as a separate jar file, the path to this jar file
 #DataType.0.JarFile = exampleDataTypes/mydt.jar
 
-#DataType.1.Name = age
-#DataType.1.ClassPath = toxgene.util.cdata.xmark.age
+#DataType.1.Name = mybirds
+#DataType.1.ClassPath = toxgene.util.cdata.xmark.Birds
 #DataType.1.Percentage = 20.0
 #DataType.1.DBType = INT8
 

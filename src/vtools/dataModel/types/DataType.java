@@ -46,13 +46,30 @@ public class DataType extends Atomic implements Visitable, Cloneable {
         return dataType;
     }
     
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
+    		DataType d;
         if (!(o instanceof DataType))
             return false;
         if (!super.equals(o))
             return false;
+        
+        d = (DataType) o;
+        if ((name == null && d.name != null) || (name != null && !name.equals(d.name)))
+        		return false;
+        if ((classPath == null && d.classPath != null) || (classPath != null && !classPath.equals(d.classPath)))
+        		return false;
+        if (!(percentage == d.percentage))
+        		return false;
+        if ((dbType == null && d.dbType != null) || (dbType != null && !dbType.equals(d.dbType)))
+        		return false;
+        if ((jarPath == null && d.jarPath != null) || (jarPath != null && !jarPath.equals(d.jarPath)))
+        		return false;
+        
         return true;
+    }
+    
+    public int hashCode() {
+    		return name.hashCode() | classPath.hashCode();
     }
 
 	public float getPercentage() {
