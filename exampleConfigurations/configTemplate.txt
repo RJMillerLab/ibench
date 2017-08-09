@@ -305,6 +305,9 @@ QueryGenerator = Postgres
 # Mapping language used (currently FO tgds or SO tgds are supported)
 # MappingLanguage = FOtgds
 
+# Specify a renamer, a class that renames all generated attribute values (None, AllLowerCase)
+# AttrRenamer = None
+
 # Number of independent tuples (not created by data exchange) generated for each target relation
 # TargetTableNumRows = 50
 
