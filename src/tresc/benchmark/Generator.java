@@ -51,8 +51,11 @@ import org.vagabond.xmlmodel.MappingScenarioDocument;
 import smark.support.MappingScenario;
 import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.ParameterName;
+import tresc.benchmark.data.SrcToTargetDTMapper;
 import tresc.benchmark.dataGen.DataGenerator;
 import tresc.benchmark.rename.RenameDriver;
+import tresc.benchmark.rename.RenameManager;
+^^^^^^^^^^^^^^^^^^^
 import tresc.benchmark.schemaGen.AbstractScenarioGenerator;
 import tresc.benchmark.schemaGen.AddAttributeScenarioGenerator;
 import tresc.benchmark.schemaGen.AddDeleteScenarioGenerator;
@@ -248,15 +251,29 @@ public class Generator {
 		scenario.getDocFac().copyFKsToRealDoc();
 		
 		// create FDs?
-		if (configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs))
+		if ( configuration.getTrampXMLOutputOption(Constants.TrampXMLOutputSwitch.FDs)) {
+			log.info("Generate random FDs");
 			fdGen.generateScenario(scenario, configuration);
+		}
 
 		// do renaming?
 		renamer.applyRenaming(scenario, configuration);
 		
 		// do the source attr with skolem trick
 		if (configuration.getParam(Constants.ParameterName.SourceSkolemPerc) != 0)
+		{
+			log.info("Create propagated source skolems");
 			skGen.generateScenario(scenario, configuration);
+		}
+		// propagate source data types based on correspondences
+		if (configuration.getParam(Constants.ParameterName.PropagateDTsToTarget) != 0) {
+			log.info("Propagate source data types to a target");
+			SrcToTargetDTMapper.getInst().propagateTypesFromSrcToTarget(scenario, configuration);
+		}
+		
+		// apply any renaming of attributes if asked for
+		log.info("Rename attributes using " + RenameManager.inst.getR().toString());
+		RenameManager.inst.applyRenaming(scenario);
 		
 		return scenario;
 	}

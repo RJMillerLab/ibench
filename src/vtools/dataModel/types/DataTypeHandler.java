@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.vagabond.benchmark.model.TrampXMLModel;
 
 /**
  * @author lord_pretzel
@@ -63,6 +64,14 @@ public class DataTypeHandler {
 		return Atomic.STRING;
 	}
 	
+	// note that this method does add a probability for this type
+	public void addDT (String name, DataType dt) {
+		nameToDTMap.put(name, dt);
+		if (!types.contains(dt))
+			types.add(dt);
+		numDTs++;
+	}
+	
 
 	public String getDbType(String dataType) {
 		DataType data = 
@@ -81,7 +90,11 @@ public class DataTypeHandler {
 	public Map<String,DataType> getNameToDTMap() {
 		return nameToDTMap;
 	}
-
+	
+	public DataType getDataType (String name) {
+		return nameToDTMap.get(name);
+	}
+	
 	public void setNameToDTMap(Map<String,DataType> nameToDTMap) {
 		this.nameToDTMap = nameToDTMap;
 	}
@@ -102,11 +115,11 @@ public class DataTypeHandler {
 		this.numDTs = numDTs;
 	}
 
-	public List<CustomDataType> getAllCustomTypes () {
-		List<CustomDataType> list = new ArrayList<CustomDataType>();
+	public List<CustomCSVDataType> getAllCustomTypes () {
+		List<CustomCSVDataType> list = new ArrayList<CustomCSVDataType>();
 		for (DataType dt : types) {
-			if (dt instanceof CustomDataType) {
-				list.add((CustomDataType)dt);
+			if (dt instanceof CustomCSVDataType) {
+				list.add((CustomCSVDataType)dt);
 			}
 		}
 		return list;
@@ -115,7 +128,7 @@ public class DataTypeHandler {
 	public List<DataType> getAllNonCSVDTs () {
 		List<DataType> result = new ArrayList<DataType> ();
 		for (DataType dt : types) {
-			if (! (dt instanceof CustomDataType)) {
+			if (! (dt instanceof CustomCSVDataType)) {
 				result.add(dt);
 			}
 		}
@@ -134,13 +147,42 @@ public class DataTypeHandler {
 		return typesNamesNewOrder.get(fullName);
 	}
 	
+	public String getTypeNameForRel (boolean source, String tableName, int attrPos) {
+		String fullName = tableName;
+		return getTypesNamesOrder(source, fullName)[attrPos];
+	}
+	
+	public String getTypeNameForRel (TrampXMLModel m, boolean source, String tableName, String attrName) throws Exception {
+		int pos;
+		String fullName = tableName;
+
+		pos = m.getRelAttrPos(tableName, attrName, source);
+		
+		return getTypeNameForRel(source, fullName, pos);
+	}
+	
 	public void setTypesNamesOrder (boolean source, String tableName, String[] order) {
 		String schema = source ? "Source." : "Target.";
 		String fullName = schema + tableName;
+		
 		typesNamesNewOrder.put(fullName, order);
 		log.info(fullName + ":" + Arrays.toString(order));
 	}
 
+	public void setTypeNameForAttr (boolean source, String tableName, int pos, String dt) throws Exception {
+		String schema = source ? "Source." : "Target.";
+		String fullName = schema + tableName;
+
+		if (!typesNamesNewOrder.containsKey(fullName))
+			throw new Exception("table has no data types associated it " + fullName);
+		typesNamesNewOrder.get(fullName)[pos] = dt;
+	}
+	
+	public void setTypeNameForAttr (TrampXMLModel m, boolean source, String tableName, String attr, String dt) throws Exception {
+		int pos = m.getRelAttrPos(tableName, attr, source);
+		setTypeNameForAttr (source, tableName, pos, dt);
+	}
+	
 	public String toString() {
 		StringBuilder st = new StringBuilder();
 		

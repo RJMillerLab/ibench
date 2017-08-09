@@ -68,7 +68,10 @@ import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
 import tresc.benchmark.queryGen.QueryTranslationHandler;
 import tresc.benchmark.queryGen.QueryTranslator;
-import vtools.dataModel.types.CustomDataType;
+import tresc.benchmark.rename.IRenameHandler;
+import tresc.benchmark.rename.RenameManager;
+import tresc.benchmark.rename.RenameManager.RenamerType;
+import vtools.dataModel.types.CustomCSVDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
 
@@ -154,7 +157,7 @@ public class Configuration {
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 	QueryTranslatorType queryGen = QueryTranslatorType.Postgres;
-	
+	RenamerType renamer = RenamerType.AllLowerCase; 
 	
 	// register option handler for log level 
 	static {
@@ -300,11 +303,12 @@ public class Configuration {
 		}
 		CSVHandler.getInst().setCSVFiles(files);
 		
-		CustomDataType customData;
+		CustomCSVDataType customData;
 		for (int i = 0; i < csvNumDT; i++) {
-			customData = new CustomDataType();
-			customData.setName(prop.getProperty(i + ".AttrName")); 
-			customData.setClassPath(prop.getProperty(i + ".File"));
+			customData = new CustomCSVDataType();
+			customData.setAttrName(prop.getProperty(i + ".AttrName")); 		
+			customData.setCsvFile(prop.getProperty(i + ".File"));
+			customData.inferName();
 			customData.setPercentage(prop.getFloat(i + ".Percentage"));
 			customData.setDbType(prop.getProperty(i + ".DBType"));
 			
@@ -362,6 +366,10 @@ public class Configuration {
 		queryGen = (QueryTranslatorType) prop.getEnumProperty("QueryGenerator", 
 				QueryTranslatorType.class, queryGen);
 		QueryTranslationHandler.getInst().setT(queryGen);
+		
+		// renamer
+		renamer = (RenamerType) prop.getEnumProperty("AttrRenamer", RenamerType.class, renamer);
+		RenameManager.inst.setR(renamer);
 		
 		// read optional parameters
 		genFileNames(fileNameSuffix);
