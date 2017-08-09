@@ -53,6 +53,7 @@ import tresc.benchmark.Constants.DataGenType;
 import tresc.benchmark.Constants.ParameterName;
 import tresc.benchmark.data.SrcToTargetDTMapper;
 import tresc.benchmark.dataGen.DataGenerator;
+import tresc.benchmark.rename.RenameManager;
 import tresc.benchmark.schemaGen.AbstractScenarioGenerator;
 import tresc.benchmark.schemaGen.AddAttributeScenarioGenerator;
 import tresc.benchmark.schemaGen.AddDeleteScenarioGenerator;
@@ -260,6 +261,10 @@ public class Generator {
 			log.info("Propagate source data types to a target");
 			SrcToTargetDTMapper.getInst().propagateTypesFromSrcToTarget(scenario, configuration);
 		}
+		
+		// apply any renaming of attributes if asked for
+		log.info("Rename attributes using " + RenameManager.inst.getR().toString());
+		RenameManager.inst.applyRenaming(scenario);
 		
 		return scenario;
 	}

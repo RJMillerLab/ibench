@@ -12,6 +12,8 @@ InstancePathPrefix=jarLoadDT
 
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 1
+Scenarios.VERTPARTITION = 5
+Scenarios.MERGING = 5
 
 ################################################################################
 # UDTs
@@ -20,7 +22,7 @@ Scenarios.COPY = 1
 #
 ################################################################################
 
-DataType.NumDataType = 1
+DataType.NumDataType = 0
 DataType.0.Name = myTestDummy
 DataType.0.ClassPath = ibench.test_udts.TestDT
 DataType.0.Percentage = 100.0
@@ -31,6 +33,9 @@ DataType.0.JarPath = ./exampleData/testDT.jar
 ################################################################################
 # Additional configuration
 
+ConfigOptions.JoinSize = 3
+
+
 ConfigOptions.NumOfSubElements = 3
 
 RandomSeed = 2
@@ -39,6 +44,7 @@ MaxStringLength = 100
 MaxNumValue = 1000
 DataGenerator = TrampCSV
 MappingLanguage = FOtgds
+AttrRenamer = AllLowerCase
 ExchangeTargetData = false
 
 ################################################################################

@@ -68,6 +68,9 @@ import tresc.benchmark.Constants.TrampXMLOutputSwitch;
 import tresc.benchmark.data.NamingPolicy;
 import tresc.benchmark.queryGen.QueryTranslationHandler;
 import tresc.benchmark.queryGen.QueryTranslator;
+import tresc.benchmark.rename.IRenameHandler;
+import tresc.benchmark.rename.RenameManager;
+import tresc.benchmark.rename.RenameManager.RenamerType;
 import vtools.dataModel.types.CustomCSVDataType;
 import vtools.dataModel.types.DataType;
 import vtools.dataModel.types.DataTypeHandler;
@@ -154,7 +157,7 @@ public class Configuration {
 	DataGenType dataGen = DataGenType.TrampCSV;
 	MappingLanguageType mapType = MappingLanguageType.FOtgds;
 	QueryTranslatorType queryGen = QueryTranslatorType.Postgres;
-	
+	RenamerType renamer = RenamerType.AllLowerCase; 
 	
 	// register option handler for log level 
 	static {
@@ -363,6 +366,10 @@ public class Configuration {
 		queryGen = (QueryTranslatorType) prop.getEnumProperty("QueryGenerator", 
 				QueryTranslatorType.class, queryGen);
 		QueryTranslationHandler.getInst().setT(queryGen);
+		
+		// renamer
+		renamer = (RenamerType) prop.getEnumProperty("AttrRenamer", RenamerType.class, renamer);
+		RenameManager.inst.setR(renamer);
 		
 		// read optional parameters
 		genFileNames(fileNameSuffix);
