@@ -103,3 +103,4 @@ More detailed explanations of the configuration file format and how to use user-
 [branches]: https://github.com/RJMillerLab/ibench/wiki/branches
 [config]: https://github.com/RJMillerLab/ibench/wiki/ConfigurationFile
 [prim]: https://github.com/RJMillerLab/ibench/wiki/BuildinPrimitives
+[confRepos]: https://github.com/RJMillerLab/ibenchScenarioCollection

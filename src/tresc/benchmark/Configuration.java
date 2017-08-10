@@ -375,13 +375,13 @@ public class Configuration {
 		genFileNames(fileNameSuffix);
 
 		prop.setPrefix("FileNames");
-		sourceSchemaFile = prop.getProperty("SourceSchema", sourceSchemaFile);
-		targetSchemaFile = prop.getProperty("TargetSchema", targetSchemaFile);
+		sourceSchemaFile = prop.getProperty("SourceSchema", sourceSchemaFile).trim();
+		targetSchemaFile = prop.getProperty("TargetSchema", targetSchemaFile).trim();
 		sourceInstanceFile =
-				prop.getProperty("SourceInstance", sourceInstanceFile);
+				prop.getProperty("SourceInstance", sourceInstanceFile).trim();
 		sourceDocumentName =
-				prop.getProperty("SourceDocumentName", sourceDocumentName);
-		schemaFile = prop.getProperty("Schemas", schemaFile);
+				prop.getProperty("SourceDocumentName", sourceDocumentName).trim();
+		schemaFile = prop.getProperty("Schemas", schemaFile).trim();
 		prop.resetPrefix();
 	}
 
@@ -677,11 +677,11 @@ public class Configuration {
 	}
 
 	public void setSchemaPathPrefix(String __schemaPathPrefix) {
-		schemaPathPrefix = __schemaPathPrefix;
+		schemaPathPrefix = __schemaPathPrefix.trim();
 	}
 
 	public void setInstancePathPrefix(String __instancePathPrefix) {
-		instancePathPrefix = __instancePathPrefix;
+		instancePathPrefix = __instancePathPrefix.trim();
 	}
 
 	@Override
