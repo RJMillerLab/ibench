@@ -95,10 +95,10 @@ More detailed explanations of the configuration file format and how to use user-
 
 [home]: https://github.com/RJMillerLab/ibench/wiki/Home
 [data]: https://github.com/RJMillerLab/ibench/wiki/Data
-[install]: https://github.com/RJMillerLab/ibench/wiki/InstallAndUsage
+[install]: https://github.com/RJMillerLab/ibench/wiki/InstallationAndUsage
 [cmd]: https://github.com/RJMillerLab/ibench/wiki/CMD
 [tutorial]: https://github.com/RJMillerLab/ibench/wiki/tutorial
-[outputs]: https://github.com/RJMillerLab/ibench/wiki/outputs
+[outputs]: https://github.com/RJMillerLab/ibench/wiki/output
 [udps]: https://github.com/RJMillerLab/ibench/wiki/udp
 [branches]: https://github.com/RJMillerLab/ibench/wiki/branches
 [config]: https://github.com/RJMillerLab/ibench/wiki/ConfigurationFile
