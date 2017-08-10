@@ -17,11 +17,17 @@ SchemaPathPrefix=templateOut
 InstancePathPrefix=templateOut			
 
 # Source and target schema xml file name
-# SourceSchema = sourceSchema.xml
-# TargetSchema = targetSchema.xml
+# FileNames.SourceSchema = sourceSchema.xml
+# FileNames.TargetSchema = targetSchema.xml
 
-# Name for source instance XML file
-# SourceInstance=sourceInst.xml
+# Name for the data generators configuration file
+# FileNames.SourceInstance=dataGen.tsl
+
+# Name for the XML file storing source instance data 
+# FileNames.SourceDocumentName=sourceInst
+
+# Name of the metadata XML file storing schemas, constraints, and mappings
+# FileNames.Schemas=metadata.xml
 
 ################################################################################
 # Number of instances for each primitive type. A primitive is a mapping template

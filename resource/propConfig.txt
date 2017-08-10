@@ -10,6 +10,12 @@
 SchemaPathPrefix=jarLoadDT
 InstancePathPrefix=jarLoadDT
 
+FileNames.Schemas=schema.xml
+FileNames.SourceSchema = sourceSchema.xml
+FileNames.TargetSchema = targetSchema.xml
+FileNames.SourceInstance=datagen.tsl
+FileNames.SourceDocumentName=sourceInst
+
 # Number of Instances for each Basic Scenario Type
 Scenarios.COPY = 1
 Scenarios.VERTPARTITION = 5
@@ -52,12 +58,12 @@ ExchangeTargetData = false
 # create only TrampXML metadata file and data
 ################################################################################ 
 
-OutputOption.HTMLSchemas = false
+OutputOption.HTMLSchemas = true
 OutputOption.Data = true
 OutputOption.XMLSchemas = true
-OutputOption.HTMLMapping = false
+OutputOption.HTMLMapping = true
 OutputOption.TrampXML = true			
-OutputOption.Clio = false				
+OutputOption.Clio = true				
 
 ################################################################################
 # Optional activation/deactivation of parts of the generated Tramp XML document

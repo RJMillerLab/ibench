@@ -6,6 +6,31 @@ iBench is a metadata generator for creating arbitrarily large and complex mappin
 
 The user provides a configuration file specifying what types of meta-data and data to generate (e.g., schemas, data, constraints, mappings, ...) and properties of the generated scenario. iBench produces an XML file storing the meta-data generated based on the user configuration. If requested, iBench also generates instance data for generated schemas.
 
+Detailed documentation is available in the [wiki](https://github.com/RJMillerLab/ibench/wiki/Home)
+
+## Wiki Documentation
+
+* [Home][home]
+
+### Installation and Tutorial
+
+* [Installation][install]
+* [Tutorial][tutorial]
+* [Commandline programs and options][cmd]
+
+### Usage
+
+* [Configuration][config]
+* [Supported output formats][outputs]
+* [Built-in primitives][prim]
+* [User-defined primitives][udps]
+* [Controlling data generation][data]
+
+### Background
+
+* [Research webpage](http://dblab.cs.toronto.edu/project/iBench/)
+
+
 ### Setup Guide ###
 
 iBench is written in Java. To build the system you need [ant](http://ant.apache.org/). Simply run 
@@ -67,3 +92,14 @@ More detailed explanations of the configuration file format and how to use user-
 * Patricia Arocena - Lead Data Architect at the University of Toronto Database Group
 * Boris Glavic - Professor at the Illinois Institute of Technology DBGroup
 * Renée J. Miller - Professor at the University of Toronto Database Group
+
+[home]: https://github.com/RJMillerLab/ibench/wiki/Home
+[data]: https://github.com/RJMillerLab/ibench/wiki/Data
+[install]: https://github.com/RJMillerLab/ibench/wiki/InstallAndUsage
+[cmd]: https://github.com/RJMillerLab/ibench/wiki/CMD
+[tutorial]: https://github.com/RJMillerLab/ibench/wiki/tutorial
+[outputs]: https://github.com/RJMillerLab/ibench/wiki/outputs
+[udps]: https://github.com/RJMillerLab/ibench/wiki/udp
+[branches]: https://github.com/RJMillerLab/ibench/wiki/branches
+[config]: https://github.com/RJMillerLab/ibench/wiki/ConfigurationFile
+[prim]: https://github.com/RJMillerLab/ibench/wiki/BuildinPrimitives

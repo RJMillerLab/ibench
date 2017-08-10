@@ -394,15 +394,11 @@ public class iBench {
 		if (log.isDebugEnabled()) {log.debug("instance path: " + instDir.toString());};
 		if (log.isDebugEnabled()) {log.debug("schema path: " + schemDir.toString());};
 		
-//		XSDWriter schemaPrinter = new XSDWriter();
-//		XMLWriter schemaWriter = new XMLWriter();
-
 		// print scenario on the screen if required
 		StringBuffer buf = new StringBuffer();
 		// PRG - Replaced to avoid generating string if it is not going to be output - Oct 5, 2012
 		// scenario.prettyPrint(buf, 0);
-		// if (log.isDebugEnabled()) {log.debug(buf);};
-//		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
+		if (log.isDebugEnabled()) {log.debug(scenario.toString());};
 
 		//********************************************************************************
 		// PRINT CLIO INPUTS IF REQUESTED
@@ -458,15 +454,26 @@ public class iBench {
 		// print XML schemas for source and target if requested
 		if (_configuration.getOutputOption(OutputOption.XMLSchemas)) {
 			XSDWriter xsdPrinter = new XSDWriter();
-			String mapjob = S.substring(0, S.length()-8);
+			String sourceSchema, targetSchema;
+			
+			// if mapjob file created then use dedicated naming schema else use user provided names
+			if (_configuration.getOutputOption(OutputOption.Clio)) {
+				String mapjob = S.substring(0, S.length()-8);
+				sourceSchema = mapjob + "_Src";
+				targetSchema = mapjob + "_Trg";
+			}
+			else {
+				sourceSchema = S;
+				targetSchema = T;
+			}
 			
 			StringBuffer bufSourceXSD = new StringBuffer();
 			///print source schema (schema.getLabel())
-			xsdPrinter.printSource(bufSourceXSD, scenario, mapjob + "_Src", 0);
+			xsdPrinter.printSource(bufSourceXSD, scenario, sourceSchema, 0);
 			
 			StringBuffer bufTargetXSD = new StringBuffer();
 			///print target schema (schema.getLabel())
-			xsdPrinter.printTarget(bufTargetXSD, scenario, mapjob + "_Trg", 0);
+			xsdPrinter.printTarget(bufTargetXSD, scenario, targetSchema, 0);
 			try {
 				BufferedWriter bufWriterXSD =
 						new BufferedWriter(new FileWriter(new File(
@@ -486,51 +493,19 @@ public class iBench {
 				LoggerUtil.logException(e, log);
 				throw e;
 			}
-//			StringBuffer sourceSchemaBuffer = new StringBuffer();
-//			schemaPrinter.print(sourceSchemaBuffer, scenario.getSource(), 0);
-//			
-//			StringBuffer targetSchemaBuffer = new StringBuffer();
-//			schemaPrinter.print(targetSchemaBuffer, scenario.getTarget(), 0);
-//			
-//			try {
-//				BufferedWriter bufWriter =
-//						new BufferedWriter(new FileWriter(new File(
-//								Configuration.schemaPathPrefix, S)));
-//				bufWriter.write(sourceSchemaBuffer.toString());
-//				bufWriter.close();
-//
-//				bufWriter =
-//						new BufferedWriter(new FileWriter(new File(
-//								Configuration.schemaPathPrefix, T)));
-//				bufWriter.write(targetSchemaBuffer.toString());
-//				bufWriter.close();
-//			}
-//			catch (Exception e) {
-//				LoggerUtil.logException(e, log);
-//				throw e;
-//			}
 		}
 		
 		//********************************************************************************
 		// PRINT TRAMP XML FORMAT OUTPUT
 		if (_configuration.getOutputOption(OutputOption.TrampXML)) {
-//			StringBuffer mappingScenarioXMLBuffer = new StringBuffer();
-			
-//			schemaWriter.print(mappingScenarioXMLBuffer, scenario, 0,
-//					instDir.getAbsolutePath(), _configuration);
 
 			try {
 				File trampFile = new File(schemDir, S1);
-//				if (trampFile.exists()) {
-//					trampFile.delete();
-//					trampFile.createNewFile();
-//				}
 				BufferedWriter bufWriter =
 						new BufferedWriter(new FileWriter(trampFile));
 				XmlOptions options = new XmlOptions();
 				options.setSavePrettyPrint();
 				scenario.getDoc().getDocument().save(bufWriter, options);
-//				bufWriter.write(mappingScenarioXMLBuffer.toString());
 				bufWriter.close();
 			}
 			catch (IOException e) {

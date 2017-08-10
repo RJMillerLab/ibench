@@ -7,9 +7,13 @@
 ################################################################################
 
 ########################################
-# Output Path Prefixes
-SchemaPathPrefix=tutorialOneCP
-InstancePathPrefix=tutorialOneCP
+# Output path prefixes and file names
+SchemaPathPrefix = tutorialOneCP
+InstancePathPrefix = tutorialOneCP
+
+FileNames.Schemas = metadata.xml
+FileNames.SourceInstance = toxConfig.tsl
+FileNames.SourceDocumentName = sourceInst
 
 ########################################
 # Number of Instances for each Basic Scenario Type
@@ -37,7 +41,7 @@ MappingLanguage = SOtgds
 ################################################################################ 
 
 OutputOption.Data = true
-OutputOption.XMLSchemas = true
+OutputOption.XMLSchemas = false
 OutputOption.TrampXML = true			
 
 ################################################################################

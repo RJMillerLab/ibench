@@ -186,6 +186,7 @@ iBench is a flexible metadata generator.
 			<zipfileset src="${librarydir}/args4j.jar"/>
 			<zipfileset src="${librarydir}/commons-primitives.jar"/>
 			<zipfileset src="${librarydir}/junit.jar"/>
+			<zipfileset src="${librarydir}/postgresql.jar"/>
 			<zipfileset src="${librarydir}/saxon.jar"/>
 			<zipfileset src="${librarydir}/toxgene.jar"/>
 			<zipfileset src="${librarydir}/trampexgen.jar"/>

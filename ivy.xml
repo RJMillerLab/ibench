@@ -23,5 +23,6 @@
    <dependency org="args4j" name="args4j-site" rev="2.0.16" />
    <dependency org="net.sf.saxon" name="saxon" rev="8.7"/>
    <dependency org="xerces" name="xercesImpl" rev="2.11.0"/>
+   <dependency org="org.postgresql" name="postgresql" rev="42.1.4"/>
  </dependencies>
 </ivy-module>
