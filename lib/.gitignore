@@ -24,3 +24,4 @@ commons-collections.jar
 slf4j-api.jar
 slf4j-simple.jar
 vagabond.jar
+*.jar

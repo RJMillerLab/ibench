@@ -20,15 +20,13 @@
 	<classpathentry kind="lib" path="lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql.jar"/>
-	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/stax-api.jar"/>
-	<classpathentry kind="lib" path="lib/toxgene.jar" sourcepath="/ToxGene"/>
-	<classpathentry kind="lib" path="lib/trampexgen.jar" sourcepath="/TrampExGen"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/xml-resolver.jar"/>
 	<classpathentry kind="lib" path="lib/xmlbeans.jar"/>
 	<classpathentry kind="lib" path="lib/saxon.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/vagabond.jar"/>
+	<classpathentry kind="lib" path="lib/ToxGene.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

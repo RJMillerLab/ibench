@@ -1,85 +1,76 @@
 <project 
-	name="iBench" 
-	default="Deploy" 
+	name="ibench" 
+	default="jar" 
 	basedir="."
 	xmlns:ivy="antlib:org.apache.ivy.ant"
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+	xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
 	>
 	<description>
 iBench is a flexible metadata generator.
 	</description>
 
-
-	<!-- Properties -->
-	<property name="binarydir" location="${basedir}/bin" />
-	<property name="testbindir" location="${basedir}/testbin" />
-	<property name="builddir" location="${basedir}/build" />
-	<property name="buildresdir" location="${basedir}/buildResources" />
-	<property name="docdir" location="${basedir}/doc" />
-	<property name="librarydir" location="${basedir}/lib" />
-	<property name="resourcedir" location="${basedir}/resource" />
-	<property name="examplescendir" location="${basedir}/exampleScenarios" />
-	<property name="exampleconfdir" location="${basedir}/exampleConfigurations" />
-	<property name="exampledatadir" location="${basedir}/exampleData" />
-	<property name="sourcedir" location="${basedir}/src" />
-	<property name="testdtsrcdir" location="${basedir}/srcDTexam" />
-	<property name="binmacdir" location="${builddir}/mac" />
-  	<property name="binwindir" location="${builddir}/win"/>
-	<property name="binexpdriverdir" location="${builddir}/expdriver"/>
-	<property name="xsltTemplate" location="${resourcedir}/xmlToCSV_XSLT_template.xml" />
+	<!-- Import macro definitions and common stuff -->
+	<import file="antutils/ant-common.xml" />
 	
-	<!-- Ivy -->
-    <property name="ivy.install.version" value="2.1.0" />
-    <condition property="ivy.home" value="${env.IVY_HOME}">
-      <isset property="env.IVY_HOME" />
-    </condition>
-    <property name="ivy.jar.dir" value="${librarydir}" />
-    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	<!-- Main Class and Packages-->
+	<property name="mainClass" value="tresc.benchmark.iBench" />
+	<property name="jar.creator" value="Illinois Institute of Technology, Department of Computer Science" />
+	<property name="package" value="tresc" />
+	<property name="mvn.description" value="iBench is a flexible metadata generator." />
+	<property name="mvn.url" value="https://github.com/RJMillerLab/ibench" />
+	
+	<!-- define artifacts' name, which follows the convention of Maven -->
+	<property name="artifactId" value="ibench" />
+	
+	<!-- ClassPath Setup -->
+	<property name="classpath.name.bin" value="classpath.bin" />
+	<property name="classpath.name.build" value="classpath.build" />
+	
+	<!-- Mkdirs and setup props-->
+	<target name="mkdirs-and-setup-props">
+		<set-default-props />
 		
-	<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />
-  	<property name="mainClass" value="tresc.benchmark.iBench" />
-  	<property name="expMainClass" value="tresc.benchmark.iBenchDriver" />
+		<!-- Properties -->
+		<property name="dir.example.scen" location="${basedir}/exampleScenarios" />
+		<property name="dir.example.conf" location="${basedir}/exampleConfigurations" />
+		<property name="dir.example.data" location="${basedir}/exampleData" />
+		<property name="dir.test.dtsrc" location="${basedir}/srcDTexam" />
+		<property name="dir.build.expdriver" location="${builddir}/expdriver"/>
+		<property name="dir.deploy" location="${builddir}/ibench"/>
+		<property name="xslt.template" location="${dir.resource}/xmlToCSV_XSLT_template.xml" />
 
+		<property name="jar.bin" value="${dir.build}/${artifactId}.jar" />
+		<property name="jar.bin.fat" value="${dir.deploy}/${artifactId}-fat.jar" />
 
+		
+		<!-- classes -->
+<!--		<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />-->
+	  	<property name="mainclass" value="tresc.benchmark.iBench" />
+	  	<property name="mainclass.exp" value="tresc.benchmark.iBenchDriver" />
 
-	<property name="fullJarClasspath" value="${jarClasspath}   resource/" />
+		<create-build-dirs />
+	</target>
 
 	<!-- targets -->
-	<!-- Ivy -->
-    <target name="download-ivy" unless="offline">
-
-        <mkdir dir="${ivy.jar.dir}"/>
-        <!-- download Ivy from web site so that it can be used even without any special installation -->
-        <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" 
-             dest="${ivy.jar.file}" usetimestamp="true"/>
-    </target>
-
-    <target name="init-ivy" depends="download-ivy">
-      <!-- try to load ivy here from ivy home, in case the user has not already dropped
-              it into ant's lib dir (note that the latter copy will always take precedence).
-              We will not fail as long as local lib dir exists (it may be empty) and
-              ivy is in at least one of ant's lib dir or the local lib dir. -->
-        <path id="ivy.lib.path">
-            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
-        </path>
-        <taskdef resource="org/apache/ivy/ant/antlib.xml"
-                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
-    </target>
-	
-	<target name="download-dependencies" depends="init-ivy">
+<!--	<target name="download-dependencies" depends="mkdirs-and-setup-props">
 		 <ivy:resolve />
 		 <ivy:retrieve sync="false" type="jar" pattern="${librarydir}/[artifact].[ext]" />
 	</target>
+	-->
 	
 	<!-- Internal Taskdefs -->
-	<target name="setup-additional-anttasks" depends="download-dependencies">
+	<target name="define-tasks-and-setup-paths" depends="download-dependencies">
 		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 			<classpath>
 				<pathelement location="${librarydir}/ant-contrib.jar"/>
 			</classpath>
 		</taskdef>
+		<property name="fullJarClasspath" value="${classpath.name.bin.jar}   resource/" />
 	</target>
 	
-	<target name="Clean" depends="setup-additional-anttasks">
+<!--	<target name="Clean" depends="setup-additional-anttasks">
 		<mkdir dir="${binarydir}" />
 		<delete includeemptydirs="true">
 			<fileset dir="${binarydir}" includes="**/*"/>
@@ -89,7 +80,7 @@ iBench is a flexible metadata generator.
 			<fileset dir="${testbindir}" includes="**/*"/>
 		</delete>
 		<mkdir dir="${builddir}" />
-		<!-- ClassPath Setup -->
+
 		<path id="libraries">
 			<fileset dir="${librarydir}"/>
 		</path>
@@ -109,112 +100,95 @@ iBench is a flexible metadata generator.
 		</pathconvert>
 		<echo message="${jarClasspath}"/>
 	</target>
+-->
 	
-	<target name="Compile" depends="Clean">
+<!--	<target name="Compile" depends="Clean">
 		<javac srcdir="${sourcedir}" destdir="${binarydir}" 
 			classpathref="libraries" debug="on" includeantruntime="false">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
-
-	<target name="CreateDTTestJar" depends="Clean">
-		<javac srcdir="${testdtsrcdir}" destdir="${testbindir}" 
-			classpathref="libraries" debug="on" includeantruntime="false">
+-->
+	
+	<target name="create-dt-test-jar" depends="define-tasks-and-setup-paths">
+		<javac srcdir="${dir.testdtsrc}" destdir="${dir.test.bin}" 
+			classpathref="${classpath.name.bin}" debug="on" includeantruntime="false">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
-		<jar destfile="${exampledatadir}/testDT.jar" basedir="${testbindir}">
+		<jar destfile="${dir.example.data}/testDT.jar" basedir="${dir.test.bin}">
 			<manifest>
-				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Main-Class" value="${mainclass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 			</manifest>
-			<fileset dir="${testbindir}"/>
+			<fileset dir="${dir.test.bin}"/>
 		</jar>
 	</target>
 	
-	<target name="Deploy" depends="Jar">
-		<var name="deployto" value="${builddir}" />
-		<antcall target="DeployOne" />
-		<copy todir="${builddir}">
-			<fileset dir="${buildresdir}">
-				<include name="*.sh"/>
-				<include name="*.bat"/>
-			</fileset>
-			</copy>
-		<chmod file="${builddir}/iBench.sh" perm="ug+rx">
-			<fileset dir="${builddir}">
-    			<include name="*.sh"/>
-			</fileset>
-		</chmod>
-	</target>
-
-	<target name="DeployOne">
-		<mkdir dir="${deployto}/exampleScenarios" />
-		<copy todir="${deployto}/exampleScenarios">
-			<fileset dir="${examplescendir}">
-				<exclude name=".svn"/>
-			</fileset>
+	<target name="copy-resources">
+		<mkdir dir="${dir.deploy}" />
+		<mkdir dir="${dir.deploy}/exampleScenarios" />
+		<copy todir="${dir.deploy}/exampleScenarios">
+			<fileset dir="${dir.example.scen}" />
 		</copy> 
-		<mkdir dir="${deployto}/exampleConfigurations" />
-		<copy todir="${deployto}/exampleConfigurations">
-			<fileset dir="${exampleconfdir}">
-				<exclude name=".svn"/>
-			</fileset>
+		<mkdir dir="${dir.deploy}/exampleConfigurations" />
+		<copy todir="${dir.deploy}/exampleConfigurations">
+			<fileset dir="${dir.example.conf}" />
 		</copy> 
-		<mkdir dir="${deployto}/exampleData" />
-		<copy todir="${deployto}/exampleData">
-			<fileset dir="${exampledatadir}">
-				<exclude name=".svn"/>
-			</fileset>
+		<mkdir dir="${dir.deploy}/exampleData" />
+		<copy todir="${dir.deploy}/exampleData">
+			<fileset dir="${dir.example.data}" />
 		</copy> 
-		<mkdir dir="${deployto}/resource"/>
-		<copy todir="${deployto}/resource" 
+		<mkdir dir="${dir.deploy}/resource"/>
+		<copy todir="${dir.deploy}/resource" 
 			file="${buildresdir}/log4jproperties.txt"/>
 	</target>
 
-	<target name="Jar" depends="Compile">
-		 <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
-		        classpath="${librarydir}/jarjar.jar"/>
-		<mkdir dir="${builddir}"/>
-		<jarjar destfile="${builddir}/iBench.jar" basedir="${binarydir}">
+	<target name="jar" depends="compile,copy-resources">
+		<jar destfile="${jar.bin}" basedir="${dir.bin}">
 			<manifest>
-				<attribute name="Main-Class" value="${mainClass}" />
+				<attribute name="Main-Class" value="${mainclass}" />
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
-			<zipfileset src="${librarydir}/log4j.jar"/>
-			<zipfileset src="${librarydir}/args4j.jar"/>
-			<zipfileset src="${librarydir}/commons-primitives.jar"/>
-			<zipfileset src="${librarydir}/junit.jar"/>
-			<zipfileset src="${librarydir}/postgresql.jar"/>
-			<zipfileset src="${librarydir}/saxon.jar"/>
-			<zipfileset src="${librarydir}/toxgene.jar"/>
-			<zipfileset src="${librarydir}/trampexgen.jar"/>
-			<zipfileset src="${librarydir}/xercesImpl.jar"/>
-			<zipfileset src="${librarydir}/xml-apis.jar"/>
-			<zipfileset src="${librarydir}/xml-resolver.jar"/>
-			<zipfileset src="${librarydir}/xmlbeans.jar"/>
+			<zipfileset src="${dir.library}/log4j.jar"/>
+			<zipfileset src="${dir.library}/args4j.jar"/>
+			<zipfileset src="${dir.library}/commons-primitives.jar"/>
+			<zipfileset src="${dir.library}/junit.jar"/>
+			<zipfileset src="${dir.library}/postgresql.jar"/>
+			<zipfileset src="${dir.library}/saxon.jar"/>
+			<zipfileset src="${dir.library}/ToxGene.jar"/>
+			<zipfileset src="${dir.library}/vagabond.jar"/>
+			<zipfileset src="${dir.library}/xercesImpl.jar"/>
+			<zipfileset src="${dir.library}/xml-apis.jar"/>
+			<zipfileset src="${dir.library}/xml-resolver.jar"/>
+			<zipfileset src="${dir.library}/xmlbeans.jar"/>
 			<file file="${xsltTemplate}"/>
+		</jar>
+	</target>
+
+	<target name="jar-fat" depends="compile">
+		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
+				        classpathref="${classpath.name.bin}"/>
+		<jarjar destfile="${jar.bin.fat}" basedir="${dir.binary}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainclass}" />
+				<attribute name="Created-By" value="${jar.creator}" />
+				<attribute name="Class-Path" value="${fullJarClasspath}" />
+			</manifest>
+			<zipfileset src="${dir.library}/log4j.jar"/>
+			<zipfileset src="${dir.library}/args4j.jar"/>
+			<zipfileset src="${dir.library}/commons-primitives.jar"/>
+			<zipfileset src="${dir.library}/junit.jar"/>
+			<zipfileset src="${dir.library}/postgresql.jar"/>
+			<zipfileset src="${dir.library}/saxon.jar"/>
+			<zipfileset src="${dir.library}/toxgene.jar"/>
+			<zipfileset src="${dir.library}/trampexgen.jar"/>
+			<zipfileset src="${dir.library}/xercesImpl.jar"/>
+			<zipfileset src="${dir.library}/xml-apis.jar"/>
+			<zipfileset src="${dir.library}/xml-resolver.jar"/>
+			<zipfileset src="${dir.library}/xmlbeans.jar"/>
+			<file file="${xslt.template}"/>
 		</jarjar>
 	</target>
-
 	
-	<target name="GenerateJavaDoc">
-		<javadoc access="private" 
-			author="true" 
-			classpathref="libraries" 
-			destdir="${docdir}" 
-			nodeprecated="false" 
-			nodeprecatedlist="false"
-			noindex="false" 
-			nonavbar="false" 
-			notree="false" 
-			packagenames="tresc" 
-			source="1.5" 
-			sourcepath="${sourcedir}" 
-			splitindex="true" 
-			use="true" 
-			version="true">
-		</javadoc>
-	</target>
-
 </project>

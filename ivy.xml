@@ -9,8 +9,8 @@
  		revision="1.0">
 	</info>
 	<dependencies>
-		<dependency org="org.bitbucket.ibencher" name="vagabond" rev="1.0-RELEASE" />
-		<dependency org="org.bitbucket.ibencher" name="ToxGene" rev="1.0-RELEASE" />
+		<dependency org="org.bitbucket.ibencher" name="vagabond" rev="1.0.1" />
+		<dependency org="org.bitbucket.ibencher" name="ToxGene" rev="1.1" />
 		<dependency org="args4j" name="args4j" rev="2.33">
 			<artifact name="args4j" type="jar" />
 		</dependency>
