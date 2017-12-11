@@ -29,5 +29,6 @@
 	<classpathentry kind="lib" path="lib/xmlbeans.jar"/>
 	<classpathentry kind="lib" path="lib/saxon.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/vagabond.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

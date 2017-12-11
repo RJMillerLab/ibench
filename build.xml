@@ -20,7 +20,6 @@ iBench is a flexible metadata generator.
 	<property name="examplescendir" location="${basedir}/exampleScenarios" />
 	<property name="exampleconfdir" location="${basedir}/exampleConfigurations" />
 	<property name="exampledatadir" location="${basedir}/exampleData" />
-<!--	<property name="exampledatadir" location="${basedir}/exampleData" /> -->
 	<property name="sourcedir" location="${basedir}/src" />
 	<property name="testdtsrcdir" location="${basedir}/srcDTexam" />
 	<property name="binmacdir" location="${builddir}/mac" />
