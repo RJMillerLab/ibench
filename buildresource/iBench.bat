@@ -1,1 +1,1 @@
-java -Xmx4096m -classpath . -jar iBench.jar
+java -Xmx4096m -jar ibench-fat.jar

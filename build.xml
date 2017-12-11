@@ -1,6 +1,6 @@
 <project 
 	name="ibench" 
-	default="jar" 
+	default="jar-fat" 
 	basedir="."
 	xmlns:ivy="antlib:org.apache.ivy.ant"
 	xmlns:artifact="antlib:org.apache.maven.artifact.ant"
@@ -27,89 +27,43 @@ iBench is a flexible metadata generator.
 	<!-- ClassPath Setup -->
 	<property name="classpath.name.bin" value="classpath.bin" />
 	<property name="classpath.name.build" value="classpath.build" />
+
+	<!-- main classes -->
+  	<property name="mainclass" value="tresc.benchmark.iBench" />
+  	<property name="mainclass.exp" value="tresc.benchmark.iBenchDriver" />
+
 	
 	<!-- Mkdirs and setup props-->
 	<target name="mkdirs-and-setup-props">
 		<set-default-props />
 		
 		<!-- Properties -->
-		<property name="dir.example.scen" location="${basedir}/exampleScenarios" />
-		<property name="dir.example.conf" location="${basedir}/exampleConfigurations" />
-		<property name="dir.example.data" location="${basedir}/exampleData" />
-		<property name="dir.test.dtsrc" location="${basedir}/srcDTexam" />
-		<property name="dir.build.expdriver" location="${builddir}/expdriver"/>
-		<property name="dir.deploy" location="${builddir}/ibench"/>
-		<property name="xslt.template" location="${dir.resource}/xmlToCSV_XSLT_template.xml" />
+		<property name="dir.example.scen" value="${basedir}/exampleScenarios" />
+		<property name="dir.example.conf" value="${basedir}/exampleConfigurations" />
+		<property name="dir.example.data" value="${basedir}/exampleData" />
+		<property name="dir.test.dtsrc" value="${basedir}/srcDTexam" />
+		<property name="dir.build.expdriver" value="${dir.build}/expdriver"/>
+		<property name="dir.deploy" value="${dir.build}/ibench"/>
+		<property name="xslt.template" value="${dir.resource}/xmlToCSV_XSLT_template.xml" />
 
-		<property name="jar.bin" value="${dir.build}/${artifactId}.jar" />
+		<property name="jar.bin" value="${dir.deploy}/${artifactId}.jar" />
 		<property name="jar.bin.fat" value="${dir.deploy}/${artifactId}-fat.jar" />
 
 		
 		<!-- classes -->
-<!--		<property name="schema" location="resource/xmlschema/mappingScenario.xsd" />-->
-	  	<property name="mainclass" value="tresc.benchmark.iBench" />
-	  	<property name="mainclass.exp" value="tresc.benchmark.iBenchDriver" />
+<!--		<property name="schema" value="resource/xmlschema/mappingScenario.xsd" />-->
 
 		<create-build-dirs />
 	</target>
-
-	<!-- targets -->
-<!--	<target name="download-dependencies" depends="mkdirs-and-setup-props">
-		 <ivy:resolve />
-		 <ivy:retrieve sync="false" type="jar" pattern="${librarydir}/[artifact].[ext]" />
-	</target>
-	-->
 	
 	<!-- Internal Taskdefs -->
 	<target name="define-tasks-and-setup-paths" depends="download-dependencies">
-		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-			<classpath>
-				<pathelement location="${librarydir}/ant-contrib.jar"/>
-			</classpath>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties"
+			classpathref="${classpath.name.build}">
 		</taskdef>
 		<property name="fullJarClasspath" value="${classpath.name.bin.jar}   resource/" />
 	</target>
-	
-<!--	<target name="Clean" depends="setup-additional-anttasks">
-		<mkdir dir="${binarydir}" />
-		<delete includeemptydirs="true">
-			<fileset dir="${binarydir}" includes="**/*"/>
-		</delete>
-		<mkdir dir="${testbindir}" />
-		<delete includeemptydirs="true">
-			<fileset dir="${testbindir}" includes="**/*"/>
-		</delete>
-		<mkdir dir="${builddir}" />
-
-		<path id="libraries">
-			<fileset dir="${librarydir}"/>
-		</path>
-
-		<pathconvert property="jarClasspath" pathsep="    ">
-			<path>
-				<fileset dir="${librarydir}">
-					<exclude name="ant*.jar" />
-				</fileset>
-			</path>
-			<mapper>
-				<chainedmapper>
-					<flattenmapper/>
-					<globmapper from="*.jar" to="lib/*.jar" casesensitive="no"/>
-				</chainedmapper>
-			</mapper>
-		</pathconvert>
-		<echo message="${jarClasspath}"/>
-	</target>
--->
-	
-<!--	<target name="Compile" depends="Clean">
-		<javac srcdir="${sourcedir}" destdir="${binarydir}" 
-			classpathref="libraries" debug="on" includeantruntime="false">
-			<compilerarg value="-Xlint:unchecked" />
-		</javac>
-	</target>
--->
-	
+		
 	<target name="create-dt-test-jar" depends="define-tasks-and-setup-paths">
 		<javac srcdir="${dir.testdtsrc}" destdir="${dir.test.bin}" 
 			classpathref="${classpath.name.bin}" debug="on" includeantruntime="false">
@@ -140,7 +94,19 @@ iBench is a flexible metadata generator.
 		</copy> 
 		<mkdir dir="${dir.deploy}/resource"/>
 		<copy todir="${dir.deploy}/resource" 
-			file="${buildresdir}/log4jproperties.txt"/>
+			file="${dir.buildresource}/log4jproperties.txt"/>
+		<copy todir="${dir.deploy}">
+			<fileset dir="${dir.buildresource}">
+				<include name="*.sh"/>
+				<include name="*.bat"/>
+			</fileset>
+		</copy>
+		<chmod perm="775" type="file">
+		  <fileset dir="${dir.deploy}">
+		    <include name="**/*.sh"/>
+		    <include name="**/*.bat"/>
+		  </fileset>
+		</chmod>
 	</target>
 
 	<target name="jar" depends="compile,copy-resources">
@@ -150,43 +116,44 @@ iBench is a flexible metadata generator.
 				<attribute name="Created-By" value="University of Toronto" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
-			<zipfileset src="${dir.library}/log4j.jar"/>
-			<zipfileset src="${dir.library}/args4j.jar"/>
-			<zipfileset src="${dir.library}/commons-primitives.jar"/>
-			<zipfileset src="${dir.library}/junit.jar"/>
-			<zipfileset src="${dir.library}/postgresql.jar"/>
-			<zipfileset src="${dir.library}/saxon.jar"/>
-			<zipfileset src="${dir.library}/ToxGene.jar"/>
-			<zipfileset src="${dir.library}/vagabond.jar"/>
-			<zipfileset src="${dir.library}/xercesImpl.jar"/>
-			<zipfileset src="${dir.library}/xml-apis.jar"/>
-			<zipfileset src="${dir.library}/xml-resolver.jar"/>
-			<zipfileset src="${dir.library}/xmlbeans.jar"/>
 			<file file="${xsltTemplate}"/>
 		</jar>
 	</target>
 
-	<target name="jar-fat" depends="compile">
+	<target name="jar-fat" depends="compile,copy-resources">
 		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
 				        classpathref="${classpath.name.bin}"/>
-		<jarjar destfile="${jar.bin.fat}" basedir="${dir.binary}">
+		<jarjar destfile="${jar.bin.fat}" basedir="${dir.bin}">
 			<manifest>
 				<attribute name="Main-Class" value="${mainclass}" />
 				<attribute name="Created-By" value="${jar.creator}" />
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
-			<zipfileset src="${dir.library}/log4j.jar"/>
-			<zipfileset src="${dir.library}/args4j.jar"/>
-			<zipfileset src="${dir.library}/commons-primitives.jar"/>
-			<zipfileset src="${dir.library}/junit.jar"/>
-			<zipfileset src="${dir.library}/postgresql.jar"/>
-			<zipfileset src="${dir.library}/saxon.jar"/>
-			<zipfileset src="${dir.library}/toxgene.jar"/>
-			<zipfileset src="${dir.library}/trampexgen.jar"/>
-			<zipfileset src="${dir.library}/xercesImpl.jar"/>
-			<zipfileset src="${dir.library}/xml-apis.jar"/>
-			<zipfileset src="${dir.library}/xml-resolver.jar"/>
-			<zipfileset src="${dir.library}/xmlbeans.jar"/>
+			<zipfileset src="${dir.library}/args4j.args4j.args4j-2.33.jar"/>
+			<zipfileset src="${dir.library}/com.googlecode.jarjar.jarjar.jarjar-1.3.jar"/>
+			<zipfileset src="${dir.library}/commons-collections.commons-collections.commons-collections-3.2.2.jar"/>
+			<zipfileset src="${dir.library}/commons-primitives.commons-primitives.commons-primitives-1.0.jar"/>
+			<zipfileset src="${dir.library}/javax.activation.activation.activation-1.1.jar"/>
+			<zipfileset src="${dir.library}/javax.mail.mail.mail-1.4.3.jar"/>
+			<zipfileset src="${dir.library}/junit.junit.junit-4.9.jar"/>
+			<zipfileset src="${dir.library}/log4j.log4j.log4j-1.2.17.jar"/>
+			<zipfileset src="${dir.library}/mysql.mysql-connector-java.mysql-connector-java-6.0.5.jar"/>
+			<zipfileset src="${dir.library}/net.java.dev.javacc.javacc.javacc-6.1.2.jar"/>
+			<zipfileset src="${dir.library}/net.sf.saxon.saxon.saxon-8.7.jar"/>
+			<zipfileset src="${dir.library}/org.apache.geronimo.specs.geronimo-jms_1.1_spec.geronimo-jms_1.1_spec-1.0.jar"/>
+			<zipfileset src="${dir.library}/org.apache.openejb.javaee-api.javaee-api-5.0-2.jar"/>
+			<zipfileset src="${dir.library}/org.apache.xmlbeans.xmlbeans.xmlbeans-2.6.0.jar"/>
+			<zipfileset src="${dir.library}/org.bitbucket.ibencher.ToxGene.ToxGene-1.1.jar"/>
+			<zipfileset src="${dir.library}/org.bitbucket.ibencher.dbunit.dbunit-1.0.jar"/>
+			<zipfileset src="${dir.library}/org.bitbucket.ibencher.vagabond.vagabond-1.0.1.jar"/>
+			<zipfileset src="${dir.library}/org.hamcrest.hamcrest-core.hamcrest-core-1.1.jar"/>
+			<zipfileset src="${dir.library}/org.slf4j.slf4j-api.slf4j-api-1.5.2.jar"/>
+			<zipfileset src="${dir.library}/org.slf4j.slf4j-simple.slf4j-simple-1.5.2.jar"/>
+			<zipfileset src="${dir.library}/postgresql.postgresql.postgresql-9.1-901-1.jdbc4.jar"/>
+			<zipfileset src="${dir.library}/stax.stax-api.stax-api-1.0.1.jar"/>
+			<zipfileset src="${dir.library}/xerces.xercesImpl.xercesImpl-2.11.0.jar"/>
+			<zipfileset src="${dir.library}/xml-apis.xml-apis.xml-apis-1.4.01.jar"/>
+			<zipfileset src="${dir.library}/xml-resolver.xml-resolver.xml-resolver-1.2.jar"/>
 			<file file="${xslt.template}"/>
 		</jarjar>
 	</target>

@@ -1,1 +1,1 @@
-java -Xmx4096m -classpath .:iBench.jar tresc.benchmark.iBenchDriver
+java -Xmx4096m -classpath .:iBench-fat.jar tresc.benchmark.iBenchDriver
