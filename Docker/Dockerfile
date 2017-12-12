@@ -40,7 +40,7 @@ ENV PATH ${PATH}:/usr/share/ant/apache-ant-${ANT_VERSION}/bin
 ########################################
 # Clone iBench github repository
 ########################################
-RUN git clone --recursive https://github.com/RJMillerLab/ibench.git /ibenchsrc
+RUN git clone --depth 1 --recursive https://github.com/RJMillerLab/ibench.git /ibenchsrc
 ########################################
 # Build and deploy iBench
 ########################################
