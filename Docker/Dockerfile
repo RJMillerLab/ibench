@@ -27,7 +27,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
 ########################################
 # Install modern ant version
 ########################################
-ENV ANT_VERSION 1.9.5
+ENV ANT_VERSION 1.9.7
 RUN mkdir -p /usr/share/ant && \
 	cd && \
 	wget -q http://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
@@ -45,12 +45,12 @@ RUN git clone https://github.com/RJMillerLab/ibench.git /ibenchsrc
 # Build and deploy iBench
 ########################################
 RUN cd /ibenchsrc \
-	&& ant Deploy \
-	&& cp -r /ibenchsrc/build/ /ibench/
+	&& ant jar-fat \
+	&& cp -r /ibenchsrc/build/ibench/ /ibench/
 ########################################
 # Per default start the gprom command line interface
 ########################################
-ENTRYPOINT ["/ibench/iBench.sh"]
+ENTRYPOINT ["/ibench/ibench.sh"]
 ########################################
 # Per default connect to the example SQLite database
 ########################################
