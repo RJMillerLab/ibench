@@ -17,7 +17,7 @@ iBench is a flexible metadata generator.
 	<!-- Main Class and Packages-->
 	<property name="mainClass" value="tresc.benchmark.iBench" />
 	<property name="jar.creator" value="Illinois Institute of Technology, Department of Computer Science" />
-	<property name="package" value="tresc" />
+	<property name="package" value="*" />
 	<property name="mvn.description" value="iBench is a flexible metadata generator." />
 	<property name="mvn.url" value="https://github.com/RJMillerLab/ibench" />
 	

@@ -1,1 +1,1 @@
-java -Xmx4096m -classpath .:iBench.jar org.vagabond.commandline.loader.CommandLineLoader
+java -Xmx4096m -classpath .:ibench-fat.jar org.vagabond.commandline.loader.CommandLineLoader

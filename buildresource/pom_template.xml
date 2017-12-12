@@ -27,6 +27,16 @@
 			<organization>IIT DBGroup</organization>
 			<organizationUrl>http://cs.iit.edu/~dbgroup</organizationUrl>
 		</developer>
+		<developer>
+			<name>Radu Ciucanu</name>
+			<email>ciucanu@isima.fr</email>
+			<organization>Université Clermont Auvergne, Clermont-Ferrand, France</organization>
+			<organizationUrl>http://ws.isima.fr/~ciucanu/</organizationUrl>
+		</developer>
+		<developer>
+			<name>Patricia Arocena</name>
+			<organization>Toronto-Dominion Bank</organization>
+		</developer>
 	</developers>
 	
 	<!--  SCM -->
