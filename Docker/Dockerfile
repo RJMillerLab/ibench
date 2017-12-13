@@ -48,10 +48,10 @@ RUN cd /ibenchsrc \
 	&& ant jar-fat \
 	&& cp -r /ibenchsrc/build/ibench/ /ibench/
 ########################################
-# Per default start the gprom command line interface
+# Per default start ibench
 ########################################
 ENTRYPOINT ["/ibench/ibench.sh"]
 ########################################
-# Per default connect to the example SQLite database
+# Per default show help message
 ########################################
 CMD ["-help"]

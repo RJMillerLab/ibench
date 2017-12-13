@@ -130,7 +130,6 @@ iBench is a flexible metadata generator.
 				<attribute name="Class-Path" value="${fullJarClasspath}" />
 			</manifest>
 			<zipfileset src="${dir.library}/args4j.args4j.args4j-2.33.jar"/>
-			<zipfileset src="${dir.library}/com.googlecode.jarjar.jarjar.jarjar-1.3.jar"/>
 			<zipfileset src="${dir.library}/commons-collections.commons-collections.commons-collections-3.2.2.jar"/>
 			<zipfileset src="${dir.library}/commons-primitives.commons-primitives.commons-primitives-1.0.jar"/>
 			<zipfileset src="${dir.library}/javax.activation.activation.activation-1.1.jar"/>
