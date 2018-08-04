@@ -46,7 +46,7 @@ RUN git clone --depth 1 --recursive https://github.com/RJMillerLab/ibench.git /i
 ########################################
 RUN cd /ibenchsrc \
 	&& ant jar-fat \
-	&& cp -r /ibenchsrc/build/ibench/ /ibench/
+	&& cp -r /ibenchsrc/build/ibench/* /ibench
 ########################################
 # Per default start ibench
 ########################################
